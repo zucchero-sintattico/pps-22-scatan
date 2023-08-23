@@ -25,4 +25,6 @@
 
 ---
 
+[Installazione]()
+
 [Conclusioni]()
