@@ -2,15 +2,15 @@
 #
 # To get started with mdBook see: https://rust-lang.github.io/mdBook/index.html
 #
-name: Deploy mdBook site to Pages
+name: Deploy mdBook site and scaladoc to Pages
 
 on:
   # Runs on pushes targeting the default branch
   push:
     branches:
       - doc
-    paths:
-      - 'docs/**'
+    paths-ignore:
+      - 'scatan.drawio'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -35,6 +35,12 @@ jobs:
       MDBOOK_VERSION: 0.4.21
     steps:
       - uses: actions/checkout@v3
+      - name: Set sbt
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'sbt'
       - name: Install mdBook
         run: |
           curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
@@ -43,12 +49,20 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
+      - name: Create artifact directory
+        run: mkdir -p ./site
+      - name: Build scaladoc
+        run: |
+          sbt doc
+          cp -r ./scaladoc ./site/scaladoc
       - name: Build with mdBook
-        run: mdbook build docs
+        run: |
+          mdbook build docs
+          cp -r ./docs/book ./site/docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./docs/book
+          path: ./site
 
   # Deployment job
   deploy:
