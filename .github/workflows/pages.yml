@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MDBOOK_VERSION: 0.4.21
+      SCALA_TARGET: ./target/scala-3.3.0
     steps:
       - uses: actions/checkout@v3
       - name: Set sbt
@@ -54,7 +55,12 @@ jobs:
       - name: Build scaladoc
         run: |
           sbt doc
-          cp -r ./scaladoc ./site/scaladoc
+          cp -r ${SCALA_TARGET}/api ./site/scaladoc
+      - name: Build test coverage
+        run: |
+          sbt clean coverage test
+          sbt coverageReport
+          cp -r ${SCALA_TARGET}/scoverage-report ./site/test-coverage
       - name: Build with mdBook
         run: |
           mdbook build docs
