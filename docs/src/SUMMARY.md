@@ -24,8 +24,12 @@
 
 - [Restrospettiva](./06-retrospective/index.md)
 
+- [Backlog](./09-backlog/product-backlog.md)
+  - [Sprint 1](./09-backlog/sprints/01-sprint.md)
+
 ---
 
 [Installazione](./07-installation/index.md)
 
 [Conclusioni](./08-conclusions/index.md)
+
