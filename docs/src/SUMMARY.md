@@ -4,27 +4,28 @@
 
 ---
 
-- [Processo di sviluppo](./01-process/01-process.md)
+- [Processo di sviluppo](./01-process/index.md)
 
-- [Requisiti]()
-    - [Business](), 
-    - [Modello di dominio](), 
-    - [Funzionali]()
-        - [Utente]()
-        - [Sistema]()
-    - [Non funzionali]()
-    - [Implementazione]()
+- [Requisiti](./02-requirements/index.md)
 
-- [Design architetturale]()
+  - [Business](),
+  - [Modello di dominio](),
+  - [Funzionali]()
+    - [Utente]()
+    - [Sistema]()
+  - [Non funzionali]()
+  - [Implementazione]()
 
-- [Design di dettaglio]()
+- [Design architetturale](./03-architectural-design/index.md)
 
-- [Implementazione]()
+- [Design di dettaglio](./04-design/index.md)
 
-- [Restrospettiva]()
+- [Implementazione](./05-implementation/index.md)
+
+- [Restrospettiva](./06-retrospective/index.md)
 
 ---
 
-[Installazione]()
+[Installazione](./07-installation/index.md)
 
-[Conclusioni]()
+[Conclusioni](./08-conclusions/index.md)
