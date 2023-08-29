@@ -65,7 +65,7 @@ jobs:
           mkdir -p ./site/${JS_COMPILED_TARGET}
           cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}
       - name: Copy html page
-        run: cp ./index.html ./site/index.html
+        run: cp ./scatan.html ./site/scatan.html
       - name: Build test coverage
         run: |
           sbt clean coverage test
