@@ -10,7 +10,7 @@ on:
     branches:
       - doc
     paths-ignore:
-      - 'scatan.drawio'
+      - "scatan.drawio"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,9 +39,9 @@ jobs:
       - name: Set sbt
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'sbt'
+          java-version: "17"
+          distribution: "temurin"
+          cache: "sbt"
       - name: Install mdBook
         run: |
           curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
@@ -69,6 +69,10 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./site
+      - name: site
+        run: |
+          sbt fastLinkJS
+          cp -r ${SCALA_TARGET}/scalajs-bundler/main/* ./site/
 
   # Deployment job
   deploy:

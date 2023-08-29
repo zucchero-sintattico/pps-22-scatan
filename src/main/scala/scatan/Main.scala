@@ -4,17 +4,15 @@ import org.scalajs.dom
 
 def appElement(): Element =
   div(
-    a(
-      href := "https://vitejs.dev",
-      target := "_blank",
-      img(src := "/vite.svg", className := "logo", alt := "Vite logo")
-    ),
-    a(
-      href := "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-      target := "_blank"
-    ),
     h1("Hello Laminar!"),
-    div(className := "card", button(tpe := "button")),
+    div(
+      className := "card",
+      button(
+        className := "button",
+        "Click me!",
+        tpe := "button"
+      )
+    ),
     p(className := "read-the-docs", "Click on the Vite logo to learn more")
   )
 @main
