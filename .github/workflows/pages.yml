@@ -55,14 +55,14 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Create artifact directory
         run: mkdir -p ./site
-      - name: Build scaladoc
-        run: |
-          sbt doc
-          cp -r ${SCALA_TARGET}/api ./site/scaladoc
+      # - name: Build scaladoc
+      #   run: |
+      #     sbt doc
+      #     cp -r ${SCALA_TARGET}/api ./site/scaladoc
       - name: Build scala project
         run: |
           sbt fastLinkJS
-          mkdir ./site/${JS_COMPILED_TARGET}
+          mkdir -p ./site/${JS_COMPILED_TARGET}
           cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}
       - name: Copy html page
         run: cp ./index.html ./site/index.html
