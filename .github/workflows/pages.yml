@@ -45,11 +45,11 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: "sbt"
-      - name: Install mdBook
-        run: |
-          curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
-          rustup update
-          cargo install --version ${MDBOOK_VERSION} mdbook
+      # - name: Install mdBook
+      #   run: |
+      #     curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
+      #     rustup update
+      #     cargo install --version ${MDBOOK_VERSION} mdbook
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
@@ -62,7 +62,8 @@ jobs:
       - name: Build scala project
         run: |
           sbt fastLinkJS
-          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}/main.js
+          mkdir ./site/${JS_COMPILED_TARGET}
+          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}
       - name: Copy html page
         run: cp ./index.html ./site/index.html
       - name: Build test coverage
