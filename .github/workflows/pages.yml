@@ -71,10 +71,10 @@ jobs:
           sbt clean coverage test
           sbt coverageReport
           cp -r ${SCALA_TARGET}/scoverage-report ./site/test-coverage
-      - name: Build with mdBook
-        run: |
-          mdbook build docs
-          cp -r ./docs/book ./site/docs
+      # - name: Build with mdBook
+      #   run: |
+      #     mdbook build docs
+      #     cp -r ./docs/book ./site/docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
