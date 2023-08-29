@@ -2,12 +2,13 @@
 #
 # To get started with mdBook see: https://rust-lang.github.io/mdBook/index.html
 #
-name: Deploy mdBook site and scaladoc to Pages
+name: Deploy mdBook site, scaladoc and application to Pages
 
 on:
   # Runs on pushes targeting the default branch
   push:
     branches:
+      - main
       - doc
     paths-ignore:
       - "scatan.drawio"
@@ -56,6 +57,12 @@ jobs:
         run: |
           sbt doc
           cp -r ${SCALA_TARGET}/api ./site/scaladoc
+      - name: Build scala project
+        run: |
+          sbt fastLinkJS
+          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js"
+      - name: Copy html page
+        run: cp ./index.html ./site/index.html
       - name: Build test coverage
         run: |
           sbt clean coverage test
