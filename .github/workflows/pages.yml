@@ -36,6 +36,7 @@ jobs:
     env:
       MDBOOK_VERSION: 0.4.21
       SCALA_TARGET: ./target/scala-3.3.0
+      JS_COMPILED_TARGET: target/scala-3.3.0/scatan-fastopt
     steps:
       - uses: actions/checkout@v3
       - name: Set sbt
@@ -61,7 +62,7 @@ jobs:
       - name: Build scala project
         run: |
           sbt fastLinkJS
-          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${SCALA_TARGET}/scatan-fastopt/main.js
+          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}/scatan-fastopt/main.js
       - name: Copy html page
         run: cp ./index.html ./site/index.html
       - name: Build test coverage
