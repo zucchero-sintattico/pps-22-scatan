@@ -61,7 +61,7 @@ jobs:
       - name: Build scala project
         run: |
           sbt fastLinkJS
-          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js"
+          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${SCALA_TARGET}/scatan-fastopt/main.js
       - name: Copy html page
         run: cp ./index.html ./site/index.html
       - name: Build test coverage
