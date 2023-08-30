@@ -2,7 +2,7 @@
 #
 # To get started with mdBook see: https://rust-lang.github.io/mdBook/index.html
 #
-name: Deploy mdBook site and scaladoc to Pages
+name: Deploy mdBook site, scaladoc and application on Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -10,7 +10,7 @@ on:
     branches:
       - doc
     paths-ignore:
-      - 'scatan.drawio'
+      - "scatan.drawio"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -34,14 +34,15 @@ jobs:
     env:
       MDBOOK_VERSION: 0.4.21
       SCALA_TARGET: ./target/scala-3.3.0
+      JS_COMPILED_TARGET: target/scala-3.3.0/scatan-fastopt
     steps:
       - uses: actions/checkout@v3
       - name: Set sbt
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'sbt'
+          java-version: "17"
+          distribution: "temurin"
+          cache: "sbt"
       - name: Install mdBook
         run: |
           curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
@@ -56,6 +57,13 @@ jobs:
         run: |
           sbt doc
           cp -r ${SCALA_TARGET}/api ./site/scaladoc
+      - name: Build scala project
+        run: |
+          sbt fastLinkJS
+          mkdir -p ./site/${JS_COMPILED_TARGET}
+          cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}
+      - name: Copy html page
+        run: cp ./scatan.html ./site/index.html
       - name: Build test coverage
         run: |
           sbt clean coverage test
