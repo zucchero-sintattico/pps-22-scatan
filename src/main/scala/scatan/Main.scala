@@ -9,7 +9,6 @@ def main(): Unit =
   z = 2
   z = 3
 
-
 trait X
 
 trait Y
