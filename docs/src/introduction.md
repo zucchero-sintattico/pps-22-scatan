@@ -1,5 +1,7 @@
 # Introduzione
 
+![Logo](./img/scatan-logo.png)
+
 L'obiettivo del progetto è la realizzazione di un clone del gioco Coloni di Catan, gioco da tavolo per 3 o 4 giocatori.
 
 Nel gioco, ogni partecipante assume il ruolo di un colono che cerca di stabilirsi sull'isola di Catan. L'obiettivo primario è quello di accumulare risorse essenziali, tra cui legno, argilla, grano, lana e rocce, attraverso la costruzione di colonie, città e strade strategicamente posizionate sull'isola. Queste risorse sono acquisite in base ai risultati dei tiri dei dadi e alla posizione delle strutture costruite.
