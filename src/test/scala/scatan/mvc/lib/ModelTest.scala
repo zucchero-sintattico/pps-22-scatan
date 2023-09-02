@@ -1,6 +1,7 @@
 package scatan.mvc.lib
 
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers.*
 
 class ModelTest extends AnyFlatSpec:
 
@@ -20,4 +21,6 @@ class ModelTest extends AnyFlatSpec:
   it should "be creatable with a State" in {
     val state: Model.State = new Model.State {}
     val model: Model.Interface[Model.State] = Model(state)
+    model should not be null
+    model.getClass should be(classOf[Model.Interface[Model.State]])
   }
