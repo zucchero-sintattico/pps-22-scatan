@@ -8,7 +8,7 @@ Nel gioco, ogni partecipante assume il ruolo di un colono che cerca di stabilirs
 
 Una delle caratteristiche distintive del gioco è la possibilità di commerciare con gli altri giocatori. Questo aspetto è cruciale nel perseguire il successo, poiché i giocatori possono scambiare le proprie risorse con quelle di cui hanno bisogno per raggiungere i loro obiettivi strategici. Questa componente di diplomazia e negoziazione aggiunge un elemento dinamico e competitivo al gioco, portando spesso a alleanze temporanee o a rivalità accese tra i partecipanti.
 
-## Obiettivo
+## Obiettivo del gioco
 
 L'obiettivo finale di "Coloni di Catan" è accumulare un numero predeterminato di punti vittoria, che possono essere ottenuti attraverso la costruzione di nuove colonie, l'espansione di città esistenti e l'acquisizione di carte di sviluppo. Il primo giocatore a raggiungere il numero di punti vittoria necessari vince la partita.
 
