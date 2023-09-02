@@ -2,7 +2,11 @@
 
 L'obiettivo del progetto è la realizzazione di un clone del gioco Coloni di Catan, gioco da tavolo per 3 o 4 giocatori.
 
-Nel gioco, i giocatori assumono il ruolo di coloni che cercano di stabilirsi sull'isola di Catan. Lo scopo è accumulare risorse, come legno, argilla, grano, lana e rocce, attraverso la costruzione di colonie e strade. Le risorse vengono ottenute in base ai tiri di dadi e alla posizione delle costruzioni. I giocatori possono commerciare tra loro le risorse per ottenere quelle di cui hanno bisogno. L'obiettivo finale è raggiungere un certo numero di punti vittoria attraverso la costruzione delle colonie, di città e l'ottenimento di carte di sviluppo. Il gioco si basa sulla strategia, sulla pianificazione e sulla diplomazia nel commercio con gli altri giocatori.
+Nel gioco, ogni partecipante assume il ruolo di un colono che cerca di stabilirsi sull'isola di Catan. L'obiettivo primario è quello di accumulare risorse essenziali, tra cui legno, argilla, grano, lana e rocce, attraverso la costruzione di colonie, città e strade strategicamente posizionate sull'isola. Queste risorse sono acquisite in base ai risultati dei tiri dei dadi e alla posizione delle strutture costruite.
+
+Una delle caratteristiche distintive del gioco è la possibilità di commerciare con gli altri giocatori. Questo aspetto è cruciale nel perseguire il successo, poiché i giocatori possono scambiare le proprie risorse con quelle di cui hanno bisogno per raggiungere i loro obiettivi strategici. Questa componente di diplomazia e negoziazione aggiunge un elemento dinamico e competitivo al gioco, portando spesso a alleanze temporanee o a rivalità accese tra i partecipanti.
+
+L'obiettivo finale di "Coloni di Catan" è accumulare un numero predeterminato di punti vittoria, che possono essere ottenuti attraverso la costruzione di nuove colonie, l'espansione di città esistenti e l'acquisizione di carte di sviluppo. Il primo giocatore a raggiungere il numero di punti vittoria necessari vince la partita.
 
 ## Contributors
 
