@@ -55,9 +55,13 @@ enum Pages(val factory: PageFactory[?, ?]):
         )
       )
 
+object Pages:
+  // Implicit conversion from Pages enum to Map[Pages, PageFactory[?, ?]]
+  given Conversion[Pages.type, Map[Pages, PageFactory[?, ?]]] = _.values.map(_.toMapEntry).toMap
+
 val MyApplication = NavigableApplication[MyState, Pages](
   initialState = MyState(0),
-  pagesFactories = Pages.values.map(_.toMapEntry).toMap
+  pagesFactories = Pages
 )
 
 @main def run(): Unit =
