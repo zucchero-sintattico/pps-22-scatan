@@ -1,1 +1,0 @@
-## Modello di dominio
