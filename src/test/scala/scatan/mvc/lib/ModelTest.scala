@@ -15,7 +15,8 @@ class ModelTest extends AnyFlatSpec:
   }
 
   it should "contains the Provider trait" in {
-    val temp: Model.Provider[Model.State] = null
+    val temp: Model.Provider[Model.State] = new Model.Provider[Model.State]:
+      override def model: Model.Interface[Model.State] = Model(new Model.State {})
   }
 
   it should "be creatable with a State" in {

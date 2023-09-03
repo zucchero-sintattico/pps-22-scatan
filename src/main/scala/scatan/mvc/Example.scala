@@ -38,25 +38,30 @@ class AboutController(requirements: Controller.Requirements[AboutView])
   def controlAbout(): Unit =
     println("AboutController.controlAbout")
 
-enum Page:
-  case Home, About
+enum Pages(val factory: PageFactory[?, ?]):
+  def toMapEntry: (Pages, PageFactory[?, ?]) = this -> factory
+  case Home
+      extends Pages(
+        PageFactory(
+          viewFactory = new HomeView(_),
+          controllerFactory = new HomeController(_)
+        )
+      )
+  case About
+      extends Pages(
+        PageFactory(
+          viewFactory = new AboutView(_),
+          controllerFactory = new AboutController(_)
+        )
+      )
 
-object MyApplication extends Application[MyState, Page](Model(MyState(1))) with MementoApplication[Page]:
-  override val pages: Map[Page, ApplicationPage[MyState, ?, ?]] = Map(
-    Page.Home -> ApplicationPage(
-      model = this.model,
-      viewFactory = (requirements: View.Requirements[HomeController]) => new HomeView(requirements),
-      controllerFactory = (requirements: Controller.Requirements[HomeView]) => new HomeController(requirements)
-    ),
-    Page.About -> ApplicationPage(
-      model = this.model,
-      viewFactory = (requirements: View.Requirements[AboutController]) => new AboutView(requirements),
-      controllerFactory = (requirements: Controller.Requirements[AboutView]) => new AboutController(requirements)
-    )
-  )
+val MyApplication = NavigableApplication[MyState, Pages](
+  initialState = MyState(0),
+  pagesFactories = Pages.values.map(_.toMapEntry).toMap
+)
 
 @main def run(): Unit =
   val app = MyApplication
-  app.show(Page.Home)
-  app.show(Page.About)
+  app.show(Pages.Home)
+  app.show(Pages.About)
   app.back()
