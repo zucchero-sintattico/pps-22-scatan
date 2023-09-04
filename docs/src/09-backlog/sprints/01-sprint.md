@@ -16,4 +16,35 @@
 | Domain understanding & reporting | 2.5 | Scrivere processo adottato nella relazione                     |   2   | Team               | 2  | 2  | 2  | 2  | 0  | 0  |
 | Architettura dell'applicativo    | 3.1 | Analisi dei pro e contro nei pattern architetturali            |   4   | Mazzoli            | 4  | 4  | 4  | 2  | 0  | 0  |
 | Architettura dell'applicativo    | 3.2 | Implementazione architettura base                              |   2   | Mazzoli            | 2  | 2  | 2  | 2  | 2  | 0  |
-|                                  |     | **TOT**                                                        |  30   |                    |    |    |    |    |    |    |
+|                                  |     | **TOT**                                                        |  30   |                    | 23 | 21 | 20 | 16 | 4  | 0  |
+
+## Sprint goal
+
+Gli obiettivi di questa Sprint sono stati:
+
+- Inizializziazione del progetto con relative configurazioni + C.I.
+- Definizione di un primo dominio
+- Definizione dell'architettura e prima implementazione
+
+## Deadline
+
+03/09/2023
+
+## Sprint review
+
+Lo Sprint goal è stato raggiunto secondo i tempi previsti.
+
+## Sprint retrospective
+
+Il primo sprint è stato incentrato sulla configurazione del progetto, che ha richiesto più tempo del previsto, data la
+scelta delle tecnologie.
+
+La poca configurabilità di Scala.js ha inficiato alle dipendenze del progetto utilizzata nell'IDE relativa alla parte
+dei test. Infatti, l'utilizzo delle librerie compilate per
+Javascript `("org.scalatest" %%% "scalatest" % "<version>" % Test)`, rendono inutilizzabile il pulsante run dei test,
+poichè non è possibile eseguire codice compilato per js su JVM. A fronte di ciò è stato necessario inserire anche la
+versione per JVM di scalatest, al fine di eseguire i test tramite l'IDE.
+
+Inoltre anche la configurazione della C.I. ha richiesto parecchio tempo, questo a causa dei tempi elevati richiesti dal
+deploy delle GitHub Actions, poichè si occupano di effettuare il deploy sia dell'applicazione, sia della documentazione
+ma anche dello stile del codice, dei test e della coverage.
