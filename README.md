@@ -29,7 +29,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/zucchero-sintattico/pps-22-scatan">
-    <img src="res/img/logo.png" alt="Logo" width="80" height="80">
+    <img src="res/img/logo.png" alt="Logo" width="270" height="90">
   </a>
 
 <h3 align="center">Scatan</h3>
@@ -66,17 +66,19 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
+
+The goal of the project is to create a clone of the board game "Settlers of Catan," a game for 3 or 4 players.
+
+In the game, each participant takes on the role of a settler trying to establish themselves on the island of Catan. The primary objective is to accumulate essential resources, including wood, clay, wheat, wool, and ore, through the construction of strategically placed settlements, cities, and roads on the island. These resources are obtained based on the results of dice rolls and the location of the structures built.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
