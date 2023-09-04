@@ -9,13 +9,11 @@ package scatan.mvc.lib
   *   The type of the view.
   * @param model
   *   The model.
-  * @param viewFactory
-  *   A factory for the view.
-  * @param controllerFactory
-  *   A factory for the controller.
+  * @param pageFactory
+  *   The page factory.
   */
-trait ApplicationPage[S <: Model.State, C <: Controller.Interface[V], V <: View.Interface[C]](
-    val model: Model.Interface[S],
+trait ApplicationPage[S <: Model.State, C <: Controller[V], V <: View[C]](
+    val model: Model[S],
     val pageFactory: PageFactory[C, V]
 ) extends Model.Provider[S]
     with View.Requirements[C]
@@ -24,10 +22,10 @@ trait ApplicationPage[S <: Model.State, C <: Controller.Interface[V], V <: View.
   override def controller: C = pageFactory.controllerFactory(this)
 
 object ApplicationPage:
-  type Factory[S <: Model.State, C <: Controller.Interface[V], V <: View.Interface[C]] =
-    Model.Interface[S] => ApplicationPage[S, ?, ?]
-  def apply[S <: Model.State, C <: Controller.Interface[V], V <: View.Interface[C]](
-      model: Model.Interface[S],
+  type Factory[S <: Model.State, C <: Controller[V], V <: View[C]] =
+    Model[S] => ApplicationPage[S, ?, ?]
+  def apply[S <: Model.State, C <: Controller[V], V <: View[C]](
+      model: Model[S],
       pageFactory: PageFactory[C, V]
   ): ApplicationPage[S, C, V] =
     new ApplicationPage[S, C, V](model, pageFactory) {}

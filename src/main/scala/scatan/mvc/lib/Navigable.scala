@@ -17,7 +17,7 @@ object NavigableApplication:
       pagesFactories: Map[Route, PageFactory[?, ?]]
   ): Application[S, Route] with Navigable[Route] =
     new Application[S, Route] with Navigable[Route]:
-      override val model: Model.Interface[S] = Model(initialState)
+      override val model: Model[S] = Model(initialState)
       override val pages: Map[Route, ApplicationPage[S, ?, ?]] = pagesFactories.map { (route, pageFactory) =>
         route -> ApplicationPage(this.model, pageFactory)
       }

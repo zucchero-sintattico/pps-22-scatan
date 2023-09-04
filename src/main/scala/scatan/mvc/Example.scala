@@ -4,7 +4,7 @@ import scatan.mvc.lib.*
 
 case class MyState(value: Int) extends Model.State
 
-class HomeView(requirements: View.Requirements[HomeController]) extends View.Interface[HomeController](requirements):
+class HomeView(requirements: View.Requirements[HomeController]) extends View[HomeController](requirements):
   override def show(): Unit =
     println("HomeView.show")
     renderHome()
@@ -16,12 +16,11 @@ class HomeView(requirements: View.Requirements[HomeController]) extends View.Int
     println("HomeView.renderHome")
     controller.controlHome()
 
-class HomeController(requirements: Controller.Requirements[HomeView])
-    extends Controller.Interface[HomeView](requirements):
+class HomeController(requirements: Controller.Requirements[HomeView]) extends Controller[HomeView](requirements):
   def controlHome(): Unit =
     println("HomeController.controlHome")
 
-class AboutView(requirements: View.Requirements[AboutController]) extends View.Interface[AboutController](requirements):
+class AboutView(requirements: View.Requirements[AboutController]) extends View[AboutController](requirements):
   override def show(): Unit =
     println("AboutView.show")
     renderAbout()
@@ -33,13 +32,12 @@ class AboutView(requirements: View.Requirements[AboutController]) extends View.I
     println("AboutView.renderAbout")
     controller.controlAbout()
 
-class AboutController(requirements: Controller.Requirements[AboutView])
-    extends Controller.Interface[AboutView](requirements):
+class AboutController(requirements: Controller.Requirements[AboutView]) extends Controller[AboutView](requirements):
   def controlAbout(): Unit =
     println("AboutController.controlAbout")
 
 enum Pages(val factory: PageFactory[?, ?]):
-  def toMapEntry: (Pages, PageFactory[?, ?]) = this -> factory
+  private def toMapEntry: (Pages, PageFactory[?, ?]) = this -> factory
   case Home
       extends Pages(
         PageFactory(

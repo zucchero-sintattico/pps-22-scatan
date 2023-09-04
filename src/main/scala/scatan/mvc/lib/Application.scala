@@ -7,12 +7,12 @@ package scatan.mvc.lib
   *   The type of the route.
   */
 trait Application[S <: Model.State, Route]:
-  val model: Model.Interface[S]
+  val model: Model[S]
   val pages: Map[Route, ApplicationPage[S, ?, ?]]
 object Application:
   /** Create an application from a model and a list of pages.
-    * @param model
-    *   The model.
+    * @param initialState
+    *   The initial state of the model.
     * @param pagesFactories
     *   The pages.
     * @tparam S
@@ -27,6 +27,6 @@ object Application:
       pagesFactories: Map[Route, PageFactory[?, ?]]
   ): Application[S, Route] =
     new Application[S, Route]:
-      override val model: Model.Interface[S] = Model(initialState)
+      override val model: Model[S] = Model(initialState)
       override val pages: Map[Route, ApplicationPage[S, ?, ?]] =
-        pagesFactories.map((k, v) => (k, ApplicationPage(model, v)))
+        pagesFactories.map((route, pageFactory) => (route, ApplicationPage(model, pageFactory)))
