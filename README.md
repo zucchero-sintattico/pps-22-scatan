@@ -163,11 +163,11 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 
-## Contact
+## Contacts
 
-Luigi Borriello - luigi.borriello2@studio.unibo.it
-Alessandro Mazzoli - alessandro.mazzoli9@studio.unibo.it
-Manuel Andruccioli - manuel.andruccioli@studio.unibo.it
+- Luigi Borriello - luigi.borriello2@studio.unibo.it
+- Alessandro Mazzoli - alessandro.mazzoli9@studio.unibo.it
+- Manuel Andruccioli - manuel.andruccioli@studio.unibo.it
 
 Project Link: [https://github.com/zucchero-sintattico/pps-22-scatan](https://github.com/zucchero-sintattico/pps-22-scatan)
 
