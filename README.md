@@ -2,14 +2,6 @@
 
 <a name="readme-top"></a>
 
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -80,61 +72,19 @@ The goal of the project is to create a clone of the board game "Settlers of Cata
 
 In the game, each participant takes on the role of a settler trying to establish themselves on the island of Catan. The primary objective is to accumulate essential resources, including wood, clay, wheat, wool, and ore, through the construction of strategically placed settlements, cities, and roads on the island. These resources are obtained based on the results of dice rolls and the location of the structures built.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Built With
 
 - Scala 3
 - Scala.js
-- Scoverage
 - SBT
+- Scoverage
 - ScalaTest
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-
-- npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/zucchero-sintattico/pps-22-scatan.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = "ENTER YOUR API";
-   ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://zucchero-sintattico.github.io/pps-22-scatan/scaladoc/)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+You can play the game by clicking on the following link: [Scatan](https://zucchero-sintattico.github.io/pps-22-scatan/)
 
 <!-- CONTRIBUTING -->
 
@@ -151,25 +101,25 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- LICENSE -->
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Distributed under the MIT License. See [LICENSE](https://github.com/zucchero-sintattico/pps-22-scatan/blob/feature-readme/LICENSE) for more information.
 
 <!-- CONTACT -->
 
-## Contacts
+## Contact
 
-- Luigi Borriello - luigi.borriello2@studio.unibo.it
-- Alessandro Mazzoli - alessandro.mazzoli9@studio.unibo.it
-- Manuel Andruccioli - manuel.andruccioli@studio.unibo.it
+Zucchero Sintattico on Instagram - [@Instagram page](https://www.instagram.com/zucchero_sintattico/)
 
 Project Link: [https://github.com/zucchero-sintattico/pps-22-scatan](https://github.com/zucchero-sintattico/pps-22-scatan)
+
+## Acknowledgements
+
+- [Luigi Borriello](https://www.linkedin.com/in/luigi-borriello/)
+- [Alessandro Mazzoli](https://www.linkedin.com/in/alessandro-mazzoli-009868140/)
+- [Manuel Andruccioli](https://www.linkedin.com/in/manuel-andruccioli-9259a5189/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
