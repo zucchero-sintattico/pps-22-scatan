@@ -29,11 +29,12 @@
   <p align="center">
     A game based on building, trading and farming resources, a clone of Settlers of Catan in a web environment.
     <br />
+    <br />
     <a href="https://zucchero-sintattico.github.io/pps-22-scatan/scaladoc/"><strong>Explore the docs 📖</strong></a>
     <br />
     or
     <br />
-    <a href="https://zucchero-sintattico.github.io/pps-22-scatan/">Play the Game 🎮</a>
+    <a href="https://zucchero-sintattico.github.io/pps-22-scatan/"><strong>Play the Game 🎮</strong></a>
   </p>
 </div>
 
