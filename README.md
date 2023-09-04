@@ -31,6 +31,7 @@
     <br />
     <a href="https://zucchero-sintattico.github.io/pps-22-scatan/scaladoc/"><strong>Explore the docs 📖</strong></a>
     <br />
+    or
     <br />
     <a href="https://zucchero-sintattico.github.io/pps-22-scatan/">Play the Game 🎮</a>
   </p>
