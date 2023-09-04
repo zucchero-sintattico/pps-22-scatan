@@ -1,7 +1,7 @@
 package scatan.mvc.lib.application
 
 import scatan.mvc.lib.*
-import scatan.mvc.lib.page.PageFactory
+import scatan.mvc.lib.page.{ApplicationPage, PageFactory}
 
 trait Navigable[Route] extends Application[?, Route]:
   private var pagesHistory: Seq[Route] = Seq.empty

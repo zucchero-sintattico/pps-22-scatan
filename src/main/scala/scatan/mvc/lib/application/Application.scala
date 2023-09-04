@@ -1,7 +1,7 @@
 package scatan.mvc.lib.application
 
 import scatan.mvc.lib.Model
-import scatan.mvc.lib.page.PageFactory
+import scatan.mvc.lib.page.{ApplicationPage, PageFactory}
 
 /** An application is a collection of pages that share a model.
   *
@@ -13,6 +13,7 @@ import scatan.mvc.lib.page.PageFactory
 trait Application[S <: Model.State, Route]:
   val model: Model[S]
   val pages: Map[Route, ApplicationPage[S, ?, ?]]
+
 object Application:
   /** Create an application from a model and a list of pages.
     * @param initialState

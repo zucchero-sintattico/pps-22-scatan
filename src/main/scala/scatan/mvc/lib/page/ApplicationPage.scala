@@ -1,7 +1,6 @@
-package scatan.mvc.lib.application
+package scatan.mvc.lib.page
 
 import scatan.mvc.lib.*
-import scatan.mvc.lib.page.PageFactory
 
 /** A page of an application. It is a combination of a model, a view and a controller.
   *
