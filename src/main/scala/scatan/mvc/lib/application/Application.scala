@@ -1,6 +1,10 @@
-package scatan.mvc.lib
+package scatan.mvc.lib.application
+
+import scatan.mvc.lib.Model
+import scatan.mvc.lib.page.PageFactory
 
 /** An application is a collection of pages that share a model.
+  *
   * @tparam S
   *   The state type of the model.
   * @tparam Route
@@ -24,7 +28,7 @@ object Application:
     */
   def apply[S <: Model.State, Route](
       initialState: S,
-      pagesFactories: Map[Route, PageFactory[?, ?]]
+      pagesFactories: Map[Route, PageFactory[?, ?, S]]
   ): Application[S, Route] =
     new Application[S, Route]:
       override val model: Model[S] = Model(initialState)

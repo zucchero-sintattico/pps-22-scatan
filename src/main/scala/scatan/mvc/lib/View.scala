@@ -7,7 +7,7 @@ package scatan.mvc.lib
   * @param requirements
   *   The Requirements for the View.
   */
-trait View[C <: Controller[?]](requirements: View.Requirements[C]):
+trait View[C <: Controller[?, ?]](requirements: View.Requirements[C]):
   def controller: C = requirements.controller
 
   def show(): Unit
@@ -23,14 +23,14 @@ object View:
     * @tparam V
     *   The type of the View.
     */
-  type Factory[C <: Controller[V], V <: View[C]] = Requirements[C] => V
+  type Factory[C <: Controller[V, ?], V <: View[C]] = Requirements[C] => V
 
   /** The Requirements for a View.
     *
     * @tparam C
     *   The type of the Controller.
     */
-  trait Requirements[C <: Controller[?]] extends Controller.Provider[C]
+  trait Requirements[C <: Controller[?, ?]] extends Controller.Provider[C]
 
   /** The Provider for a View.
     *

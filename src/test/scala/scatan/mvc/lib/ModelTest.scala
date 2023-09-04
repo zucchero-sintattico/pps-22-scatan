@@ -13,7 +13,8 @@ class ModelTest extends AnyFlatSpec:
     val state: Model.State = new Model.State {}
     val model: Model[Model.State] = Model(state)
     model should not be null
-    model.getClass should be(classOf[Model[Model.State]])
+    model.state should be(state)
+    model.isInstanceOf[Model[?]] should be(true)
   }
 
   it should "contains the Provider trait" in {

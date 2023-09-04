@@ -1,6 +1,8 @@
 package scatan.mvc
 
-import scatan.mvc.lib.*
+import scatan.mvc.lib.{page, *}
+import scatan.mvc.lib.application.NavigableApplication
+import scatan.mvc.lib.page.PageFactory
 
 case class MyState(value: Int) extends Model.State
 
@@ -16,7 +18,8 @@ class HomeView(requirements: View.Requirements[HomeController]) extends View[Hom
     println("HomeView.renderHome")
     controller.controlHome()
 
-class HomeController(requirements: Controller.Requirements[HomeView]) extends Controller[HomeView](requirements):
+class HomeController(requirements: Controller.Requirements[HomeView, MyState])
+    extends Controller[HomeView, MyState](requirements):
   def controlHome(): Unit =
     println("HomeController.controlHome")
 
@@ -32,12 +35,13 @@ class AboutView(requirements: View.Requirements[AboutController]) extends View[A
     println("AboutView.renderAbout")
     controller.controlAbout()
 
-class AboutController(requirements: Controller.Requirements[AboutView]) extends Controller[AboutView](requirements):
+class AboutController(requirements: Controller.Requirements[AboutView, MyState])
+    extends Controller[AboutView, MyState](requirements):
   def controlAbout(): Unit =
     println("AboutController.controlAbout")
 
-enum Pages(val factory: PageFactory[?, ?]):
-  private def toMapEntry: (Pages, PageFactory[?, ?]) = this -> factory
+enum Pages(val factory: PageFactory[?, ?, MyState]):
+  private def toMapEntry: (Pages, PageFactory[?, ?, MyState]) = this -> factory
   case Home
       extends Pages(
         PageFactory(
@@ -55,7 +59,7 @@ enum Pages(val factory: PageFactory[?, ?]):
 
 object Pages:
   // Implicit conversion from Pages enum to Map[Pages, PageFactory[?, ?]]
-  given Conversion[Pages.type, Map[Pages, PageFactory[?, ?]]] = _.values.map(_.toMapEntry).toMap
+  given Conversion[Pages.type, Map[Pages, PageFactory[?, ?, MyState]]] = _.values.map(_.toMapEntry).toMap
 
 val MyApplication = NavigableApplication[MyState, Pages](
   initialState = MyState(0),

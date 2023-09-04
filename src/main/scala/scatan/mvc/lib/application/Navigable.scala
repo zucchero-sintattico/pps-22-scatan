@@ -1,4 +1,7 @@
-package scatan.mvc.lib
+package scatan.mvc.lib.application
+
+import scatan.mvc.lib.*
+import scatan.mvc.lib.page.PageFactory
 
 trait Navigable[Route] extends Application[?, Route]:
   private var pagesHistory: Seq[Route] = Seq.empty
@@ -14,7 +17,7 @@ trait Navigable[Route] extends Application[?, Route]:
 object NavigableApplication:
   def apply[S <: Model.State, Route](
       initialState: S,
-      pagesFactories: Map[Route, PageFactory[?, ?]]
+      pagesFactories: Map[Route, PageFactory[?, ?, S]]
   ): Application[S, Route] with Navigable[Route] =
     new Application[S, Route] with Navigable[Route]:
       override val model: Model[S] = Model(initialState)
