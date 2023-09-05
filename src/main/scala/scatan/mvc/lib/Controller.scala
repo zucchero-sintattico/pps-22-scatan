@@ -1,30 +1,18 @@
 package scatan.mvc.lib
 
-/** The interface for a Controller.
-  *
-  * @tparam V
-  *   The type of the View.
-  * @param requirements
-  *   The requirements for the Controller.
-  */
-trait Controller[V <: View[?], S <: Model.State](requirements: Controller.Requirements[V, S]):
-  def model: Model[S] = requirements.model
-  def view: V = requirements.view
+import scatan.mvc.lib
+
+trait Controller
 
 /** The Controller object.
   */
 object Controller:
-  type Factory[V <: View[C], C <: Controller[V, S], S <: Model.State] = Requirements[V, S] => C
+  type Factory[V <: View, C <: Controller, S <: Model.State] = Requirements[V, S] => C
+  trait Requirements[V <: View, S <: Model.State] extends Model.Provider[S] with View.Provider[V]
 
-  /** The requirements for a Controller.
-    * @tparam V
-    *   The type of the View.
-    */
-  trait Requirements[V <: View[?], S <: Model.State] extends Model.Provider[S] with View.Provider[V]
+  trait Dependencies[V <: View, S <: Model.State](requirements: Requirements[V, S]) extends Controller:
+    protected def view: V = requirements.view
+    protected def model: Model[S] = requirements.model
 
-  /** The provider for a Controller.
-    * @tparam C
-    *   The type of the Controller.
-    */
-  trait Provider[C <: Controller[?, ?]]:
+  trait Provider[C <: Controller]:
     def controller: C

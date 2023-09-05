@@ -3,8 +3,7 @@ package scatan.mvc.lib
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
 
-abstract class ScalajsView[C <: Controller[?, ?]](requirements: View.Requirements[C], val container: String)
-    extends View[C](requirements):
+trait ScalaJS(val container: String) extends View:
   def element: Element
 
   override def show(): Unit =
