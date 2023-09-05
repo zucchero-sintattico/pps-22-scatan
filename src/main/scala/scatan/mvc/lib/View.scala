@@ -9,9 +9,7 @@ package scatan.mvc.lib
   */
 trait View[C <: Controller[?, ?]](requirements: View.Requirements[C]):
   def controller: C = requirements.controller
-
   def show(): Unit
-
   def hide(): Unit
 
 /** The View object.

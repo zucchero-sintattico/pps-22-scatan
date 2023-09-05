@@ -8,8 +8,7 @@ package scatan.mvc.lib
   *   The requirements for the Controller.
   */
 trait Controller[V <: View[?], S <: Model.State](requirements: Controller.Requirements[V, S]):
-  def model: Model[?] = requirements.model
-
+  def model: Model[S] = requirements.model
   def view: V = requirements.view
 
 /** The Controller object.

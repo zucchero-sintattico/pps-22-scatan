@@ -1,6 +1,6 @@
 package scatan.mvc.lib
 
-trait Model[S <: Model.State](val state: S)
+trait Model[S <: Model.State](var state: S)
 
 object Model:
   trait State

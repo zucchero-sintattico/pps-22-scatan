@@ -16,12 +16,14 @@ import scatan.mvc.lib.*
   *   The page factory.
   */
 trait ApplicationPage[S <: Model.State, C <: Controller[V, S], V <: View[C]](
-    val model: Model[S],
+    override val model: Model[S],
     val pageFactory: PageFactory[C, V, S]
 ) extends View.Requirements[C]
     with Controller.Requirements[V, S]:
-  override def view: V = pageFactory.viewFactory(this)
-  override def controller: C = pageFactory.controllerFactory(this)
+  private lazy val _controller: C = pageFactory.controllerFactory(this)
+  private lazy val _view: V = pageFactory.viewFactory(this)
+  override def controller: C = _controller
+  override def view: V = _view
 
 object ApplicationPage:
   type Factory[S <: Model.State, C <: Controller[V, S], V <: View[C]] =
