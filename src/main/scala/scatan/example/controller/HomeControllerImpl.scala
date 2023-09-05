@@ -8,7 +8,10 @@ import scatan.mvc.lib.{Controller, Model, ScalaJS, View}
 class HomeControllerImpl(requirements: Controller.Requirements[HomeView, CounterAppState])
     extends HomeController
     with Controller.Dependencies(requirements):
+
+  override def counter: Int = this.model.state.count
   override def increment(): Unit =
     this.model.update { m =>
       m.copy(count = m.count + 1)
     }
+    this.view.onCounterUpdated(this.model.state.count)

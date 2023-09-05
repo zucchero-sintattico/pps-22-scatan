@@ -1,6 +1,6 @@
 package scatan.example.view
 
-import com.raquo.laminar.api.L
+import com.raquo.laminar.api.L.*
 import scatan.example.controller.HomeController
 import scatan.mvc.lib.{ScalaJS, View}
 
@@ -9,7 +9,18 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
     with View.Dependencies(requirements)
     with ScalaJS(container):
 
-  override def element: L.Element =
-    ???
+  private val reactiveCounter = Var(this.controller.counter)
+
+  override def element: Element =
+    div(
+        h1("Scala.js Home"),
+        p("This is a Scala.js view"),
+        p("The counter is: ", child.text <-- reactiveCounter.signal),
+        button(
+          "Increment",
+          onClick --> (_ => controller.increment())
+        )
+    )
+
   override def onCounterUpdated(counter: Int): Unit =
-    ???
+    reactiveCounter.set(counter)
