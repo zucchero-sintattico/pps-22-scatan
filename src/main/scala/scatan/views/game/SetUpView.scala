@@ -1,10 +1,10 @@
-package scatan.views.setup
+package scatan.views.game
 
-import scatan.controllers.setup.SetUpController
+import scatan.controllers.game.SetUpController
 
 import scatan.Pages
 import scatan.mvc.lib.View
-import scatan.controllers.setup.SetUpController
+import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
 import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.Pages

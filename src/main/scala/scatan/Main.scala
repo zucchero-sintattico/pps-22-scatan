@@ -1,8 +1,8 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
 import scatan.controllers.home.{HomeController, HomeControllerImpl}
-import scatan.controllers.setup.{SetUpController, SetUpControllerImpl}
-import scatan.views.setup.{SetUpView, ScalaJsSetUpView}
+import scatan.controllers.game.{SetUpController, SetUpControllerImpl}
+import scatan.views.game.{SetUpView, ScalaJsSetUpView}
 import scatan.views.home.{HomeView, ScalaJsHomeView}
 import scatan.model.ApplicationState
 import scatan.views.home.{AboutView, ScalaJSAboutView}
