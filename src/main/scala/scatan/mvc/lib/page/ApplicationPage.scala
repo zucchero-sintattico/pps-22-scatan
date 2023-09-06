@@ -18,7 +18,8 @@ import scatan.mvc.lib.*
 trait ApplicationPage[S <: Model.State, C <: Controller, V <: View](
     override val model: Model[S],
     val pageFactory: PageFactory[C, V, S]
-) extends View.Requirements[C] with Controller.Requirements[V, S]:
+) extends View.Requirements[C]
+    with Controller.Requirements[V, S]:
   private lazy val _controller: C = pageFactory.controllerFactory(this)
   private lazy val _view: V = pageFactory.viewFactory(this)
   override def controller: C = _controller

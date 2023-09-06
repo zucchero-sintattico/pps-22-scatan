@@ -14,13 +14,13 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
 
   override def element: Element =
     div(
-        h1("Scala.js Home"),
-        p("This is a Scala.js view"),
-        p("The counter is: ", child.text <-- reactiveCounter.signal),
-        button(
-          "Increment",
-          onClick --> (_ => controller.increment())
-        ),
+      h1("Scala.js Home"),
+      p("This is a Scala.js view"),
+      p("The counter is: ", child.text <-- reactiveCounter.signal),
+      button(
+        "Increment",
+        onClick --> (_ => controller.increment())
+      ),
       button(
         "Switch to About Page",
         onClick --> (_ => NavigableApplicationManager.navigateTo(Pages.About))

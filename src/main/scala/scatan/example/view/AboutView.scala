@@ -8,9 +8,9 @@ trait AboutView extends View:
   def about(): Unit
 
 class ScalaJSAboutView(requirements: View.Requirements[AboutController], container: String)
-  extends AboutView
-  with View.Dependencies[AboutController](requirements)
-  with ScalaJSView(container):
+    extends AboutView
+    with View.Dependencies[AboutController](requirements)
+    with ScalaJSView(container):
 
   override def about(): Unit = ???
 

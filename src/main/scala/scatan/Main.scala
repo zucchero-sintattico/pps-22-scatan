@@ -19,19 +19,18 @@ enum Pages(val pageFactory: PageFactory[?, ?, CounterAppState]):
         )
       )
   case About
-    extends Pages(
-      PageFactory[AboutController, AboutView, CounterAppState](
-        viewFactory = new ScalaJSAboutView(_, "root"),
-        controllerFactory = new AboutControllerImpl(_)
+      extends Pages(
+        PageFactory[AboutController, AboutView, CounterAppState](
+          viewFactory = new ScalaJSAboutView(_, "root"),
+          controllerFactory = new AboutControllerImpl(_)
+        )
       )
-    )
 
 // Application
 val CounterApplication: NavigableApplication[CounterAppState, Pages] = NavigableApplication[CounterAppState, Pages](
   initialState = CounterAppState(0),
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
 )
-
 
 @main def main(): Unit =
   NavigableApplicationManager.startApplication(CounterApplication, Pages.Home)
