@@ -1,3 +1,8 @@
+# mdbook compiled book
+book
+
+.vscode/
+.metals/
 .DS_Store
 .idea/*
 scaladoc/
