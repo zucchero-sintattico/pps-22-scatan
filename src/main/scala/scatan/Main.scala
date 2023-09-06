@@ -1,8 +1,10 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
-import scatan.example.controller.{AboutController, AboutControllerImpl, HomeController, HomeControllerImpl}
+import scatan.example.controller.{AboutController, AboutControllerImpl}
+import scatan.controllers.{HomeController, HomeControllerImpl}
+import scatan.views.{HomeView, ScalaJsHomeView}
 import scatan.example.model.CounterAppState
-import scatan.example.view.{AboutView, HomeView, ScalaJSAboutView, ScalaJsHomeView}
+import scatan.example.view.{AboutView, ScalaJSAboutView}
 import scatan.mvc.lib.application.NavigableApplication
 import scatan.mvc.lib.page.PageFactory
 import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
