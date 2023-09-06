@@ -1,6 +1,9 @@
 # mdbook compiled book
 book
 
+project/project/
+.bloop/
+project/metals.sbt
 .vscode/
 .metals/
 .DS_Store
