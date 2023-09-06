@@ -39,7 +39,7 @@ enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
 
 // App
 val Application: NavigableApplication[ApplicationState, Pages] = NavigableApplication[ApplicationState, Pages](
-  initialState = ApplicationState(0),
+  initialState = ApplicationState(),
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
 )
 
