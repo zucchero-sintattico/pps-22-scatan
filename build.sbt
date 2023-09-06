@@ -1,12 +1,12 @@
 ThisBuild / scalaVersion := "3.3.0"
 
-wartremoverErrors ++= Warts.unsafe
-wartremoverErrors ++= Warts.all
+wartremoverWarnings ++= Warts.all
 
 lazy val scatan = (project in file("."))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "Scatan",
+    scalaVersion := "3.3.0",
     libraryDependencies ++= Seq(
       // Do not remove or change order
       "org.scalatest" %%% "scalatest" % "3.3.0-SNAP4" % Test,

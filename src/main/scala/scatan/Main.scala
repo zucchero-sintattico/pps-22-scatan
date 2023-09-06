@@ -1,23 +1,36 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
-import org.scalajs.dom
+import scatan.example.controller.{AboutController, AboutControllerImpl, HomeController, HomeControllerImpl}
+import scatan.example.model.CounterAppState
+import scatan.example.view.{AboutView, HomeView, ScalaJSAboutView, ScalaJsHomeView}
+import scatan.mvc.lib.application.NavigableApplication
+import scatan.mvc.lib.page.PageFactory
+import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
 
-def appElement(): Element =
-  div(
-    h1("Hello Laminar!"),
-    div(
-      className := "card",
-      button(
-        className := "button",
-        "Click me!",
-        tpe := "button"
+import scala.util.Random
+
+// Route
+enum Pages(val pageFactory: PageFactory[?, ?, CounterAppState]):
+  case Home
+      extends Pages(
+        PageFactory[HomeController, HomeView, CounterAppState](
+          viewFactory = new ScalaJsHomeView(_, "root"),
+          controllerFactory = new HomeControllerImpl(_)
+        )
       )
-    ),
-    p(className := "read-the-docs", "Click on the Vite logo to learn more")
-  )
-@main
-def main(): Unit =
-  val containerNode = dom.document.querySelector("#root")
+  case About
+      extends Pages(
+        PageFactory[AboutController, AboutView, CounterAppState](
+          viewFactory = new ScalaJSAboutView(_, "root"),
+          controllerFactory = new AboutControllerImpl(_)
+        )
+      )
 
-  // this is how you render the rootElement in the browser
-  render(containerNode, appElement())
+// Application
+val CounterApplication: NavigableApplication[CounterAppState, Pages] = NavigableApplication[CounterAppState, Pages](
+  initialState = CounterAppState(0),
+  pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
+)
+
+@main def main(): Unit =
+  NavigableApplicationManager.startApplication(CounterApplication, Pages.Home)
