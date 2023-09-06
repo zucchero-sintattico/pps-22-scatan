@@ -11,8 +11,7 @@ import scatan.Pages
 
 /** This is the view for the setup page.
   */
-trait SetUpView extends View:
-  def start(): Unit
+trait SetUpView extends View
 
 /** This is the view for the setup page.
   *
@@ -26,9 +25,6 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     with View.Dependencies(requirements)
     with ScalaJSView(container):
   val numberOfUsers: Int = 3
-
-  def start(): Unit =
-    print("Hello, world!")
 
   override def element: Element =
     div(

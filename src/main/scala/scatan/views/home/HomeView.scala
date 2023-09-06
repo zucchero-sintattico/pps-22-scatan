@@ -9,8 +9,7 @@ import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
 
 /** This is the view for the home page.
   */
-trait HomeView extends View:
-  def start(): Unit
+trait HomeView extends View
 
 /** This is the view for the home page.
   *
@@ -23,9 +22,6 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
     extends HomeView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
-
-  def start(): Unit =
-    print("Hello, world!")
 
   override def element: Element =
     div(
