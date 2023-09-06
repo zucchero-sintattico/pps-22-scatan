@@ -16,18 +16,21 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
 
   override def element: Element =
     div(
-      backgroundColor := "red",
-      h1("Scatan"),
+      cls := "home-view",
+      // Title
+      div(
+        cls := "home-title"
+      ),
       // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(
-        cls := "menu",
+        cls := "home-menu",
         button(
-          cls := "menu-button",
+          cls := "home-menu-button",
           onClick.mapTo(Pages.Home) --> NavigableApplicationManager.navigateTo,
           "Play"
         ),
         button(
-          cls := "menu-button",
+          cls := "home-menu-button",
           onClick.mapTo(Pages.About) --> NavigableApplicationManager.navigateTo,
           "About"
         )
