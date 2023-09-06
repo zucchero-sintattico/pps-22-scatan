@@ -1,7 +1,7 @@
 package scatan.views.home
 
 import com.raquo.laminar.api.L.*
-import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
+import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.controllers.home.AboutController
 
 trait AboutView extends View
@@ -16,6 +16,6 @@ class ScalaJSAboutView(requirements: View.Requirements[AboutController], contain
     p("This is a ScalaJS view"),
     button(
       "Back",
-      onClick --> (_ => NavigableApplicationManager.navigateBack())
+      onClick --> (_ => controller.goToHome())
     )
   )

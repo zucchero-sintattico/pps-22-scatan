@@ -5,7 +5,7 @@ import scatan.controllers.home.HomeController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
 
-import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
+import scatan.mvc.lib.{ScalaJSView, View}
 
 /** This is the view for the home page.
   */

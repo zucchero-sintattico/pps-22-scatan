@@ -6,7 +6,7 @@ import scatan.Pages
 import scatan.mvc.lib.View
 import scatan.controllers.setup.SetUpController
 import com.raquo.laminar.api.L.*
-import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
+import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.Pages
 
 /** This is the view for the setup page.
