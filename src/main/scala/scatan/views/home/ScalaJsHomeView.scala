@@ -1,6 +1,6 @@
-package scatan.views
+package scatan.views.home
 
-import scatan.controllers.HomeController
+import scatan.controllers.home.HomeController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
 
@@ -16,6 +16,7 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
 
   override def element: Element =
     div(
+      backgroundColor := "red",
       h1("Scatan"),
       // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(

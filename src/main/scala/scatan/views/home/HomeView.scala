@@ -1,4 +1,4 @@
-package scatan.views
+package scatan.views.home
 
 import scatan.mvc.lib.View
 

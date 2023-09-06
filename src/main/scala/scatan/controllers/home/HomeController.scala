@@ -1,7 +1,7 @@
-package scatan.controllers
+package scatan.controllers.home
 
 import scatan.mvc.lib.Controller
-import scatan.views.HomeView
+import scatan.views.home.HomeView
 import scatan.example.model.CounterAppState
 
 trait HomeController extends Controller
