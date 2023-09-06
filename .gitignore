@@ -1,5 +1,5 @@
 .DS_Store
-.idea
+.idea/*
 scaladoc/
 # Created by https://www.toptal.com/developers/gitignore/api/scala,sbt,java,intellij
 # Edit at https://www.toptal.com/developers/gitignore?templates=scala,sbt,java,intellij
