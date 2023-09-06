@@ -1,7 +1,7 @@
 name: Test
 on:
   push:
-    branches-ignore: [ 'doc' ]
+    branches-ignore: [ 'doc', 'develop' ]
   pull_request:
     branches: [ 'develop' ]
 
