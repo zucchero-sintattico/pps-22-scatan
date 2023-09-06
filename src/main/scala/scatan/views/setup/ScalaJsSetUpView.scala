@@ -6,6 +6,13 @@ import com.raquo.laminar.api.L.*
 import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
 import scatan.Pages
 
+/** This is the view for the setup page.
+  *
+  * @param requirements,
+  *   the requirements for the view
+  * @param container,
+  *   the container for the view
+  */
 class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], container: String)
     extends SetUpView
     with View.Dependencies(requirements)
@@ -16,9 +23,6 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     print("Hello, world!")
 
   override def element: Element =
-    /*
-      in this div, there are 4 textbox, one for each user name, and one button to start the game
-     */
     div(
       cls := "setup-view",
       // Title
@@ -26,7 +30,6 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         cls := "setup-title",
         "Setup your game"
       ),
-      // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(
         cls := "setup-menu",
         for i <- 1 to numberOfUsers

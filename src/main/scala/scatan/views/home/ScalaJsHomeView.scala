@@ -6,6 +6,13 @@ import scatan.Pages
 
 import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
 
+/** This is the view for the home page.
+  *
+  * @param requirements,
+  *   the requirements for the view
+  * @param container,
+  *   the container for the view
+  */
 class ScalaJsHomeView(requirements: View.Requirements[HomeController], container: String)
     extends HomeView
     with View.Dependencies(requirements)
