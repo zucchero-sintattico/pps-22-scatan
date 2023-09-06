@@ -1,11 +1,11 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
-import scatan.example.controller.{HomeController, HomeControllerImpl}
+import scatan.example.controller.{AboutController, AboutControllerImpl, HomeController, HomeControllerImpl}
 import scatan.example.model.CounterAppState
-import scatan.example.view.{HomeView, ScalaJsHomeView}
+import scatan.example.view.{AboutView, HomeView, ScalaJSAboutView, ScalaJsHomeView}
 import scatan.mvc.lib.application.NavigableApplication
 import scatan.mvc.lib.page.PageFactory
-import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJS}
+import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
 
 import scala.util.Random
 
@@ -18,6 +18,13 @@ enum Pages(val pageFactory: PageFactory[?, ?, CounterAppState]):
           controllerFactory = new HomeControllerImpl(_)
         )
       )
+  case About
+    extends Pages(
+      PageFactory[AboutController, AboutView, CounterAppState](
+        viewFactory = new ScalaJSAboutView(_, "root"),
+        controllerFactory = new AboutControllerImpl(_)
+      )
+    )
 
 // Application
 val CounterApplication: NavigableApplication[CounterAppState, Pages] = NavigableApplication[CounterAppState, Pages](
@@ -25,7 +32,6 @@ val CounterApplication: NavigableApplication[CounterAppState, Pages] = Navigable
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
 )
 
-/*
+
 @main def main(): Unit =
   NavigableApplicationManager.startApplication(CounterApplication, Pages.Home)
-*/
