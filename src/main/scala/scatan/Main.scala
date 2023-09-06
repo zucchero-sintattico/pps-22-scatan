@@ -25,5 +25,7 @@ val CounterApplication: NavigableApplication[CounterAppState, Pages] = Navigable
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
 )
 
+/*
 @main def main(): Unit =
   NavigableApplicationManager.startApplication(CounterApplication, Pages.Home)
+*/
