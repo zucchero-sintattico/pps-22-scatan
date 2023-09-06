@@ -1,13 +1,13 @@
-package scatan.views.home
+package scatan.views.setup
 
-import scatan.controllers.home.HomeController
+import scatan.mvc.lib.View
+import scatan.controllers.setup.SetUpController
 import com.raquo.laminar.api.L.*
+import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
 import scatan.Pages
 
-import scatan.mvc.lib.{NavigableApplicationManager, ScalaJSView, View}
-
-class ScalaJsHomeView(requirements: View.Requirements[HomeController], container: String)
-    extends HomeView
+class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], container: String)
+    extends SetUpView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
 
@@ -15,22 +15,23 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
     print("Hello, world!")
 
   override def element: Element =
+    // menu with 4 textbox for the players username and 4 dropdown for the players color and a button to start
     div(
-      cls := "home-view",
+      cls := "setup-view",
       // Title
       div(
-        cls := "home-title"
+        cls := "setup-title"
       ),
       // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(
-        cls := "home-menu",
+        cls := "setup-menu",
         button(
-          cls := "home-menu-button",
-          onClick.mapTo(Pages.Setup) --> NavigableApplicationManager.navigateTo,
+          cls := "setup-menu-button",
+          onClick.mapTo(Pages.Home) --> NavigableApplicationManager.navigateTo,
           "Play"
         ),
         button(
-          cls := "home-menu-button",
+          cls := "setup-menu-button",
           onClick.mapTo(Pages.About) --> NavigableApplicationManager.navigateTo,
           "About"
         )

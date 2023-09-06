@@ -2,6 +2,8 @@ package scatan
 import com.raquo.laminar.api.L.{*, given}
 import scatan.example.controller.{AboutController, AboutControllerImpl}
 import scatan.controllers.home.{HomeController, HomeControllerImpl}
+import scatan.controllers.setup.{SetUpController, SetUpControllerImpl}
+import scatan.views.setup.{SetUpView, ScalaJsSetUpView}
 import scatan.views.home.{HomeView, ScalaJsHomeView}
 import scatan.example.model.CounterAppState
 import scatan.example.view.{AboutView, ScalaJSAboutView}
@@ -18,6 +20,13 @@ enum Pages(val pageFactory: PageFactory[?, ?, CounterAppState]):
         PageFactory[HomeController, HomeView, CounterAppState](
           viewFactory = new ScalaJsHomeView(_, "root"),
           controllerFactory = new HomeControllerImpl(_)
+        )
+      )
+  case Setup
+      extends Pages(
+        PageFactory[SetUpController, SetUpView, CounterAppState](
+          viewFactory = new ScalaJsSetUpView(_, "root"),
+          controllerFactory = new SetUpControllerImpl(_)
         )
       )
   case About
