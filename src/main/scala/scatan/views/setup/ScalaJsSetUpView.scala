@@ -43,7 +43,12 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         ),
         button(
           cls := "setup-menu-button",
-          onClick.mapTo(Pages.Home) --> NavigableApplicationManager.navigateTo,
+          onClick --> (_ => controller.goToHome()),
+          "Back"
+        ),
+        button(
+          cls := "setup-menu-button",
+          onClick --> (_ => controller.goToPlay()),
           "Start"
         )
       )
