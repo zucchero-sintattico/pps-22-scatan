@@ -10,30 +10,41 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     extends SetUpView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
+  val users: Int = 4
 
   def start(): Unit =
     print("Hello, world!")
 
   override def element: Element =
-    // menu with 4 textbox for the players username and 4 dropdown for the players color and a button to start
+    /*
+      in this div, there are 4 textbox, one for each user name, and one button to start the game
+     */
     div(
       cls := "setup-view",
       // Title
       div(
-        cls := "setup-title"
+        cls := "setup-title",
+        "Setup your game"
       ),
       // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(
         cls := "setup-menu",
-        button(
-          cls := "setup-menu-button",
-          onClick.mapTo(Pages.Home) --> NavigableApplicationManager.navigateTo,
-          "Play"
+        for i <- 1 to users
+        yield div(
+          cls := "setup-menu-textbox-container",
+          input(
+            cls := "setup-menu-textbox",
+            placeholder := "Player " + i
+          ),
+          label(
+            cls := "setup-menu-label",
+            "Player" + i
+          )
         ),
         button(
           cls := "setup-menu-button",
-          onClick.mapTo(Pages.About) --> NavigableApplicationManager.navigateTo,
-          "About"
+          onClick.mapTo(Pages.Home) --> NavigableApplicationManager.navigateTo,
+          "Start"
         )
       )
     )
