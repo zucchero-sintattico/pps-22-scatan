@@ -26,12 +26,12 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
         cls := "home-menu",
         button(
           cls := "home-menu-button",
-          onClick.mapTo(Pages.Setup) --> NavigableApplicationManager.navigateTo,
+          onClick --> (_ => controller.goToSetup()),
           "Play"
         ),
         button(
           cls := "home-menu-button",
-          onClick.mapTo(Pages.About) --> NavigableApplicationManager.navigateTo,
+          onClick --> (_ => controller.goToAbout()),
           "About"
         )
       )

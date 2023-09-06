@@ -20,11 +20,11 @@ body {
 }
 
 .home-title{
+    background-position-x: center;
     background-image: url("res/img/logo.png");
     background-size: contain;
     background-repeat: no-repeat;
     width: 100%;
-    padding: auto;
     height: 20em;
 }
 /* Home 
@@ -33,14 +33,16 @@ display all menu item vertically
 .home-menu{
     margin-top: 1em;
     margin-bottom: 1em;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    width: 70%;
+    height: auto;
+    flex-direction: column;
+    gap: 1em;
 }
 
 .home-menu-button{
-    margin-bottom: 1em;
-    width: 30em;
-    height: 5em;
-    display: block;
+    flex-grow: 1;
     font-size: large;
+    font-weight: bold;
+    height: 3em;
 }

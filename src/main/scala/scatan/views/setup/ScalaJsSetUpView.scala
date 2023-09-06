@@ -10,7 +10,7 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     extends SetUpView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
-  val users: Int = 4
+  val numberOfUsers: Int = 3
 
   def start(): Unit =
     print("Hello, world!")
@@ -29,7 +29,7 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
       // Menu view with 3 buttons, play, settings and about, dispose them vertically
       div(
         cls := "setup-menu",
-        for i <- 1 to users
+        for i <- 1 to numberOfUsers
         yield div(
           cls := "setup-menu-textbox-container",
           input(
