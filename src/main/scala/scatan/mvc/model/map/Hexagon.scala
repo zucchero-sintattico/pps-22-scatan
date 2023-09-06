@@ -1,11 +1,28 @@
 package scatan.mvc.model.map
 
+/** An Hexagon in the space rapresented by 3 coordinates.
+  */
 trait Hexagon:
   def row: Int
   def col: Int
   def slice: Int
+
+  /** @return
+    *   the set of all neighbours
+    */
   def neighbours: Set[Hexagon]
+
+  /** Neighborhood means that two Hexagon are far away 1 in coordinate system
+    * @param another
+    *   Hexagon to test on
+    * @return
+    *   true if another is a neighbour of this hexagon
+    */
   def isNeighbour(another: Hexagon): Boolean
+
+  /** @return
+    *   the distance from the center
+    */
   def layer: Int
 
 object Hexagon:
