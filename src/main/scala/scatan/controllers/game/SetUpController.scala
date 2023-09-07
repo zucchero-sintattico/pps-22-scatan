@@ -4,6 +4,7 @@ import scatan.mvc.lib.Controller
 import scatan.views.game.SetUpView
 import scatan.mvc.lib.NavigableApplicationManager
 import scatan.Pages
+import scatan.model.ApplicationState
 
 /** This is the controller for the setup page.
   */
@@ -20,7 +21,7 @@ trait SetUpController extends Controller:
     * @param dependencies,
     *   the dependencies for the controller.
     */
-class SetUpControllerImpl(dependencies: Controller.Requirements[SetUpView, ?]) extends SetUpController:
+class SetUpControllerImpl(dependencies: Controller.Requirements[SetUpView, ApplicationState]) extends SetUpController:
   override def goToHome(): Unit = NavigableApplicationManager.navigateTo(Pages.Home)
   // TODO: implement goToPlay
   override def goToPlay(): Unit = NavigableApplicationManager.navigateTo(Pages.Home)
