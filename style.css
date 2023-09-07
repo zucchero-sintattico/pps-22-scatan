@@ -1,0 +1,48 @@
+body {
+    /* Set the background image URL */
+    background-image: url('res/img/backgroundBlurred.jpg');
+
+    /* Set the background size to cover the entire body */
+    background-size: cover;
+
+}
+.home-view{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-title{
+    background-position-x: center;
+    background-image: url("res/img/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 20em;
+}
+/* Home 
+display all menu item vertically
+*/
+.home-menu{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: flex;
+    width: 70%;
+    height: auto;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.home-menu-button{
+    flex-grow: 1;
+    font-size: large;
+    font-weight: bold;
+    height: 3em;
+}
