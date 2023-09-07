@@ -1,10 +1,10 @@
-package scatan.mvc.model.map
+package scatan.model.map
 
 import cats.kernel.Monoid
 import cats.syntax.semigroup.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
-import scatan.mvc.model.map.Hexagon.given
+import scatan.model.map.Hexagon.given
 
 class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
 

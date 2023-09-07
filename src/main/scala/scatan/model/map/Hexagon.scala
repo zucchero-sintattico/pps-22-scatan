@@ -1,4 +1,4 @@
-package scatan.mvc.model.map
+package scatan.model.map
 
 /** An Hexagon in the space rapresented by 3 coordinates.
   */
