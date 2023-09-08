@@ -9,6 +9,7 @@ import scatan.model.{Spot, GameMap}
 class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
 
   val rangeToTest: Range = 0 to 4
+  val standardGameMap = GameMap(2)
 
   "Hexagonal tiles in GameMap" should "obey to cubic coordinates rules" in {
     rangeToTest foreach { (layer: Int) =>
@@ -60,4 +61,10 @@ class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
     val gameMap = GameMap(0)
     for spot <- gameMap.nodes
     do gameMap.edges.filter(_ contains spot) should have size 2
+  }
+
+  "A standard GameMap" should "have Terrains" in {
+    standardGameMap.tiles.foreach { (hexagon: Hexagon) =>
+      standardGameMap.toTerrain.isDefinedAt(hexagon) shouldBe true
+    }
   }

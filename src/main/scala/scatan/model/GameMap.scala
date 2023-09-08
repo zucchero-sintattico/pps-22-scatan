@@ -1,10 +1,9 @@
 package scatan.model
 
 import scatan.utils.UnorderedTriple
-import scatan.utils.UnorderedTriple.given
 import scatan.utils.UnorderedPair
 import scatan.model.map.HexTiledMap.*
-import scatan.model.map.{Hexagon, HexTiledMap, UndirectedGraph}
+import scatan.model.map.*
 
 /** A Spot is unique identified by three hexagons in the map.
   *
@@ -21,7 +20,10 @@ type Road = UnorderedPair[Spot]
   * @param layers
   *   number of concentric circles of hexagons
   */
-class GameMap(layers: Int) extends HexTiledMap with UndirectedGraph[Spot, Road]:
+class GameMap(layers: Int) extends HexTiledMap with UndirectedGraph[Spot, Road] with MapWithTerrain:
+
+  override val toTerrain: PartialFunction[Hexagon, Terrain] =
+    TerrainFactory.fixedForLayer2(tiles.toSeq)
 
   override def tiles: Set[Hexagon] =
     (for
