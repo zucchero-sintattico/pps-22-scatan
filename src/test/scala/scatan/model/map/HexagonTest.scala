@@ -4,7 +4,8 @@ import cats.kernel.Monoid
 import cats.syntax.semigroup.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
-import scatan.model.map.Hexagon.given
+import Hexagon.given
+import HexTiledMap.*
 
 class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
 
@@ -37,7 +38,7 @@ class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
     }
   }
 
-  it should "have 6 neighbours" in {
+  "An Hexagon in the space" should "have 6 neighbours" in {
     forAll { (r: Int, c: Int, s: Int) =>
       val hexagon = Hexagon(r, c, s)
       hexagon.neighbours should have size 6
