@@ -15,6 +15,9 @@ final case class UnorderedPair[A](_1: A, _2: A):
 
   override def hashCode: Int = _set.hashCode
 
+object UnorderedPair:
+  extension [A](pair: UnorderedPair[A]) def contains(elem: A): Boolean = pair._set.contains(elem)
+
 /** An unordered triple of elements.
   * @param a
   *   element
@@ -31,3 +34,8 @@ final case class UnorderedTriple[A](_1: A, _2: A, _3: A):
     case _                        => false
 
   override def hashCode: Int = _set.hashCode
+
+object UnorderedTriple:
+  extension [A](triple: UnorderedTriple[A])
+    def toSet: Set[A] = triple._set
+    def contains(elem: A): Boolean = triple._set.contains(elem)
