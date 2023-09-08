@@ -33,7 +33,7 @@ class UnorderedPairTest extends BaseTest with ScalaCheckPropertyChecks:
 
   it should "be not equals if its elements are different" in {
     forAll { (a1: Int, b1: Int, a2: Int, b2: Int) =>
-      whenever(a1 != a2 || b1 != b2) {
+      whenever(((a1, b1) != (b2, a2)) || a1 != a2 || b1 != b2) {
         val pair1 = UnorderedPair(a1, b1)
         val pair2 = UnorderedPair(a2, b2)
         pair1 should not be pair2
