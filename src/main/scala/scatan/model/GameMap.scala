@@ -1,9 +1,10 @@
-package scatan.model.map
+package scatan.model
 
 import scatan.utils.UnorderedTriple
 import scatan.utils.UnorderedTriple.given
 import scatan.utils.UnorderedPair
 import scatan.model.map.HexTiledMap.*
+import scatan.model.map.{Hexagon, HexTiledMap, UndirectedGraph}
 
 /** A Spot is unique identified by three hexagons in the map.
   *

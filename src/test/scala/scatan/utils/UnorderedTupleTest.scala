@@ -34,7 +34,7 @@ class UnorderedPairTest extends BaseTest with ScalaCheckPropertyChecks:
   it should "be not equals if, at least, one element is different" in {
     val itemsInPair = 2
     forAll { (a1: Int, b1: Int, a2: Int, b2: Int) =>
-      whenever(Set(a1, b1).intersect(Set(a2, b2)).sizeIs < itemsInPair) {
+      whenever((Set(a1, b1) | Set(a2, b2)).sizeIs > itemsInPair) {
         val pair1 = UnorderedPair(a1, b1)
         val pair2 = UnorderedPair(a2, b2)
         pair1 should not be pair2
@@ -70,7 +70,7 @@ class UnorderedTripleTest extends BaseTest with ScalaCheckPropertyChecks:
   it should "be not equals if, at least, one element is different" in {
     val itemsInTriple = 3
     forAll { (a1: Int, b1: Int, c1: Int, a2: Int, b2: Int, c2: Int) =>
-      whenever(Set(a1, b1, c1).intersect(Set(a2, b2, c2)).sizeIs < itemsInTriple) {
+      whenever((Set(a1, b1, c1) | Set(a2, b2, c2)).sizeIs > itemsInTriple) {
         val triple1 = UnorderedTriple(a1, b1, c1)
         val triple2 = UnorderedTriple(a2, b2, c2)
         triple1 should not be triple2

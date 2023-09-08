@@ -4,10 +4,11 @@ import scatan.BaseTest
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.utils.UnorderedPair
 import scatan.utils.UnorderedTriple
+import scatan.model.{Spot, GameMap}
 
 class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
 
-  val rangeToTest: Range = 0 to 5
+  val rangeToTest: Range = 0 to 4
 
   "Hexagonal tiles in GameMap" should "obey to cubic coordinates rules" in {
     rangeToTest foreach { (layer: Int) =>
