@@ -26,7 +26,7 @@ trait HexTiledMap:
   /** @return
     *   the tiles of the map
     */
-  def tiles: Seq[Hexagon]
+  def tiles: Set[Hexagon]
 
 object HexTiledMap:
   private def allowedDirections: Set[Hexagon] = Set(
