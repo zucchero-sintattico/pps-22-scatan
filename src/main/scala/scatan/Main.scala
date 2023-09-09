@@ -1,8 +1,8 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
 import scatan.controllers.home.{HomeController, HomeControllerImpl}
-import scatan.controllers.game.{SetUpController, SetUpControllerImpl}
-import scatan.views.game.{SetUpView, ScalaJsSetUpView}
+import scatan.controllers.game.{SetUpController, SetUpControllerImpl, GameController, GameControllerImpl}
+import scatan.views.game.{SetUpView, ScalaJsSetUpView, GameView, ScalaJsGameView}
 import scatan.views.home.{HomeView, ScalaJsHomeView}
 import scatan.model.ApplicationState
 import scatan.views.home.{AboutView, ScalaJSAboutView}
@@ -34,6 +34,13 @@ enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
         PageFactory[AboutController, AboutView, ApplicationState](
           viewFactory = new ScalaJSAboutView(_, "root"),
           controllerFactory = new AboutControllerImpl(_)
+        )
+      )
+  case Game
+      extends Pages(
+        PageFactory[GameController, GameView, ApplicationState](
+          viewFactory = new ScalaJsGameView(_, "root"),
+          controllerFactory = new GameControllerImpl(_)
         )
       )
 
