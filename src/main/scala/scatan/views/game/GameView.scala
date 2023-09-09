@@ -73,13 +73,13 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
 
     override def hashCode: Int = (value * 1000).toInt.hashCode
 
-    /** Generate the hexagon graphic
-      *
-      * @param hex,
-      *   the hexagon
-      * @return
-      *   the hexagon graphic
-      */
+  /** Generate the hexagon graphic
+    *
+    * @param hex,
+    *   the hexagon
+    * @return
+    *   the hexagon graphic
+    */
   private def generateHexagon(hex: Hexagon): Element =
     val (x, y) = fromHexToPoint(hex)
     svg.g(
