@@ -15,33 +15,55 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     extends GameView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
-  val numberOfUsers: Int = 3
 
+  val hexSize = 100.0
   val gameMap = GameMap(2)
 
+  /** Convert hexagon to point, the point is the center of the hexagon
+    *
+    * @param hex,
+    *   the hexagon
+    * @return
+    *   the point of the hexagon
+    */
   def fromHexToPoint(hex: Hexagon): (Double, Double) =
-    val size = 100.0
-    val x = size * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
-    val y = size * (3.0 / 2 * hex.row)
+    val x = this.hexSize * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
+    val y = this.hexSize * (3.0 / 2 * hex.row)
     (x, y)
 
+  /** Get the points of the hexagon, starting from the center of the hexagon, and then clockwise
+    *
+    * @param hex,
+    *   the hexagon
+    * @return
+    *   the points of the hexagon
+    */
   def getPointsOfHex(hex: Hexagon): Set[(DoubleWithPrecision, DoubleWithPrecision)] =
-    val size = 100.0
-    val x = size * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
-    val y = size * (3.0 / 2 * hex.row)
+    val (x, y) = fromHexToPoint(hex)
     val points = Set(
-      (DoubleWithPrecision(x), DoubleWithPrecision(y + size)),
-      (DoubleWithPrecision(x + size * math.sqrt(3) / 2), DoubleWithPrecision(y + size / 2)),
-      (DoubleWithPrecision(x + size * math.sqrt(3) / 2), DoubleWithPrecision(y - size / 2)),
-      (DoubleWithPrecision(x), DoubleWithPrecision(y - size)),
-      (DoubleWithPrecision(x - size * math.sqrt(3) / 2), DoubleWithPrecision(y - size / 2)),
-      (DoubleWithPrecision(x - size * math.sqrt(3) / 2), DoubleWithPrecision(y + size / 2))
+      (DoubleWithPrecision(x), DoubleWithPrecision(y + this.hexSize)),
+      (DoubleWithPrecision(x + this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y + this.hexSize / 2)),
+      (DoubleWithPrecision(x + this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y - this.hexSize / 2)),
+      (DoubleWithPrecision(x), DoubleWithPrecision(y - this.hexSize)),
+      (DoubleWithPrecision(x - this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y - this.hexSize / 2)),
+      (DoubleWithPrecision(x - this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y + this.hexSize / 2))
     )
     points
 
+  /** Get the point of the spot, the point is the center of the spot
+    * @param spot,
+    *   the spot
+    * @return
+    *   the point of the spot
+    */
   def getPointOfSpot(spot: Spot): Option[(DoubleWithPrecision, DoubleWithPrecision)] =
     (getPointsOfHex(spot._1) & getPointsOfHex(spot._2) & getPointsOfHex(spot._3)).headOption
 
+  /** Double with precision, used to compare double with precision 0.001
+    *
+    * @param value,
+    *   the value of the double
+    */
   case class DoubleWithPrecision(value: Double):
     override def equals(x: Any): Boolean =
       x match
@@ -51,6 +73,39 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
 
     override def hashCode: Int = (value * 1000).toInt.hashCode
 
+  private def drawHexagon(hex: Hexagon): Element =
+    val (x, y) = fromHexToPoint(hex)
+    svg.g(
+      svg.transform := s"translate($x, $y) rotate(30) scale(0.95)",
+      svg.polygon(
+        svg.points := "100,0 50,-87 -50,-87 -100,-0 -50,87 50,87",
+        svg.cls := "hexagon"
+      )
+    )
+
+  private def drawRoad(
+      spot1: (DoubleWithPrecision, DoubleWithPrecision),
+      spot2: (DoubleWithPrecision, DoubleWithPrecision)
+  ): Element =
+    print(spot1, spot2)
+    svg.line(
+      svg.x1 := s"${spot1._1.value}",
+      svg.y1 := s"${spot1._2.value}",
+      svg.x2 := s"${spot2._1.value}",
+      svg.y2 := s"${spot2._2.value}",
+      svg.className := "road",
+      svg.stroke := "red",
+      svg.strokeWidth := "10"
+    )
+
+  private def drawSpot(x: DoubleWithPrecision, y: DoubleWithPrecision): Element =
+    svg.circle(
+      svg.cx := s"${x.value}",
+      svg.cy := s"${y.value}",
+      svg.r := "10",
+      svg.className := "spot",
+      svg.fill := "white"
+    )
   override def element: Element =
     div(
       display := "block",
@@ -59,47 +114,15 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
       svg.svg(
         svg.viewBox := "-500 -500 1000 1000",
         for hex <- gameMap.tiles.toList
-        yield
-          val (x, y) = fromHexToPoint(hex)
-          svg.g(
-            svg.transform := s"translate($x, $y) rotate(30) scale(0.95)",
-            svg.polygon(
-              svg.points := "100,0 50,-87 -50,-87 -100,-0 -50,87 50,87",
-              svg.cls := "hexagon"
-            ),
-            onClick --> (_ => println(hex))
-          )
-        ,
+        yield drawHexagon(hex),
         for
           spots <- gameMap.edges.toList
-          (x1, y1) <- getPointOfSpot(spots._1)
-          (x2, y2) <- getPointOfSpot(spots._2)
-        yield svg.g(
-          svg.line(
-            svg.x1 := s"${x1.value}",
-            svg.y1 := s"${y1.value}",
-            svg.x2 := s"${x2.value}",
-            svg.y2 := s"${y2.value}",
-            svg.className := "road",
-            onClick --> (_ => println(spots))
-          ),
-          svg.circle(
-            svg.cx := s"${x1.value + (x2.value - x1.value) / 2}",
-            svg.cy := s"${y1.value + (y2.value - y1.value) / 2}",
-            svg.r := "20",
-            svg.className := "road",
-            onClick --> (_ => println(spots))
-          )
-        ),
+          pointsOfSpot1 <- getPointOfSpot(spots._1)
+          pointsOfSpot2 <- getPointOfSpot(spots._2)
+        yield drawRoad(pointsOfSpot1, pointsOfSpot2),
         for
           spot <- gameMap.nodes.toList
           (x, y) <- getPointOfSpot(spot)
-        yield svg.circle(
-          svg.cx := s"${x.value}",
-          svg.cy := s"${y.value}",
-          svg.r := "10",
-          svg.className := "spot",
-          onClick --> (_ => println(spot))
-        )
+        yield drawSpot(x, y)
       )
     )
