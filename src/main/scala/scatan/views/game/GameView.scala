@@ -73,7 +73,14 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
 
     override def hashCode: Int = (value * 1000).toInt.hashCode
 
-  private def drawHexagon(hex: Hexagon): Element =
+    /** Generate the hexagon graphic
+      *
+      * @param hex,
+      *   the hexagon
+      * @return
+      *   the hexagon graphic
+      */
+  private def generateHexagon(hex: Hexagon): Element =
     val (x, y) = fromHexToPoint(hex)
     svg.g(
       svg.transform := s"translate($x, $y) rotate(30) scale(0.95)",
@@ -83,28 +90,54 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
       )
     )
 
-  private def drawRoad(
+  /** Generate the road graphic
+    * @param spot1,
+    *   the first spot
+    * @param spot2,
+    *   the second spot
+    * @return
+    *   the road graphic
+    */
+  private def generateRoad(
       spot1: (DoubleWithPrecision, DoubleWithPrecision),
       spot2: (DoubleWithPrecision, DoubleWithPrecision)
   ): Element =
-    print(spot1, spot2)
-    svg.line(
-      svg.x1 := s"${spot1._1.value}",
-      svg.y1 := s"${spot1._2.value}",
-      svg.x2 := s"${spot2._1.value}",
-      svg.y2 := s"${spot2._2.value}",
-      svg.className := "road",
-      svg.stroke := "red",
-      svg.strokeWidth := "10"
+    svg.g(
+      svg.line(
+        svg.x1 := s"${spot1._1.value}",
+        svg.y1 := s"${spot1._2.value}",
+        svg.x2 := s"${spot2._1.value}",
+        svg.y2 := s"${spot2._2.value}",
+        svg.className := "road",
+        svg.stroke := "red",
+        svg.strokeWidth := "10"
+      ),
+      svg.circle(
+        svg.cx := s"${spot1._1.value + (spot2._1.value - spot1._1.value) / 2}",
+        svg.cy := s"${spot1._2.value + (spot2._2.value - spot1._2.value) / 2}",
+        svg.r := "15",
+        svg.className := "road",
+        svg.fill := "yellow",
+        onClick --> (_ => println((spot1, spot2)))
+      )
     )
 
-  private def drawSpot(x: DoubleWithPrecision, y: DoubleWithPrecision): Element =
+  /** Generate the spot graphic
+    * @param x,
+    *   the x coordinate of the spot
+    * @param y,
+    *   the y coordinate of the spot
+    * @return
+    *   the spot graphic
+    */
+  private def generateSpot(x: DoubleWithPrecision, y: DoubleWithPrecision): Element =
     svg.circle(
       svg.cx := s"${x.value}",
       svg.cy := s"${y.value}",
       svg.r := "10",
       svg.className := "spot",
-      svg.fill := "white"
+      svg.fill := "white",
+      onClick --> (_ => println((x, y)))
     )
   override def element: Element =
     div(
@@ -114,15 +147,15 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
       svg.svg(
         svg.viewBox := "-500 -500 1000 1000",
         for hex <- gameMap.tiles.toList
-        yield drawHexagon(hex),
+        yield generateHexagon(hex),
         for
           spots <- gameMap.edges.toList
           pointsOfSpot1 <- getPointOfSpot(spots._1)
           pointsOfSpot2 <- getPointOfSpot(spots._2)
-        yield drawRoad(pointsOfSpot1, pointsOfSpot2),
+        yield generateRoad(pointsOfSpot1, pointsOfSpot2),
         for
           spot <- gameMap.nodes.toList
           (x, y) <- getPointOfSpot(spot)
-        yield drawSpot(x, y)
+        yield generateSpot(x, y)
       )
     )
