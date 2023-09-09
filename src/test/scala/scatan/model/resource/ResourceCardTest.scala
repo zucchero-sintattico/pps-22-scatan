@@ -1,7 +1,8 @@
-package scatan.model
+package scatan.model.resource
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
+import scatan.model.{ResourceCard, ResourceType}
 
 class ResourceCardTest extends AnyFlatSpec with should.Matchers:
 
