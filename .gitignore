@@ -1,11 +1,10 @@
-# mdbook compiled book
-book
-
-project/project/
 .bloop/
-project/metals.sbt
-.vscode/
 .metals/
+.vscode/
+project/.bloop/
+project/metals.sbt
+project/project/
+
 .DS_Store
 .idea/*
 scaladoc/
