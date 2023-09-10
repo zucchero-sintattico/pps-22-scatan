@@ -8,7 +8,6 @@ import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.model.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap
-import scatan.views.game.components.GameMapComponent
 import scatan.views.game.components.GameMapComponent.getMapComponent
 
 trait GameView extends View

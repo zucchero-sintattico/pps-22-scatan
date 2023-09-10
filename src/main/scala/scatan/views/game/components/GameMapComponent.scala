@@ -6,6 +6,8 @@ import com.raquo.laminar.api.L.*
 import scatan.views.Coordinates.*
 import scatan.views.Coordinates
 
+/** A component to display the game map.
+  */
 object GameMapComponent:
   /** Generate the hexagon graphic
     *
