@@ -10,6 +10,8 @@ import scatan.model.map.Hexagon
 import scatan.model.GameMap
 import scatan.views.game.Coordinates.center
 import scatan.views.game.Coordinates.coordinates
+import scatan.model.map.Terrain.*
+import com.raquo.airstream.core.Signal
 
 trait GameView extends View
 
@@ -114,10 +116,11 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
   private def generateHexagon(hex: Hexagon): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
-      svg.transform := s"translate($x, $y) rotate(30) scale(0.95)",
+      svg.transform := s"translate($x, $y)",
       svg.polygon(
-        svg.points := "100,0 50,-87 -50,-87 -100,-0 -50,87 50,87",
-        svg.cls := "hexagon"
+        svg.points := "0,100 87,50 87,-50 0,-100 -87,-50 -87,50", // TODO: refactor?
+        svg.cls := "hexagon",
+        svg.fill := s"url(#img-${resources.head._1.toString.toLowerCase})" // TODO: add map from model terrain
       )
     )
 
@@ -138,16 +141,13 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
         svg.y1 := s"${y1}",
         svg.x2 := s"${x2}",
         svg.y2 := s"${y2}",
-        svg.className := "road",
-        svg.stroke := "red",
-        svg.strokeWidth := "10"
+        svg.className := "road"
       ),
       svg.circle(
         svg.cx := s"${x1 + (x2 - x1) / 2}",
         svg.cy := s"${y1 + (y2 - y1) / 2}",
-        svg.r := "15",
-        svg.className := "road",
-        svg.fill := "yellow",
+        svg.className := "road-center",
+        svg.r := "25",
         onClick --> (_ => println((spot1, spot2)))
       )
     )
@@ -165,10 +165,37 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     svg.circle(
       svg.cx := s"${x}",
       svg.cy := s"${y}",
-      svg.r := "10",
+      svg.r := "25",
       svg.className := "spot",
-      svg.fill := "white",
       onClick --> (_ => println((x, y)))
+    )
+
+  val resources = Map(
+    WOOD -> "res/img/hexagonal/wood.jpg",
+    SHEEP -> "res/img/hexagonal/sheep.jpg",
+    GRAIN -> "res/img/hexagonal/wheat.jpg",
+    ROCK -> "res/img/hexagonal/ore.jpg",
+    BRICK -> "res/img/hexagonal/clay.jpg",
+    DESERT -> "res/img/hexagonal/desert.jpg"
+  )
+
+  private val svgImages: Element =
+    svg.svg(
+      svg.defs(
+        for (terrain, path) <- resources.toList
+        yield svg.pattern(
+          svg.idAttr := s"img-${terrain.toString.toLowerCase}",
+          svg.width := "100%",
+          svg.height := "100%",
+          svg.patternContentUnits := "objectBoundingBox",
+          svg.image(
+            svg.href := path,
+            svg.width := "1",
+            svg.height := "1",
+            svg.preserveAspectRatio := "none"
+          )
+        )
+      )
     )
 
   override def element: Element =
@@ -177,6 +204,7 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
       width := "70%",
       margin := "auto",
       svg.svg(
+        svgImages,
         svg.viewBox := "-500 -500 1000 1000",
         for hex <- gameMap.tiles.toList
         yield generateHexagon(hex),

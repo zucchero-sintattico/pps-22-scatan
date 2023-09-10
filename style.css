@@ -5,7 +5,32 @@ body {
     /* Set the background size to cover the entire body */
     background-size: cover;
 
+    --hover: #f2f2f2;
+    --road: #363636;
 }
+
+.spot {
+    /* fill: var(--spot); */
+    opacity: 0;
+}
+
+.spot:hover, .road-center:hover {
+    fill: var(--hover);
+    transition: all 0.2s ease-out;
+    opacity: 0.4;
+}
+
+.road {
+    stroke: var(--road);
+    stroke-width: 10px;
+    stroke-linecap: round;
+}
+
+.road-center {
+    fill: white;
+    opacity: 0;
+}
+
 .home-view{
     margin-top: 1em;
     margin-bottom: 1em;
