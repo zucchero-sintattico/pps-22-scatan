@@ -8,70 +8,101 @@ import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.model.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap
+import scatan.views.game.Coordinates.center
+import scatan.views.game.Coordinates.coordinates
 
 trait GameView extends View
+
+/** @param value
+  */
+final case class DoubleWithPrecision(value: Double):
+  override def equals(x: Any): Boolean =
+    x match
+      case that: DoubleWithPrecision =>
+        (this.value - that.value).abs < 0.001
+      case _ => false
+
+  override def hashCode: Int = (value * 1000).round.toInt.hashCode
+
+/** A trait to represent cartesian coordinates.
+  */
+trait Coordinates:
+  def x: DoubleWithPrecision
+  def y: DoubleWithPrecision
+
+object Coordinates:
+
+  /** Create a new Coordinates object.
+    *
+    * @param x
+    *   the x coordinate
+    * @param y
+    *   the y coordinate
+    * @return
+    *   the new Coordinates object
+    */
+  def apply(x: DoubleWithPrecision, y: DoubleWithPrecision): Coordinates = CoordinatesImpl(x, y)
+
+  /** Extract the x and y coordinates from a Coordinates object, unwrapping them to double.
+    *
+    * @param coordinates
+    *   the coordinates to extract from
+    * @return
+    *   a pair of doubles.
+    */
+  def unapply(coordinates: Coordinates): (Double, Double) =
+    (coordinates.x.value, coordinates.y.value)
+
+  private case class CoordinatesImpl(x: DoubleWithPrecision, y: DoubleWithPrecision) extends Coordinates
+
+  /** Convert a pair of doubles to a Coordinates object.
+    */
+  given Conversion[(Double, Double), Coordinates] with
+    def apply(pair: (Double, Double)): Coordinates =
+      Coordinates(DoubleWithPrecision(pair._1), DoubleWithPrecision(pair._2))
+
+  /** Extension methods to handle hexagon in cartesian plane.
+    */
+  extension (hex: Hexagon)
+    /** Get the center, based on cantesian coordinates of the Hexagon.
+      *
+      * @return
+      *   the center point of the hexagon
+      */
+    def center(using hexSize: Int): Coordinates =
+      val x = hexSize * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
+      val y = hexSize * (3.0 / 2 * hex.row)
+      (x, y)
+
+    /** Get the vertices of the hexagon.
+      *
+      * @return
+      *   the points of the hexagon
+      */
+    def vertices(using hexSize: Int): Set[Coordinates] =
+      val Coordinates(x, y) = center
+      for
+        i <- (0 to 5).toSet
+        angle_deg = 60 * i - 30
+        angle_rad = (math.Pi / 180.0) * angle_deg
+      yield (
+        x + hexSize * math.cos(angle_rad),
+        y + hexSize * math.sin(angle_rad)
+      )
+
+  /** Extension methods to handle spot in cartesian plane.
+    */
+  extension (spot: Spot)
+    def coordinates(using hexSize: Int): Option[Coordinates] =
+      (spot._1.vertices & spot._2.vertices & spot._3.vertices).headOption
 
 class ScalaJsGameView(requirements: View.Requirements[GameController], container: String)
     extends GameView
     with View.Dependencies(requirements)
     with ScalaJSView(container):
 
-  val hexSize = 100.0
+  given hexSize: Int = 100
   val gameMap = GameMap(2)
-
-  /** Convert hexagon to point, the point is the center of the hexagon
-    *
-    * @param hex,
-    *   the hexagon
-    * @return
-    *   the point of the hexagon
-    */
-  def fromHexToPoint(hex: Hexagon): (Double, Double) =
-    val x = this.hexSize * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
-    val y = this.hexSize * (3.0 / 2 * hex.row)
-    (x, y)
-
-  /** Get the points of the hexagon, starting from the center of the hexagon, and then clockwise
-    *
-    * @param hex,
-    *   the hexagon
-    * @return
-    *   the points of the hexagon
-    */
-  def getPointsOfHex(hex: Hexagon): Set[(DoubleWithPrecision, DoubleWithPrecision)] =
-    val (x, y) = fromHexToPoint(hex)
-    val points = Set(
-      (DoubleWithPrecision(x), DoubleWithPrecision(y + this.hexSize)),
-      (DoubleWithPrecision(x + this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y + this.hexSize / 2)),
-      (DoubleWithPrecision(x + this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y - this.hexSize / 2)),
-      (DoubleWithPrecision(x), DoubleWithPrecision(y - this.hexSize)),
-      (DoubleWithPrecision(x - this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y - this.hexSize / 2)),
-      (DoubleWithPrecision(x - this.hexSize * math.sqrt(3) / 2), DoubleWithPrecision(y + this.hexSize / 2))
-    )
-    points
-
-  /** Get the point of the spot, the point is the center of the spot
-    * @param spot,
-    *   the spot
-    * @return
-    *   the point of the spot
-    */
-  def getPointOfSpot(spot: Spot): Option[(DoubleWithPrecision, DoubleWithPrecision)] =
-    (getPointsOfHex(spot._1) & getPointsOfHex(spot._2) & getPointsOfHex(spot._3)).headOption
-
-  /** Double with precision, used to compare double with precision 0.001
-    *
-    * @param value,
-    *   the value of the double
-    */
-  case class DoubleWithPrecision(value: Double):
-    override def equals(x: Any): Boolean =
-      x match
-        case that: DoubleWithPrecision =>
-          (this.value - that.value).abs < 0.001
-        case _ => false
-
-    override def hashCode: Int = (value * 1000).toInt.hashCode
 
   /** Generate the hexagon graphic
     *
@@ -81,7 +112,7 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     *   the hexagon graphic
     */
   private def generateHexagon(hex: Hexagon): Element =
-    val (x, y) = fromHexToPoint(hex)
+    val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y) rotate(30) scale(0.95)",
       svg.polygon(
@@ -98,23 +129,22 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     * @return
     *   the road graphic
     */
-  private def generateRoad(
-      spot1: (DoubleWithPrecision, DoubleWithPrecision),
-      spot2: (DoubleWithPrecision, DoubleWithPrecision)
-  ): Element =
+  private def generateRoad(spot1: Coordinates, spot2: Coordinates): Element =
+    val Coordinates(x1, y1) = spot1
+    val Coordinates(x2, y2) = spot2
     svg.g(
       svg.line(
-        svg.x1 := s"${spot1._1.value}",
-        svg.y1 := s"${spot1._2.value}",
-        svg.x2 := s"${spot2._1.value}",
-        svg.y2 := s"${spot2._2.value}",
+        svg.x1 := s"${x1}",
+        svg.y1 := s"${y1}",
+        svg.x2 := s"${x2}",
+        svg.y2 := s"${y2}",
         svg.className := "road",
         svg.stroke := "red",
         svg.strokeWidth := "10"
       ),
       svg.circle(
-        svg.cx := s"${spot1._1.value + (spot2._1.value - spot1._1.value) / 2}",
-        svg.cy := s"${spot1._2.value + (spot2._2.value - spot1._2.value) / 2}",
+        svg.cx := s"${x1 + (x2 - x1) / 2}",
+        svg.cy := s"${y1 + (y2 - y1) / 2}",
         svg.r := "15",
         svg.className := "road",
         svg.fill := "yellow",
@@ -130,15 +160,17 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     * @return
     *   the spot graphic
     */
-  private def generateSpot(x: DoubleWithPrecision, y: DoubleWithPrecision): Element =
+  private def generateSpot(coordinate: Coordinates): Element =
+    val Coordinates(x, y) = coordinate
     svg.circle(
-      svg.cx := s"${x.value}",
-      svg.cy := s"${y.value}",
+      svg.cx := s"${x}",
+      svg.cy := s"${y}",
       svg.r := "10",
       svg.className := "spot",
       svg.fill := "white",
       onClick --> (_ => println((x, y)))
     )
+
   override def element: Element =
     div(
       display := "block",
@@ -150,12 +182,12 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
         yield generateHexagon(hex),
         for
           spots <- gameMap.edges.toList
-          pointsOfSpot1 <- getPointOfSpot(spots._1)
-          pointsOfSpot2 <- getPointOfSpot(spots._2)
+          pointsOfSpot1 <- spots._1.coordinates
+          pointsOfSpot2 <- spots._2.coordinates
         yield generateRoad(pointsOfSpot1, pointsOfSpot2),
         for
           spot <- gameMap.nodes.toList
-          (x, y) <- getPointOfSpot(spot)
-        yield generateSpot(x, y)
+          coordinates <- spot.coordinates
+        yield generateSpot(coordinates)
       )
     )
