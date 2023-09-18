@@ -69,10 +69,10 @@ jobs:
           cp -r ./res ./site/res
       - name: Deploy releases
         run: cp -r ./releases ./site/releases
-      - name: Build test coverage
-        run: |
-          sbt jacoco
-          cp -r ${SCALA_TARGET}/jacoco/report/html ./site/test-coverage
+      # - name: Build test coverage
+      #   run: |
+      #     sbt jacoco
+      #     cp -r ${SCALA_TARGET}/jacoco/report/html ./site/test-coverage
       - name: Build with mdBook
         run: |
           mdbook build docs
