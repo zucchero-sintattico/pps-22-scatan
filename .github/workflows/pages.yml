@@ -68,9 +68,8 @@ jobs:
         run: cp -r ./releases ./site/releases
       - name: Build test coverage
         run: |
-          sbt clean coverage test
-          sbt coverageReport
-          cp -r ${SCALA_TARGET}/scoverage-report ./site/test-coverage
+          sbt jacoco
+          cp -r ${SCALA_TARGET}/jacoco/report ./site/test-coverage
       - name: Build with mdBook
         run: |
           mdbook build docs
