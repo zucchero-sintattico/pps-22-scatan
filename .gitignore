@@ -7,6 +7,8 @@ project/.bloop/
 project/metals.sbt
 project/project/
 
+
+
 .DS_Store
 .idea/*
 scaladoc/
@@ -174,3 +176,5 @@ project/plugins/project/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/scala,sbt,java,intellij
+
+!/releases/**
