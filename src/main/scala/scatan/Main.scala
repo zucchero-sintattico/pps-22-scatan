@@ -1,23 +1,54 @@
 package scatan
 import com.raquo.laminar.api.L.{*, given}
-import org.scalajs.dom
+import scatan.controllers.home.{HomeController, HomeControllerImpl}
+import scatan.controllers.game.{SetUpController, SetUpControllerImpl, GameController, GameControllerImpl}
+import scatan.views.game.{SetUpView, ScalaJsSetUpView, GameView, ScalaJsGameView}
+import scatan.views.home.{HomeView, ScalaJsHomeView}
+import scatan.model.ApplicationState
+import scatan.views.home.{AboutView, ScalaJSAboutView}
+import scatan.controllers.home.{AboutController, AboutControllerImpl}
+import scatan.mvc.lib.application.NavigableApplication
+import scatan.mvc.lib.page.PageFactory
+import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
 
-def appElement(): Element =
-  div(
-    h1("Hello Laminar!"),
-    div(
-      className := "card",
-      button(
-        className := "button",
-        "Click me!",
-        tpe := "button"
+import scala.util.Random
+
+// Route
+enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
+  case Home
+      extends Pages(
+        PageFactory[HomeController, HomeView, ApplicationState](
+          viewFactory = new ScalaJsHomeView(_, "root"),
+          controllerFactory = new HomeControllerImpl(_)
+        )
       )
-    ),
-    p(className := "read-the-docs", "Click on the Vite logo to learn more")
-  )
-@main
-def main(): Unit =
-  val containerNode = dom.document.querySelector("#root")
+  case Setup
+      extends Pages(
+        PageFactory[SetUpController, SetUpView, ApplicationState](
+          viewFactory = new ScalaJsSetUpView(_, "root"),
+          controllerFactory = new SetUpControllerImpl(_)
+        )
+      )
+  case About
+      extends Pages(
+        PageFactory[AboutController, AboutView, ApplicationState](
+          viewFactory = new ScalaJSAboutView(_, "root"),
+          controllerFactory = new AboutControllerImpl(_)
+        )
+      )
+  case Game
+      extends Pages(
+        PageFactory[GameController, GameView, ApplicationState](
+          viewFactory = new ScalaJsGameView(_, "root"),
+          controllerFactory = new GameControllerImpl(_)
+        )
+      )
 
-  // this is how you render the rootElement in the browser
-  render(containerNode, appElement())
+// App
+val Application: NavigableApplication[ApplicationState, Pages] = NavigableApplication[ApplicationState, Pages](
+  initialState = ApplicationState(),
+  pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
+)
+
+@main def main(): Unit =
+  NavigableApplicationManager.startApplication(Application, Pages.Home)
