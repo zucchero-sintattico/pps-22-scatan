@@ -64,6 +64,8 @@ jobs:
           cp -r ${SCALA_TARGET}/scatan-fastopt/main.js ./site/${JS_COMPILED_TARGET}
       - name: Copy html page
         run: cp ./scatan.html ./site/index.html
+      - name: Deploy releases
+        run: cp -r ./releases ./site/releases
       - name: Build test coverage
         run: |
           sbt clean coverage test
