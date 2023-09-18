@@ -18,6 +18,7 @@
 
 - [Backlog](./09-backlog/product-backlog.md)
   - [Sprint 1](./09-backlog/sprints/01-sprint.md)
+  - [Sprint 2](./09-backlog/sprints/02-sprint.md)
 
 ---
 

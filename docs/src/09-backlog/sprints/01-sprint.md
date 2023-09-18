@@ -18,6 +18,26 @@
 | Architettura dell'applicativo    | 3.2 | Implementazione architettura base                              |   2   | Mazzoli            | 2  | 2  | 2  | 2  | 2  | 0  |
 |                                  |     | **TOT**                                                        |  30   |                    | 23 | 21 | 20 | 16 | 4  | 0  |
 
+## Ore
+
+| Id/task | Effettivo (h) lavorato |
+|:--------|:----------------------:|
+| 1.1     |           4            |
+| 1.2     |           1            |
+| 1.3     |           2            |
+| 1.4     |           1            |
+| 1.5     |           1            |
+| 1.6     |           1            |
+| 1.7     |           1            |
+| 2.1     |           4            |
+| 2.2     |           4            |
+| 2.3     |           2            |
+| 2.4     |           1            |
+| 2.5     |           2            |
+| 3.1     |           4            |
+| 3.2     |           2            |
+| **TOT** |           30           |
+
 ## Sprint goal
 
 Gli obiettivi di questa Sprint sono stati:
