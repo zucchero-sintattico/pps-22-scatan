@@ -17,13 +17,12 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     with View.Dependencies(requirements)
     with ScalaJSView(container):
 
-  given hexSize: Int = 100
-  val gameMap = GameMap(2)
+  val gameMap = GameMap(3)
 
   override def element: Element =
     div(
       display := "block",
-      width := "70%",
+      width := "50%",
       margin := "auto",
       getMapComponent(gameMap)
     )
