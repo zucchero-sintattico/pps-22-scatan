@@ -30,6 +30,8 @@ class BuildingTypeTest extends BaseTest:
     buildingType should be(BuildingType.Road)
   }
 
+class BuildingTypeCostTest extends BaseTest:
+
   "A Settlement" should "cost 1 wood, 1 brick, 1 sheep" in {
     val cost: Cost = Settlement.cost
     cost should be(
