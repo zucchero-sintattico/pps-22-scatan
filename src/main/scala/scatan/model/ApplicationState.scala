@@ -1,5 +1,6 @@
 package scatan.model
 
-import scatan.mvc.lib.Model
+import scatan.lib.mvc.Model
+import scatan.lib.mvc.Model
 
 final case class ApplicationState() extends Model.State

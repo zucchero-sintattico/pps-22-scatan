@@ -1,9 +1,10 @@
 package scatan.controllers.home
-import scatan.mvc.lib.Controller
+import scatan.lib.mvc.Controller
 import scatan.model.ApplicationState
 import scatan.views.home.AboutView
-import scatan.mvc.lib.NavigableApplicationManager
+import scatan.lib.mvc.NavigableApplicationManager
 import scatan.Pages
+import scatan.lib.mvc.{NavigableApplicationManager, Controller}
 
 trait AboutController extends Controller:
   def goToHome(): Unit

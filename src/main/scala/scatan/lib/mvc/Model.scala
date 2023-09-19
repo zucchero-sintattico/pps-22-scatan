@@ -1,4 +1,4 @@
-package scatan.mvc.lib
+package scatan.lib.mvc
 
 trait Model[S <: Model.State](private var _state: S):
   def state: S = _state

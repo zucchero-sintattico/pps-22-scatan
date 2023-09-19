@@ -1,4 +1,4 @@
-package scatan.mvc.lib
+package scatan.lib.mvc
 
 trait View:
   def show(): Unit

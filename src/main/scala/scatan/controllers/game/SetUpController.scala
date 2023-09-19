@@ -1,8 +1,8 @@
 package scatan.controllers.game
 
-import scatan.mvc.lib.Controller
+import scatan.lib.mvc.Controller
 import scatan.views.game.SetUpView
-import scatan.mvc.lib.NavigableApplicationManager
+import scatan.lib.mvc.NavigableApplicationManager
 import scatan.Pages
 import scatan.model.ApplicationState
 
