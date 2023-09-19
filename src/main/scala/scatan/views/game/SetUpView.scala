@@ -13,7 +13,14 @@ import org.scalajs.dom.document
 /** This is the view for the setup page.
   */
 trait SetUpView extends View:
+
+  /** Notify the controller to switch to the game page.
+    */
   def notifySwitchToGame(): Unit
+
+  /** Notify the controller to switch to the home page.
+    */
+  def notifySwitchToHome(): Unit
 
 /** This is the view for the setup page.
   *
@@ -29,7 +36,6 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
   val numberOfUsers: Int = 3
 
   override def notifySwitchToGame(): Unit =
-    // obtain the usernames from the textboxes and pass them to the controller
     val usernames =
       for i <- 1 to numberOfUsers
       yield document
@@ -37,7 +43,10 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         .item(i - 1)
         .asInstanceOf[org.scalajs.dom.raw.HTMLInputElement]
         .value
-    controller.goToHome(usernames*)
+    controller.goToPlay(usernames*)
+
+  override def notifySwitchToHome(): Unit =
+    controller.goToHome()
 
   override def element: Element =
     div(
