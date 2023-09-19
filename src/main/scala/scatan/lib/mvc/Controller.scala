@@ -1,6 +1,6 @@
-package scatan.mvc.lib
+package scatan.lib.mvc
 
-import scatan.mvc.lib
+import scatan.lib.mvc
 
 trait Controller
 
