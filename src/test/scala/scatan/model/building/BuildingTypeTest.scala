@@ -33,8 +33,7 @@ class BuildingTypeTest extends BaseTest:
 class BuildingTypeCostTest extends BaseTest:
 
   "A Settlement" should "cost 1 wood, 1 brick, 1 sheep" in {
-    val cost: Cost = Settlement.cost
-    cost should be(
+    Settlement.cost should be(
       Cost(
         Wood * 1,
         Brick * 1,
@@ -44,18 +43,17 @@ class BuildingTypeCostTest extends BaseTest:
   }
 
   "A City" should "cost 2 wheat, 3 rock" in {
-    val cost: Cost = City.cost
-    cost should be(
+    City.cost should be(
       Cost(
         Wheat * 2,
         Rock * 3
       )
     )
+
   }
 
   "A Road" should "cost 1 wood, 1 brick" in {
-    val cost: Cost = Road.cost
-    cost should be(
+    Road.cost should be(
       Cost(
         Wood * 1,
         Brick * 1
