@@ -6,7 +6,7 @@ import scatan.Pages
 class ApplicationStateTest extends BaseTest:
 
   "An ApplicationState" should "exists" in {
-    val applicationState: ApplicationState = null
+    val applicationState: ApplicationState = ApplicationState(Option.empty)
   }
 
   it should "not have a game initially" in {
