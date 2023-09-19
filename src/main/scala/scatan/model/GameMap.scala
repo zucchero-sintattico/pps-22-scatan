@@ -20,10 +20,17 @@ type Road = UnorderedPair[Spot]
   * @param layers
   *   number of concentric circles of hexagons
   */
-final case class GameMap(layers: Int) extends HexTiledMap with UndirectedGraph[Spot, Road] with MapWithTerrain:
+final case class GameMap(layers: Int)
+    extends HexTiledMap
+    with UndirectedGraph[Spot, Road]
+    with MapWithTerrain
+    with MapWithNumbers:
 
-  override val toTerrain: PartialFunction[Hexagon, Terrain] =
+  override val toTerrain: Map[Hexagon, Terrain] =
     TerrainFactory.fixedForLayer2(tiles.toSeq)
+
+  override val possibleNumbers: Seq[Int] =
+    NumbersFactory.fixedForLayer2(tiles.toSeq)
 
   override def tiles: Set[Hexagon] =
     (for
