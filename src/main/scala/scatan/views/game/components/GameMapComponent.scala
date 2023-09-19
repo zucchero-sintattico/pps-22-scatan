@@ -5,7 +5,8 @@ import scatan.model.GameMap
 import com.raquo.laminar.api.L.*
 import scatan.views.Coordinates.*
 import scatan.views.Coordinates
-import scatan.model.map.Terrain.*
+import scatan.model.map.Resources.*
+import scatan.model.map.UnproductiveTerrain.*
 
 /** A component to display the game map.
   */
@@ -29,7 +30,7 @@ object GameMapComponent:
       svgImages,
       svg.viewBox := s"-${canvasSize} -${canvasSize} ${2 * canvasSize} ${2 * canvasSize}",
       for hex <- gameMap.tiles.toList
-      yield svgHexagonWithNumber(hex, Some(0)),
+      yield svgHexagonWithNumber(hex, gameMap.toNumber.get(hex)),
       for
         spots <- gameMap.edges.toList
         spot1Coordinates <- spots._1.coordinates
