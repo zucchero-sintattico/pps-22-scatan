@@ -17,6 +17,8 @@ trait SetUpController extends Controller:
     */
   def goToPlay(usernames: String*): Unit
 
+  def createGame(usernames: String*): Unit
+
   /** This is the implementation of the controller for the setup page.
     * @param requirements,
     *   the requirements for the controller.
@@ -32,3 +34,6 @@ class SetUpControllerImpl(requirements: Controller.Requirements[SetUpView, Appli
     NavigableApplicationManager.navigateTo(Pages.Home)
   override def goToPlay(usernames: String*): Unit =
     if checkIfAllNamesAreInserted(usernames) then NavigableApplicationManager.navigateTo(Pages.Game)
+
+  override def createGame(usernames: String*): Unit =
+    this.model.state.createGame(usernames*)

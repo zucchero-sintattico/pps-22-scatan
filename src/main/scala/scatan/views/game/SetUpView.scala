@@ -35,6 +35,7 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     with ScalaJSView(container):
   val numberOfUsers: Int = 3
 
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def notifySwitchToGame(): Unit =
     val usernames =
       for i <- 1 to numberOfUsers

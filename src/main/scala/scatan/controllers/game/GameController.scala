@@ -15,3 +15,6 @@ class GameControllerImpl(requirements: Controller.Requirements[GameView, Applica
     with Controller.Dependencies(requirements):
   def goToHome(): Unit =
     NavigableApplicationManager.navigateTo(Pages.Home)
+
+  def apply(): Unit =
+    println("GameController")

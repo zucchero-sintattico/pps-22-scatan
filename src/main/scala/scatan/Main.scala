@@ -12,6 +12,8 @@ import scatan.mvc.lib.page.PageFactory
 import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
 
 import scala.util.Random
+import scatan.model.Game
+import scatan.model.Player
 
 // Route
 enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
@@ -46,7 +48,7 @@ enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
 
 // App
 val Application: NavigableApplication[ApplicationState, Pages] = NavigableApplication[ApplicationState, Pages](
-  initialState = ApplicationState(),
+  initialState = ApplicationState(Option.empty),
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
 )
 
