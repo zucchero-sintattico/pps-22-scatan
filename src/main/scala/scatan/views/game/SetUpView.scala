@@ -8,11 +8,15 @@ import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
 import scatan.lib.mvc.{ScalaJSView, View}
 import scatan.Pages
-import scatan.lib.mvc.{View, ScalaJSView}
+import scatan.lib.mvc.{View, BaseScalaJSView}
 
 /** This is the view for the setup page.
   */
 trait SetUpView extends View
+
+object SetUpView:
+  def apply(container: String, requirements: View.Requirements[SetUpController]): SetUpView =
+    ScalaJsSetUpView(container, requirements)
 
 /** This is the view for the setup page.
   *
@@ -21,10 +25,10 @@ trait SetUpView extends View
   * @param container,
   *   the container for the view
   */
-class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], container: String)
-    extends SetUpView
-    with View.Dependencies(requirements)
-    with ScalaJSView(container):
+private class ScalaJsSetUpView(container: String, requirements: View.Requirements[SetUpController])
+    extends BaseScalaJSView(container, requirements)
+    with SetUpView:
+
   val numberOfUsers: Int = 3
 
   override def element: Element =
@@ -51,12 +55,12 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         ),
         button(
           cls := "setup-menu-button",
-          onClick --> (_ => controller.goToHome()),
+          onClick --> (_ => this.navigateTo(Pages.Home)),
           "Back"
         ),
         button(
           cls := "setup-menu-button",
-          onClick --> (_ => controller.goToPlay()),
+          onClick --> (_ => this.navigateTo(Pages.Game)),
           "Start"
         )
       )
