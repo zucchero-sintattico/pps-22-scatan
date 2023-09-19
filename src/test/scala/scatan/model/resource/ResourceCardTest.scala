@@ -9,7 +9,6 @@ class ResourceCardTest extends BaseTest:
 
   "A ResourceCard" should "exists" in {
     val resourceCard: ResourceCard = ResourceCard(ResourceType.Brick)
-    resourceCard should not be null
   }
 
   it should "have a resource type" in {

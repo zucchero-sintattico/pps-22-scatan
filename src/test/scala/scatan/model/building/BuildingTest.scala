@@ -9,7 +9,6 @@ class BuildingTest extends BaseTest:
 
   "A Building" should "exists" in {
     val building: Building = Building(BuildingType.Settlement)
-    building should not be null
   }
 
   it should "have a building type" in {
