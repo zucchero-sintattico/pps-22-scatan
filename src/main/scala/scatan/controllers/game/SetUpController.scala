@@ -18,10 +18,12 @@ trait SetUpController extends Controller:
   def goToPlay(): Unit
 
   /** This is the implementation of the controller for the setup page.
-    * @param dependencies,
-    *   the dependencies for the controller.
+    * @param requirements,
+    *   the requirements for the controller.
     */
-class SetUpControllerImpl(dependencies: Controller.Requirements[SetUpView, ApplicationState]) extends SetUpController:
+class SetUpControllerImpl(requirements: Controller.Requirements[SetUpView, ApplicationState])
+    extends SetUpController
+    with Controller.Dependencies(requirements):
   override def goToHome(): Unit = NavigableApplicationManager.navigateTo(Pages.Home)
   // TODO: implement goToPlay
-  override def goToPlay(): Unit = NavigableApplicationManager.navigateTo(Pages.Home)
+  override def goToPlay(): Unit = NavigableApplicationManager.navigateTo(Pages.Game)
