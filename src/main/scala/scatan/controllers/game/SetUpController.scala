@@ -11,7 +11,7 @@ import scatan.model.ApplicationState
 trait SetUpController extends Controller:
   /** This method is called when the user clicks on the back button.
     */
-  def goToHome(): Unit
+  def goToHome(usernames: String*): Unit
 
   /** This method is called when the user clicks on the start button.
     */
@@ -24,6 +24,12 @@ trait SetUpController extends Controller:
 class SetUpControllerImpl(requirements: Controller.Requirements[SetUpView, ApplicationState])
     extends SetUpController
     with Controller.Dependencies(requirements):
-  override def goToHome(): Unit = NavigableApplicationManager.navigateTo(Pages.Home)
+
+  private def checkIfAllNamesAreInserted(usernames: Seq[String]): Boolean =
+    // check if the usernames are all non-empty and valid (not only spaces) with regex
+    usernames.forall(_.matches(".*\\S.*"))
+
+  override def goToHome(usernames: String*): Unit =
+    if checkIfAllNamesAreInserted(usernames) then NavigableApplicationManager.navigateTo(Pages.Game)
   // TODO: implement goToPlay
   override def goToPlay(): Unit = NavigableApplicationManager.navigateTo(Pages.Game)

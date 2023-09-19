@@ -8,10 +8,12 @@ import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
 import scatan.mvc.lib.{ScalaJSView, View}
 import scatan.Pages
+import org.scalajs.dom.document
 
 /** This is the view for the setup page.
   */
-trait SetUpView extends View
+trait SetUpView extends View:
+  def notifySwitchToGame(): Unit
 
 /** This is the view for the setup page.
   *
@@ -25,6 +27,17 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
     with View.Dependencies(requirements)
     with ScalaJSView(container):
   val numberOfUsers: Int = 3
+
+  override def notifySwitchToGame(): Unit =
+    // obtain the usernames from the textboxes and pass them to the controller
+    val usernames =
+      for i <- 1 to numberOfUsers
+      yield document
+        .getElementsByClassName("setup-menu-textbox")
+        .item(i - 1)
+        .asInstanceOf[org.scalajs.dom.raw.HTMLInputElement]
+        .value
+    controller.goToHome(usernames*)
 
   override def element: Element =
     div(
@@ -55,7 +68,7 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         ),
         button(
           cls := "setup-menu-button",
-          onClick --> (_ => controller.goToPlay()),
+          onClick --> (_ => this.notifySwitchToGame()),
           "Start"
         )
       )
