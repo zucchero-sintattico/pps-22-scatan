@@ -6,8 +6,9 @@ import scatan.model.BuildingType
 import scatan.model.BuildingType.*
 import scatan.model.ResourceType.*
 import scatan.model.Cost
+import scatan.BaseTest
 
-class BuildingTypeTest extends AnyFlatSpec with should.Matchers:
+class BuildingTypeTest extends BaseTest:
 
   "A BuildingType" should "exists" in {
     val buildingType: BuildingType = BuildingType.Settlement

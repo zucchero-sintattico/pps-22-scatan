@@ -3,8 +3,9 @@ package scatan.model.resource
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import scatan.model.ResourceType
+import scatan.BaseTest
 
-class ResourceTypeTest extends AnyFlatSpec with should.Matchers:
+class ResourceTypeTest extends BaseTest:
 
   "A ResourceType" should "exists" in {
     val resourceType: ResourceType = ResourceType.Brick

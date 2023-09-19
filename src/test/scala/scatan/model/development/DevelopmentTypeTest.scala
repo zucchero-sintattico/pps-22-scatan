@@ -3,8 +3,9 @@ package scatan.model.development
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import scatan.model.DevelopmentType
+import scatan.BaseTest
 
-class DevelopmentTypeTest extends AnyFlatSpec with should.Matchers:
+class DevelopmentTypeTest extends BaseTest:
 
   "A DevelopmentType" should "exists" in {
     val developmentType: DevelopmentType = DevelopmentType.Knight

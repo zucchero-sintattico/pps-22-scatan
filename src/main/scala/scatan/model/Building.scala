@@ -4,6 +4,7 @@ import scatan.mvc.lib.Model
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]
+
 object Cost:
   def apply(resourceCosts: ResourceCost*): Cost = resourceCosts.toMap
 
