@@ -17,12 +17,13 @@ object GameMapComponent:
     * @return
     *   the hexagon graphic
     */
-  private def generateHexagon(hex: Hexagon)(using hexSize: Int): Element =
+  private def svgHexagon(hex: Hexagon)(using hexSize: Int): Element =
     val Coordinates(x, y) = hex.center
+    val hexCornersSvg = "0,100 87,50 87,-50 0,-100 -87,-50 -87,50"
     svg.g(
       svg.transform := s"translate($x, $y)",
       svg.polygon(
-        svg.points := "0,100 87,50 87,-50 0,-100 -87,-50 -87,50", // TODO: refactor?
+        svg.points := hexCornersSvg,
         svg.cls := "hexagon",
         svg.fill := s"url(#img-${resources.head._1.toString.toLowerCase})" // TODO: add map from model terrain
       )
@@ -36,7 +37,7 @@ object GameMapComponent:
     * @return
     *   the road graphic
     */
-  private def generateRoad(spot1: Coordinates, spot2: Coordinates): Element =
+  private def svgRoad(spot1: Coordinates, spot2: Coordinates): Element =
     val Coordinates(x1, y1) = spot1
     val Coordinates(x2, y2) = spot2
     svg.g(
@@ -64,7 +65,7 @@ object GameMapComponent:
     * @return
     *   the spot graphic
     */
-  private def generateSpot(coordinate: Coordinates): Element =
+  private def svgSpot(coordinate: Coordinates): Element =
     val Coordinates(x, y) = coordinate
     svg.circle(
       svg.cx := s"${x}",
@@ -107,14 +108,14 @@ object GameMapComponent:
       svgImages,
       svg.viewBox := "-500 -500 1000 1000",
       for hex <- gameMap.tiles.toList
-      yield generateHexagon(hex),
+      yield svgHexagon(hex),
       for
         spots <- gameMap.edges.toList
-        pointsOfSpot1 <- spots._1.coordinates
-        pointsOfSpot2 <- spots._2.coordinates
-      yield generateRoad(pointsOfSpot1, pointsOfSpot2),
+        spot1Coordinates <- spots._1.coordinates
+        spot2Coordinates <- spots._2.coordinates
+      yield svgRoad(spot1Coordinates, spot2Coordinates),
       for
         spot <- gameMap.nodes.toList
         coordinates <- spot.coordinates
-      yield generateSpot(coordinates)
+      yield svgSpot(coordinates)
     )
