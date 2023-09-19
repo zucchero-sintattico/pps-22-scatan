@@ -4,7 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import scatan.model.BuildingType
 import scatan.model.BuildingType.*
-import scatan.model.ResourceType
+import scatan.model.ResourceType.*
 import scatan.model.Cost
 
 class BuildingTypeTest extends AnyFlatSpec with should.Matchers:
@@ -30,14 +30,14 @@ class BuildingTypeTest extends AnyFlatSpec with should.Matchers:
   }
 
   it should "have a cost" in {
-    BuildingType.Road.cost should be(Cost(ResourceType.Brick * 1, ResourceType.Wood * 1))
+    BuildingType.Road.cost should be(Cost(Brick * 1, Wood * 1))
     BuildingType.Settlement.cost should be(
       Cost(
-        ResourceType.Wood * 1,
-        ResourceType.Brick * 1,
-        ResourceType.Wheat * 1,
-        ResourceType.Sheep * 1
+        Wood * 1,
+        Brick * 1,
+        Wheat * 1,
+        Sheep * 1
       )
     )
-    BuildingType.City.cost should be(Cost(ResourceType.Wheat * 2, ResourceType.Rock * 3))
+    BuildingType.City.cost should be(Cost(Wheat * 2, Rock * 3))
   }
