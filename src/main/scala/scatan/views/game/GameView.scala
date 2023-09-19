@@ -9,13 +9,18 @@ import scatan.model.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap
 import scatan.views.game.components.GameMapComponent.getMapComponent
+import scatan.lib.mvc.BaseView
+import scatan.lib.mvc.BaseScalaJSView
 
 trait GameView extends View
 
-class ScalaJsGameView(requirements: View.Requirements[GameController], container: String)
-    extends GameView
-    with View.Dependencies(requirements)
-    with ScalaJSView(container):
+object GameView:
+  def apply(container: String, requirements: View.Requirements[GameController]): GameView =
+    ScalaJsGameView(container, requirements)
+
+private class ScalaJsGameView(container: String, requirements: View.Requirements[GameController])
+    extends BaseScalaJSView(container, requirements)
+    with GameView:
 
   given hexSize: Int = 100
   val gameMap = GameMap(2)
