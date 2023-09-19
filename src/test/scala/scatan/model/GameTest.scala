@@ -37,3 +37,15 @@ class GameTest extends BaseTest:
       Game(players = players(n))
     }
   }
+
+  it should "have a current player" in {
+    val game: Game = Game(players = threePlayers)
+    game.currentPlayer should be(threePlayers.head)
+  }
+
+  it should "allow to change player" in {
+    val game: Game = Game(players = threePlayers)
+    game.currentPlayer should be(threePlayers.head)
+    val game2 = game.changePlayer
+    game2.currentPlayer should be(threePlayers.tail.head)
+  }
