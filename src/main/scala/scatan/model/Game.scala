@@ -8,4 +8,4 @@ final case class Game(players: Seq[Player]):
 
 extension (game: Game)
   def currentPlayer: Player = game.players.head
-  def changePlayer: Game = game.copy(players = game.players.tail :+ game.players.head)
+  def withNextPlayer: Game = game.copy(players = game.players.tail :+ game.players.head)

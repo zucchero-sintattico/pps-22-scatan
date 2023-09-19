@@ -46,6 +46,17 @@ class GameTest extends BaseTest:
   it should "allow to change player" in {
     val game: Game = Game(players = threePlayers)
     game.currentPlayer should be(threePlayers.head)
-    val game2 = game.changePlayer
+    val game2 = game.withNextPlayer
     game2.currentPlayer should be(threePlayers.tail.head)
+  }
+
+  it should "allow to change player in a round-robin fashion" in {
+    val game: Game = Game(players = threePlayers)
+    game.currentPlayer should be(threePlayers.head)
+    val game2 = game.withNextPlayer
+    game2.currentPlayer should be(threePlayers.tail.head)
+    val game3 = game2.withNextPlayer
+    game3.currentPlayer should be(threePlayers.tail.tail.head)
+    val game4 = game3.withNextPlayer
+    game4.currentPlayer should be(threePlayers.head)
   }
