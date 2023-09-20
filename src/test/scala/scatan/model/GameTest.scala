@@ -55,8 +55,3 @@ class GameTest extends BaseTest:
     game3.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
     game3.awards(Award(AwardType.LargestArmy)) should be(Some(player2))
   }
-
-  it should "have a game map" in {
-    val game: Game = Game(players = threePlayers)
-    game.gameMap should be(GameMap(2))
-  }

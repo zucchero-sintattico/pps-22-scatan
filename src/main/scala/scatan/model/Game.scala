@@ -13,7 +13,8 @@ trait Game:
 object Game:
 
   def apply(players: Seq[Player]): Game =
-    GameImpl(players, Award.EmptyAwards(), GameMap(2))
+    if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
+    else GameImpl(players, Award.EmptyAwards(), GameMap(2))
 
   def apply(players: Seq[Player], awards: Awards, gameMap: GameMap): Game =
     GameImpl(players, awards, gameMap)
