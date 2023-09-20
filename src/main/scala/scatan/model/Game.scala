@@ -52,6 +52,7 @@ object Game:
     Game(players, Turn(1, players.head), false)
 
 extension (game: Game)
+  def currentPhase: Phase = game.currentTurn.phase
   def currentPlayer: Player = game.currentTurn.player
   def possibleActions: Set[Action] = game.currentTurn.phase.allowedActions
   def isAllowed(action: Action): Boolean = game.currentTurn.phase.isAllowed(action)

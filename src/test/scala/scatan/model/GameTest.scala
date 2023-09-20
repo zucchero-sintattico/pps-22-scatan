@@ -19,6 +19,20 @@ class GameTest extends BaseTest:
     game.players should be(threePlayers)
   }
 
+  it should "expose if the game is over" in {
+    val game = Game(players = threePlayers)
+    game.isOver shouldBe false
+  }
+
+  it should "be ended" in {
+    val game = Game(
+      players = threePlayers,
+      currentTurn = Turn(1, threePlayers(0)),
+      isOver = true
+    )
+    game.isOver shouldBe true
+  }
+
   it should "take players" in {
     val game: Game = Game(players = threePlayers)
     game.players should be(threePlayers)
