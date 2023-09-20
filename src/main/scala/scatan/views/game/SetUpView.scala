@@ -1,13 +1,9 @@
 package scatan.views.game
-
-import scatan.controllers.game.SetUpController
-
 import scatan.Pages
-import scatan.mvc.lib.View
+import scatan.lib.mvc.View
 import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
-import scatan.mvc.lib.{ScalaJSView, View}
-import scatan.Pages
+import scatan.lib.mvc.{ScalaJSView, View}
 import org.scalajs.dom.document
 
 /** This is the view for the setup page.

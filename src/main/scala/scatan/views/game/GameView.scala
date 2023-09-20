@@ -4,7 +4,7 @@ import scatan.controllers.game.GameController
 
 import scatan.Pages
 import com.raquo.laminar.api.L.*
-import scatan.mvc.lib.{ScalaJSView, View}
+import scatan.lib.mvc.{ScalaJSView, View}
 import scatan.model.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap

@@ -7,13 +7,15 @@ import scatan.views.home.{HomeView, ScalaJsHomeView}
 import scatan.model.ApplicationState
 import scatan.views.home.{AboutView, ScalaJSAboutView}
 import scatan.controllers.home.{AboutController, AboutControllerImpl}
-import scatan.mvc.lib.application.NavigableApplication
-import scatan.mvc.lib.page.PageFactory
-import scatan.mvc.lib.{Controller, Model, NavigableApplicationManager, ScalaJSView}
+import scatan.lib.mvc.application.NavigableApplication
+import scatan.lib.mvc.page.PageFactory
+import scatan.lib.mvc.ScalaJSView
+import scatan.lib.mvc.{Controller, Model, NavigableApplicationManager}
 
 import scala.util.Random
-import scatan.model.Game
-import scatan.model.Player
+import lib.mvc.application.NavigableApplication
+import lib.mvc.page.PageFactory
+import lib.mvc.{NavigableApplicationManager, Model, Controller}
 
 // Route
 enum Pages(val pageFactory: PageFactory[?, ?, ApplicationState]):
