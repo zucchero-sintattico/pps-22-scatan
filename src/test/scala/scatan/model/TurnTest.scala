@@ -4,31 +4,41 @@ import scatan.BaseTest
 
 class TurnTest extends BaseTest:
 
-  "A game" should "have a turn" in {
-    val game = Game(Seq(Player("a"), Player("b"), Player("c"), Player("d")))
-    game.currentTurn shouldBe Turn(1, Player("a"))
-  }
-
-  it should "have a next turn" in {
-    val game = Game(Seq(Player("a"), Player("b"), Player("c"), Player("d")))
-    game.nextTurn.currentTurn shouldBe Turn(2, Player("b"))
-  }
-
-  it should "do a circular turn" in {
-    val gameWith4Players = Game(Seq(Player("a"), Player("b"), Player("c"), Player("d")))
-    val playersTurnIterator = Iterator.iterate(gameWith4Players)(_.nextTurn).map(_.currentPlayer)
-    val playersIterator = Iterator.continually(Seq(Player("a"), Player("b"), Player("c"), Player("d"))).flatten
-    playersTurnIterator.take(100).toList shouldBe playersIterator.take(100).toList
-  }
-
   "A turn" should "have a number" in {
     val turn = Turn(1, Player("a"))
     turn.number shouldBe 1
   }
 
+  it should "not allow to have a number less than 1" in {
+    assertThrows[IllegalArgumentException] {
+      Turn(0, Player("a"))
+    }
+  }
+
   it should "have a player" in {
     val turn = Turn(1, Player("a"))
     turn.player shouldBe Player("a")
+  }
+
+class NewGameTest extends BaseTest:
+
+  val players = Seq(Player("a"), Player("b"), Player("c"), Player("d"))
+
+  "A game" should "have a turn" in {
+    val game = Game(players)
+    game.currentTurn shouldBe Turn(1, players(0))
+  }
+
+  it should "have a next turn" in {
+    val game = Game(players)
+    game.nextTurn.currentTurn shouldBe Turn(2, players(1))
+  }
+
+  it should "do a circular turn" in {
+    val gameWith4Players = Game(players)
+    val playersTurnIterator = Iterator.iterate(gameWith4Players)(_.nextTurn).map(_.currentPlayer)
+    val playersIterator = Iterator.continually(players).flatten
+    playersTurnIterator.take(100).toList shouldBe playersIterator.take(100).toList
   }
 
 /*
