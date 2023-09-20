@@ -2,6 +2,27 @@ package scatan.model
 
 import scatan.BaseTest
 
+class PhaseTest extends BaseTest:
+  "A Phase" should "be initial" in {
+    Phase.Initial shouldBe Phase.Initial
+  }
+
+  it should "be PlaceRobber" in {
+    Phase.PlaceRobber shouldBe Phase.PlaceRobber
+  }
+
+  it should "be StoleCard" in {
+    Phase.StoleCard shouldBe Phase.StoleCard
+  }
+
+  it should "be Playing" in {
+    Phase.Playing shouldBe Phase.Playing
+  }
+
+  it should "be End" in {
+    Phase.End shouldBe Phase.End
+  }
+
 class TurnTest extends BaseTest:
 
   "A turn" should "have a number" in {
@@ -18,6 +39,17 @@ class TurnTest extends BaseTest:
   it should "have a player" in {
     val turn = Turn(1, Player("a"))
     turn.player shouldBe Player("a")
+  }
+
+  it should "not allow to have a player with an empty name" in {
+    assertThrows[IllegalArgumentException] {
+      Turn(1, Player(""))
+    }
+  }
+
+  it should "have a phase" in {
+    val turn = Turn(1, Player("a"))
+    turn.phase shouldBe Phase.Initial
   }
 
 class NewGameTest extends BaseTest:

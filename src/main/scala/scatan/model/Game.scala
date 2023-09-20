@@ -1,8 +1,16 @@
 package scatan.model
 
-final case class Player(name: String)
+final case class Player(name: String):
+  if name.isEmpty then throw IllegalArgumentException("A player must have a non-empty name")
 
-final case class Turn(number: Int, player: Player):
+enum Phase:
+  case Initial
+  case PlaceRobber
+  case StoleCard
+  case Playing
+  case End
+
+final case class Turn(number: Int, player: Player, phase: Phase = Phase.Initial):
   if number < 1 then throw IllegalArgumentException("A turn must have a number greater than 0")
 
 private final case class Game(players: Seq[Player], currentTurn: Turn, isOver: Boolean)
