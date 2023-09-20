@@ -29,6 +29,11 @@ class NewGameTest extends BaseTest:
     game.currentTurn shouldBe Turn(1, players(0))
   }
 
+  it should "be possible to know if the game is over" in {
+    val game = Game(players)
+    game.isOver shouldBe false
+  }
+
   it should "have a next turn" in {
     val game = Game(players)
     game.nextTurn.currentTurn shouldBe Turn(2, players(1))
@@ -39,6 +44,17 @@ class NewGameTest extends BaseTest:
     val playersTurnIterator = Iterator.iterate(gameWith4Players)(_.nextTurn).map(_.currentPlayer)
     val playersIterator = Iterator.continually(players).flatten
     playersTurnIterator.take(100).toList shouldBe playersIterator.take(100).toList
+  }
+
+  it should "not allow to change turn if the game is over" in {
+    val endedGame = Game(
+      players = Seq(Player("a"), Player("b"), Player("c"), Player("d")),
+      currentTurn = Turn(1, Player("a")),
+      isOver = true
+    )
+    assertThrows[IllegalStateException] {
+      endedGame.nextTurn
+    }
   }
 
 /*
