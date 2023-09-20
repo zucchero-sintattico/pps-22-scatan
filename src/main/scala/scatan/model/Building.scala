@@ -1,6 +1,6 @@
 package scatan.model
 
-import scatan.mvc.lib.Model
+import scatan.lib.mvc.Model
 import ResourceType.*
 
 type ResourceCost = (ResourceType, Int)
