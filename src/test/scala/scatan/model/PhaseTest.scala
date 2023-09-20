@@ -20,47 +20,27 @@ class PhaseTest extends BaseTest:
   }
 
   it should "have allowed actions" in {
-    Phase.Initial.allowedActions shouldBe Set(Action.Roll, Action.RollSeven)
+    Phase.Initial.allowedActions shouldBe Set(ActionType.Roll)
   }
 
   it should "have allowed actions for PlaceRobber" in {
-    Phase.PlaceRobber.allowedActions shouldBe Set(Action.PlaceRobber)
+    Phase.PlaceRobber.allowedActions shouldBe Set(ActionType.PlaceRobber)
   }
 
   it should "have allowed actions for StoleCard" in {
-    Phase.StoleCard.allowedActions shouldBe Set(Action.StoleCard)
+    Phase.StoleCard.allowedActions shouldBe Set(ActionType.StoleCard)
   }
 
   it should "have allowed actions for Playing" in {
     Phase.Playing.allowedActions shouldBe Set(
-      Action.Build,
-      Action.BuyDevelopmentCard,
-      Action.PlayDevelopmentCard,
-      Action.Trade,
-      Action.NextTurn
+      ActionType.Build,
+      ActionType.BuyDevelopmentCard,
+      ActionType.PlayDevelopmentCard,
+      ActionType.Trade,
+      ActionType.NextTurn
     )
   }
 
   it should "have isAllowed" in {
-    Phase.Initial.isAllowed(Action.Roll) shouldBe true
-  }
-
-  it should "have a nextPhaseWhen" in {
-    Phase.Initial.nextPhaseWhen(Action.Roll) shouldBe Some(Phase.Playing)
-  }
-
-  it should "have a nextPhaseWhen for PlaceRobber" in {
-    Phase.PlaceRobber.nextPhaseWhen(Action.PlaceRobber) shouldBe Some(Phase.StoleCard)
-  }
-
-  it should "have a nextPhaseWhen for StoleCard" in {
-    Phase.StoleCard.nextPhaseWhen(Action.StoleCard) shouldBe Some(Phase.Playing)
-  }
-
-  it should "have a nextPhaseWhen for Playing" in {
-    Phase.Playing.nextPhaseWhen(Action.NextTurn) shouldBe Some(Phase.Initial)
-    Phase.Playing.nextPhaseWhen(Action.Build) shouldBe Some(Phase.Playing)
-    Phase.Playing.nextPhaseWhen(Action.BuyDevelopmentCard) shouldBe Some(Phase.Playing)
-    Phase.Playing.nextPhaseWhen(Action.PlayDevelopmentCard) shouldBe Some(Phase.Playing)
-    Phase.Playing.nextPhaseWhen(Action.Trade) shouldBe Some(Phase.Playing)
+    Phase.Initial.isAllowed(ActionType.Roll) shouldBe true
   }

@@ -8,12 +8,12 @@ class GameActionsTest extends BaseTest:
 
   "A Game" should "allow to get possible actions" in {
     val game = Game(players)
-    game.possibleActions shouldBe Set(Action.Roll, Action.RollSeven)
+    game.possibleActions shouldBe Set(ActionType.Roll)
   }
 
   it should "allow to check if an action is allowed" in {
     val game = Game(players)
-    game.isAllowed(Action.Roll) shouldBe true
+    game.isAllowed(ActionType.Roll) shouldBe true
   }
 
   it should "allow to play an action" in {
@@ -36,15 +36,14 @@ class GameActionsTest extends BaseTest:
   it should "not allow to play an action if the action is not allowed" in {
     val game = Game(players)
     assertThrows[IllegalArgumentException] {
-      game.play(Action.Build)
+      game.play(Action.BuyDevelopmentCard)
     }
   }
 
   it should "allow to play a sequence of actions" in {
     val game = Game(players)
     val gameAfterRoll = game.play(Action.Roll)
-    val gameAfterBuild = gameAfterRoll.play(Action.Build)
-    val gameAfterNextTurn = gameAfterBuild.play(Action.NextTurn)
+    val gameAfterNextTurn = gameAfterRoll.play(Action.NextTurn)
     gameAfterNextTurn.currentTurn shouldBe Turn(2, players(1))
   }
 
