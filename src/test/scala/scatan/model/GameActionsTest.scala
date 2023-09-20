@@ -8,7 +8,7 @@ class GameActionsTest extends BaseTest:
 
   "A Game" should "allow to get possible actions" in {
     val game = Game(players)
-    game.possibleActions shouldBe Set(ActionType.Roll)
+    game.allowedActions shouldBe Set(ActionType.Roll)
   }
 
   it should "allow to check if an action is allowed" in {
@@ -52,7 +52,7 @@ class GameActionsTest extends BaseTest:
     def nextTurn(game: Game): Game =
       game.play(Action.Roll).play(Action.NextTurn)
     val playersIterator = Iterator.continually(players).flatten
-    val gamePlayerIterator = Iterator.iterate(game)(nextTurn).map(_.currentPlayer)
+    val gamePlayerIterator = Iterator.iterate(game)(nextTurn).map(game => game.currentPlayer)
     playersIterator.take(100).toList shouldBe gamePlayerIterator.take(100).toList
   }
 

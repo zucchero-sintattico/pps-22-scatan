@@ -17,7 +17,7 @@ class TurnTest extends BaseTest:
 
   it should "have a player" in {
     val turn = Turn(1, Player("a"))
-    turn.player shouldBe Player("a")
+    turn.currentPlayer shouldBe Player("a")
   }
 
   it should "not allow to have a player with an empty name" in {
@@ -28,5 +28,5 @@ class TurnTest extends BaseTest:
 
   it should "have a phase" in {
     val turn = Turn(1, Player("a"))
-    turn.phase shouldBe Phase.Initial
+    turn.currentPhase shouldBe Phase.Initial
   }
