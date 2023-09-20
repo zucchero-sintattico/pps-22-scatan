@@ -2,6 +2,35 @@ package scatan.model
 
 import scatan.BaseTest
 
+class ActionTest extends BaseTest:
+  "An Action" should "be roll" in {
+    Action.Roll shouldBe Action.Roll
+  }
+
+  it should "be roll seven" in {
+    Action.RollSeven shouldBe Action.RollSeven
+  }
+
+  it should "be build" in {
+    Action.Build shouldBe Action.Build
+  }
+
+  it should "be buy development card" in {
+    Action.BuyDevelopmentCard shouldBe Action.BuyDevelopmentCard
+  }
+
+  it should "be play development card" in {
+    Action.PlayDevelopmentCard shouldBe Action.PlayDevelopmentCard
+  }
+
+  it should "be trade" in {
+    Action.Trade shouldBe Action.Trade
+  }
+
+  it should "be next turn" in {
+    Action.NextTurn shouldBe Action.NextTurn
+  }
+
 class PhaseTest extends BaseTest:
   "A Phase" should "be initial" in {
     Phase.Initial shouldBe Phase.Initial
@@ -21,6 +50,28 @@ class PhaseTest extends BaseTest:
 
   it should "be End" in {
     Phase.End shouldBe Phase.End
+  }
+
+  it should "have allowed actions" in {
+    Phase.Initial.allowedActions shouldBe Set(Action.Roll, Action.RollSeven)
+  }
+
+  it should "have allowed actions for PlaceRobber" in {
+    Phase.PlaceRobber.allowedActions shouldBe Set(Action.PlaceRobber)
+  }
+
+  it should "have allowed actions for StoleCard" in {
+    Phase.StoleCard.allowedActions shouldBe Set(Action.StoleCard)
+  }
+
+  it should "have allowed actions for Playing" in {
+    Phase.Playing.allowedActions shouldBe Set(
+      Action.Build,
+      Action.BuyDevelopmentCard,
+      Action.PlayDevelopmentCard,
+      Action.Trade,
+      Action.End
+    )
   }
 
 class TurnTest extends BaseTest:
