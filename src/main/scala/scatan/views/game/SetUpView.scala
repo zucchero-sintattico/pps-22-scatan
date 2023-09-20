@@ -9,6 +9,7 @@ import com.raquo.laminar.api.L.*
 import scatan.lib.mvc.{ScalaJSView, View}
 import scatan.Pages
 import scatan.lib.mvc.{View, BaseScalaJSView}
+import org.scalajs.dom.document
 
 /** This is the view for the setup page.
   */
@@ -48,10 +49,10 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         .item(i - 1)
         .asInstanceOf[org.scalajs.dom.raw.HTMLInputElement]
         .value
-    controller.goToPlay(usernames*)
+    // controller.goToPlay(usernames*)
 
-  override def notifySwitchToHome(): Unit =
-    controller.goToHome()
+  override def notifySwitchToHome(): Unit = ???
+  // controller.goToHome()
 
   override def element: Element =
     div(
@@ -82,12 +83,8 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         ),
         button(
           cls := "setup-menu-button",
-          <<<<<<< HEAD
-            onClick --> (_ => this.notifySwitchToGame()),
-          =======
-            onClick -->(_ => this.navigateTo(Pages.Game)),
-          >>>>>>> develop
-            "Start"
+          onClick --> (_ => this.navigateTo(Pages.Game)),
+          "Start"
         )
       )
     )

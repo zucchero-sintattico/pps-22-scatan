@@ -1,7 +1,5 @@
 package scatan.model
 
-import scatan.mvc.lib.Model
-
 enum DevelopmentType:
   case Knight
   case RoadBuilding
