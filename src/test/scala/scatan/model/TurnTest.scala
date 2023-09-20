@@ -48,10 +48,6 @@ class PhaseTest extends BaseTest:
     Phase.Playing shouldBe Phase.Playing
   }
 
-  it should "be End" in {
-    Phase.End shouldBe Phase.End
-  }
-
   it should "have allowed actions" in {
     Phase.Initial.allowedActions shouldBe Set(Action.Roll, Action.RollSeven)
   }
@@ -70,8 +66,32 @@ class PhaseTest extends BaseTest:
       Action.BuyDevelopmentCard,
       Action.PlayDevelopmentCard,
       Action.Trade,
-      Action.End
+      Action.NextTurn
     )
+  }
+
+  it should "have isAllowed" in {
+    Phase.Initial.isAllowed(Action.Roll) shouldBe true
+  }
+
+  it should "have a nextPhaseWhen" in {
+    Phase.Initial.nextPhaseWhen(Action.Roll) shouldBe Some(Phase.Playing)
+  }
+
+  it should "have a nextPhaseWhen for PlaceRobber" in {
+    Phase.PlaceRobber.nextPhaseWhen(Action.PlaceRobber) shouldBe Some(Phase.StoleCard)
+  }
+
+  it should "have a nextPhaseWhen for StoleCard" in {
+    Phase.StoleCard.nextPhaseWhen(Action.StoleCard) shouldBe Some(Phase.Playing)
+  }
+
+  it should "have a nextPhaseWhen for Playing" in {
+    Phase.Playing.nextPhaseWhen(Action.NextTurn) shouldBe Some(Phase.Initial)
+    Phase.Playing.nextPhaseWhen(Action.Build) shouldBe Some(Phase.Playing)
+    Phase.Playing.nextPhaseWhen(Action.BuyDevelopmentCard) shouldBe Some(Phase.Playing)
+    Phase.Playing.nextPhaseWhen(Action.PlayDevelopmentCard) shouldBe Some(Phase.Playing)
+    Phase.Playing.nextPhaseWhen(Action.Trade) shouldBe Some(Phase.Playing)
   }
 
 class TurnTest extends BaseTest:
@@ -117,27 +137,46 @@ class NewGameTest extends BaseTest:
     game.isOver shouldBe false
   }
 
-  it should "have a next turn" in {
+  it should "allow to get possible actions" in {
     val game = Game(players)
-    game.nextTurn.currentTurn shouldBe Turn(2, players(1))
+    game.possibleActions shouldBe Set(Action.Roll, Action.RollSeven)
   }
 
-  it should "do a circular turn" in {
-    val gameWith4Players = Game(players)
-    val playersTurnIterator = Iterator.iterate(gameWith4Players)(_.nextTurn).map(_.currentPlayer)
-    val playersIterator = Iterator.continually(players).flatten
-    playersTurnIterator.take(100).toList shouldBe playersIterator.take(100).toList
+  it should "allow to check if an action is allowed" in {
+    val game = Game(players)
+    game.isAllowed(Action.Roll) shouldBe true
   }
 
-  it should "not allow to change turn if the game is over" in {
+  it should "allow to play an action" in {
+    val game = Game(players)
+    val gameAfterRoll = game.play(Action.Roll)
+    gameAfterRoll.currentTurn shouldBe Turn(1, players(0), Phase.Playing)
+  }
+
+  it should "not allow to play an action if the game is over" in {
     val endedGame = Game(
       players = Seq(Player("a"), Player("b"), Player("c"), Player("d")),
       currentTurn = Turn(1, Player("a")),
       isOver = true
     )
     assertThrows[IllegalStateException] {
-      endedGame.nextTurn
+      endedGame.play(Action.Roll)
     }
+  }
+
+  it should "not allow to play an action if the action is not allowed" in {
+    val game = Game(players)
+    assertThrows[IllegalArgumentException] {
+      game.play(Action.Build)
+    }
+  }
+
+  it should "allow to play a sequence of actions" in {
+    val game = Game(players)
+    val gameAfterRoll = game.play(Action.Roll)
+    val gameAfterBuild = gameAfterRoll.play(Action.Build)
+    val gameAfterNextTurn = gameAfterBuild.play(Action.NextTurn)
+    gameAfterNextTurn.currentTurn shouldBe Turn(2, players(1))
   }
 
 /*
