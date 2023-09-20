@@ -19,8 +19,8 @@ object PageFactory:
 object ScalaJSPageFactory:
   def apply[C <: Controller, V <: View, S <: Model.State](
       scalaJSviewFactory: ScalaJSView.Factory[C, V],
-      controllerFactory: Controller.Factory[V, C, S]
+      _controllerFactory: Controller.Factory[V, C, S]
   )(using root: String): PageFactory[C, V, S] =
     new PageFactory[C, V, S]:
       override def viewFactory: View.Factory[C, V] = scalaJSviewFactory(root, _)
-      override def controllerFactory: Controller.Factory[V, C, S] = controllerFactory
+      override def controllerFactory: Controller.Factory[V, C, S] = _controllerFactory
