@@ -25,12 +25,11 @@ enum Action(val actionType: ActionType, val apply: Game => Game):
 
   /**   - Roll the dice. \-
     */
-  case Roll
+  case Roll(diceResult: Int = (1 + scala.util.Random.nextInt(6)) + (1 + scala.util.Random.nextInt(6)))
       extends Action(
         ActionType.Roll,
         game =>
-          val result = (1 + scala.util.Random.nextInt(6)) + (1 + scala.util.Random.nextInt(6))
-          if result == 7 then
+          if diceResult == 7 then
             Game(
               players = game.players,
               currentTurn = Turn(
