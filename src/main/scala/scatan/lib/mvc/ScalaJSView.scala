@@ -1,7 +1,8 @@
-package scatan.mvc.lib
+package scatan.lib.mvc
 
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
+import scatan.lib.mvc.View
 
 trait ScalaJSView(val container: String) extends View:
   def element: Element
@@ -15,3 +16,10 @@ trait ScalaJSView(val container: String) extends View:
     val containerElement = dom.document.getElementById(container)
     containerElement.children.foreach(_.remove())
     render(containerElement, div())
+
+object ScalaJSView:
+  type Factory[C <: Controller, V <: View] = (String, View.Requirements[C]) => V
+
+abstract class BaseScalaJSView[C <: Controller](container: String, requirements: View.Requirements[C])
+    extends BaseView(requirements)
+    with ScalaJSView(container)

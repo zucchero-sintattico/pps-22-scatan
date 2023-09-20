@@ -1,4 +1,4 @@
-package scatan.mvc.lib
+package scatan.lib.mvc
 
 trait View:
   def show(): Unit
@@ -16,3 +16,11 @@ object View:
 
   trait Provider[V <: View]:
     def view: V
+
+trait NavigatorView extends View:
+  def navigateTo[Route](route: Route): Unit = NavigableApplicationManager.navigateTo(route)
+  def navigateBack(): Unit = NavigableApplicationManager.navigateBack()
+
+abstract class BaseView[C <: Controller](requirements: View.Requirements[C])
+    extends NavigatorView
+    with View.Dependencies(requirements)
