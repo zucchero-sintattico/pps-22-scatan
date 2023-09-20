@@ -1,22 +1,25 @@
 package scatan.views.game
 import scatan.Pages
-import scatan.lib.mvc.View
 import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
-import scatan.lib.mvc.{ScalaJSView, View}
+import scatan.Pages
+import scatan.lib.mvc.{View, BaseScalaJSView}
 import org.scalajs.dom.document
 
 /** This is the view for the setup page.
   */
 trait SetUpView extends View:
-
-  /** Notify the controller to switch to the game page.
+  /** This method is called when the user clicks the start button.
     */
-  def notifySwitchToGame(): Unit
+  def switchToGame(): Unit
 
-  /** Notify the controller to switch to the home page.
+  /** This method is called when the user clicks the back button.
     */
-  def notifySwitchToHome(): Unit
+  def switchToHome(): Unit
+
+object SetUpView:
+  def apply(container: String, requirements: View.Requirements[SetUpController]): SetUpView =
+    ScalaJsSetUpView(container, requirements)
 
 /** This is the view for the setup page.
   *
@@ -25,14 +28,14 @@ trait SetUpView extends View:
   * @param container,
   *   the container for the view
   */
-class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], container: String)
-    extends SetUpView
-    with View.Dependencies(requirements)
-    with ScalaJSView(container):
+private class ScalaJsSetUpView(container: String, requirements: View.Requirements[SetUpController])
+    extends BaseScalaJSView(container, requirements)
+    with SetUpView:
+
   val numberOfUsers: Int = 3
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-  override def notifySwitchToGame(): Unit =
+  override def switchToGame(): Unit =
     val usernames =
       for i <- 1 to numberOfUsers
       yield document
@@ -40,10 +43,10 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         .item(i - 1)
         .asInstanceOf[org.scalajs.dom.raw.HTMLInputElement]
         .value
-    controller.goToPlay(usernames*)
+    this.navigateTo(Pages.Game)
 
-  override def notifySwitchToHome(): Unit =
-    controller.goToHome()
+  override def switchToHome(): Unit =
+    this.navigateTo(Pages.Home)
 
   override def element: Element =
     div(
@@ -69,12 +72,12 @@ class ScalaJsSetUpView(requirements: View.Requirements[SetUpController], contain
         ),
         button(
           cls := "setup-menu-button",
-          onClick --> (_ => controller.goToHome()),
+          onClick --> (_ => this.switchToHome()),
           "Back"
         ),
         button(
           cls := "setup-menu-button",
-          onClick --> (_ => this.notifySwitchToGame()),
+          onClick --> (_ => this.switchToGame()),
           "Start"
         )
       )

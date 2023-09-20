@@ -16,3 +16,9 @@ object Controller:
 
   trait Provider[C <: Controller]:
     def controller: C
+
+abstract class BaseController[V <: View, S <: Model.State](requirements: Controller.Requirements[V, S])
+    extends Controller
+    with Controller.Dependencies(requirements)
+
+class EmptyController(requirements: Controller.Requirements[View, Model.State]) extends BaseController(requirements)
