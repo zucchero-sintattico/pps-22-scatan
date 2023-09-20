@@ -15,60 +15,37 @@ class GameTest extends BaseTest:
   }
 
   it should "have players" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
+    val game: Game = Game(players = threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "take players" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
+    val game: Game = Game(players = threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "not allow fewer than 3 players" in {
     for n <- 0 to 2
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n), Award.EmptyAwards())
+      Game(players = players(n))
     }
   }
 
   it should "not allow more than 4 players" in {
     for n <- 5 to 10
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n), Award.EmptyAwards())
+      Game(players = players(n))
     }
   }
 
-  it should "have a current player" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
-    game.currentPlayer should be(threePlayers.head)
-  }
-
-  it should "allow to change player" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
-    game.currentPlayer should be(threePlayers.head)
-    val game2 = game.withNextPlayer
-    game2.currentPlayer should be(threePlayers.drop(1).head)
-  }
-
-  it should "allow to change player in a round-robin fashion" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
-    game.currentPlayer should be(threePlayers.head)
-    val game2 = game.withNextPlayer
-    game2.currentPlayer should be(threePlayers.tail.head)
-    val game3 = game2.withNextPlayer
-    game3.currentPlayer should be(threePlayers.tail.tail.head)
-    val game4 = game3.withNextPlayer
-    game4.currentPlayer should be(threePlayers.head)
-  }
-
   it should "have awards initially not assigned" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
+    val game: Game = Game(players = threePlayers)
     game.awards(Award(AwardType.LongestRoad)) should be(Option.empty[Player])
     game.awards(Award(AwardType.LargestArmy)) should be(Option.empty[Player])
   }
 
   it should "allow to assign awards" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
+    val game: Game = Game(players = threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
     val game2 = game.assignAward(Award(AwardType.LongestRoad), player1)
@@ -79,11 +56,7 @@ class GameTest extends BaseTest:
     game3.awards(Award(AwardType.LargestArmy)) should be(Some(player2))
   }
 
-  it should "allow to assign awards to the same player" in {
-    val game: Game = Game(players = threePlayers, Award.EmptyAwards())
-    val player1 = threePlayers.head
-    val game2 = game.assignAward(Award(AwardType.LongestRoad), player1)
-    game2.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
-    val game3 = game2.assignAward(Award(AwardType.LargestArmy), player1)
-    game3.awards(Award(AwardType.LargestArmy)) should be(Some(player1))
+  it should "have a game map" in {
+    val game: Game = Game(players = threePlayers)
+    game.gameMap should be(GameMap(2))
   }
