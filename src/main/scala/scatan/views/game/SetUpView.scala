@@ -49,8 +49,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         .value
     if validateNames(usernames*) then
       println(usernames)
-      // this.controller.startGame(usernames*)
-      print(this.controller)
+      this.controller.startGame(usernames*)
       this.navigateTo(Pages.Game)
 
   override def switchToHome(): Unit =
