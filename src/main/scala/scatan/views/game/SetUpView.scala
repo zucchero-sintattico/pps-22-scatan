@@ -32,18 +32,26 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
     extends BaseScalaJSView(container, requirements)
     with SetUpView:
 
-  val numberOfUsers: Int = 3
+  val numberOfUsers: Var[Int] = Var(3)
+  val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
+
+  private def validateNames(usernames: String*) =
+    usernames.forall(_.matches(".*\\S.*"))
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def switchToGame(): Unit =
     val usernames =
-      for i <- 1 to numberOfUsers
+      for i <- 1 to numberOfUsers.now()
       yield document
         .getElementsByClassName("setup-menu-textbox")
         .item(i - 1)
         .asInstanceOf[org.scalajs.dom.raw.HTMLInputElement]
         .value
-    this.navigateTo(Pages.Game)
+    if validateNames(usernames*) then
+      println(usernames)
+      // this.controller.startGame(usernames*)
+      print(this.controller)
+      this.navigateTo(Pages.Game)
 
   override def switchToHome(): Unit =
     this.navigateTo(Pages.Home)
@@ -58,27 +66,44 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
       ),
       div(
         cls := "setup-menu",
-        for i <- 1 to numberOfUsers
-        yield div(
-          cls := "setup-menu-textbox-container",
-          input(
-            cls := "setup-menu-textbox",
-            placeholder := "Player " + i
+        // combobox for choose 3 or 4 players
+        select(
+          cls := "setup-menu-combobox",
+          onChange.mapToValue.map(_.toInt) --> numberOfUsers,
+          option(
+            cls := "setup-menu-combobox-option",
+            value := "3",
+            "3 Players"
+            // on select, change the number of users
           ),
-          label(
-            cls := "setup-menu-label",
-            "Player" + i
+          option(
+            cls := "setup-menu-combobox-option",
+            value := "4",
+            "4 Players"
           )
-        ),
-        button(
-          cls := "setup-menu-button",
-          onClick --> (_ => this.switchToHome()),
-          "Back"
-        ),
-        button(
-          cls := "setup-menu-button",
-          onClick --> (_ => this.switchToGame()),
-          "Start"
         )
+      ),
+      div(
+        cls := "setup-menu",
+        children <-- reactiveNumberOfUsers.map(element =>
+          for i <- 1 to element
+          yield div(
+            cls := "setup-menu-textbox-container",
+            input(
+              cls := "setup-menu-textbox",
+              placeholder := s"Player $i"
+            )
+          )
+        )
+      ),
+      button(
+        cls := "setup-menu-button",
+        onClick --> (_ => this.switchToHome()),
+        "Back"
+      ),
+      button(
+        cls := "setup-menu-button",
+        onClick --> (_ => this.switchToGame()),
+        "Start"
       )
     )
