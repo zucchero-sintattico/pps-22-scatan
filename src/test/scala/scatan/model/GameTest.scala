@@ -10,9 +10,6 @@ class GameTest extends BaseTest:
   val threePlayers = players(3)
   val fourPlayers = players(4)
 
-  private def awards(): Awards =
-    Map(Award(AwardType.LongestRoad) -> Option.empty[Player], Award(AwardType.LargestArmy) -> Option.empty[Player])
-
   "A Game" should "exists" in {
     val game: Game = null
   }
@@ -80,4 +77,13 @@ class GameTest extends BaseTest:
     val game3 = game2.assignAward(Award(AwardType.LargestArmy), player2)
     game3.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
     game3.awards(Award(AwardType.LargestArmy)) should be(Some(player2))
+  }
+
+  it should "allow to assign awards to the same player" in {
+    val game: Game = Game(players = threePlayers, Award.getEmptyAwardMap())
+    val player1 = threePlayers.head
+    val game2 = game.assignAward(Award(AwardType.LongestRoad), player1)
+    game2.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
+    val game3 = game2.assignAward(Award(AwardType.LargestArmy), player1)
+    game3.awards(Award(AwardType.LargestArmy)) should be(Some(player1))
   }
