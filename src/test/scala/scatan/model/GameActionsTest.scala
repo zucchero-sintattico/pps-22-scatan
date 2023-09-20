@@ -1,6 +1,8 @@
 package scatan.model
 
 import scatan.BaseTest
+import scatan.model.map.Hexagon
+import scatan.utils.UnorderedTriple
 
 class GameActionsTest extends BaseTest:
 
@@ -50,7 +52,15 @@ class GameActionsTest extends BaseTest:
   it should "work with a circular turn" in {
     val game = Game(players)
     def nextTurn(game: Game): Game =
-      game.play(Action.Roll).play(Action.NextTurn)
+      val gameAfterRoll = game.play(Action.Roll)
+      if gameAfterRoll.currentPhase == Phase.Playing then gameAfterRoll.play(Action.NextTurn)
+      else
+        val gameAfterPlaceRobber =
+          gameAfterRoll.play(
+            Action.PlaceRobber(UnorderedTriple(Hexagon(0, 0, 0), Hexagon(0, 1, -1), Hexagon(1, 0, -1)))
+          )
+        gameAfterPlaceRobber.play(Action.StoleCard(gameAfterPlaceRobber.currentPlayer)).play(Action.NextTurn)
+
     val playersIterator = Iterator.continually(players).flatten
     val gamePlayerIterator = Iterator.iterate(game)(nextTurn).map(game => game.currentPlayer)
     playersIterator.take(100).toList shouldBe gamePlayerIterator.take(100).toList

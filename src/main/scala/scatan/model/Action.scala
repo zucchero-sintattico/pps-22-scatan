@@ -121,7 +121,7 @@ enum Action(val actionType: ActionType, val apply: Game => Game):
         game =>
           val nextPlayer = game.players(game.currentTurn.number % game.players.size)
           Game(
-            players = game.players.tail :+ game.players.head,
+            players = game.players,
             currentTurn = Turn(game.currentTurn.number + 1, nextPlayer),
             isOver = game.isOver
           )

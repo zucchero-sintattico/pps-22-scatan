@@ -50,7 +50,7 @@ object Game:
   def apply(players: Seq[Player], currentTurn: Turn, isOver: Boolean): Game =
     if players.sizeIs < 3 then throw IllegalArgumentException("A game must have at least 3 players")
     if players.sizeIs > 4 then throw IllegalArgumentException("A game must have at most 4 players")
-    Game(players, currentTurn, isOver)
+    GameImpl(players, currentTurn, isOver)
 
 private final case class GameImpl(players: Seq[Player], currentTurn: Turn, isOver: Boolean) extends Game:
   export currentTurn.{currentPhase, isAllowed, allowedActions}
