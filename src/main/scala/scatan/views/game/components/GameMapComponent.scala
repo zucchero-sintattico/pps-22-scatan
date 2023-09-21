@@ -1,12 +1,14 @@
 package scatan.views.game.components
 
-import scatan.model.map.Hexagon
-import scatan.model.GameMap
 import com.raquo.laminar.api.L.*
-import scatan.views.Coordinates.*
-import scatan.views.Coordinates
+import scatan.model.GameMap
+import scatan.model.map.Hexagon
 import scatan.model.map.Resources.*
+import scatan.model.map.Terrain
+import scatan.model.map.TileContent
 import scatan.model.map.UnproductiveTerrain.*
+import scatan.views.Coordinates
+import scatan.views.Coordinates.*
 
 /** A component to display the game map.
   */
@@ -31,8 +33,8 @@ object GameMapComponent:
       svg.viewBox := s"-${canvasSize} -${canvasSize} ${2 * canvasSize} ${2 * canvasSize}",
       for
         hex <- gameMap.tiles.toList
-        number = gameMap.toContent(hex).diceResult
-      yield svgHexagonWithNumber(hex, number),
+        content = gameMap.toContent(hex)
+      yield svgHexagonWithNumber(hex, content),
       for
         spots <- gameMap.edges.toList
         spot1Coordinates <- spots._1.coordinates
@@ -51,16 +53,16 @@ object GameMapComponent:
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(hex: Hexagon, number: Option[Int]): Element =
+  private def svgHexagonWithNumber(hex: Hexagon, tileContent: TileContent): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
       svg.polygon(
         svg.points := svgCornersPoints,
         svg.cls := "hexagon",
-        svg.fill := s"url(#img-${resources.head._1.toString.toLowerCase})" // TODO: add map from model terrain
+        svg.fill := s"url(#${tileContent.terrain.toImgId})" // TODO: add map from model terrain
       ),
-      number match
+      tileContent.diceResult match
         case Some(n) => circularNumber(n)
         case _       => ""
     )
@@ -138,21 +140,24 @@ object GameMapComponent:
       onClick --> (_ => println((x, y)))
     )
 
-  val resources = Map(
+  private val resources: Map[Terrain, String] = Map(
     WOOD -> "res/img/hexagonal/wood.jpg",
     SHEEP -> "res/img/hexagonal/sheep.jpg",
     GRAIN -> "res/img/hexagonal/wheat.jpg",
     ROCK -> "res/img/hexagonal/ore.jpg",
     BRICK -> "res/img/hexagonal/clay.jpg",
-    DESERT -> "res/img/hexagonal/desert.jpg"
+    DESERT -> "res/img/hexagonal/desert.jpg",
+    SEA -> "res/img/hexagonal/water.jpg"
   )
+
+  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
 
   private val svgImages: Element =
     svg.svg(
       svg.defs(
         for (terrain, path) <- resources.toList
         yield svg.pattern(
-          svg.idAttr := s"img-${terrain.toString.toLowerCase}",
+          svg.idAttr := terrain.toImgId,
           svg.width := "100%",
           svg.height := "100%",
           svg.patternContentUnits := "objectBoundingBox",
