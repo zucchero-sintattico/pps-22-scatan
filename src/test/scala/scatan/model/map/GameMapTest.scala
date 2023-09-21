@@ -29,5 +29,5 @@ class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
     standardGameMap.tileWithTerrain
       .filter(standardGameMap.toContent(_).terrain == UnproductiveTerrain.DESERT)
       .map(standardGameMap.toContent)
-      .map(_.diceResult) should contain only None
+      .map(_.number) should contain only None
   }

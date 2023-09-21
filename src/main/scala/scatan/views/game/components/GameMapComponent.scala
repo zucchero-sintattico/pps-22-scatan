@@ -62,7 +62,7 @@ object GameMapComponent:
         svg.cls := "hexagon",
         svg.fill := s"url(#${tileContent.terrain.toImgId})" // TODO: add map from model terrain
       ),
-      tileContent.diceResult match
+      tileContent.number match
         case Some(n) => circularNumber(n)
         case _       => ""
     )

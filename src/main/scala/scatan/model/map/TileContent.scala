@@ -28,7 +28,7 @@ enum UnproductiveTerrain:
 
 type Terrain = Resources | UnproductiveTerrain
 
-final case class TileContent(terrain: Terrain, diceResult: Option[Int])
+final case class TileContent(terrain: Terrain, number: Option[Int])
 
 /** A mixin that add the concept of Terrains to a Map.
   */
@@ -51,14 +51,14 @@ object TileContentFactory:
       3 * BRICK
     ).flatten
 
-    val diceResults =
+    val numbers =
       2 :: 12 :: (for
         i <- (3 to 11).toList
         if i != 7
       yield List(i, i)).flatten
 
     val tileContents =
-      terrains.zip(diceResults).map(p => TileContent(p._1, Some(p._2)))
+      terrains.zip(numbers).map(p => TileContent(p._1, Some(p._2)))
 
     Map
       .from(tiles.zip(TileContent(DESERT, None) :: tileContents))
