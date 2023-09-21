@@ -68,3 +68,20 @@ class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
       standardGameMap.toTerrain.isDefinedAt(hexagon) shouldBe true
     }
   }
+
+  it should "have 19 Terrains" in {
+    standardGameMap.tiles should have size 19
+  }
+
+  it should "have one Desert tile" in {
+    val desertTiles =
+      standardGameMap.tiles
+        .filter(standardGameMap.toTerrain(_) == UnproductiveTerrain.DESERT)
+    desertTiles should have size 1
+  }
+
+  it should "do not have number over Desert tile" in {
+    standardGameMap.tiles
+      .filter(standardGameMap.toTerrain(_) == UnproductiveTerrain.DESERT)
+      .map(standardGameMap.toNumber.isDefinedAt) should contain only false
+  }
