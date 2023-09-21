@@ -1,5 +1,9 @@
 package scatan.model.map
 
+import scatan.utils.UnorderedTriple
+import scatan.utils.UnorderedPair
+import scatan.model.map.HexagonInMap.*
+
 /** An Hexagon in the space rapresented by 3 coordinates.
   */
 trait Hexagon:
@@ -20,15 +24,47 @@ object Hexagon:
   def apply(row: Int, col: Int, slice: Int): Hexagon = HexagonImpl(row, col, slice)
   private case class HexagonImpl(row: Int, col: Int, slice: Int) extends Hexagon
 
+/** A Spot is unique identified by three hexagons in the map.
+  *
+  * @param hexagons
+  */
+type Spot = UnorderedTriple[Hexagon]
+
+/** A Road connect two spots.
+  */
+type Road = UnorderedPair[Spot]
+
 /** A map made of hexagonal tiles.
   */
-trait HexTiledMap:
-  /** @return
-    *   the tiles of the map
-    */
-  def tiles: Set[Hexagon]
+class HexagonalTiledMap(layers: Int) extends UndirectedGraph[Spot, Road]:
 
-object HexTiledMap:
+  val tiles: Set[Hexagon] =
+    (for
+      r <- -layers to layers
+      q <- -layers to layers
+      s <- -layers to layers
+      if r + q + s == 0
+    yield Hexagon(r, q, s)).toSet
+
+  val nodes: Set[Spot] =
+    for
+      hex <- tiles
+      first <- hex.neighbours
+      second <- hex.neighbours
+      if first.isNeighbour(second)
+    yield UnorderedTriple(hex, first, second)
+
+  val spotsPerRoad = 2
+  val edges: Set[Road] =
+    for
+      first <- nodes
+      second <- nodes
+      if first.toSet.intersect(second.toSet).sizeIs == spotsPerRoad
+    yield UnorderedPair(first, second)
+
+/** Extension method of Hexagons if put in an Hexagonal map.
+  */
+object HexagonInMap:
   private def allowedDirections: Set[Hexagon] = Set(
     Hexagon(+1, 0, -1),
     Hexagon(+1, -1, 0),
