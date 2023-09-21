@@ -3,6 +3,7 @@ ThisBuild / scalaVersion := "3.3.0"
 wartremoverWarnings ++= Warts.all
 wartremoverWarnings -= Wart.Equals
 wartremoverWarnings -= Wart.ImplicitParameter
+wartremoverWarnings -= Wart.DefaultArguments
 
 lazy val scatan = (project in file("."))
   .enablePlugins(ScalaJSPlugin)
