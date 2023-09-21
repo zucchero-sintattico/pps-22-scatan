@@ -5,7 +5,7 @@ import scatan.controllers.game.GameController
 import scatan.Pages
 import com.raquo.laminar.api.L.*
 import scatan.lib.mvc.{ScalaJSView, View}
-import scatan.model.Spot
+import scatan.model.map.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap
 import scatan.views.game.components.GameMapComponent.getMapComponent
@@ -17,7 +17,7 @@ class ScalaJsGameView(requirements: View.Requirements[GameController], container
     with View.Dependencies(requirements)
     with ScalaJSView(container):
 
-  val gameMap = GameMap(3)
+  val gameMap = GameMap()
 
   override def element: Element =
     div(

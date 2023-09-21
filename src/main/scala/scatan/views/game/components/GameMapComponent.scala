@@ -25,12 +25,14 @@ object GameMapComponent:
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
   def getMapComponent(gameMap: GameMap): Element =
-    val canvasSize = layersToCanvasSize(gameMap.layers)
+    val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
       svgImages,
       svg.viewBox := s"-${canvasSize} -${canvasSize} ${2 * canvasSize} ${2 * canvasSize}",
-      for hex <- gameMap.tiles.toList
-      yield svgHexagonWithNumber(hex, gameMap.toNumber.get(hex)),
+      for
+        hex <- gameMap.tiles.toList
+        number = gameMap.toContent(hex).diceResult
+      yield svgHexagonWithNumber(hex, number),
       for
         spots <- gameMap.edges.toList
         spot1Coordinates <- spots._1.coordinates
