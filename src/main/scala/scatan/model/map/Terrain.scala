@@ -1,6 +1,7 @@
 package scatan.model.map
 
 import scala.annotation.targetName
+
 import Listable.*
 import Resources.*
 import UnproductiveTerrain.*
@@ -23,29 +24,42 @@ enum Resources:
 /** Unproductive terrain.
   */
 enum UnproductiveTerrain:
-  case DESERT
+  case DESERT, SEA
 
 type Terrain = Resources | UnproductiveTerrain
 
+final case class TileContent(terrain: Terrain, diceResult: Option[Int])
+
 /** A mixin that add the concept of Terrains to a Map.
   */
-trait MapWithTerrain extends HexTiledMap:
+trait MapWithTileContent:
 
   /** Get the terrain under the tile.
     */
-  def toTerrain: Map[Hexagon, Terrain]
+  def toContent: Map[Hexagon, TileContent]
 
 /** A factory to create terrains.
   */
-object TerrainFactory:
+object TileContentFactory:
 
-  def fixedForLayer2(tiles: Seq[Hexagon]): Map[Hexagon, Terrain] =
+  def fixedForLayer2(tiles: Seq[Hexagon]): Map[Hexagon, TileContent] =
     val terrains: List[Terrain] = List(
       4 * WOOD,
       4 * SHEEP,
       4 * GRAIN,
       3 * ROCK,
-      3 * BRICK,
-      1 * DESERT
+      3 * BRICK
     ).flatten
-    Map.from(tiles.zip(terrains))
+
+    val diceResults =
+      2 :: 12 :: (for
+        i <- (3 to 11).toList
+        if i != 7
+      yield List(i, i)).flatten
+
+    val tileContents =
+      terrains.zip(diceResults).map(p => TileContent(p._1, Some(p._2)))
+
+    Map
+      .from(tiles.zip(TileContent(DESERT, None) :: tileContents))
+      .withDefaultValue(TileContent(SEA, None))
