@@ -25,8 +25,6 @@ enum ActionType:
   */
 enum Action(val actionType: ActionType, val apply: Game => Game):
 
-  /**   - Roll the dice. \-
-    */
   case Roll(diceResult: Int = Action.rollDice)
       extends Action(
         ActionType.Roll,
@@ -103,16 +101,7 @@ object Action:
 
   private[this] def PlaceRobberAction(hexagon: Hexagon)(game: Game): Game = identity(game)
 
-  private[this] def StoleCardAction(player: Player)(game: Game): Game =
-    Game(
-      players = game.players,
-      currentTurn = Turn(
-        game.currentTurn.number,
-        game.currentTurn.currentPlayer,
-        Phase.Playing
-      ),
-      isOver = game.isOver
-    )
+  private[this] def StoleCardAction(player: Player)(game: Game): Game = identity(game)
 
   private[this] def BuildAction(spot: Spot, buildingType: BuildingType)(game: Game): Game = identity(game)
 
