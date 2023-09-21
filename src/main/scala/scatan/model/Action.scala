@@ -2,6 +2,7 @@ package scatan.model
 
 import scatan.model.Spot
 import scatan.model.map.Hexagon
+import scala.util.Random
 
 /** The type of action that can be performed in a turn.
   */
@@ -26,7 +27,7 @@ enum Action(val actionType: ActionType, val apply: Game => Game):
 
   /**   - Roll the dice. \-
     */
-  case Roll(diceResult: Int = (1 + scala.util.Random.nextInt(6)) + (1 + scala.util.Random.nextInt(6)))
+  case Roll(diceResult: Int = Action.rollDice)
       extends Action(
         ActionType.Roll,
         Action.RollAction(diceResult)
@@ -75,6 +76,8 @@ enum Action(val actionType: ActionType, val apply: Game => Game):
       )
 
 object Action:
+
+  private[this] def rollDice: Int = (1 + Random.nextInt(6)) + (1 + Random.nextInt(6))
 
   private[this] def RollAction(diceResult: Int)(game: Game): Game =
     if diceResult == 7 then
