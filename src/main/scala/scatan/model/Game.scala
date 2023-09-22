@@ -4,6 +4,18 @@ import scatan.model.Game.apply
 
 final case class Player(name: String)
 
+/** The game, which contains all the information about the game state
+  * @param players
+  *   the players in the game
+  * @param buildings
+  *   the buildings of the players
+  * @param awards
+  *   the awards of the game
+  * @param gameMap
+  *   the game map
+  * @param scores
+  *   the scores of the players
+  */
 trait Game:
   def players: Seq[Player]
   def buildings: Buildings
@@ -53,6 +65,12 @@ private final case class GameImpl(
       )
     )
 
+  /** The scores of the players The score is calculated by the buildings and the awards The buildings value are
+    * calculated by the building type
+    *
+    * @return
+    *   the scores of the players
+    */
   def scores: Scores =
     val scoreWithBuildings = calculateBuildingsScores()
     val scoreWithAwards = calculateScoreWithAwards()

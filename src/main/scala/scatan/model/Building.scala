@@ -39,8 +39,16 @@ object BuildingType:
 
 final case class Building(buildingType: BuildingType)
 
+/** A map of players to their buildings
+  */
 type Buildings = Map[Player, Seq[Building]]
 object Building:
+  /** Returns a map of players to an empty buildings sequence
+    *
+    * @param players
+    *   the players to create the empty buildings map for
+    * @return
+    *   the empty buildings map
+    */
   def empty(players: Seq[Player]): Buildings =
-    // map each player to a sequence of 0 buildings
     players.map(player => (player, Seq.empty[Building])).toMap
