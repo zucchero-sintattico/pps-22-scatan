@@ -38,3 +38,9 @@ object BuildingType:
   extension (resourceType: ResourceType) def *(amount: Int): ResourceCost = (resourceType, amount)
 
 final case class Building(buildingType: BuildingType)
+
+type Buildings = Map[Player, Seq[Building]]
+object Building:
+  def empty(players: Seq[Player]): Buildings =
+    // map each player to a sequence of 0 buildings
+    players.map(player => (player, Seq.empty[Building])).toMap
