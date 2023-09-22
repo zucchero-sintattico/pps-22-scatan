@@ -49,11 +49,11 @@ private final case class GameImpl(
     val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
     Game(players, awards, gameMap, newBuildings)
 
-  private def calculateScoreWithAwards(): Scores =
+  private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
     playersWithAwards.foldLeft(Score.empty(players))((scores, player) => scores.updated(player, scores(player) + 1))
 
-  private def calculateBuildingsScores(): Scores =
+  private def partialScoresWithBuildings(): Scores =
     def buildingScore(buildingType: BuildingType): Int = buildingType match
       case BuildingType.Settlement => 1
       case BuildingType.City       => 2
@@ -65,6 +65,18 @@ private final case class GameImpl(
       )
     )
 
+  /** Merges the partial scores of the players,
+    *
+    * @param scoreMaps,
+    *   the scores of the players evaluated by different functions
+    * @return
+    *   the merged scores
+    */
+  private def mergePartialScore(scoreMaps: Seq[Scores]): Scores =
+    scoreMaps.foldLeft(Score.empty(players))((scores, scoreMap) =>
+      scoreMap.foldLeft(scores)((scores, score) => scores.updated(score._1, scores(score._1) + score._2))
+    )
+
   /** The scores of the players The score is calculated by the buildings and the awards The buildings value are
     * calculated by the building type
     *
@@ -72,6 +84,9 @@ private final case class GameImpl(
     *   the scores of the players
     */
   def scores: Scores =
-    val scoreWithBuildings = calculateBuildingsScores()
-    val scoreWithAwards = calculateScoreWithAwards()
-    scoreWithBuildings.map((player, score) => (player, score + scoreWithAwards(player)))
+    this.mergePartialScore(
+      Seq(
+        partialScoresWithBuildings(),
+        partialScoresWithAwards()
+      )
+    )
