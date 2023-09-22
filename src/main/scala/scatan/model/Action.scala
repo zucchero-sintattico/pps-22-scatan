@@ -3,10 +3,11 @@ package scatan.model
 import scatan.model.Spot
 import scatan.model.map.Hexagon
 import scala.util.Random
+import game.{Player, Turn, Game, Action}
 
 /** The type of action that can be performed in a turn.
   */
-enum ActionType:
+enum ActionsType:
   case Roll
   case PlaceRobber
   case StoleCard
@@ -23,68 +24,68 @@ enum ActionType:
   * @param apply
   *   the function to apply the action to a game
   */
-enum Action(val actionType: ActionType, val apply: Game => Game):
+enum Actions(actionType: ActionsType, apply: Game[ActionsType] => Game[ActionsType]) extends Action(actionType, apply):
 
-  case Roll(diceResult: Int = Action.rollDice)
-      extends Action(
-        ActionType.Roll,
-        Action.RollAction(diceResult)
+  case Roll(diceResult: Int = Actions.rollDice)
+      extends Actions(
+        ActionsType.Roll,
+        Actions.RollAction(diceResult)
       )
 
   case PlaceRobber(val hexagon: Hexagon)
-      extends Action(
-        ActionType.PlaceRobber,
-        Action.PlaceRobberAction(hexagon)
+      extends Actions(
+        ActionsType.PlaceRobber,
+        Actions.PlaceRobberAction(hexagon)
       )
 
   case StoleCard(val player: Player)
-      extends Action(
-        ActionType.StoleCard,
-        Action.StoleCardAction(player)
+      extends Actions(
+        ActionsType.StoleCard,
+        Actions.StoleCardAction(player)
       )
 
   case Build(val spot: Spot, val buildingType: BuildingType)
-      extends Action(
-        ActionType.Build,
-        Action.BuildAction(spot, buildingType)
+      extends Actions(
+        ActionsType.Build,
+        Actions.BuildAction(spot, buildingType)
       )
 
   case BuyDevelopmentCard
-      extends Action(
-        ActionType.BuyDevelopmentCard,
-        Action.BuyDevelopmentCardAction
+      extends Actions(
+        ActionsType.BuyDevelopmentCard,
+        Actions.BuyDevelopmentCardAction
       )
 
   case PlayDevelopmentCard(val developmentCard: DevelopmentCard)
-      extends Action(
-        ActionType.PlayDevelopmentCard,
-        Action.PlayDevelopmentCardAction(developmentCard)
+      extends Actions(
+        ActionsType.PlayDevelopmentCard,
+        Actions.PlayDevelopmentCardAction(developmentCard)
       )
 
   case Trade
-      extends Action(
-        ActionType.Trade,
-        Action.TradeAction
+      extends Actions(
+        ActionsType.Trade,
+        Actions.TradeAction
       )
 
   case NextTurn
-      extends Action(
-        ActionType.NextTurn,
-        Action.NextTurnAction
+      extends Actions(
+        ActionsType.NextTurn,
+        Actions.NextTurnAction
       )
 
-object Action:
+object Actions:
 
   private[this] def rollDice: Int = (1 + Random.nextInt(6)) + (1 + Random.nextInt(6))
 
-  private[this] def RollAction(diceResult: Int)(game: Game): Game =
+  private[this] def RollAction(diceResult: Int)(game: Game[ActionsType]): Game[ActionsType] =
     if diceResult == 7 then
       Game(
         players = game.players,
         currentTurn = Turn(
           game.currentTurn.number,
           game.currentTurn.currentPlayer,
-          Phase.PlaceRobber
+          Phases.PlaceRobber
         ),
         isOver = game.isOver
       )
@@ -94,27 +95,30 @@ object Action:
         currentTurn = Turn(
           game.currentTurn.number,
           game.currentTurn.currentPlayer,
-          Phase.Playing
+          Phases.Playing
         ),
         isOver = game.isOver
       )
 
-  private[this] def PlaceRobberAction(hexagon: Hexagon)(game: Game): Game = identity(game)
+  private[this] def PlaceRobberAction(hexagon: Hexagon)(game: Game[ActionsType]): Game[ActionsType] = identity(game)
 
-  private[this] def StoleCardAction(player: Player)(game: Game): Game = identity(game)
+  private[this] def StoleCardAction(player: Player)(game: Game[ActionsType]): Game[ActionsType] = identity(game)
 
-  private[this] def BuildAction(spot: Spot, buildingType: BuildingType)(game: Game): Game = identity(game)
+  private[this] def BuildAction(spot: Spot, buildingType: BuildingType)(game: Game[ActionsType]): Game[ActionsType] =
+    identity(game)
 
-  private[this] def BuyDevelopmentCardAction(game: Game): Game = identity(game)
+  private[this] def BuyDevelopmentCardAction(game: Game[ActionsType]): Game[ActionsType] = identity(game)
 
-  private[this] def PlayDevelopmentCardAction(developmentCard: DevelopmentCard)(game: Game): Game = identity(game)
+  private[this] def PlayDevelopmentCardAction(developmentCard: DevelopmentCard)(
+      game: Game[ActionsType]
+  ): Game[ActionsType] = identity(game)
 
-  private[this] def TradeAction(game: Game): Game = identity(game)
+  private[this] def TradeAction(game: Game[ActionsType]): Game[ActionsType] = identity(game)
 
-  private[this] def NextTurnAction(game: Game): Game =
+  private[this] def NextTurnAction(game: Game[ActionsType]): Game[ActionsType] =
     val nextPlayer = game.players(game.currentTurn.number % game.players.size)
     Game(
       players = game.players,
-      currentTurn = Turn(game.currentTurn.number + 1, nextPlayer),
+      currentTurn = Turn[ActionsType](game.currentTurn.number + 1, nextPlayer, Phases.Initial),
       isOver = game.isOver
     )

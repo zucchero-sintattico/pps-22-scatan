@@ -5,25 +5,25 @@ import scatan.BaseTest
 class ActionTypeTest extends BaseTest:
 
   "An Action Type" should "be roll" in {
-    ActionType.Roll shouldBe ActionType.Roll
+    ActionsType.Roll shouldBe ActionsType.Roll
   }
 
   it should "be build" in {
-    ActionType.Build shouldBe ActionType.Build
+    ActionsType.Build shouldBe ActionsType.Build
   }
 
   it should "be buy development card" in {
-    ActionType.BuyDevelopmentCard shouldBe ActionType.BuyDevelopmentCard
+    ActionsType.BuyDevelopmentCard shouldBe ActionsType.BuyDevelopmentCard
   }
 
   it should "be play development card" in {
-    ActionType.PlayDevelopmentCard shouldBe ActionType.PlayDevelopmentCard
+    ActionsType.PlayDevelopmentCard shouldBe ActionsType.PlayDevelopmentCard
   }
 
   it should "be trade" in {
-    ActionType.Trade shouldBe ActionType.Trade
+    ActionsType.Trade shouldBe ActionsType.Trade
   }
 
   it should "be next turn" in {
-    ActionType.NextTurn shouldBe ActionType.NextTurn
+    ActionsType.NextTurn shouldBe ActionsType.NextTurn
   }

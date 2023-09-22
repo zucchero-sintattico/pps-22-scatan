@@ -1,6 +1,7 @@
 package scatan.model
 
 import scatan.BaseTest
+import game.{Player, Turn}
 
 class TurnTest extends BaseTest:
 
@@ -28,5 +29,5 @@ class TurnTest extends BaseTest:
 
   it should "have a phase" in {
     val turn = Turn(1, Player("a"))
-    turn.currentPhase shouldBe Phase.Initial
+    turn.currentPhase shouldBe Phases.Initial
   }

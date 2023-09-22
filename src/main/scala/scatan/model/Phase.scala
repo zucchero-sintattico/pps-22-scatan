@@ -1,24 +1,22 @@
 package scatan.model
+import game.Phase
 
 /** The possible phases of a turn.
   *
   * @param allowedActions
   *   The actions that are allowed in this phase.
   */
-enum Phase(val allowedActions: Set[ActionType]):
-  case Initial extends Phase(Set(ActionType.Roll))
-  case PlaceRobber extends Phase(Set(ActionType.PlaceRobber))
-  case StoleCard extends Phase(Set(ActionType.StoleCard))
+enum Phases(allowedActions: Set[ActionsType]) extends Phase(allowedActions):
+  case Initial extends Phases(Set(ActionsType.Roll))
+  case PlaceRobber extends Phases(Set(ActionsType.PlaceRobber))
+  case StoleCard extends Phases(Set(ActionsType.StoleCard))
   case Playing
-      extends Phase(
+      extends Phases(
         Set(
-          ActionType.Build,
-          ActionType.BuyDevelopmentCard,
-          ActionType.PlayDevelopmentCard,
-          ActionType.Trade,
-          ActionType.NextTurn
+          ActionsType.Build,
+          ActionsType.BuyDevelopmentCard,
+          ActionsType.PlayDevelopmentCard,
+          ActionsType.Trade,
+          ActionsType.NextTurn
         )
       )
-
-  /** Check if the given action is allowed in this phase. */
-  def isAllowed(action: ActionType): Boolean = allowedActions.contains(action)

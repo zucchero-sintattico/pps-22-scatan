@@ -2,45 +2,45 @@ package scatan.model
 
 import scatan.BaseTest
 
-class PhaseTest extends BaseTest:
+class PhasesTest extends BaseTest:
   "A Phase" should "be initial" in {
-    Phase.Initial shouldBe Phase.Initial
+    Phases.Initial shouldBe Phases.Initial
   }
 
   it should "be PlaceRobber" in {
-    Phase.PlaceRobber shouldBe Phase.PlaceRobber
+    Phases.PlaceRobber shouldBe Phases.PlaceRobber
   }
 
   it should "be StoleCard" in {
-    Phase.StoleCard shouldBe Phase.StoleCard
+    Phases.StoleCard shouldBe Phases.StoleCard
   }
 
   it should "be Playing" in {
-    Phase.Playing shouldBe Phase.Playing
+    Phases.Playing shouldBe Phases.Playing
   }
 
   it should "have allowed actions" in {
-    Phase.Initial.allowedActions shouldBe Set(ActionType.Roll)
+    Phases.Initial.allowedActions shouldBe Set(ActionsType.Roll)
   }
 
   it should "have allowed actions for PlaceRobber" in {
-    Phase.PlaceRobber.allowedActions shouldBe Set(ActionType.PlaceRobber)
+    Phases.PlaceRobber.allowedActions shouldBe Set(ActionsType.PlaceRobber)
   }
 
   it should "have allowed actions for StoleCard" in {
-    Phase.StoleCard.allowedActions shouldBe Set(ActionType.StoleCard)
+    Phases.StoleCard.allowedActions shouldBe Set(ActionsType.StoleCard)
   }
 
   it should "have allowed actions for Playing" in {
-    Phase.Playing.allowedActions shouldBe Set(
-      ActionType.Build,
-      ActionType.BuyDevelopmentCard,
-      ActionType.PlayDevelopmentCard,
-      ActionType.Trade,
-      ActionType.NextTurn
+    Phases.Playing.allowedActions shouldBe Set(
+      ActionsType.Build,
+      ActionsType.BuyDevelopmentCard,
+      ActionsType.PlayDevelopmentCard,
+      ActionsType.Trade,
+      ActionsType.NextTurn
     )
   }
 
   it should "have isAllowed" in {
-    Phase.Initial.isAllowed(ActionType.Roll) shouldBe true
+    Phases.Initial.isAllowed(ActionsType.Roll) shouldBe true
   }
