@@ -17,28 +17,43 @@ trait Game:
 object Game:
   def apply(players: Seq[Player]): Game =
     if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
-    else GameImpl(players, Award.empty(), GameMap(2), Score.empty(players), Building.empty(players))
+    else GameImpl(players, Award.empty(), GameMap(2), Building.empty(players))
 
-  def apply(players: Seq[Player], awards: Awards, gameMap: GameMap, scores: Scores, buildings: Buildings): Game =
-    GameImpl(players, awards, gameMap, scores, buildings)
+  def apply(players: Seq[Player], awards: Awards, gameMap: GameMap, buildings: Buildings): Game =
+    GameImpl(players, awards, gameMap, buildings)
 
 private final case class GameImpl(
     players: Seq[Player],
     awards: Awards,
     gameMap: GameMap,
-    scores: Scores,
     buildings: Buildings
 ) extends Game:
 
-  private def calculateScoreWithAwards(awards: Awards): Scores =
-    val players = awards.filter(_._2.isDefined).map(_._2.get)
-    players.foldLeft(this.scores)((scores, player) => scores.updated(player, scores.get(player).get + 1))
-
   override def assignAward(award: Award, player: Player): Game =
     val newAwards = awards.updated(award, Some(player))
-    val newScores = calculateScoreWithAwards(newAwards)
-    apply(players, newAwards, gameMap, newScores, buildings)
+    Game(players, newAwards, gameMap, buildings)
 
   override def assignBuilding(building: Building, player: Player): Game =
     val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
-    apply(players, awards, gameMap, scores, newBuildings)
+    Game(players, awards, gameMap, newBuildings)
+
+  private def calculateScoreWithAwards(): Scores =
+    val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
+    playersWithAwards.foldLeft(Score.empty(players))((scores, player) => scores.updated(player, scores(player) + 1))
+
+  private def calculateBuildingsScores(): Scores =
+    def buildingScore(buildingType: BuildingType): Int = buildingType match
+      case BuildingType.Settlement => 1
+      case BuildingType.City       => 2
+      case BuildingType.Road       => 0
+    buildings.foldLeft(Score.empty(players))((scores, buildingsOfPlayer) =>
+      scores.updated(
+        buildingsOfPlayer._1,
+        buildingsOfPlayer._2.foldLeft(0)((score, building) => score + buildingScore(building.buildingType))
+      )
+    )
+
+  def scores: Scores =
+    val scoreWithBuildings = calculateBuildingsScores()
+    val scoreWithAwards = calculateScoreWithAwards()
+    scoreWithBuildings.map((player, score) => (player, score + scoreWithAwards(player)))
