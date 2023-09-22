@@ -12,6 +12,7 @@ trait Game:
   def scores: Scores
 
   def assignAward(award: Award, player: Player): Game
+  def assignBuilding(building: Building, player: Player): Game
 
 object Game:
   def apply(players: Seq[Player]): Game =
@@ -28,7 +29,6 @@ private final case class GameImpl(
     scores: Scores,
     buildings: Buildings
 ) extends Game:
-  def awards(award: Award): Option[Player] = awards.get(award).flatten
 
   private def calculateScoreWithAwards(awards: Awards): Scores =
     val players = awards.filter(_._2.isDefined).map(_._2.get)
@@ -38,3 +38,7 @@ private final case class GameImpl(
     val newAwards = awards.updated(award, Some(player))
     val newScores = calculateScoreWithAwards(newAwards)
     apply(players, newAwards, gameMap, newScores, buildings)
+
+  override def assignBuilding(building: Building, player: Player): Game =
+    val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
+    apply(players, awards, gameMap, scores, newBuildings)

@@ -56,12 +56,27 @@ class GameTest extends BaseTest:
     game3.awards(Award(AwardType.LargestArmy)) should be(Some(player2))
   }
 
-  it should "have an empty scoreboard initially" in {
-    val game: Game = Game(players = threePlayers)
-    game.scores should be(Score.empty(threePlayers))
-  }
-
   it should "have an empty building map initially" in {
     val game: Game = Game(players = threePlayers)
     game.buildings should be(Building.empty(threePlayers))
+  }
+
+  it should "allow to assign buildings" in {
+    val game: Game = Game(players = threePlayers)
+    val player1 = threePlayers.head
+    val player2 = threePlayers.tail.head
+    val game2 = game.assignBuilding(Building(BuildingType.Settlement), player1)
+    game2.buildings(player1) should be(Seq(Building(BuildingType.Settlement)))
+    game2.buildings(player2) should be(Seq.empty[Building])
+    val game3 = game2.assignBuilding(Building(BuildingType.City), player1)
+    game3.buildings(player1) should be(Seq(Building(BuildingType.Settlement), Building(BuildingType.City)))
+    game3.buildings(player2) should be(Seq.empty[Building])
+    val game4 = game3.assignBuilding(Building(BuildingType.Road), player2)
+    game4.buildings(player1) should be(Seq(Building(BuildingType.Settlement), Building(BuildingType.City)))
+    game4.buildings(player2) should be(Seq(Building(BuildingType.Road)))
+  }
+
+  it should "have an empty scoreboard initially" in {
+    val game: Game = Game(players = threePlayers)
+    game.scores should be(Score.empty(threePlayers))
   }
