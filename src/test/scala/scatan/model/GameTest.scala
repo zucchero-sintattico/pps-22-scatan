@@ -55,3 +55,18 @@ class GameTest extends BaseTest:
     game3.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
     game3.awards(Award(AwardType.LargestArmy)) should be(Some(player2))
   }
+
+  it should "have an empty scoreboard initially" in {
+    val game: Game = Game(players = threePlayers)
+    game.scores should be(Score.EmptyScores(threePlayers))
+  }
+
+  it should "increase player score when assign him an award" in {
+    val game: Game = Game(players = threePlayers)
+    val player1 = threePlayers.head
+    val game2 = game.assignAward(Award(AwardType.LongestRoad), player1)
+    game.scores(player1) should be(0)
+    val game3 = game2.assignAward(Award(AwardType.LargestArmy), player1)
+    game2.scores(player1) should be(1)
+    game3.scores(player1) should be(2)
+  }
