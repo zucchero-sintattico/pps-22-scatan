@@ -1,6 +1,7 @@
 package scatan.model
 
 import scatan.model.Game.apply
+import cats.instances.long
 
 final case class Player(name: String)
 
@@ -23,31 +24,38 @@ trait Game:
   def gameMap: GameMap
   def scores: Scores
 
-  def assignAward(award: Award, player: Player): Game
+  // def assignAward(award: Award, player: Player): Game
   def assignBuilding(building: Building, player: Player): Game
 
 object Game:
   def apply(players: Seq[Player]): Game =
     if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
-    else GameImpl(players, Award.empty(), GameMap(2), Building.empty(players))
+    else GameImpl(players, GameMap(2), Building.empty(players))
 
-  def apply(players: Seq[Player], awards: Awards, gameMap: GameMap, buildings: Buildings): Game =
-    GameImpl(players, awards, gameMap, buildings)
+  def apply(players: Seq[Player], gameMap: GameMap, buildings: Buildings): Game =
+    GameImpl(players, gameMap, buildings)
 
 private final case class GameImpl(
     players: Seq[Player],
-    awards: Awards,
     gameMap: GameMap,
     buildings: Buildings
 ) extends Game:
 
-  override def assignAward(award: Award, player: Player): Game =
-    val newAwards = awards.updated(award, Some(player))
-    Game(players, newAwards, gameMap, buildings)
+  def awards: Awards =
+    val longestRoad = buildings.foldLeft((Player(""), 0))((playerWithLongestRoad, buildingsOfPlayer) =>
+      val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
+      if roads.sizeIs >= 5 && roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+      else playerWithLongestRoad
+    )
+    val largestArmy = (Player(""), 0)
+    Map(
+      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some(longestRoad._1) else None),
+      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some(largestArmy._1) else None)
+    )
 
   override def assignBuilding(building: Building, player: Player): Game =
     val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
-    Game(players, awards, gameMap, newBuildings)
+    Game(players, gameMap, newBuildings)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
@@ -72,7 +80,7 @@ private final case class GameImpl(
     * @return
     *   the merged scores
     */
-  private def mergePartialScore(scoreMaps: Seq[Scores]): Scores =
+  private def combinePartialScores(scoreMaps: Seq[Scores]): Scores =
     scoreMaps.foldLeft(Score.empty(players))((scores, scoreMap) =>
       scoreMap.foldLeft(scores)((scores, score) => scores.updated(score._1, scores(score._1) + score._2))
     )
@@ -84,7 +92,7 @@ private final case class GameImpl(
     *   the scores of the players
     */
   def scores: Scores =
-    this.mergePartialScore(
+    this.combinePartialScores(
       Seq(
         partialScoresWithBuildings(),
         partialScoresWithAwards()
