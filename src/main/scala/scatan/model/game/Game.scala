@@ -22,7 +22,6 @@ trait Game:
   def players: Seq[Player]
   def buildings: Buildings
   def developmentCardsOfPlayers: DevelopmentCardsOfPlayers
-  val assignedAwards: Awards
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
@@ -45,17 +44,16 @@ object Game:
       players: Seq[Player],
       gameMap: GameMap,
       buildings: Buildings,
-      developmentCardsOfPlayers: DevelopmentCardsOfPlayers,
-      assignedAwards: Awards
+      developmentCardsOfPlayers: DevelopmentCardsOfPlayers
   ): Game =
-    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers, assignedAwards)
+    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers)
 
 private final case class GameImpl(
     players: Seq[Player],
     gameMap: GameMap,
     buildings: Buildings,
     developmentCardsOfPlayers: DevelopmentCardsOfPlayers,
-    assignedAwards: Awards
+    assignedAwards: Awards = Award.empty()
 ) extends Game:
 
   def awards: Awards =
@@ -82,19 +80,19 @@ private final case class GameImpl(
 
   override def assignBuilding(building: Building, player: Player): Game =
     val newBuildings = buildings.updated(player, buildings(player) :+ building)
-    Game(players, gameMap, newBuildings, developmentCardsOfPlayers, awards)
+    this.copy(players, gameMap, newBuildings, developmentCardsOfPlayers, assignedAwards = awards)
 
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard)
-    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers, assignedAwards)
+    this.copy(developmentCardsOfPlayers = newDevelopmentCardsOfPlayers, assignedAwards = awards)
 
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val remainingMatchingCards = developmentCardsOfPlayers(player).filter(_ == developmentCard).drop(1)
     val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)
-    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers, awards)
+    this.copy(players, gameMap, buildings, newDevelopmentCardsOfPlayers, assignedAwards = awards)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
