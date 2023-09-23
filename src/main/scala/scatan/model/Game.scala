@@ -21,6 +21,7 @@ trait Game:
   def players: Seq[Player]
   def buildings: Buildings
   def developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+  val assignedAwards: Awards
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
@@ -30,58 +31,68 @@ trait Game:
 object Game:
   def apply(players: Seq[Player]): Game =
     if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
-    else GameImpl(players, GameMap(2), Building.empty(players), DevelopmentCardsOfPlayers.empty(players))
+    else GameImpl(players, GameMap(2), Building.empty(players), DevelopmentCardsOfPlayers.empty(players), Award.empty())
 
   def apply(
       players: Seq[Player],
       gameMap: GameMap,
       buildings: Buildings,
-      developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+      developmentCardsOfPlayers: DevelopmentCardsOfPlayers,
+      assignedAwards: Awards
   ): Game =
-    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers)
+    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers, assignedAwards)
 
 private final case class GameImpl(
     players: Seq[Player],
     gameMap: GameMap,
     buildings: Buildings,
-    developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+    developmentCardsOfPlayers: DevelopmentCardsOfPlayers,
+    assignedAwards: Awards
 ) extends Game:
 
   def awards: Awards =
-    val longestRoad = buildings.foldLeft((Player(""), 0))((playerWithLongestRoad, buildingsOfPlayer) =>
-      val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
-      if roads.sizeIs >= 5 && roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
-      else playerWithLongestRoad
-    )
-    val largestArmy = developmentCardsOfPlayers.foldLeft((Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
-      val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
-      if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
-      else playerWithLargestArmy
+    val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
+    val longestRoad =
+      buildings.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))((playerWithLongestRoad, buildingsOfPlayer) =>
+        val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
+        if roads.sizeIs >= 5 && roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+        else playerWithLongestRoad
+      )
+    val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
+    val largestArmy = developmentCardsOfPlayers.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))(
+      (playerWithLargestArmy, cardsOfPlayer) =>
+        val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+        if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+        else playerWithLargestArmy
     )
     Map(
-      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some(longestRoad._1) else None),
-      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some(largestArmy._1) else None)
+      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
+                                       else precedentLongestRoad),
+      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
+                                       else precedentLargestArmy)
     )
 
   override def assignBuilding(building: Building, player: Player): Game =
     val newBuildings = buildings.updated(player, buildings(player) :+ building)
-    Game(players, gameMap, newBuildings, developmentCardsOfPlayers)
+    Game(players, gameMap, newBuildings, developmentCardsOfPlayers, awards)
 
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard)
-    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers)
+    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers, assignedAwards)
 
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val remainingMatchingCards = developmentCardsOfPlayers(player).filter(_ == developmentCard).drop(1)
     val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)
-    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers)
+    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers, awards)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
-    playersWithAwards.foldLeft(Score.empty(players))((scores, player) => scores.updated(player, scores(player) + 1))
+    playersWithAwards.foldLeft(Score.empty(players))((scores, playerWithCount) =>
+      scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
+    )
 
   private def partialScoresWithBuildings(): Scores =
     def buildingScore(buildingType: BuildingType): Int = buildingType match

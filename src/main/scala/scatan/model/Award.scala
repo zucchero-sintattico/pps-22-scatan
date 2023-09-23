@@ -6,11 +6,11 @@ enum AwardType:
 
 final case class Award(awardType: AwardType)
 
-type Awards = Map[Award, Option[Player]]
+type Awards = Map[Award, Option[(Player, Int)]]
 
 object Award:
   def empty(): Awards =
     Map(
-      Award(AwardType.LargestArmy) -> Option.empty[Player],
-      Award(AwardType.LongestRoad) -> Option.empty[Player]
+      Award(AwardType.LargestArmy) -> Option.empty[(Player, Int)],
+      Award(AwardType.LongestRoad) -> Option.empty[(Player, Int)]
     )
