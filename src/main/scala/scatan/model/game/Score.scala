@@ -1,4 +1,4 @@
-package scatan.model
+package scatan.model.game
 
 /** A Map that contains for each player the number of points they have
   */

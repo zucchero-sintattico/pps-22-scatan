@@ -1,4 +1,4 @@
-package scatan.model
+package scatan.model.game
 
 import scatan.lib.mvc.Model
 

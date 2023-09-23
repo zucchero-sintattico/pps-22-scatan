@@ -1,4 +1,4 @@
-package scatan.model
+package scatan.model.game
 
 class GameWithAwards extends BasicGameTest:
   "A Game with Awards" should "have awards initially not assigned" in {

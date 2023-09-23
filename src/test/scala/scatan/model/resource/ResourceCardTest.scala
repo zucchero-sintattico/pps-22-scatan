@@ -2,8 +2,8 @@ package scatan.model.resource
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.{ResourceCard, ResourceType}
 import scatan.BaseTest
+import scatan.model.game.{ResourceType, ResourceCard}
 
 class ResourceCardTest extends BaseTest:
 

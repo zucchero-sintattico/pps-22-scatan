@@ -2,7 +2,7 @@ package scatan.model.development
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.DevelopmentType
+import scatan.model.game.DevelopmentType
 import scatan.BaseTest
 
 class DevelopmentTypeTest extends BaseTest:

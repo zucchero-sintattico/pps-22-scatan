@@ -1,9 +1,4 @@
-package scatan.model
-
-import scatan.BaseTest
-import scatan.model.Game
-import scatan.model.Player
-import scatan.model.DevelopmentCard
+package scatan.model.game
 
 class GameWithDevCardsTest extends BasicGameTest:
 

@@ -2,7 +2,7 @@ package scatan.model.resource
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.ResourceType
+import scatan.model.game.ResourceType
 import scatan.BaseTest
 
 class ResourceTypeTest extends BaseTest:

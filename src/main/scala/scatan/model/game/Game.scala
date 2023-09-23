@@ -1,7 +1,8 @@
-package scatan.model
+package scatan.model.game
 
-import scatan.model.Game.apply
 import cats.instances.long
+
+import scatan.model.GameMap
 
 final case class Player(name: String)
 
@@ -30,8 +31,15 @@ trait Game:
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
 object Game:
   def apply(players: Seq[Player]): Game =
-    if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
-    else GameImpl(players, GameMap(2), Building.empty(players), DevelopmentCardsOfPlayers.empty(players), Award.empty())
+    if players.sizeIs < 3 || players.sizeIs > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
+    else
+      GameImpl(
+        players,
+        GameMap(2),
+        Building.empty(players),
+        DevelopmentCardsOfPlayers.empty(players),
+        Award.empty()
+      )
 
   def apply(
       players: Seq[Player],

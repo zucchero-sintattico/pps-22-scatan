@@ -1,4 +1,4 @@
-package scatan.model
+package scatan.model.game
 
 class GameWithScores extends BasicGameTest:
 
@@ -14,7 +14,8 @@ class GameWithScores extends BasicGameTest:
     gameWithSettlementPlaced.scores(player1) should be(1)
     val gameWithSettlementAndCity = gameWithSettlementPlaced.assignBuilding(Building(BuildingType.City), player1)
     gameWithSettlementAndCity.scores(player1) should be(3)
-    val gameWithSettlementCityAndRoad = gameWithSettlementAndCity.assignBuilding(Building(BuildingType.Road), player1)
+    val gameWithSettlementCityAndRoad =
+      gameWithSettlementAndCity.assignBuilding(Building(BuildingType.Road), player1)
     gameWithSettlementCityAndRoad.scores(player1) should be(3)
   }
 
