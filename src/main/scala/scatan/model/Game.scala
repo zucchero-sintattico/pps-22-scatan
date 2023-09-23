@@ -20,25 +20,31 @@ final case class Player(name: String)
 trait Game:
   def players: Seq[Player]
   def buildings: Buildings
+  def developmentCardsOfPlayers: DevelopmentCardsOfPlayers
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
-
-  // def assignAward(award: Award, player: Player): Game
   def assignBuilding(building: Building, player: Player): Game
-
+  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
+  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
 object Game:
   def apply(players: Seq[Player]): Game =
     if players.size < 3 || players.size > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
-    else GameImpl(players, GameMap(2), Building.empty(players))
+    else GameImpl(players, GameMap(2), Building.empty(players), DevelopmentCardsOfPlayers.empty(players))
 
-  def apply(players: Seq[Player], gameMap: GameMap, buildings: Buildings): Game =
-    GameImpl(players, gameMap, buildings)
+  def apply(
+      players: Seq[Player],
+      gameMap: GameMap,
+      buildings: Buildings,
+      developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+  ): Game =
+    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers)
 
 private final case class GameImpl(
     players: Seq[Player],
     gameMap: GameMap,
-    buildings: Buildings
+    buildings: Buildings,
+    developmentCardsOfPlayers: DevelopmentCardsOfPlayers
 ) extends Game:
 
   def awards: Awards =
@@ -55,7 +61,19 @@ private final case class GameImpl(
 
   override def assignBuilding(building: Building, player: Player): Game =
     val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
-    Game(players, gameMap, newBuildings)
+    Game(players, gameMap, newBuildings, developmentCardsOfPlayers)
+
+  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
+    val newDevelopmentCardsOfPlayers =
+      developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers.get(player).get :+ developmentCard)
+    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers)
+
+  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
+    val remainingMatchingCards = developmentCardsOfPlayers.get(player).get.filter(_ == developmentCard).drop(1)
+    val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
+    val newDevelopmentCardsOfPlayers =
+      developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)
+    Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
@@ -73,24 +91,11 @@ private final case class GameImpl(
       )
     )
 
-  /** Merges the partial scores of the players,
-    *
-    * @param scoreMaps,
-    *   the scores of the players evaluated by different functions
-    * @return
-    *   the merged scores
-    */
   private def combinePartialScores(scoreMaps: Seq[Scores]): Scores =
     scoreMaps.foldLeft(Score.empty(players))((scores, scoreMap) =>
       scoreMap.foldLeft(scores)((scores, score) => scores.updated(score._1, scores(score._1) + score._2))
     )
 
-  /** The scores of the players The score is calculated by the buildings and the awards The buildings value are
-    * calculated by the building type
-    *
-    * @return
-    *   the scores of the players
-    */
   def scores: Scores =
     this.combinePartialScores(
       Seq(
