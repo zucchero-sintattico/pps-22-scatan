@@ -4,6 +4,7 @@ wartremoverWarnings ++= Warts.all
 wartremoverWarnings -= Wart.Equals
 wartremoverWarnings -= Wart.Overloading
 wartremoverWarnings -= Wart.ImplicitParameter
+wartremoverWarnings -= Wart.IterableOps
 
 lazy val scatan = (project in file("."))
   .enablePlugins(ScalaJSPlugin)

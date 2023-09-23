@@ -10,7 +10,7 @@ abstract class BasicGameTest extends BaseTest:
   val threePlayers = players(3)
   val fourPlayers = players(4)
 
-  it should "exists" in {
+  "As a Game" should "exists" in {
     val game: Game = null
   }
 
