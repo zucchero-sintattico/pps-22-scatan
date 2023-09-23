@@ -53,23 +53,27 @@ private final case class GameImpl(
       if roads.sizeIs >= 5 && roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
       else playerWithLongestRoad
     )
-    val largestArmy = (Player(""), 0)
+    val largestArmy = developmentCardsOfPlayers.foldLeft((Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
+      val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+      if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+      else playerWithLargestArmy
+    )
     Map(
       Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some(longestRoad._1) else None),
       Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some(largestArmy._1) else None)
     )
 
   override def assignBuilding(building: Building, player: Player): Game =
-    val newBuildings = buildings.updated(player, buildings.get(player).get :+ building)
+    val newBuildings = buildings.updated(player, buildings(player) :+ building)
     Game(players, gameMap, newBuildings, developmentCardsOfPlayers)
 
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val newDevelopmentCardsOfPlayers =
-      developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers.get(player).get :+ developmentCard)
+      developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard)
     Game(players, gameMap, buildings, newDevelopmentCardsOfPlayers)
 
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
-    val remainingMatchingCards = developmentCardsOfPlayers.get(player).get.filter(_ == developmentCard).drop(1)
+    val remainingMatchingCards = developmentCardsOfPlayers(player).filter(_ == developmentCard).drop(1)
     val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)

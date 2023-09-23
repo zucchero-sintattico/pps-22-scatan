@@ -124,6 +124,20 @@ class GameTest extends BaseTest:
     game7.awards(Award(AwardType.LongestRoad)) should be(Some(player1))
   }
 
+  it should "assign a LargestArmy award if there are conditions" in {
+    val game: Game = Game(players = threePlayers)
+    val player1 = threePlayers.head
+    val player2 = threePlayers.tail.head
+    val game2 = game.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    game2.awards(Award(AwardType.LargestArmy)) should be(Option.empty[Player])
+    val game3 = game2.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    game3.awards(Award(AwardType.LargestArmy)) should be(Option.empty[Player])
+    val game4 = game3.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    game4.awards(Award(AwardType.LargestArmy)) should be(Some(player1))
+    val game5 = game4.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+    game5.awards(Award(AwardType.LargestArmy)) should be(Some(player1))
+  }
+
   it should "have an empty building map initially" in {
     val game: Game = Game(players = threePlayers)
     game.buildings should be(Building.empty(threePlayers))
