@@ -28,6 +28,8 @@ trait Game:
   def assignBuilding(building: Building, player: Player): Game
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
+  def isThereAWinner: Boolean = scores.exists(_._2 >= 10)
+  def winner: Option[Player] = if isThereAWinner then Some(scores.maxBy(_._2)._1) else None
 object Game:
   def apply(players: Seq[Player]): Game =
     if players.sizeIs < 3 || players.sizeIs > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")

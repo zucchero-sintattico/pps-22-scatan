@@ -31,3 +31,20 @@ class GameWithScores extends BasicGameTest:
       .assignBuilding(Building(BuildingType.Road), player1)
     gameWithSettlementAndAward.scores(player1) should be(2)
   }
+
+  it should "recognize if there is a winner" in {
+    val game: Game = Game(players = threePlayers)
+    val player1 = threePlayers.head
+    val gameWithAWinner = game
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(Building(BuildingType.Settlement), player1)
+    gameWithAWinner.winner should be(Some(player1))
+  }
