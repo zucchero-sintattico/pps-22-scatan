@@ -81,20 +81,21 @@ private final case class GameImpl(
     )
 
   override def assignBuilding(building: Building, player: Player): Game =
-    val newBuildings = buildings.updated(player, buildings(player) :+ building)
-    this.copy(players, gameMap, newBuildings, developmentCardsOfPlayers, assignedAwards = awards)
+    this.copy(buildings = buildings.updated(player, buildings(player) :+ building), assignedAwards = awards)
 
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
-    val newDevelopmentCardsOfPlayers =
-      developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard)
-    this.copy(developmentCardsOfPlayers = newDevelopmentCardsOfPlayers, assignedAwards = awards)
+    this.copy(
+      developmentCardsOfPlayers =
+        developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard),
+      assignedAwards = awards
+    )
 
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
     val remainingMatchingCards = developmentCardsOfPlayers(player).filter(_ == developmentCard).drop(1)
     val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
     val newDevelopmentCardsOfPlayers =
       developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)
-    this.copy(players, gameMap, buildings, newDevelopmentCardsOfPlayers, assignedAwards = awards)
+    this.copy(developmentCardsOfPlayers = newDevelopmentCardsOfPlayers, assignedAwards = awards)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
