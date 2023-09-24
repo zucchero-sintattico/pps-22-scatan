@@ -9,6 +9,7 @@ import scatan.model.map.TileContent
 import scatan.model.map.UnproductiveTerrain.*
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
+import scatan.views.game.components.GameMapComponent.BuildingType.*
 
 /** A component to display the game map.
   */
@@ -33,6 +34,13 @@ object GameMapComponent:
     3 -> "player4"
   )
 
+  enum BuildingType:
+    case Settlement, City
+  private val buildings: Map[BuildingType, String] = Map(
+    Settlement -> "S",
+    City -> "C"
+  )
+
   def getMapComponent(gameMap: GameMap): Element =
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
@@ -52,7 +60,17 @@ object GameMapComponent:
         spot <- gameMap.nodes.toList
         coordinates <- spot.coordinates
         player = players.get((math.random() * 10).toInt) // TODO: correct player selection
-      yield svgSpot(coordinates, player)
+        building = buildings.get(
+          buildings.keySet.zipWithIndex
+            .find(_._2 == (math.random() * 2).toInt)
+            .getOrElse((Settlement, 0))
+            ._1
+        ) // TODO: correct building selection
+      yield svgSpot(
+        coordinates,
+        player,
+        if player.isDefined then building else None
+      ) // TODO: correct building selection
     )
 
   /** A svg hexagon.
@@ -142,14 +160,27 @@ object GameMapComponent:
     * @return
     *   the spot graphic
     */
-  private def svgSpot(coordinate: Coordinates, withPlayer: Option[String]): Element =
+  private def svgSpot(coordinate: Coordinates, withPlayer: Option[String], withType: Option[String]): Element =
     val Coordinates(x, y) = coordinate
-    svg.circle(
-      svg.cx := s"${x}",
-      svg.cy := s"${y}",
-      svg.r := s"$radius",
-      svg.className := s"${withPlayer.getOrElse("spot")}",
-      onClick --> (_ => println((x, y)))
+    svg.g(
+      svg.circle(
+        svg.cx := s"${x}",
+        svg.cy := s"${y}",
+        svg.r := s"$radius",
+        svg.className := s"${withPlayer.getOrElse("spot")}",
+        onClick --> (_ => println((x, y)))
+      ),
+      svg.text(
+        svg.x := s"${x}",
+        svg.y := s"${y}",
+        svg.textAnchor := "middle",
+        svg.dominantBaseline := "central",
+        svg.fontFamily := "sans-serif",
+        svg.fontSize := s"$radius",
+        svg.fontWeight := "bold",
+        svg.fill := "black",
+        s"${withType.getOrElse("")}"
+      )
     )
 
   private val resources: Map[Terrain, String] = Map(
