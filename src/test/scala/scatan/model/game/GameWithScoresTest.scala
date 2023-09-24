@@ -1,6 +1,6 @@
 package scatan.model.game
 
-class GameWithScores extends BasicGameTest:
+class GameWithScoresTest extends BasicGameTest:
 
   "A Game with Scores" should "have an empty scoreboard initially" in {
     val game: Game = Game(players = threePlayers)

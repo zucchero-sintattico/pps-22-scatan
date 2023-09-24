@@ -1,6 +1,6 @@
 package scatan.model.game
 
-class GameWithAwards extends BasicGameTest:
+class GameWithAwardsTest extends BasicGameTest:
   "A Game with Awards" should "have awards initially not assigned" in {
     val game: Game = Game(players = threePlayers)
     game.awards(Award(AwardType.LongestRoad)) should be(Option.empty[Player])

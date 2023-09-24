@@ -6,26 +6,17 @@ import scatan.model.GameMap
 
 final case class Player(name: String)
 
-/** The game, which contains all the information about the game state
-  * @param players
-  *   the players in the game
-  * @param buildings
-  *   the buildings of the players
-  * @param awards
-  *   the awards of the game
-  * @param gameMap
-  *   the game map
-  * @param scores
-  *   the scores of the players
-  */
 trait Game:
   def players: Seq[Player]
   def buildings: Buildings
-  def developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+  def developmentCards: DevelopmentCardsOfPlayers
+  def resourceCards: ResourceCards
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
+  def build(building: Building, player: Player): Game
   def assignBuilding(building: Building, player: Player): Game
+  def assignResourceCard(player: Player, resourceCard: ResourceCard): Game
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game
   def isThereAWinner: Boolean = scores.exists(_._2 >= 10)
@@ -38,6 +29,7 @@ object Game:
         players,
         GameMap(2),
         Building.empty(players),
+        ResourceCard.empty(players),
         DevelopmentCardsOfPlayers.empty(players),
         Award.empty()
       )
@@ -46,15 +38,17 @@ object Game:
       players: Seq[Player],
       gameMap: GameMap,
       buildings: Buildings,
+      resourceCards: ResourceCards,
       developmentCardsOfPlayers: DevelopmentCardsOfPlayers
   ): Game =
-    GameImpl(players, gameMap, buildings, developmentCardsOfPlayers)
+    GameImpl(players, gameMap, buildings, resourceCards, developmentCardsOfPlayers)
 
 private final case class GameImpl(
     players: Seq[Player],
     gameMap: GameMap,
     buildings: Buildings,
-    developmentCardsOfPlayers: DevelopmentCardsOfPlayers,
+    resourceCards: ResourceCards,
+    developmentCards: DevelopmentCardsOfPlayers,
     assignedAwards: Awards = Award.empty()
 ) extends Game:
 
@@ -67,12 +61,12 @@ private final case class GameImpl(
         else playerWithLongestRoad
       )
     val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
-    val largestArmy = developmentCardsOfPlayers.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))(
-      (playerWithLargestArmy, cardsOfPlayer) =>
+    val largestArmy =
+      developmentCards.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
         val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
         if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
         else playerWithLargestArmy
-    )
+      )
     Map(
       Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
                                        else precedentLongestRoad),
@@ -80,22 +74,43 @@ private final case class GameImpl(
                                        else precedentLargestArmy)
     )
 
-  override def assignBuilding(building: Building, player: Player): Game =
-    this.copy(buildings = buildings.updated(player, buildings(player) :+ building), assignedAwards = awards)
+  private def verifyResourceCost(player: Player, cost: Cost): Boolean =
+    cost.foldLeft(true)((result, resourceCost) =>
+      result && resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
+    )
 
-  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
+  override def assignBuilding(building: Building, player: Player): Game =
     this.copy(
-      developmentCardsOfPlayers =
-        developmentCardsOfPlayers.updated(player, developmentCardsOfPlayers(player) :+ developmentCard),
+      buildings = buildings.updated(player, buildings(player) :+ building),
+      assignedAwards = awards
+    )
+
+  override def build(building: Building, player: Player): Game =
+    if verifyResourceCost(player, building.buildingType.cost) then
+      val remainingResourceCards = building.buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
+        cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
+      )
+      this.copy(
+        buildings = buildings.updated(player, buildings(player) :+ building),
+        resourceCards = resourceCards.updated(player, remainingResourceCards),
+        assignedAwards = awards
+      )
+    else this
+
+  override def assignResourceCard(player: Player, resourceCard: ResourceCard): Game =
+    this.copy(
+      resourceCards = resourceCards.updated(player, resourceCards(player) :+ resourceCard)
+    )
+
+  override def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
+    this.copy(
+      developmentCards = developmentCards.updated(player, developmentCards(player) :+ developmentCard),
       assignedAwards = awards
     )
 
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): Game =
-    val remainingMatchingCards = developmentCardsOfPlayers(player).filter(_ == developmentCard).drop(1)
-    val notMatchingCards = developmentCardsOfPlayers(player).filter(_ != developmentCard)
-    val newDevelopmentCardsOfPlayers =
-      developmentCardsOfPlayers.updated(player, notMatchingCards ++ remainingMatchingCards)
-    this.copy(developmentCardsOfPlayers = newDevelopmentCardsOfPlayers, assignedAwards = awards)
+    val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
+    this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
 
   private def partialScoresWithAwards(): Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
