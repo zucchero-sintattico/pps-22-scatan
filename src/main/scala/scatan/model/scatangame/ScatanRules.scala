@@ -17,7 +17,7 @@ object ScatanRules extends GameRulesDSL[ScatanState, ScatanPhases, ScatanActions
   }
 
   When in RobberPlacement phase { case PlaceRobber(_) =>
-    Playing
+    CardStealing
   }
 
   When in CardStealing phase { case StoleCard(_) =>

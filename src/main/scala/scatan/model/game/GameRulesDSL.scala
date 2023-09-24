@@ -10,6 +10,7 @@ trait GameRulesDSL[State, P, A <: Action[State]]:
 
   def Players = new Players()
   class Players:
+    def canBe(sizes: Seq[Int]): Unit = configuration.playersSizes = sizes
     def canBe(range: Range): Unit = configuration.playersSizes = range
     def canBe(size: Int): Unit = configuration.playersSizes = Seq(size)
 
