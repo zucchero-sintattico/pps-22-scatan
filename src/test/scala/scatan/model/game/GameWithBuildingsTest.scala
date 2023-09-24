@@ -26,3 +26,13 @@ class GameWithBuildingsTest extends BasicGameTest:
     game.buildings(threePlayers.head) should be(Seq.empty[Building])
     gameWithBuilding.buildings(threePlayers.head) should be(Seq(Building(BuildingType.Settlement)))
   }
+
+  it should "consume the resources when a building is assigned" in {
+    val game: Game = Game(players = threePlayers)
+    val gameWithBuilding = game
+      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
+      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
+      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
+      .build(Building(BuildingType.Settlement), threePlayers.head)
+    gameWithBuilding.resourceCards(threePlayers.head) should be(Seq.empty[ResourceCard])
+  }
