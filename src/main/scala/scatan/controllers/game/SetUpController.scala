@@ -9,7 +9,8 @@ import scatan.lib.mvc.Controller
 
 /** This is the controller for the setup page.
   */
-trait SetUpController extends Controller
+trait SetUpController extends Controller:
+  def startGame(usernames: String*): Unit
 
 object SetUpController:
   def apply(requirements: Controller.Requirements[SetUpView, ApplicationState]): SetUpController =
@@ -21,4 +22,8 @@ object SetUpController:
   */
 private class SetUpControllerImpl(requirements: Controller.Requirements[SetUpView, ApplicationState])
     extends BaseController(requirements)
-    with SetUpController
+    with SetUpController:
+
+  override def startGame(usernames: String*): Unit =
+    this.model.update(_.createGame(usernames*))
+    println(this.model.state)
