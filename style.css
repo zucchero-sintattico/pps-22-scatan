@@ -7,6 +7,9 @@ body {
 
     --hover: #f2f2f2;
     --road: #363636;
+    --button-color: #f2f2f2;
+
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .spot {
@@ -14,7 +17,8 @@ body {
     opacity: 0;
 }
 
-.spot:hover, .road-center:hover {
+.spot:hover,
+.road-center:hover {
     fill: var(--hover);
     transition: all 0.2s ease-out;
     opacity: 0.4;
@@ -31,7 +35,7 @@ body {
     opacity: 0;
 }
 
-.home-view{
+.home-view {
     margin-top: 1em;
     margin-bottom: 1em;
     margin-left: auto;
@@ -44,7 +48,7 @@ body {
     align-items: center;
 }
 
-.home-title{
+.home-title {
     background-position-x: center;
     background-image: url("res/img/logo.png");
     background-size: contain;
@@ -52,10 +56,11 @@ body {
     width: 100%;
     height: 20em;
 }
+
 /* Home 
 display all menu item vertically
 */
-.home-menu{
+.home-menu {
     margin-top: 1em;
     margin-bottom: 1em;
     display: flex;
@@ -65,9 +70,58 @@ display all menu item vertically
     gap: 1em;
 }
 
-.home-menu-button{
+.home-menu-button {
     flex-grow: 1;
     font-size: large;
     font-weight: bold;
     height: 3em;
+    border-radius: 1em;
+    background-color: var(--button-color);
+}
+
+.setup-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.setup-view>* {
+    display: inline-block;
+    width: fit-content;
+    margin: auto;
+}
+
+.setup-title {
+    font-size: 5em;
+    font-weight: bold;
+    margin-top: 1em;
+    background-color: rgba(159, 109, 23, 0.5);
+    padding: 0.3em 0.6em;
+    border-radius: 1em;
+    box-shadow: 0 0 0.5em 0.2em rgba(159, 109, 23, 0.65);
+}
+
+.setup-menu-combobox {
+    margin-top: 2em;
+    width: 50%;
+    font-size: 1.2em;
+    width: fit-content;
+}
+
+.setup-menu-textbox {
+    margin-top: 1em;
+    font-size: 1.2em;
+}
+
+.setup-menu-button {
+    margin-top: 1em;
+    width: 50%;
+    height: 3em;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 1em;
+    background-color: var(--button-color);
+}
+
+.setup-menu-button:first-of-type {
+    margin-top: 2.5em;
 }

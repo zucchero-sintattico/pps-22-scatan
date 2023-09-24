@@ -32,10 +32,11 @@ class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
   }
 
   it should "respect the associative law in order to be a Monoid" in {
-    forAll { (r1: Int, c1: Int, s1: Int, r2: Int, c2: Int, s2: Int) =>
+    forAll { (r1: Int, c1: Int, s1: Int, r2: Int, c2: Int, s2: Int, r3: Int, c3: Int, s3: Int) =>
       val hexagon1 = Hexagon(r1, c1, s1)
       val hexagon2 = Hexagon(r2, c2, s2)
-      hexagon1 |+| hexagon2 shouldBe (hexagon2 |+| hexagon1)
+      val hexagon3 = Hexagon(r3, c3, s3)
+      (hexagon1 |+| hexagon2) |+| hexagon3 shouldBe hexagon1 |+| (hexagon2 |+| hexagon3)
     }
   }
 
