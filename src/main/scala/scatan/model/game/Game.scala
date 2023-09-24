@@ -1,58 +1,71 @@
 package scatan.model.game
 
-import scatan.model.game.GameRuleDSL.GameRuleDSLConfiguration
+import scatan.model.game.GameRulesDSL.GameRules
 
-trait Game[State, P, A <: Action[State]](gameRules: GameRuleDSLConfiguration[State, P, A]):
+import scala.language.reflectiveCalls
+type BasicState = { def isOver: Boolean }
+private trait StateGame[State <: BasicState]:
   def players: Seq[Player]
-  def turn: Turn
-  def phase: P
   def state: State
-  def isOver: Boolean = gameRules.isOver.exists(_.apply(state))
-  def canPlay(a: A): Boolean = gameRules.phasesMap(phase).isDefinedAt(a)
-  def play(action: A): Game[State, P, A]
-  def nextTurn(): Game[State, P, A]
+  def isOver: Boolean = state.isOver
+
+private trait Turnable extends StateGame[?]:
+  def turn: Turn[Player]
+  def nextTurn: Turnable
+
+private trait Playable[State <: BasicState, PhaseType, ActionType <: Action[State]] extends StateGame[State]:
+  def phase: PhaseType
+  def canPlay(action: ActionType): Boolean
+  def play(action: ActionType): Playable[State, PhaseType, ActionType]
+
+trait Game[State <: BasicState, PhaseType, ActionType <: Action[State]]
+    extends StateGame[State]
+    with Turnable
+    with Playable[State, PhaseType, ActionType]:
+  override def nextTurn: Game[State, PhaseType, ActionType]
+  override def play(action: ActionType): Game[State, PhaseType, ActionType]
 
 object Game:
-  def apply[State, P, A <: Action[State]](
+  def apply[State <: BasicState, PhaseType, ActionType <: Action[State]](
       players: Seq[Player]
   )(using
-      gameRuleDSL: GameRuleDSL[State, P, A]
-  ): Game[State, P, A] =
-    require(gameRuleDSL.configuration.playersSizes contains players.size, "Invalid number of players")
+      gameRulesDSL: GameRulesDSL[State, PhaseType, ActionType]
+  ): Game[State, PhaseType, ActionType] =
+    given gameRules: GameRules[State, PhaseType, ActionType] = gameRulesDSL.configuration
+    Game[State, PhaseType, ActionType](players)(gameRules)
+
+  def apply[State <: BasicState, PhaseType, ActionType <: Action[State]](
+      players: Seq[Player]
+  )(gameRules: GameRules[State, PhaseType, ActionType]): Game[State, PhaseType, ActionType] =
+    require(gameRules.playersSizes contains players.size, "Invalid number of players")
+    given GameRules[State, PhaseType, ActionType] = gameRules
     GameImpl(
       players,
       Turn(1, players.head),
-      gameRuleDSL.configuration.initialPhase.get,
-      gameRuleDSL.configuration.initialState.get
+      gameRules.initialPhase.get,
+      gameRules.initialState.get
     )
 
-private final case class GameImpl[State, P, A <: Action[State]](
+private final case class GameImpl[State <: BasicState, PhaseType, ActionType <: Action[State]](
     players: Seq[Player],
-    turn: Turn,
-    phase: P,
+    turn: Turn[Player],
+    phase: PhaseType,
     state: State
 )(using
-    gameRuleDSL: GameRuleDSL[State, P, A]
-) extends Game[State, P, A](gameRuleDSL.configuration):
-  private val gameConfig = gameRuleDSL.configuration
+    gameRules: GameRules[State, PhaseType, ActionType]
+) extends Game[State, PhaseType, ActionType]:
 
-  def nextTurn(): Game[State, P, A] =
-    if phase == gameConfig.endingPhase.get then
-      this.copy(
-        turn = turn.next(players),
-        phase = gameConfig.initialPhase.get
-      )
-    else this
+  override def play(action: ActionType) =
+    require(canPlay(action), "Invalid action: " + action)
+    val newState = action(state)
+    this.copy(state = newState, phase = gameRules.phasesMap(phase)(action))
 
-  def play(action: A): Game[State, P, A] = action match
-    case _ if !canPlay(action) =>
-      this
-    case _ =>
-      val nextPhase = gameConfig.phasesMap(phase)(action)
-      val newStatus = action.apply(state)
-      GameImpl(
-        players,
-        turn,
-        nextPhase,
-        newStatus
-      )
+  override def canPlay(action: ActionType): Boolean =
+    gameRules.phasesMap(phase).isDefinedAt(action)
+
+  override def nextTurn: Game[State, PhaseType, ActionType] =
+    val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
+    this.copy(
+      turn = turn.next(nextPlayer),
+      phase = gameRules.initialPhase.get
+    )
