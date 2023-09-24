@@ -9,6 +9,7 @@ import scatan.model.map.TileContent
 import scatan.model.map.UnproductiveTerrain.*
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
+import scatan.views.game.components.GameMapComponent.BuildingType.*
 
 /** A component to display the game map.
   */
@@ -26,6 +27,20 @@ object GameMapComponent:
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
+  private val players: Map[Int, String] = Map(
+    0 -> "player1",
+    1 -> "player2",
+    2 -> "player3",
+    3 -> "player4"
+  )
+
+  enum BuildingType:
+    case Settlement, City
+  private val buildings: Map[BuildingType, String] = Map(
+    Settlement -> "S",
+    City -> "C"
+  )
+
   def getMapComponent(gameMap: GameMap): Element =
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
@@ -39,11 +54,23 @@ object GameMapComponent:
         spots <- gameMap.edges.toList
         spot1Coordinates <- spots._1.coordinates
         spot2Coordinates <- spots._2.coordinates
-      yield svgRoad(spot1Coordinates, spot2Coordinates),
+        player = players.get((math.random() * 10).toInt) // TODO: correct player selection
+      yield svgRoad(spot1Coordinates, spot2Coordinates, player),
       for
         spot <- gameMap.nodes.toList
         coordinates <- spot.coordinates
-      yield svgSpot(coordinates)
+        player = players.get((math.random() * 10).toInt) // TODO: correct player selection
+        building = buildings.get(
+          buildings.keySet.zipWithIndex
+            .find(_._2 == (math.random() * 2).toInt)
+            .getOrElse((Settlement, 0))
+            ._1
+        ) // TODO: correct building selection
+      yield svgSpot(
+        coordinates,
+        player,
+        if player.isDefined then building else None
+      ) // TODO: correct building selection
     )
 
   /** A svg hexagon.
@@ -60,7 +87,7 @@ object GameMapComponent:
       svg.polygon(
         svg.points := svgCornersPoints,
         svg.cls := "hexagon",
-        svg.fill := s"url(#${tileContent.terrain.toImgId})" // TODO: add map from model terrain
+        svg.fill := s"url(#${tileContent.terrain.toImgId})"
       ),
       tileContent.number match
         case Some(n) => circularNumber(n)
@@ -102,7 +129,7 @@ object GameMapComponent:
     * @return
     *   the road graphic
     */
-  private def svgRoad(spot1: Coordinates, spot2: Coordinates): Element =
+  private def svgRoad(spot1: Coordinates, spot2: Coordinates, withPlayer: Option[String]): Element =
     val Coordinates(x1, y1) = spot1
     val Coordinates(x2, y2) = spot2
     svg.g(
@@ -111,15 +138,18 @@ object GameMapComponent:
         svg.y1 := s"${y1}",
         svg.x2 := s"${x2}",
         svg.y2 := s"${y2}",
-        svg.className := "road"
+        svg.className := s"road ${withPlayer.getOrElse("")}"
       ),
-      svg.circle(
-        svg.cx := s"${x1 + (x2 - x1) / 2}",
-        svg.cy := s"${y1 + (y2 - y1) / 2}",
-        svg.className := "road-center",
-        svg.r := s"$radius",
-        onClick --> (_ => println((spot1, spot2)))
-      )
+      withPlayer match
+        case Some(_) => ""
+        case _ =>
+          svg.circle(
+            svg.cx := s"${x1 + (x2 - x1) / 2}",
+            svg.cy := s"${y1 + (y2 - y1) / 2}",
+            svg.className := "road-center",
+            svg.r := s"$radius",
+            onClick --> (_ => println((spot1, spot2)))
+          )
     )
 
   /** Generate the spot graphic
@@ -130,14 +160,27 @@ object GameMapComponent:
     * @return
     *   the spot graphic
     */
-  private def svgSpot(coordinate: Coordinates): Element =
+  private def svgSpot(coordinate: Coordinates, withPlayer: Option[String], withType: Option[String]): Element =
     val Coordinates(x, y) = coordinate
-    svg.circle(
-      svg.cx := s"${x}",
-      svg.cy := s"${y}",
-      svg.r := s"$radius",
-      svg.className := "spot",
-      onClick --> (_ => println((x, y)))
+    svg.g(
+      svg.circle(
+        svg.cx := s"${x}",
+        svg.cy := s"${y}",
+        svg.r := s"$radius",
+        svg.className := s"${withPlayer.getOrElse("spot")}",
+        onClick --> (_ => println((x, y)))
+      ),
+      svg.text(
+        svg.x := s"${x}",
+        svg.y := s"${y}",
+        svg.textAnchor := "middle",
+        svg.dominantBaseline := "central",
+        svg.fontFamily := "sans-serif",
+        svg.fontSize := s"$radius",
+        svg.fontWeight := "bold",
+        svg.fill := "black",
+        s"${withType.getOrElse("")}"
+      )
     )
 
   private val resources: Map[Terrain, String] = Map(

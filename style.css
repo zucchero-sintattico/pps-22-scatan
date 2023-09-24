@@ -12,6 +12,7 @@ body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+/* Game */
 .spot {
     /* fill: var(--spot); */
     opacity: 0;
@@ -34,6 +35,31 @@ body {
     fill: white;
     opacity: 0;
 }
+
+.player1 {
+    fill: #ff0000;
+    stroke: #ff0000;
+    opacity: 1;
+}
+
+.player2 {
+    fill: #0000ff;
+    stroke: #0000ff;
+    opacity: 1;
+}
+
+.player3 {
+    fill: #00ff00;
+    stroke: #00ff00;
+    opacity: 1;
+}
+
+.player4 {
+    fill: #ffff00;
+    stroke: #ffff00;
+    opacity: 1;
+}
+/* end Game */
 
 .home-view {
     margin-top: 1em;
@@ -58,7 +84,7 @@ body {
 }
 
 /* Home 
-display all menu item vertically
+  display all menu item vertically
 */
 .home-menu {
     margin-top: 1em;
@@ -79,6 +105,7 @@ display all menu item vertically
     background-color: var(--button-color);
 }
 
+/* SetUp */
 .setup-view {
     display: flex;
     flex-direction: column;
