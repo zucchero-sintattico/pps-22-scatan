@@ -1,10 +1,9 @@
 package scatan.views.home
 
 import com.raquo.laminar.api.L.*
-import scatan.lib.mvc.{ScalaJSView, View}
 import scatan.controllers.home.AboutController
-import scatan.lib.mvc.{View, BaseScalaJSView}
 import scatan.Pages
+import scatan.lib.mvc.{BaseScalaJSView, View}
 
 trait AboutView extends View
 

@@ -1,7 +1,7 @@
 package scatan.model
 
 import scatan.BaseTest
-import scatan.model.game.Game
+import scatan.lib.game.Game
 
 class ApplicationStateTest extends BaseTest:
 

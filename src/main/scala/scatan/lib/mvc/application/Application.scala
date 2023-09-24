@@ -1,8 +1,7 @@
 package scatan.lib.mvc.application
 
-import scatan.lib.mvc.*
-import scatan.lib.mvc.page.*
-import scatan.lib.mvc.application.*
+import scatan.lib.mvc.Model
+import scatan.lib.mvc.page.{ApplicationPage, PageFactory}
 
 /** An application is a collection of pages that share a model.
   *

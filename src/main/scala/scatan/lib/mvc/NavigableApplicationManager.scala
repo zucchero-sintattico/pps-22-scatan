@@ -1,6 +1,6 @@
 package scatan.lib.mvc
 
-import scatan.lib.mvc.application.{Application, NavigableApplication}
+import scatan.lib.mvc.application.NavigableApplication
 
 object NavigableApplicationManager:
   private var _application: Option[NavigableApplication[?, ?]] = None

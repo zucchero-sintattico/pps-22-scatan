@@ -1,16 +1,13 @@
 package scatan.views.game
 
 import scatan.controllers.game.GameController
-
 import scatan.Pages
 import com.raquo.laminar.api.L.*
-import scatan.lib.mvc.{ScalaJSView, View}
+import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.map.Spot
 import scatan.model.map.Hexagon
 import scatan.model.GameMap
 import scatan.views.game.components.GameMapComponent.getMapComponent
-import scatan.lib.mvc.BaseView
-import scatan.lib.mvc.BaseScalaJSView
 
 trait GameView extends View
 

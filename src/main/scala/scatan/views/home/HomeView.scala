@@ -1,12 +1,9 @@
 package scatan.views.home
 
-import scatan.lib.mvc.View
 import scatan.controllers.home.HomeController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
-
-import scatan.lib.mvc.{ScalaJSView, View}
-import scatan.lib.mvc.{View, BaseScalaJSView}
+import scatan.lib.mvc.{BaseScalaJSView, View}
 
 /** This is the view for the home page.
   */

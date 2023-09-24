@@ -1,12 +1,11 @@
 package scatan.controllers.game
 
-import scatan.lib.mvc.Controller.Requirements
-import scatan.lib.mvc.NavigableApplicationManager
 import scatan.Pages
 import scatan.model.ApplicationState
-import scatan.lib.mvc.Controller
 import scatan.views.game.GameView
-import scatan.lib.mvc.BaseController
+import scatan.Pages
+import scatan.lib.mvc.{BaseController, Controller}
+import scatan.model.ApplicationState
 
 trait GameController extends Controller
 
