@@ -1,35 +1,23 @@
 # Sprint 2 [04/09/2023 - 10/09/2023]
 
-| Backlog Item                                                                                                    | Id  | Task                                                                                         | Stima | Volontario  | D1 | D2 | D3 | D4 | D5 | D6 | D7 |
-|:----------------------------------------------------------------------------------------------------------------|:---:|:---------------------------------------------------------------------------------------------|:-----:|-------------|----|----|----|----|----|----|----|
-| Menù principale dell'applicazione & iniziare una partita                                                        | 4.1 | Integrare MVC con scalaJs                                                                    |   2   | Mazzoli     | 2  | 2  | 1  | 0  | 0  | 0  | 0  |
-| Menù principale dell'applicazione & iniziare una partita                                                        | 4.2 | Creazione pagina menù principale                                                             |   2   | Borriello   | 0  | 0  | 0  | 0  | 0  | 0  | 0  |
-| Menù principale dell'applicazione & iniziare una partita                                                        | 4.3 | Creazione pagina di inizio partita                                                           |   1   | Borriello   | 1  | 1  | 0  | 0  | 0  | 0  | 0  |
-| Menù principale dell'applicazione & iniziare una partita                                                        | 4.4 | Creazione pagina di gioco                                                                    |   1   | Borriello   | 1  | 1  | 1  | 1  | 1  | 0  | 0  |
-| Menù principale dell'applicazione & iniziare una partita                                                        | 4.5 | Doc MVC                                                                                      |   2   | Mazzoli     | 2  | 2  | 2  | 2  | 2  | 0  | 0  |
-| Come giocatore, voglio vedere la mappa e i numeri che indicano quali lanci produrranno risorse per ogni tessera | 5.1 | Model Mappa                                                                                  |   8   | Team        | 6  | 4  | 2  | 1  | 0  | 0  | 0  |
-| Come giocatore, voglio vedere la mappa e i numeri che indicano quali lanci produrranno risorse per ogni tessera | 5.2 | Mostrare graficamente la mappa                                                               |   4   | Andruccioli | 4  | 4  | 4  | 4  | 2  | 1  | 0  |
-| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.1 | Gestione input dalla view                                                                    |   4   | Team        | 4  | 4  | 4  | 4  | 4  | 4  | 3  |
-| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.2 | Update del model a fronte dell'input dell'utente                                             |   2   |             | 2  | 2  | 2  | 2  | 2  | 2  | 2  |
-| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.3 | Update della view in base al cambio del model                                                |   2   |             | 2  | 2  | 2  | 2  | 2  | 2  | 2  |
-| Come giocatore, voglio ricevere le materie prime iniziali                                                       | 7.1 | Aggiornamento delle risorse dei giocatori in base ai posizionamenti iniziali e print a video |   4   |             | 4  | 4  | 4  | 4  | 4  | 4  | 4  |
-| **TOT**                                                                                                         |     |                                                                                              |  32   |             | 28 | 26 | 22 | 20 | 17 | 13 | 11 |
+Giornalemnte, viene calato il quantitativo effettivo
 
-## Ore
-
-| Id/task               | Effettivo (h) lavorato | Volontario  |
-|:----------------------|:----------------------:|-------------|
-| Integrare WartRemover |           1            | Andruccioli |
-| Setup README          |           1            | Borriello   |
-| 4.1                   |           4            | Mazzoli     |
-| 4.2                   |           2            | Borriello   |
-| 4.3                   |           1            | Borriello   |
-| 4.4                   |           1            | Borriello   |
-| 4.5                   |           2            | Mazzoli     |
-| 5.1                   |           20           | Team        |
-| 5.2                   |           6            | Andruccioli |
-| 6.1                   |           2            | Team        |
-| **TOT**               |           40           |             |
+| Backlog Item                                                                                                    | Id  | Task                                                                                         | Volontario  | Stima (h) | Effettivo (h) | D1 | D2 | D3 | D4 | D5 | D6 | D7 |
+|:----------------------------------------------------------------------------------------------------------------|:---:|:---------------------------------------------------------------------------------------------|-------------|:---------:|:-------------:|----|----|----|----|----|----|----|
+| Integrare WartRemover                                                                                           |  0  | Eventuale                                                                                    | Andruccioli |     0     |       1       | 1  | 0  | 0  | 0  | 0  | 0  | 0  |
+| Setup README                                                                                                    |  0  | Eventuale                                                                                    | Borriello   |     0     |       1       | 0  | 0  | 0  | 0  | 0  | 0  | 0  |
+| Menù principale dell'applicazione & iniziare una partita                                                        | 4.1 | Integrare MVC con scalaJs                                                                    | Mazzoli     |     2     |       4       | 4  | 4  | 2  | 0  | 0  | 0  | 0  |
+| Menù principale dell'applicazione & iniziare una partita                                                        | 4.2 | Creazione pagina menù principale                                                             | Borriello   |     2     |       2       | 0  | 0  | 0  | 0  | 0  | 0  | 0  |
+| Menù principale dell'applicazione & iniziare una partita                                                        | 4.3 | Creazione pagina di inizio partita                                                           | Borriello   |     1     |       1       | 1  | 1  | 0  | 0  | 0  | 0  | 0  |
+| Menù principale dell'applicazione & iniziare una partita                                                        | 4.4 | Creazione pagina di gioco                                                                    | Borriello   |     1     |       1       | 1  | 1  | 1  | 1  | 1  | 0  | 0  |
+| Menù principale dell'applicazione & iniziare una partita                                                        | 4.5 | Doc MVC                                                                                      | Mazzoli     |     2     |       2       | 2  | 2  | 2  | 2  | 2  | 0  | 0  |
+| Come giocatore, voglio vedere la mappa e i numeri che indicano quali lanci produrranno risorse per ogni tessera | 5.1 | Model Mappa                                                                                  | Team        |     8     |      20       | 16 | 12 | 8  | 4  | 0  | 0  | 0  |
+| Come giocatore, voglio vedere la mappa e i numeri che indicano quali lanci produrranno risorse per ogni tessera | 5.2 | Mostrare graficamente la mappa                                                               | Andruccioli |     4     |       6       | 6  | 6  | 6  | 6  | 4  | 2  | 0  |
+| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.1 | Gestione input dalla view                                                                    | Team        |     4     |       2       | 4  | 4  | 4  | 4  | 4  | 4  | 2  |
+| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.2 | Update del model a fronte dell'input dell'utente                                             | -           |     2     |       -       | -  | -  | -  | -  | -  | -  | -  |
+| Come giocatore, voglio gestire il posizionamento iniziale                                                       | 6.3 | Update della view in base al cambio del model                                                | -           |     2     |       -       | -  | -  | -  | -  | -  | -  | -  |
+| Come giocatore, voglio ricevere le materie prime iniziali                                                       | 7.1 | Aggiornamento delle risorse dei giocatori in base ai posizionamenti iniziali e print a video | -           |     4     |       -       | -  | -  | -  | -  | -  | -  | -  |
+| **TOT**                                                                                                         |     |                                                                                              | -           |    32     |      40       | 35 | 30 | 23 | 17 | 11 | 6  | 2  |
 
 ## Sprint goal
 
