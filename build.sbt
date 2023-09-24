@@ -4,7 +4,10 @@ wartremoverWarnings ++= Warts.all
 wartremoverWarnings -= Wart.Equals
 wartremoverWarnings -= Wart.Overloading
 wartremoverWarnings -= Wart.ImplicitParameter
+<<<<<<< HEAD
 wartremoverWarnings -= Wart.IterableOps
+=======
+>>>>>>> develop
 wartremoverWarnings -= Wart.DefaultArguments
 
 lazy val scatan = (project in file("."))

@@ -1,7 +1,7 @@
 package scatan.views
 
 import scatan.model.map.Hexagon
-import scatan.model.Spot
+import scatan.model.map.Spot
 
 /** @param value
   */

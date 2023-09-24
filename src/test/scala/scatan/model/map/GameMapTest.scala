@@ -1,70 +1,33 @@
 package scatan.model.map
 
-import scatan.BaseTest
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import scatan.utils.UnorderedPair
-import scatan.utils.UnorderedTriple
-import scatan.model.{Spot, GameMap}
+import scatan.BaseTest
+import scatan.model.GameMap
 
 class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
 
-  val rangeToTest: Range = 0 to 4
   val standardGameMap = GameMap(2)
 
-  "Hexagonal tiles in GameMap" should "obey to cubic coordinates rules" in {
-    rangeToTest foreach { (layer: Int) =>
-      val gameMap = GameMap(layer)
-      gameMap.tiles.foreach { (hexagon: Hexagon) =>
-        hexagon.row + hexagon.col + hexagon.slice shouldBe 0
-      }
+  "A standard GameMap" should "have Content in tile" in {
+    standardGameMap.tileWithTerrain.foreach { (hexagon: Hexagon) =>
+      standardGameMap.toContent.isDefinedAt(hexagon) shouldBe true
     }
   }
 
-  it should "be $1 + \\sum_{n=0}^{layer} 6*n$" in {
-    rangeToTest foreach { (layer: Int) =>
-      val gameMap = GameMap(layer)
-      gameMap.tiles.size shouldBe 1 + (0 to layer).map(6 * _).sum
-    }
+  it should "have 19 Terrains" in {
+    standardGameMap.tileWithTerrain should have size 19
   }
 
-  "Spots in GameMap" should "be $\\sum_{n=0}^{layer} 6 + 12*n$" in {
-    rangeToTest foreach { (layer: Int) =>
-      val gameMap = GameMap(layer)
-      gameMap.nodes.size shouldBe (0 to layer).map(6 + 12 * _).sum
-    }
+  it should "have one Desert tile" in {
+    val desertTiles =
+      standardGameMap.tileWithTerrain
+        .filter(standardGameMap.toContent(_).terrain == UnproductiveTerrain.DESERT)
+    desertTiles should have size 1
   }
 
-  "Roads in GameMap" should "be $\\sum_{n=0}^{layer} 6 + 18*n$" in {
-    rangeToTest foreach { (layer: Int) =>
-      val gameMap = GameMap(layer)
-      gameMap.edges.size shouldBe (0 to layer).map(6 + 18 * _).sum
-    }
-  }
-
-  "Every spot in GameMap" should "be over 3 tiles" in {
-    rangeToTest foreach { (layer: Int) =>
-      val gameMap = GameMap(layer)
-      gameMap.nodes.foreach { (spot: Spot) =>
-        spot.toSet.size shouldBe 3
-      }
-    }
-  }
-
-  "A Spot in the center" should "have 3 roads" in {
-    val gameMap = GameMap(1)
-    val centeredHexagon = Hexagon(0, 0, 0)
-    for spot <- gameMap.nodes.filter(_ contains centeredHexagon)
-    do gameMap.edges.filter(_ contains spot) should have size 3
-  }
-
-  "A Spot near border" should "have 2 roads" in {
-    val gameMap = GameMap(0)
-    for spot <- gameMap.nodes
-    do gameMap.edges.filter(_ contains spot) should have size 2
-  }
-
-  "A standard GameMap" should "have Terrains" in {
-    standardGameMap.tiles.foreach { (hexagon: Hexagon) =>
-      standardGameMap.toTerrain.isDefinedAt(hexagon) shouldBe true
-    }
+  it should "do not have number over Desert tile" in {
+    standardGameMap.tileWithTerrain
+      .filter(standardGameMap.toContent(_).terrain == UnproductiveTerrain.DESERT)
+      .map(standardGameMap.toContent)
+      .map(_.number) should contain only None
   }
