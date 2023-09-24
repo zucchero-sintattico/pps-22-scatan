@@ -2,7 +2,7 @@ package scatan.model.map
 
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
-import scatan.model.{GameMap}
+import scatan.model.GameMap
 
 class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
 
