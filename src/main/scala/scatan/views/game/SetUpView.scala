@@ -38,7 +38,6 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
   private def validateNames(usernames: String*) =
     usernames.forall(_.matches(".*\\S.*"))
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def switchToGame(): Unit =
     val usernames =
       for i <- 1 to numberOfUsers.now()
