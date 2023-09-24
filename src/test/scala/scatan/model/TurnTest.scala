@@ -1,33 +1,31 @@
 package scatan.model
 
 import scatan.BaseTest
-import game.{Player, Turn}
+import scatan.model.game.{Player, Turn, next}
 
 class TurnTest extends BaseTest:
 
+  val player = Player("a")
+
   "A turn" should "have a number" in {
-    val turn = Turn(1, Player("a"))
+    val turn = Turn(1, player)
     turn.number shouldBe 1
   }
 
   it should "not allow to have a number less than 1" in {
     assertThrows[IllegalArgumentException] {
-      Turn(0, Player("a"))
+      Turn(0, player)
     }
   }
 
   it should "have a player" in {
-    val turn = Turn(1, Player("a"))
-    turn.currentPlayer shouldBe Player("a")
+    val turn = Turn(1, player)
+    turn.player shouldBe player
   }
 
-  it should "not allow to have a player with an empty name" in {
-    assertThrows[IllegalArgumentException] {
-      Turn(1, Player(""))
-    }
-  }
-
-  it should "have a phase" in {
-    val turn = Turn(1, Player("a"))
-    turn.currentPhase shouldBe Phases.Initial
+  it should "be nextable using players" in {
+    val players = List(Player("a"), Player("b"), Player("c"))
+    for i <- 1 to 3 do
+      val turn = Turn(i, players(i - 1))
+      turn.next(players) shouldBe Turn(i + 1, players(i % 3))
   }

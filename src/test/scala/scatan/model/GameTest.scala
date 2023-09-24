@@ -1,59 +1,86 @@
 package scatan.model
 
 import scatan.BaseTest
-import game.{Player, Turn, Game}
+import scatan.model.game.{Game, GameRuleDSL, Player}
+import scatan.model.scatangame.ScatanActions.RollDice
+import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules}
 
 class GameTest extends BaseTest:
+
+  given GameRuleDSL[ScatanPhases, ScatanActions] = ScatanRules
 
   private def players(n: Int): Seq[Player] =
     (1 to n).map(i => Player(s"Player $i"))
 
-  val threePlayers = players(3)
-  val fourPlayers = players(4)
+  val threePlayers: Seq[Player] = players(3)
+  val fourPlayers: Seq[Player] = players(4)
 
   "A Game" should "exists" in {
-    val game: Game = null
+    val game: Game[?, ?] = null
   }
 
   it should "have players" in {
-    val game: Game = Game(players = threePlayers)
+    val game = Game(threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "expose if the game is over" in {
-    val game = Game(players = threePlayers)
+    val game = Game(threePlayers)
     game.isOver shouldBe false
   }
 
-  it should "be ended" in {
-    val game = Game(
-      players = threePlayers,
-      currentTurn = Turn(1, threePlayers(0)),
-      isOver = true
-    )
+  it should "be endable" in {
+    val game = Game(threePlayers, isOver = true)
     game.isOver shouldBe true
   }
 
   it should "take players" in {
-    val game: Game = Game(players = threePlayers)
+    val game = Game(threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "not allow fewer than 3 players" in {
     for n <- 0 to 2
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n))
+      Game(players(n))
     }
   }
 
   it should "not allow more than 4 players" in {
     for n <- 5 to 10
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n))
+      Game(players(n))
     }
   }
 
-  it should "have a current player" in {
-    val game: Game = Game(players = threePlayers)
-    game.currentPlayer should be(threePlayers.head)
+  it should "have a phase" in {
+    val game = Game(threePlayers)
+    game.phase shouldBe ScatanPhases.Initial
+  }
+
+  it should "have a turn" in {
+    val game = Game(threePlayers)
+    game.turn.number shouldBe 1
+    game.turn.player shouldBe threePlayers(0)
+  }
+
+  it should "allow to change turn" in {
+    val game = Game(threePlayers)
+    def nextTurn(game: Game[ScatanPhases, ScatanActions]): Game[ScatanPhases, ScatanActions] =
+      game.play(RollDice(1)).nextTurn()
+    val newGame = nextTurn(game)
+    println(newGame)
+    newGame.turn.number shouldBe 2
+    newGame.turn.player shouldBe threePlayers(1)
+  }
+
+  it should "do a circular turn" in {
+    var game = Game(threePlayers)
+    def nextTurn(game: Game[ScatanPhases, ScatanActions]): Game[ScatanPhases, ScatanActions] =
+      game.play(RollDice(1)).nextTurn()
+    for i <- 1 to 10
+    do
+      game.turn.number shouldBe i
+      game.turn.player shouldBe threePlayers(((i - 1) % 3))
+      game = nextTurn(game)
   }
