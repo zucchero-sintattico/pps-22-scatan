@@ -9,7 +9,7 @@ final case class Player(name: String)
 trait Game:
   def players: Seq[Player]
   def buildings: Buildings
-  def developmentCards: DevelopmentCardsOfPlayers
+  def developmentCards: DevelopmentCards
   def resourceCards: ResourceCards
   def awards: Awards
   def gameMap: GameMap
@@ -22,6 +22,15 @@ trait Game:
   def isThereAWinner: Boolean = scores.exists(_._2 >= 10)
   def winner: Option[Player] = if isThereAWinner then Some(scores.maxBy(_._2)._1) else None
 object Game:
+  /** Creates a new game with the given players The game must have 3 or 4 players The game map is created with a fixed
+    * number of hexagons The buildings are empty The resource cards are empty The development cards are empty The awards
+    * are empty
+    *
+    * @param players
+    *   the players of the game
+    * @return
+    *   the new game
+    */
   def apply(players: Seq[Player]): Game =
     if players.sizeIs < 3 || players.sizeIs > 4 then throw IllegalArgumentException("Game must have 3 or 4 players")
     else
@@ -39,7 +48,7 @@ object Game:
       gameMap: GameMap,
       buildings: Buildings,
       resourceCards: ResourceCards,
-      developmentCardsOfPlayers: DevelopmentCardsOfPlayers
+      developmentCardsOfPlayers: DevelopmentCards
   ): Game =
     GameImpl(players, gameMap, buildings, resourceCards, developmentCardsOfPlayers)
 
@@ -48,7 +57,7 @@ private final case class GameImpl(
     gameMap: GameMap,
     buildings: Buildings,
     resourceCards: ResourceCards,
-    developmentCards: DevelopmentCardsOfPlayers,
+    developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
 ) extends Game:
 
@@ -57,7 +66,7 @@ private final case class GameImpl(
     val longestRoad =
       buildings.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))((playerWithLongestRoad, buildingsOfPlayer) =>
         val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
-        if roads.sizeIs >= 5 && roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+        if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
         else playerWithLongestRoad
       )
     val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
