@@ -118,13 +118,13 @@ private final case class GameImpl(
     val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
     this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
 
-  private def partialScoresWithAwards(): Scores =
+  private def partialScoresWithAwards: Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
     playersWithAwards.foldLeft(Score.empty(players))((scores, playerWithCount) =>
       scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
     )
 
-  private def partialScoresWithBuildings(): Scores =
+  private def partialScoresWithBuildings: Scores =
     def buildingScore(buildingType: BuildingType): Int = buildingType match
       case BuildingType.Settlement => 1
       case BuildingType.City       => 2
@@ -136,15 +136,8 @@ private final case class GameImpl(
       )
     )
 
-  private def combinePartialScores(scoreMaps: Seq[Scores]): Scores =
-    scoreMaps.foldLeft(Score.empty(players))((scores, scoreMap) =>
-      scoreMap.foldLeft(scores)((scores, score) => scores.updated(score._1, scores(score._1) + score._2))
-    )
-
+  import Score.given
+  import cats.syntax.semigroup.*
   def scores: Scores =
-    this.combinePartialScores(
-      Seq(
-        partialScoresWithBuildings(),
-        partialScoresWithAwards()
-      )
-    )
+    val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
+    partialScores.foldLeft(Score.empty(players))(_ |+| _)
