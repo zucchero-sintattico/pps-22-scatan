@@ -1,11 +1,11 @@
 package scatan.model.gamedsl
 
-import scatan.model.game.{Action, Game, GameRulesDSL}
+import scatan.model.game.{Action, Game, GameRulesDSL, Player}
 import scatan.{BaseTest, model}
 
 class GameDSLTest extends BaseTest:
 
-  case class MyState(isOver: Boolean = false)
+  case class MyState(players: Seq[Player], isOver: Boolean = false, winner: Option[Player] = None)
   enum MyPhases:
     case Setup, Play
 
@@ -29,8 +29,8 @@ class GameDSLTest extends BaseTest:
 
   it should "allow to specify the initial state" in {
     object GameRules extends MyGameDSL:
-      Start withState MyState()
-      GameRules.configuration.initialState shouldBe Some(MyState())
+      Start withState { players => MyState(players) }
+      GameRules.configuration.initialState shouldBe Some(MyState(_))
   }
 
   it should "allow to specify the number of players" in {

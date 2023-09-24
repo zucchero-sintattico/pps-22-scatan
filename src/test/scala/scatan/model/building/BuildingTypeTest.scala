@@ -2,11 +2,10 @@ package scatan.model.building
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.BuildingType
-import scatan.model.BuildingType.*
-import scatan.model.ResourceType.*
-import scatan.model.Cost
+import scatan.model.scatangame.BuildingType.*
+import scatan.model.scatangame.ResourceType.*
 import scatan.BaseTest
+import scatan.model.scatangame.{BuildingType, Cost}
 
 class BuildingTypeTest extends BaseTest:
 

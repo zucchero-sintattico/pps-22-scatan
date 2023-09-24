@@ -3,7 +3,7 @@ package scatan.model
 import scatan.BaseTest
 import scatan.model.game.{Game, GameRulesDSL, Player}
 import scatan.model.scatangame.ScatanActions.RollDice
-import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
+import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules, ScatanState, ScatanStateImpl}
 
 class GameTest extends BaseTest:
 
@@ -34,7 +34,7 @@ class GameTest extends BaseTest:
 
   it should "be endable" in {
     val config = ScatanRules.configuration
-    config.initialState = Some(ScatanState(isOver = true))
+    config.initialState = Some(ScatanState.ended)
     val game = Game(threePlayers)(config)
     game.isOver shouldBe true
   }

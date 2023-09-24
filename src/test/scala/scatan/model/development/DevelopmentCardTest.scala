@@ -2,8 +2,8 @@ package scatan.model.development
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.{DevelopmentCard, DevelopmentType}
 import scatan.BaseTest
+import scatan.model.scatangame.{DevelopmentCard, DevelopmentType}
 
 class DevelopmentCardTest extends BaseTest:
 

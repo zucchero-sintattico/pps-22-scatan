@@ -7,7 +7,7 @@ object ScatanRules extends GameRulesDSL[ScatanState, ScatanPhases, ScatanActions
   import ScatanPhases.*
 
   Players canBe (3 to 4)
-  Start withState ScatanState()
+  Start withState { players => ScatanState(players) }
   Start withPhase Initial
   Turn canEndIn Playing
 

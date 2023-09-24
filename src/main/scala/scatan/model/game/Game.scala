@@ -1,13 +1,15 @@
 package scatan.model.game
 
 import scatan.model.game.GameRulesDSL.GameRules
+import scatan.model.scatangame.{Award, AwardType, Building, BuildingType, DevelopmentCard, DevelopmentCardsOfPlayers, DevelopmentType, ResourceCard, Score}
 
 import scala.language.reflectiveCalls
-type BasicState = { def isOver: Boolean }
+type BasicState = { def isOver: Boolean; def winner: Option[Player] }
 private trait StateGame[State <: BasicState]:
   def players: Seq[Player]
   def state: State
   def isOver: Boolean = state.isOver
+  def winner: Option[Player] = state.winner
 
 private trait Turnable extends StateGame[?]:
   def turn: Turn[Player]
@@ -43,7 +45,7 @@ object Game:
       players,
       Turn(1, players.head),
       gameRules.initialPhase.get,
-      gameRules.initialState.get
+      gameRules.initialState.get(players)
     )
 
 private final case class GameImpl[State <: BasicState, PhaseType, ActionType <: Action[State]](

@@ -1,6 +1,11 @@
-package scatan.model
+package scatan.model.scatangame
 
-import ResourceType.*
+
+import scatan.lib.mvc.Model
+import scatan.model.game.Player
+import scatan.model.scatangame.*
+import scatan.model.scatangame.ResourceType.*
+import scatan.model.scatangame.BuildingType.*
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]
@@ -8,7 +13,7 @@ type Cost = Map[ResourceType, Int]
 object Cost:
   def apply(resourceCosts: ResourceCost*): Cost = resourceCosts.toMap
 
-import BuildingType.*
+
 enum BuildingType(val cost: Cost):
   case Settlement
       extends BuildingType(
@@ -37,3 +42,17 @@ object BuildingType:
   extension (resourceType: ResourceType) def *(amount: Int): ResourceCost = (resourceType, amount)
 
 final case class Building(buildingType: BuildingType)
+
+/** A map of players to their buildings
+  */
+type Buildings = Map[Player, Seq[Building]]
+object Building:
+  /** Returns a map of players to an empty buildings sequence
+    *
+    * @param players
+    *   the players to create the empty buildings map for
+    * @return
+    *   the empty buildings map
+    */
+  def empty(players: Seq[Player]): Buildings =
+    players.map(player => (player, Seq.empty[Building])).toMap

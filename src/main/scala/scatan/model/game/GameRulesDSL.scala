@@ -4,7 +4,7 @@ import scatan.model.game.GameRulesDSL.GameRules
 
 given Conversion[GameRulesDSL[?, ?, ?], GameRules[?, ?, ?]] = _.configuration
 
-trait GameRulesDSL[State, P, A <: Action[State]]:
+trait GameRulesDSL[State <: BasicState, P, A <: Action[State]]:
 
   val configuration = GameRules[State, P, A]()
 
@@ -16,7 +16,7 @@ trait GameRulesDSL[State, P, A <: Action[State]]:
 
   def Start = new Start()
   class Start:
-    def withState(state: State): Unit = configuration.initialState = Some(state)
+    def withState(stateFactory: Seq[Player] => State): Unit = configuration.initialState = Some(stateFactory)
     def withPhase(phase: P): Unit = configuration.initialPhase = Some(phase)
 
   def When = new When()
@@ -32,14 +32,14 @@ trait GameRulesDSL[State, P, A <: Action[State]]:
 
 object GameRulesDSL:
 
-  class GameRules[State, P, A <: Action[State]]:
+  class GameRules[State <: BasicState, P, A <: Action[State]]:
     var playersSizes = Seq.empty[Int]
-    var initialState: Option[State] = None
+    var initialState: Option[Seq[Player] => State] = None
     var initialPhase: Option[P] = None
     var endingPhase: Option[P] = None
     var phasesMap: Map[P, PartialFunction[A, P]] = Map.empty
 
-  def fromSinglePhase[State, P, A <: Action[State]](players: Range, phase: P): GameRulesDSL[State, P, A] =
+  def fromSinglePhase[State <: BasicState, P, A <: Action[State]](players: Range, phase: P): GameRulesDSL[State, P, A] =
     new GameRulesDSL[State, P, A]:
       import scala.language.postfixOps
       Players canBe players

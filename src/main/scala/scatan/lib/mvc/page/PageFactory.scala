@@ -9,18 +9,18 @@ trait PageFactory[C <: Controller, V <: View, S <: Model.State]:
 
 object PageFactory:
   def apply[C <: Controller, V <: View, S <: Model.State](
-      viewFactory: View.Factory[C, V],
-      controllerFactory: Controller.Factory[V, C, S]
+      _viewFactory: View.Factory[C, V],
+      _controllerFactory: Controller.Factory[V, C, S]
   ): PageFactory[C, V, S] =
     new PageFactory[C, V, S]:
-      override def viewFactory: View.Factory[C, V] = viewFactory
-      override def controllerFactory: Controller.Factory[V, C, S] = controllerFactory
+      override def viewFactory: View.Factory[C, V] = _viewFactory
+      override def controllerFactory: Controller.Factory[V, C, S] = _controllerFactory
 
 object ScalaJSPageFactory:
   def apply[C <: Controller, V <: View, S <: Model.State](
       scalaJSviewFactory: ScalaJSView.Factory[C, V],
-      controllerFactory: Controller.Factory[V, C, S]
+      _controllerFactory: Controller.Factory[V, C, S]
   )(using root: String): PageFactory[C, V, S] =
     new PageFactory[C, V, S]:
       override def viewFactory: View.Factory[C, V] = scalaJSviewFactory(root, _)
-      override def controllerFactory: Controller.Factory[V, C, S] = controllerFactory
+      override def controllerFactory: Controller.Factory[V, C, S] = _controllerFactory

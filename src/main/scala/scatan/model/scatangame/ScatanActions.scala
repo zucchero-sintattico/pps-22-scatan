@@ -3,7 +3,7 @@ package scatan.model.scatangame
 import scatan.model.game.Action
 import scatan.model.map.Hexagon
 
-enum ScatanActions(effect: ScatanState => ScatanState) extends Action(effect):
+enum ScatanActions(effect: ScatanState => ScatanState) extends Action[ScatanState](effect):
   case RollDice(result: Int) extends ScatanActions(ScatanActions.RollEffect(result))
   case PlaceRobber(hexagon: Hexagon) extends ScatanActions(ScatanActions.PlaceRobberEffect(hexagon))
   case StoleCard(player: String) extends ScatanActions(ScatanActions.StoleCardEffect(player))

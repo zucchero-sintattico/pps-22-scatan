@@ -2,8 +2,8 @@ package scatan.model.building
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import scatan.model.{Building, BuildingType}
 import scatan.BaseTest
+import scatan.model.scatangame.{Building, BuildingType}
 
 class BuildingTest extends BaseTest:
 
