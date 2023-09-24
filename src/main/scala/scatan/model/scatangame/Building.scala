@@ -1,6 +1,5 @@
 package scatan.model.scatangame
 
-
 import scatan.lib.mvc.Model
 import scatan.model.game.Player
 import scatan.model.scatangame.*
@@ -12,7 +11,6 @@ type Cost = Map[ResourceType, Int]
 
 object Cost:
   def apply(resourceCosts: ResourceCost*): Cost = resourceCosts.toMap
-
 
 enum BuildingType(val cost: Cost):
   case Settlement

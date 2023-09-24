@@ -21,14 +21,14 @@ trait ScatanState:
 
 object ScatanState:
   /** Creates a new game with the given players The game must have 3 or 4 players The game map is created with a fixed
-   * number of hexagons The buildings are empty The resource cards are empty The development cards are empty The awards
-   * are empty
-   *
-   * @param players
-   *   the players of the game
-   * @return
-   *   the new game
-   */
+    * number of hexagons The buildings are empty The resource cards are empty The development cards are empty The awards
+    * are empty
+    *
+    * @param players
+    *   the players of the game
+    * @return
+    *   the new game
+    */
   def apply(players: Seq[Player]): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
     ScatanStateImpl(
@@ -41,12 +41,12 @@ object ScatanState:
     )
 
   def apply(
-             players: Seq[Player],
-             gameMap: GameMap,
-             buildings: Buildings,
-             resourceCards: ResourceCards,
-             developmentCardsOfPlayers: DevelopmentCards
-           ): ScatanState =
+      players: Seq[Player],
+      gameMap: GameMap,
+      buildings: Buildings,
+      resourceCards: ResourceCards,
+      developmentCardsOfPlayers: DevelopmentCards
+  ): ScatanState =
     ScatanStateImpl(players, gameMap, buildings, resourceCards, developmentCardsOfPlayers)
 
   def ended(_players: Seq[Player]) =
@@ -56,13 +56,13 @@ object ScatanState:
       override def isOver: Boolean = true
 
 private final case class ScatanStateImpl(
-                                   players: Seq[Player],
-                                   gameMap: GameMap,
-                                   buildings: Buildings,
-                                   resourceCards: ResourceCards,
-                                   developmentCards: DevelopmentCards,
-                                   assignedAwards: Awards = Award.empty()
-                                 ) extends ScatanState:
+    players: Seq[Player],
+    gameMap: GameMap,
+    buildings: Buildings,
+    resourceCards: ResourceCards,
+    developmentCards: DevelopmentCards,
+    assignedAwards: Awards = Award.empty()
+) extends ScatanState:
 
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
@@ -81,9 +81,9 @@ private final case class ScatanStateImpl(
       )
     Map(
       Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
-      else precedentLongestRoad),
+                                       else precedentLongestRoad),
       Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
-      else precedentLargestArmy)
+                                       else precedentLargestArmy)
     )
 
   private def verifyResourceCost(player: Player, cost: Cost): Boolean =

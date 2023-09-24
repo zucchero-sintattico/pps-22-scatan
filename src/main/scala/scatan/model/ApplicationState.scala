@@ -4,7 +4,6 @@ import scatan.lib.mvc.Model
 import scatan.model.game.{Game, GameRulesDSL, Player}
 import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
 
-
 type ScatanGame = Game[ScatanState, ScatanPhases, ScatanActions]
 type ScatanGameDSL = GameRulesDSL[ScatanState, ScatanPhases, ScatanActions]
 

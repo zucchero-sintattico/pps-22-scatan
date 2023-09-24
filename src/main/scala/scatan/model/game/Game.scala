@@ -1,7 +1,17 @@
 package scatan.model.game
 
 import scatan.model.game.GameRulesDSL.GameRules
-import scatan.model.scatangame.{Award, AwardType, Building, BuildingType, DevelopmentCard, DevelopmentCardsOfPlayers, DevelopmentType, ResourceCard, Score}
+import scatan.model.scatangame.{
+  Award,
+  AwardType,
+  Building,
+  BuildingType,
+  DevelopmentCard,
+  DevelopmentCardsOfPlayers,
+  DevelopmentType,
+  ResourceCard,
+  Score
+}
 
 import scala.language.reflectiveCalls
 type BasicState = { def isOver: Boolean; def winner: Option[Player] }

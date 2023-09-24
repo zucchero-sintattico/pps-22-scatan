@@ -27,4 +27,3 @@ private class SetUpControllerImpl(requirements: Controller.Requirements[SetUpVie
   override def startGame(usernames: String*): Unit =
     this.model.update(_.createGame(usernames*))
     println(this.model.state)
-

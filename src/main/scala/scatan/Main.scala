@@ -13,7 +13,6 @@ import lib.mvc.page.PageFactory
 import lib.mvc.{NavigableApplicationManager, Model, Controller}
 import scatan.lib.mvc.EmptyController
 
-
 val Application = NavigableApplication(
   initialState = ApplicationState(),
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap
