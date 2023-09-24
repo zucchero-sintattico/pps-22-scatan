@@ -4,8 +4,9 @@ import cats.kernel.Monoid
 import cats.syntax.semigroup.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
+
 import Hexagon.given
-import HexTiledMap.*
+import HexagonInMap.*
 
 class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
 

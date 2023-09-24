@@ -1,11 +1,7 @@
 package scatan.utils
 
-import cats.kernel.Monoid
-import cats.syntax.semigroup.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
-import scatan.model.map.Hexagon.given
-import scatan.model.map.HexTiledMap.*
 import scatan.utils.{UnorderedPair, UnorderedTriple}
 
 class UnorderedPairTest extends BaseTest with ScalaCheckPropertyChecks:
