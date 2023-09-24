@@ -1,4 +1,6 @@
-package scatan.model.game
+package scatan.model.components
+
+import scatan.lib.game.Player
 
 enum AwardType:
   case LongestRoad

@@ -1,6 +1,6 @@
 package scatan.lib.mvc.application
 
-import scatan.lib.mvc.*
+import scatan.lib.mvc.Model
 import scatan.lib.mvc.page.{ApplicationPage, PageFactory}
 
 trait Navigable[Route] extends Application[?, Route]:

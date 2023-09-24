@@ -1,11 +1,9 @@
 package scatan.controllers.game
 
-import scatan.lib.mvc.BaseController
 import scatan.views.game.SetUpView
-import scatan.lib.mvc.NavigableApplicationManager
 import scatan.Pages
+import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.lib.mvc.Controller
 
 /** This is the controller for the setup page.
   */

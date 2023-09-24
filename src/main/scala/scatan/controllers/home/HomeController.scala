@@ -1,13 +1,10 @@
 package scatan.controllers.home
 
-import scatan.lib.mvc.{Controller, BaseController}
 import scatan.views.home.HomeView
 import scatan.Pages
-import scatan.lib.mvc.application.NavigableApplication
-import scatan.lib.mvc.NavigableApplicationManager
 import scatan.model.ApplicationState
-import scatan.lib.mvc.application.NavigableApplication
-import scatan.lib.mvc.{NavigableApplicationManager, Controller}
+import scatan.lib.mvc.{BaseController, Controller}
+import scatan.model.ApplicationState
 
 /** This is the controller for the home page.
   */

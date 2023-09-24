@@ -1,8 +1,10 @@
 package scatan.model.game
 
 import scatan.BaseTest
+import scatan.lib.game.Player
+import scatan.model.game.ScatanState
 
-abstract class BasicGameTest extends BaseTest:
+abstract class BasicStateTest extends BaseTest:
 
   private def players(n: Int): Seq[Player] =
     (1 to n).map(i => Player(s"Player $i"))
@@ -10,30 +12,25 @@ abstract class BasicGameTest extends BaseTest:
   val threePlayers = players(3)
   val fourPlayers = players(4)
 
-  "As a Game" should "exists" in {
-    val game: Game = null
+  "A Scatan State" should "exists" in {
+    val state = ScatanState(threePlayers)
   }
 
   it should "have players" in {
-    val game: Game = Game(players = threePlayers)
-    game.players should be(threePlayers)
-  }
-
-  it should "take players" in {
-    val game: Game = Game(players = threePlayers)
-    game.players should be(threePlayers)
+    val state = ScatanState(threePlayers)
+    state.players should be(threePlayers)
   }
 
   it should "not allow fewer than 3 players" in {
     for n <- 0 to 2
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n))
+      ScatanState(players(n))
     }
   }
 
   it should "not allow more than 4 players" in {
     for n <- 5 to 10
     yield assertThrows[IllegalArgumentException] {
-      Game(players = players(n))
+      ScatanState(players(n))
     }
   }

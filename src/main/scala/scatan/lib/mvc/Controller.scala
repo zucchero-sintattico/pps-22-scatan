@@ -1,7 +1,5 @@
 package scatan.lib.mvc
 
-import scatan.lib.mvc
-
 trait Controller
 
 /** The Controller object.

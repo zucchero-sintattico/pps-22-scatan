@@ -1,6 +1,6 @@
-package scatan.model.game
+package scatan.model.components
 
-import scatan.lib.mvc.Model
+import scatan.lib.game.Player
 
 enum DevelopmentType:
   case Knight

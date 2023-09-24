@@ -3,8 +3,8 @@ import scatan.Pages
 import scatan.controllers.game.SetUpController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
-import scatan.lib.mvc.{View, BaseScalaJSView}
 import org.scalajs.dom.document
+import scatan.lib.mvc.{BaseScalaJSView, View}
 
 /** This is the view for the setup page.
   */
