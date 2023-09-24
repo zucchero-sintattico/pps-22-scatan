@@ -1,9 +1,11 @@
 package scatan.model
 
-import scatan.{BaseTest, Pages}
 import scatan.model.game.Game
+import scatan.{BaseTest, Pages}
 
 class ApplicationStateTest extends BaseTest:
+
+  type UnkownGame = Game[?, ?, ?]
 
   "An ApplicationState" should "exists" in {
     val applicationState: ApplicationState = ApplicationState(Option.empty)
@@ -11,25 +13,25 @@ class ApplicationStateTest extends BaseTest:
 
   it should "not have a game initially" in {
     val applicationState: ApplicationState = ApplicationState(Option.empty)
-    applicationState.game should be(Option.empty[Game[?, ?]])
+    applicationState.game should be(Option.empty[UnkownGame])
   }
 
   it should "allow to create a game" in {
     val applicationState: ApplicationState = ApplicationState(Option.empty)
     val applicationState2 = applicationState.createGame("Player 1", "Player 2", "Player 3", "Player 4")
-    applicationState2.game should not be (Option.empty[Game[?, ?]])
+    applicationState2.game should not be (Option.empty[UnkownGame])
   }
 
   it should "allow to create a game with 3 players" in {
     val applicationState: ApplicationState = ApplicationState(Option.empty)
     val applicationState2 = applicationState.createGame("Player 1", "Player 2", "Player 3")
-    applicationState2.game should not be (Option.empty[Game[?, ?]])
+    applicationState2.game should not be (Option.empty[UnkownGame])
   }
 
   it should "allow to create a game with 4 players" in {
     val applicationState: ApplicationState = ApplicationState(Option.empty)
     val applicationState2 = applicationState.createGame("Player 1", "Player 2", "Player 3", "Player 4")
-    applicationState2.game should not be (Option.empty[Game[?, ?]])
+    applicationState2.game should not be (Option.empty[UnkownGame])
   }
 
   it should "not allow to create a game with less than 3 players" in {

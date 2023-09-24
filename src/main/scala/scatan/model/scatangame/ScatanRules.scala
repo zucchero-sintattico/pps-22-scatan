@@ -2,15 +2,15 @@ package scatan.model.scatangame
 
 import scatan.model.game.GameRuleDSL
 
-object ScatanRules extends GameRuleDSL[ScatanPhases, ScatanActions]:
+object ScatanRules extends GameRuleDSL[ScatanState, ScatanPhases, ScatanActions]:
   import ScatanActions.*
   import ScatanPhases.*
 
   Players canBe (3 to 4)
+  Start withState ScatanState()
   Start withPhase Initial
   Turn canEndIn Playing
-
-  Phases(ScatanPhases.values*)
+  End when (_.isOver)
 
   When in Initial phase {
     case RollDice(7) => RobberPlacement

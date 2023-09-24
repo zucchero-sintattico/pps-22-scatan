@@ -3,11 +3,14 @@ package scatan.model
 import scatan.BaseTest
 import scatan.model.game.{Game, GameRuleDSL, Player}
 import scatan.model.scatangame.ScatanActions.RollDice
-import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules}
+import scatan.model.scatangame.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
 
 class GameTest extends BaseTest:
 
-  given GameRuleDSL[ScatanPhases, ScatanActions] = ScatanRules
+  type ScatanGame = Game[ScatanState, ScatanPhases, ScatanActions]
+  type ScatanGameDSL = GameRuleDSL[ScatanState, ScatanPhases, ScatanActions]
+
+  given ScatanGameDSL = ScatanRules
 
   private def players(n: Int): Seq[Player] =
     (1 to n).map(i => Player(s"Player $i"))
@@ -16,7 +19,7 @@ class GameTest extends BaseTest:
   val fourPlayers: Seq[Player] = players(4)
 
   "A Game" should "exists" in {
-    val game: Game[?, ?] = null
+    val game: ScatanGame = null
   }
 
   it should "have players" in {
@@ -30,7 +33,9 @@ class GameTest extends BaseTest:
   }
 
   it should "be endable" in {
-    val game = Game(threePlayers, isOver = true)
+    val endedScatanRules = ScatanRules
+    endedScatanRules.configuration.isOver = Some(_ => true)
+    val game = Game(threePlayers)
     game.isOver shouldBe true
   }
 
@@ -66,7 +71,7 @@ class GameTest extends BaseTest:
 
   it should "allow to change turn" in {
     val game = Game(threePlayers)
-    def nextTurn(game: Game[ScatanPhases, ScatanActions]): Game[ScatanPhases, ScatanActions] =
+    def nextTurn(game: ScatanGame): ScatanGame =
       game.play(RollDice(1)).nextTurn()
     val newGame = nextTurn(game)
     println(newGame)
@@ -76,7 +81,7 @@ class GameTest extends BaseTest:
 
   it should "do a circular turn" in {
     var game = Game(threePlayers)
-    def nextTurn(game: Game[ScatanPhases, ScatanActions]): Game[ScatanPhases, ScatanActions] =
+    def nextTurn(game: ScatanGame): ScatanGame =
       game.play(RollDice(1)).nextTurn()
     for i <- 1 to 10
     do

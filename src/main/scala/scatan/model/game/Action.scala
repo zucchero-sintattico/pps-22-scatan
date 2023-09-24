@@ -1,4 +1,4 @@
 package scatan.model.game
 
-trait Action(val effect: Game[?, ?] => Game[?, ?]):
-  def apply[P, A <: Action](game: Game[P, A]): Game[P, A] = effect(game).asInstanceOf[Game[P, A]]
+trait Action[State](val effect: State => State):
+  def apply(game: State): State = effect(game)

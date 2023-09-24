@@ -1,35 +1,42 @@
 package scatan.model.game
 
-trait Game[P, A <: Action](phasesMap: Map[P, PartialFunction[A, P]] = Map.empty):
+import scatan.model.game.GameRuleDSL.GameRuleDSLConfiguration
+
+trait Game[State, P, A <: Action[State]](gameRules: GameRuleDSLConfiguration[State, P, A]):
   def players: Seq[Player]
   def turn: Turn
   def phase: P
-  def isOver: Boolean
-  def canPlay(a: A): Boolean = phasesMap(phase).isDefinedAt(a)
-  def play(action: A): Game[P, A]
-  def nextTurn(): Game[P, A]
+  def state: State
+  def isOver: Boolean = gameRules.isOver.exists(_.apply(state))
+  def canPlay(a: A): Boolean = gameRules.phasesMap(phase).isDefinedAt(a)
+  def play(action: A): Game[State, P, A]
+  def nextTurn(): Game[State, P, A]
 
 object Game:
-  def apply[P, A <: Action](
-      players: Seq[Player],
-      isOver: Boolean = false
+  def apply[State, P, A <: Action[State]](
+      players: Seq[Player]
   )(using
-      gameRuleDSL: GameRuleDSL[P, A]
-  ): Game[P, A] =
+      gameRuleDSL: GameRuleDSL[State, P, A]
+  ): Game[State, P, A] =
     require(gameRuleDSL.configuration.playersSizes contains players.size, "Invalid number of players")
-    GameImpl(players, Turn(1, players.head), gameRuleDSL.configuration.initialPhase.get, isOver)
+    GameImpl(
+      players,
+      Turn(1, players.head),
+      gameRuleDSL.configuration.initialPhase.get,
+      gameRuleDSL.configuration.initialState.get
+    )
 
-private final case class GameImpl[P, A <: Action](
+private final case class GameImpl[State, P, A <: Action[State]](
     players: Seq[Player],
     turn: Turn,
     phase: P,
-    isOver: Boolean = false
+    state: State
 )(using
-    gameRuleDSL: GameRuleDSL[P, A]
-) extends Game[P, A](gameRuleDSL.configuration.phasesMap):
+    gameRuleDSL: GameRuleDSL[State, P, A]
+) extends Game[State, P, A](gameRuleDSL.configuration):
   private val gameConfig = gameRuleDSL.configuration
 
-  def nextTurn(): Game[P, A] =
+  def nextTurn(): Game[State, P, A] =
     if phase == gameConfig.endingPhase.get then
       this.copy(
         turn = turn.next(players),
@@ -37,14 +44,15 @@ private final case class GameImpl[P, A <: Action](
       )
     else this
 
-  def play(action: A): Game[P, A] = action match
+  def play(action: A): Game[State, P, A] = action match
     case _ if !canPlay(action) =>
       this
     case _ =>
       val nextPhase = gameConfig.phasesMap(phase)(action)
-      val gameAfterAction = action.apply(this)
+      val newStatus = action.apply(state)
       GameImpl(
-        gameAfterAction.players,
-        gameAfterAction.turn,
-        nextPhase
+        players,
+        turn,
+        nextPhase,
+        newStatus
       )
