@@ -99,11 +99,8 @@ private final case class GameImpl(
       val remainingResourceCards = building.buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
         cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
       )
-      this.copy(
-        buildings = buildings.updated(player, buildings(player) :+ building),
-        resourceCards = resourceCards.updated(player, remainingResourceCards),
-        assignedAwards = awards
-      )
+      val gameWithConsumedResources = this.copy(resourceCards = resourceCards.updated(player, remainingResourceCards))
+      gameWithConsumedResources.assignBuilding(building, player)
     else this
 
   override def assignResourceCard(player: Player, resourceCard: ResourceCard): Game =
