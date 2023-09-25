@@ -3,10 +3,10 @@ package scatan.views.game.components
 import com.raquo.laminar.api.L.*
 import scatan.model.GameMap
 import scatan.model.map.Hexagon
-import scatan.model.map.Resources.*
-import scatan.model.map.Terrain
 import scatan.model.map.TileContent
-import scatan.model.map.UnproductiveTerrain.*
+import scatan.model.components.ResourceType.*
+import scatan.model.components.UnproductiveTerrain.*
+import scatan.model.components.Terrain
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
 import scatan.views.game.components.GameMapComponent.BuildingType.*
@@ -184,13 +184,13 @@ object GameMapComponent:
     )
 
   private val resources: Map[Terrain, String] = Map(
-    WOOD -> "res/img/hexagonal/wood.jpg",
-    SHEEP -> "res/img/hexagonal/sheep.jpg",
-    GRAIN -> "res/img/hexagonal/wheat.jpg",
-    ROCK -> "res/img/hexagonal/ore.jpg",
-    BRICK -> "res/img/hexagonal/clay.jpg",
-    DESERT -> "res/img/hexagonal/desert.jpg",
-    SEA -> "res/img/hexagonal/water.jpg"
+    Wood -> "res/img/hexagonal/wood.jpg",
+    Sheep -> "res/img/hexagonal/sheep.jpg",
+    Wheat -> "res/img/hexagonal/wheat.jpg",
+    Rock -> "res/img/hexagonal/ore.jpg",
+    Brick -> "res/img/hexagonal/clay.jpg",
+    Desert -> "res/img/hexagonal/desert.jpg",
+    Sea -> "res/img/hexagonal/water.jpg"
   )
 
   extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
