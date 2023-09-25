@@ -1,0 +1,30 @@
+1695479593534:~tewst
+1695479596689:~test
+1695480151914:q
+1695480154031:reload
+1695480159885:test
+1695480298372:reload
+1695480323125:ProcedureSyntax
+1695480514282:scalafixAll
+1695481749620:reload
+1695481771948:ProcedureSyntax
+1695481816278:compile
+1695481953131:Scatan/scalafix ProcedureSyntax
+1695481958434:Scatan/scalafix / ProcedureSyntax
+1695481971537:exit
+1695482099344:scalafixAll
+1695482127221:reload
+1695482130562:scalafixAll
+1695482151746:reload
+1695482153958:scalafixAll
+1695482174997:reload
+1695482177304:scalafixAll
+1695482196464:reload
+1695482200350:scalafixAll
+1695482216635:reload
+1695482221167:scalafixAll
+1695482229537:reload
+1695482232738:scalafixAll
+1695482284826:reload
+1695484360128:~fastLinkJS
+1695572371514:;set _root_.scala.collection.Seq(historyPath := None,shellPrompt := { _ => "" },SettingKey[_root_.scala.Option[_root_.sbt.File]]("sbtStructureOutputFile") in _root_.sbt.Global := _root_.scala.Some(_root_.sbt.file("/private/var/folders/qq/f5mbvswd4_d_7lhfvfdq4d4r0000gn/T/sbt-structure.xml")),SettingKey[_root_.java.lang.String]("sbtStructureOptions") in _root_.sbt.Global := "download, resolveClassifiers");apply -cp "/Users/manuandru/Library/Application Support/JetBrains/IntelliJIdea2023.2/plugins/Scala/repo/org/jetbrains/scala/sbt-structure-extractor_2.12_1.0/2023.1.0/sbt-structure-extractor-2023.1.0.jar" org.jetbrains.sbt.CreateTasks;preferScala2;*/*:dumpStructure
