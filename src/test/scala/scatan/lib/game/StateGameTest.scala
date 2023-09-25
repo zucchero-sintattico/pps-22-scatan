@@ -11,8 +11,8 @@ class StateGameTest extends BaseTest:
       players = players,
       state = 0
     )
-    stateGame.players should be (players)
-    stateGame.state should be (0)
+    stateGame.players should be(players)
+    stateGame.state should be(0)
   }
 
   it should "have players" in {
@@ -20,15 +20,15 @@ class StateGameTest extends BaseTest:
       players = players,
       state = 0
     )
-    stateGame.players should be (players)
+    stateGame.players should be(players)
   }
 
   it should "have a state" in {
-      val stateGame = StateGame(
+    val stateGame = StateGame(
       players = players,
       state = 0
-      )
-      stateGame.state should be (0)
+    )
+    stateGame.state should be(0)
   }
 
   it should "accept any type of state" in {
@@ -36,7 +36,7 @@ class StateGameTest extends BaseTest:
       players = players,
       state = "Hello"
     )
-    stateGame.state should be ("Hello")
+    stateGame.state should be("Hello")
   }
 
   it should "not be able to be created with no players" in {
@@ -49,16 +49,10 @@ class StateGameTest extends BaseTest:
   }
 
   it should "not be able to be created with no state" in {
-      assertThrows[IllegalArgumentException] {
+    assertThrows[IllegalArgumentException] {
       StateGame(
-          players = players,
-          state = null
+        players = players,
+        state = null
       )
-      }
+    }
   }
-
-
-
-
-
-

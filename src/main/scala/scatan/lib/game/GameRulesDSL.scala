@@ -1,6 +1,6 @@
 package scatan.lib.game
 
-import GameRulesDSL.GameRules
+import scatan.lib.game.GameRulesDSL.GameRules
 
 given Conversion[GameRulesDSL[?, ?, ?], GameRules[?, ?, ?]] = _.configuration
 

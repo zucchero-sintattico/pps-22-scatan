@@ -1,8 +1,7 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.model.components.{ResourceCard, ResourceType}
-import scatan.model.components.{Building, BuildingType}
+import scatan.model.components.{Building, BuildingType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanState
 
 class StateWithBuildingsTest extends BasicStateTest:

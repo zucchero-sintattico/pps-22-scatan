@@ -1,6 +1,6 @@
 package scatan.lib.game
 
-import GameRulesDSL.GameRules
+import scatan.lib.game.GameRulesDSL.GameRules
 
 import scala.language.reflectiveCalls
 type BasicState = { def isOver: Boolean; def winner: Option[Player] }
@@ -8,10 +8,7 @@ private[game] trait StateGame[State]:
   def players: Seq[Player]
   def state: State
 
-private[game] class StateGameImpl[State](
-   val players: Seq[Player],
-   val state: State)
-    extends StateGame[State]:
+private[game] class StateGameImpl[State](val players: Seq[Player], val state: State) extends StateGame[State]:
   require(players.nonEmpty, "Invalid number of players")
   require(state != null, "Invalid state")
   override def equals(obj: Any): Boolean =
@@ -31,25 +28,26 @@ private[game] trait Turnable extends StateGame[?]:
   def nextTurn: Turnable
 
 private[game] class TurnableGameImpl[State](
-  players: Seq[Player],
-  state: State,
-  val turn: Turn[Player]
-  ) extends StateGameImpl(players, state) with Turnable:
-    require(players.contains(turn.player), "Invalid player in turn")
-    override def nextTurn: Turnable =
-      val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
-      TurnableGameImpl(
-        players,
-        state,
-        turn.next(nextPlayer)
-      )
-    override def equals(obj: Any): Boolean =
-      obj match
-        case other: TurnableGameImpl[State] =>
-          super.equals(other) && turn == other.turn
-        case _ => false
-    override def hashCode(): Int =
-      super.hashCode() + turn.hashCode()
+    players: Seq[Player],
+    state: State,
+    val turn: Turn[Player]
+) extends StateGameImpl(players, state)
+    with Turnable:
+  require(players.contains(turn.player), "Invalid player in turn")
+  override def nextTurn: Turnable =
+    val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
+    TurnableGameImpl(
+      players,
+      state,
+      turn.next(nextPlayer)
+    )
+  override def equals(obj: Any): Boolean =
+    obj match
+      case other: TurnableGameImpl[State] =>
+        super.equals(other) && turn == other.turn
+      case _ => false
+  override def hashCode(): Int =
+    super.hashCode() + turn.hashCode()
 
 private[game] object Turnable:
   def apply[State](players: Seq[Player], state: State, turn: Turn[Player]): Turnable =

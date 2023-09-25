@@ -1,8 +1,7 @@
 package scatan.model.game
 
 import scatan.lib.game.Player
-import scatan.model.components.{Award, AwardType, DevelopmentCard, DevelopmentType}
-import scatan.model.components.{Building, BuildingType}
+import scatan.model.components.*
 import scatan.model.game.ScatanState
 
 class StateWithAwardsTest extends BasicStateTest:

@@ -2,9 +2,9 @@ package scatan.model.game
 
 import cats.instances.long
 import scatan.lib.game.Player
+import scatan.model.GameMap
 import scatan.model.components.*
 import scatan.model.game.{ScatanState, ScatanStateImpl}
-import scatan.model.GameMap
 
 trait ScatanState:
   def players: Seq[Player]

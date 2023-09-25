@@ -3,7 +3,6 @@ package scatan.model
 import scatan.BaseTest
 import scatan.lib.game.{Game, GameRulesDSL, Player}
 import scatan.model.game.ScatanActions.RollDice
-import scatan.model.game.ScatanStateImpl
 import scatan.model.game.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
 
 class GameTest extends BaseTest:

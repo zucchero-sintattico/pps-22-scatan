@@ -20,7 +20,7 @@ class TurnableGameTest extends BaseTest:
       0,
       Turn(1, players(0))
     )
-    game.turn should be (Turn(1, players(0)))
+    game.turn should be(Turn(1, players(0)))
   }
 
   it should "be nextable" in {
@@ -29,11 +29,13 @@ class TurnableGameTest extends BaseTest:
       0,
       Turn(1, players(0))
     )
-    game.nextTurn should be (Turnable(
-      players,
-      0,
-      Turn(2, players(1))
-    ))
+    game.nextTurn should be(
+      Turnable(
+        players,
+        0,
+        Turn(2, players(1))
+      )
+    )
   }
 
   it should "not be able to set a turn with a non present player" in {
@@ -45,5 +47,3 @@ class TurnableGameTest extends BaseTest:
       )
     }
   }
-
-

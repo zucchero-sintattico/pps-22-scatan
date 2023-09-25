@@ -1,11 +1,9 @@
 package scatan.controllers.game
 
 import scatan.Pages
-import scatan.model.ApplicationState
-import scatan.views.game.GameView
-import scatan.Pages
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
+import scatan.views.game.GameView
 
 trait GameController extends Controller
 

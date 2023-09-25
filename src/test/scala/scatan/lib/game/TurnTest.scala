@@ -1,7 +1,6 @@
 package scatan.lib.game
 
 import scatan.BaseTest
-import scatan.lib.game.{Player, Turn}
 
 class TurnTest extends BaseTest:
 

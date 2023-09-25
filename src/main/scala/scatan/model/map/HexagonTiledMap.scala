@@ -1,8 +1,7 @@
 package scatan.model.map
 
-import scatan.utils.UnorderedTriple
-import scatan.utils.UnorderedPair
 import scatan.model.map.HexagonInMap.*
+import scatan.utils.{UnorderedPair, UnorderedTriple}
 
 /** A Spot is unique identified by three hexagons in the map.
   *

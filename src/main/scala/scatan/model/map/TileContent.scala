@@ -1,10 +1,10 @@
 package scatan.model.map
 
-import scala.annotation.targetName
+import scatan.model.map.Listable.*
+import scatan.model.map.Resources.*
+import scatan.model.map.UnproductiveTerrain.*
 
-import Listable.*
-import Resources.*
-import UnproductiveTerrain.*
+import scala.annotation.targetName
 
 object Listable:
   extension (count: Int)

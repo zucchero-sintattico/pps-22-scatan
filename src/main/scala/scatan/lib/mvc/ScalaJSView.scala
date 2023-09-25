@@ -1,7 +1,7 @@
 package scatan.lib.mvc
 
-import org.scalajs.dom
 import com.raquo.laminar.api.L.*
+import org.scalajs.dom
 
 trait ScalaJSView(val container: String) extends View:
   def element: Element
