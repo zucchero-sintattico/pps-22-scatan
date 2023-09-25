@@ -20,7 +20,7 @@
 
 ## Sprint goal
 
-Gli obiettivi di questa Sprint sono stati:
+Gli obiettivi di questo Sprint sono stati:
 
 - Inizializziazione del progetto con relative configurazioni + C.I.
 - Definizione di un primo dominio

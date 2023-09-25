@@ -23,7 +23,7 @@ Giornalemnte, viene calato il quantitativo effettivo
 
 Gli obiettivi di questa Sprint sono stati:
 
-- Setup delle view in diverse schemate.
+- Setup delle view in diverse schermate.
 - Definizione del model della Mappa.
 - Mostrare a video la mappa.
 
