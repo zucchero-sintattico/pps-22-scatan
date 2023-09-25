@@ -4,8 +4,6 @@ import scatan.lib.mvc.NavigableApplicationManager
 import scatan.lib.mvc.application.NavigableApplication
 import scatan.model.ApplicationState
 
-import scala.util.Random
-
 val Application = NavigableApplication(
   initialState = ApplicationState(),
   pagesFactories = Pages.values.map(p => p -> p.pageFactory).toMap

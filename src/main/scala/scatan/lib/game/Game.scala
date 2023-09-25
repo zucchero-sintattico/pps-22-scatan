@@ -4,11 +4,22 @@ import GameRulesDSL.GameRules
 
 import scala.language.reflectiveCalls
 type BasicState = { def isOver: Boolean; def winner: Option[Player] }
-private trait StateGame[State <: BasicState]:
+private[game] trait StateGame[State]:
   def players: Seq[Player]
   def state: State
-  def isOver: Boolean = state.isOver
-  def winner: Option[Player] = state.winner
+  //def isOver: Boolean = state.isOver
+  //def winner: Option[Player] = state.winner
+
+private[game] case class StateGameImpl[State](
+   players: Seq[Player],
+   state: State)
+    extends StateGame[State]
+
+private [game] object StateGame:
+  def apply[State](players: Seq[Player], state: State): StateGame[State] =
+    require(players.nonEmpty, "Invalid number of players")
+    require(state != null, "Invalid state")
+    StateGameImpl(players, state)
 
 private trait Turnable extends StateGame[?]:
   def turn: Turn[Player]
@@ -23,6 +34,8 @@ trait Game[State <: BasicState, PhaseType, ActionType <: Action[State]]
     extends StateGame[State]
     with Turnable
     with Playable[State, PhaseType, ActionType]:
+  def isOver: Boolean = state.isOver
+  def winner: Option[Player] = state.winner
   override def nextTurn: Game[State, PhaseType, ActionType]
   override def play(action: ActionType): Game[State, PhaseType, ActionType]
 
