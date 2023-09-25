@@ -1,15 +1,17 @@
 package scatan.controllers.home
-import scatan.mvc.lib.Controller
+
 import scatan.model.ApplicationState
 import scatan.views.home.AboutView
-import scatan.mvc.lib.NavigableApplicationManager
 import scatan.Pages
+import scatan.lib.mvc.{BaseController, Controller}
+import scatan.model.ApplicationState
 
-trait AboutController extends Controller:
-  def goToHome(): Unit
+trait AboutController extends Controller
 
-class AboutControllerImpl(requirements: Controller.Requirements[AboutView, ApplicationState])
-    extends AboutController
-    with Controller.Dependencies(requirements):
-  override def goToHome(): Unit =
-    NavigableApplicationManager.navigateTo(Pages.Home)
+object AboutController:
+  def apply(requirements: Controller.Requirements[AboutView, ApplicationState]): AboutController =
+    AboutControllerImpl(requirements)
+
+private class AboutControllerImpl(requirements: Controller.Requirements[AboutView, ApplicationState])
+    extends BaseController(requirements)
+    with AboutController

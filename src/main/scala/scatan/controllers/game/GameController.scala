@@ -1,17 +1,18 @@
 package scatan.controllers.game
 
-import scatan.mvc.lib.Controller.Requirements
-import scatan.mvc.lib.NavigableApplicationManager
 import scatan.Pages
 import scatan.model.ApplicationState
-import scatan.mvc.lib.Controller
 import scatan.views.game.GameView
+import scatan.Pages
+import scatan.lib.mvc.{BaseController, Controller}
+import scatan.model.ApplicationState
 
-trait GameController extends Controller:
-  def goToHome(): Unit
+trait GameController extends Controller
 
-class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
-    extends GameController
-    with Controller.Dependencies(requirements):
-  def goToHome(): Unit =
-    NavigableApplicationManager.navigateTo(Pages.Home)
+object GameController:
+  def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
+    GameControllerImpl(requirements)
+
+private class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
+    extends BaseController(requirements)
+    with GameController

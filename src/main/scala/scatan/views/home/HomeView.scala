@@ -1,15 +1,17 @@
 package scatan.views.home
 
-import scatan.mvc.lib.View
 import scatan.controllers.home.HomeController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
-
-import scatan.mvc.lib.{ScalaJSView, View}
+import scatan.lib.mvc.{BaseScalaJSView, View}
 
 /** This is the view for the home page.
   */
 trait HomeView extends View
+
+object HomeView:
+  def apply(container: String, requirements: View.Requirements[HomeController]): HomeView =
+    ScalaJsHomeView(container, requirements)
 
 /** This is the view for the home page.
   *
@@ -18,10 +20,9 @@ trait HomeView extends View
   * @param container,
   *   the container for the view
   */
-class ScalaJsHomeView(requirements: View.Requirements[HomeController], container: String)
-    extends HomeView
-    with View.Dependencies(requirements)
-    with ScalaJSView(container):
+private class ScalaJsHomeView(container: String, requirements: View.Requirements[HomeController])
+    extends BaseScalaJSView(container, requirements)
+    with HomeView:
 
   override def element: Element =
     div(
@@ -35,12 +36,12 @@ class ScalaJsHomeView(requirements: View.Requirements[HomeController], container
         cls := "home-menu",
         button(
           cls := "home-menu-button",
-          onClick --> (_ => controller.goToSetup()),
+          onClick --> (_ => this.navigateTo(Pages.SetUp)),
           "Play"
         ),
         button(
           cls := "home-menu-button",
-          onClick --> (_ => controller.goToAbout()),
+          onClick --> (_ => this.navigateTo(Pages.About)),
           "About"
         )
       )
