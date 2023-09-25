@@ -36,4 +36,14 @@ class TurnableGameTest extends BaseTest:
     ))
   }
 
+  it should "not be able to set a turn with a non present player" in {
+    assertThrows[IllegalArgumentException] {
+      val game = Turnable(
+        players,
+        0,
+        Turn(1, Player("p3"))
+      )
+    }
+  }
+
 

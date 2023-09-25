@@ -12,6 +12,8 @@ private[game] class StateGameImpl[State](
    val players: Seq[Player],
    val state: State)
     extends StateGame[State]:
+  require(players.nonEmpty, "Invalid number of players")
+  require(state != null, "Invalid state")
   override def equals(obj: Any): Boolean =
     obj match
       case other: StateGameImpl[State] =>
@@ -22,8 +24,6 @@ private[game] class StateGameImpl[State](
 
 private[game] object StateGame:
   def apply[State](players: Seq[Player], state: State): StateGame[State] =
-    require(players.nonEmpty, "Invalid number of players")
-    require(state != null, "Invalid state")
     StateGameImpl(players, state)
 
 private[game] trait Turnable extends StateGame[?]:
@@ -35,6 +35,7 @@ private[game] class TurnableGameImpl[State](
   state: State,
   val turn: Turn[Player]
   ) extends StateGameImpl(players, state) with Turnable:
+    require(players.contains(turn.player), "Invalid player in turn")
     override def nextTurn: Turnable =
       val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
       TurnableGameImpl(
@@ -52,7 +53,6 @@ private[game] class TurnableGameImpl[State](
 
 private[game] object Turnable:
   def apply[State](players: Seq[Player], state: State, turn: Turn[Player]): Turnable =
-    require(players.contains(turn.player), "Invalid player")
     TurnableGameImpl(players, state, turn)
 
 private trait Playable[State <: BasicState, PhaseType, ActionType <: Action[State]] extends StateGame[State]:
