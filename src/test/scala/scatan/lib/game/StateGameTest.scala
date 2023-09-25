@@ -2,7 +2,7 @@ package scatan.lib.game
 
 import scatan.BaseTest
 
-class GameTest extends BaseTest:
+class StateGameTest extends BaseTest:
 
   val players = Seq(Player("Player 1"), Player("Player 2"))
 

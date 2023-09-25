@@ -1,0 +1,39 @@
+package scatan.lib.game
+
+import scatan.BaseTest
+
+class TurnableGameTest extends BaseTest:
+
+  val players = Seq(Player("p1"), Player("p2"))
+
+  "A Turnable Game" should "be able to be created" in {
+    val game = Turnable(
+      players,
+      0,
+      Turn(1, players(0))
+    )
+  }
+
+  it should "have a turn" in {
+    val game = Turnable(
+      players,
+      0,
+      Turn(1, players(0))
+    )
+    game.turn should be (Turn(1, players(0)))
+  }
+
+  it should "be nextable" in {
+    val game = Turnable(
+      players,
+      0,
+      Turn(1, players(0))
+    )
+    game.nextTurn should be (Turnable(
+      players,
+      0,
+      Turn(2, players(1))
+    ))
+  }
+
+

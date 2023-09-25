@@ -7,23 +7,53 @@ type BasicState = { def isOver: Boolean; def winner: Option[Player] }
 private[game] trait StateGame[State]:
   def players: Seq[Player]
   def state: State
-  //def isOver: Boolean = state.isOver
-  //def winner: Option[Player] = state.winner
 
-private[game] case class StateGameImpl[State](
-   players: Seq[Player],
-   state: State)
-    extends StateGame[State]
+private[game] class StateGameImpl[State](
+   val players: Seq[Player],
+   val state: State)
+    extends StateGame[State]:
+  override def equals(obj: Any): Boolean =
+    obj match
+      case other: StateGameImpl[State] =>
+        players == other.players && state == other.state
+      case _ => false
+  override def hashCode(): Int =
+    players.hashCode() + state.hashCode()
 
-private [game] object StateGame:
+private[game] object StateGame:
   def apply[State](players: Seq[Player], state: State): StateGame[State] =
     require(players.nonEmpty, "Invalid number of players")
     require(state != null, "Invalid state")
     StateGameImpl(players, state)
 
-private trait Turnable extends StateGame[?]:
+private[game] trait Turnable extends StateGame[?]:
   def turn: Turn[Player]
   def nextTurn: Turnable
+
+private[game] class TurnableGameImpl[State](
+  players: Seq[Player],
+  state: State,
+  val turn: Turn[Player]
+  ) extends StateGameImpl(players, state) with Turnable:
+    override def nextTurn: Turnable =
+      val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
+      TurnableGameImpl(
+        players,
+        state,
+        turn.next(nextPlayer)
+      )
+    override def equals(obj: Any): Boolean =
+      obj match
+        case other: TurnableGameImpl[State] =>
+          super.equals(other) && turn == other.turn
+        case _ => false
+    override def hashCode(): Int =
+      super.hashCode() + turn.hashCode()
+
+private[game] object Turnable:
+  def apply[State](players: Seq[Player], state: State, turn: Turn[Player]): Turnable =
+    require(players.contains(turn.player), "Invalid player")
+    TurnableGameImpl(players, state, turn)
 
 private trait Playable[State <: BasicState, PhaseType, ActionType <: Action[State]] extends StateGame[State]:
   def phase: PhaseType
