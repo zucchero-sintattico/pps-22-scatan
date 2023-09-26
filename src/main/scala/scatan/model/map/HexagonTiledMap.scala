@@ -4,19 +4,17 @@ import scatan.utils.UnorderedTriple
 import scatan.utils.UnorderedPair
 import scatan.model.map.HexagonInMap.*
 
-/** A Spot is unique identified by three hexagons in the map.
-  *
-  * @param hexagons
+/** A spot for a structure that is over three hexagons in the map.
   */
-type Spot = UnorderedTriple[Hexagon]
+type StructureSpot = UnorderedTriple[Hexagon]
 
-/** A Road connect two spots.
+/** A spot for a road connect two BuildingSpots.
   */
-type Road = UnorderedPair[Spot]
+type RoadSpot = UnorderedPair[StructureSpot]
 
 /** A map made of hexagonal tiles.
   */
-class HexagonalTiledMap(layers: Int) extends UndirectedGraph[Spot, Road]:
+class HexagonalTiledMap(layers: Int) extends UndirectedGraph[StructureSpot, RoadSpot]:
 
   val tiles: Set[Hexagon] =
     (for
@@ -26,7 +24,7 @@ class HexagonalTiledMap(layers: Int) extends UndirectedGraph[Spot, Road]:
       if r + q + s == 0
     yield Hexagon(r, q, s)).toSet
 
-  val nodes: Set[Spot] =
+  val nodes: Set[StructureSpot] =
     for
       hex <- tiles
       first <- hex.neighbours
@@ -35,7 +33,7 @@ class HexagonalTiledMap(layers: Int) extends UndirectedGraph[Spot, Road]:
     yield UnorderedTriple(hex, first, second)
 
   val spotsPerRoad = 2
-  val edges: Set[Road] =
+  val edges: Set[RoadSpot] =
     for
       first <- nodes
       second <- nodes

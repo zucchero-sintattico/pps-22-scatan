@@ -40,8 +40,17 @@ class HexagonalMapTest extends BaseTest with ScalaCheckPropertyChecks:
   "Every spot in GameMap" should "be over 3 tiles" in {
     rangeToTest foreach { (layer: Int) =>
       val map = HexagonalTiledMap(layer)
-      map.nodes.foreach { (spot: Spot) =>
-        spot.toSet.size shouldBe 3
+      map.nodes.foreach { (buildingSpot: StructureSpot) =>
+        buildingSpot.toSet.size shouldBe 3
+      }
+    }
+  }
+
+  "Every road in GameMap" should "be connect 2 spots" in {
+    rangeToTest foreach { (layer: Int) =>
+      val map = HexagonalTiledMap(layer)
+      map.edges.foreach { (roadSpot: RoadSpot) =>
+        roadSpot.toSet.size shouldBe 2
       }
     }
   }
