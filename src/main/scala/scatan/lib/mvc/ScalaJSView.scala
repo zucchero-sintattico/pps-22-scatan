@@ -11,7 +11,6 @@ trait ScalaJSView[State <: Model.State](
   private val _reactiveState = Var[State](initialState)
   val reactiveState: Signal[State] = _reactiveState.signal
   override def updateState(state: State): Unit =
-    println(s"updateState: $state")
     _reactiveState.writer.onNext(state)
 
   def element: Element
