@@ -7,7 +7,7 @@ class TurnableGameTest extends BaseTest:
   val players = Seq(Player("p1"), Player("p2"))
 
   "A Turnable Game" should "be able to be created" in {
-    val game = Turnable(
+    val game = TurnableGame(
       players,
       0,
       Turn(1, players(0))
@@ -15,7 +15,7 @@ class TurnableGameTest extends BaseTest:
   }
 
   it should "have a turn" in {
-    val game = Turnable(
+    val game = TurnableGame(
       players,
       0,
       Turn(1, players(0))
@@ -24,13 +24,13 @@ class TurnableGameTest extends BaseTest:
   }
 
   it should "be nextable" in {
-    val game = Turnable(
+    val game = TurnableGame(
       players,
       0,
       Turn(1, players(0))
     )
     game.nextTurn should be(
-      Turnable(
+      TurnableGame(
         players,
         0,
         Turn(2, players(1))
@@ -40,7 +40,7 @@ class TurnableGameTest extends BaseTest:
 
   it should "not be able to set a turn with a non present player" in {
     assertThrows[IllegalArgumentException] {
-      val game = Turnable(
+      val game = TurnableGame(
         players,
         0,
         Turn(1, Player("p3"))
