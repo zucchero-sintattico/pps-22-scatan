@@ -4,15 +4,16 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.home.AboutController
 import scatan.Pages
 import scatan.lib.mvc.{BaseScalaJSView, View}
+import scatan.model.ApplicationState
 
-trait AboutView extends View
+trait AboutView extends View[ApplicationState]
 
 object AboutView:
   def apply(container: String, requirements: View.Requirements[AboutController]): AboutView =
     ScalaJSAboutView(container, requirements)
 
 private class ScalaJSAboutView(container: String, requirements: View.Requirements[AboutController])
-    extends BaseScalaJSView(container, requirements)
+    extends BaseScalaJSView[ApplicationState, AboutController](container, requirements)
     with AboutView:
 
   override def element: Element = div(

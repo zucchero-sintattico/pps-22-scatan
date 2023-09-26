@@ -6,7 +6,7 @@ import scatan.Pages
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
 
-trait AboutController extends Controller
+trait AboutController extends Controller[ApplicationState]
 
 object AboutController:
   def apply(requirements: Controller.Requirements[AboutView, ApplicationState]): AboutController =

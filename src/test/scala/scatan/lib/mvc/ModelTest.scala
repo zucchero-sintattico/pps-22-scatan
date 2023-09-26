@@ -11,9 +11,9 @@ class ModelTest extends BaseTest:
   }
 
   it should "be creatable with a State" in {
-    val state: Model.State = new Model.State {}
-    val model: Model[Model.State] = Model(state)
-    model.state should be(state)
+    case class MyState() extends Model.State
+    val model = Model(MyState())
+    model.state should be(MyState())
   }
 
   it should "contains the Provider trait" in {
