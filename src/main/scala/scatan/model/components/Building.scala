@@ -3,6 +3,7 @@ package scatan.model.components
 import scatan.lib.game.Player
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
+import scatan.model.map.Spot
 import ResourceType.*
 
 type ResourceCost = (ResourceType, Int)
@@ -38,18 +39,33 @@ enum BuildingType(val cost: Cost):
 object BuildingType:
   extension (resourceType: ResourceType) def *(amount: Int): ResourceCost = (resourceType, amount)
 
-final case class Building(buildingType: BuildingType)
-
-/** A map of players to their buildings
+/** A building is a structure that can be placed on the map.
   */
-type Buildings = Map[Player, Seq[Building]]
-object Building:
-  /** Returns a map of players to an empty buildings sequence
-    *
-    * @param players
-    *   the players to create the empty buildings map for
-    * @return
-    *   the empty buildings map
+trait AssignmentInfo:
+  def player: Player
+  def buildingType: BuildingType
+
+object AssignmentInfo:
+  def apply(player: Player, buildingType: BuildingType): AssignmentInfo = AssignmentInfoImpl(player, buildingType)
+  private case class AssignmentInfoImpl(player: Player, buildingType: BuildingType) extends AssignmentInfo
+
+/** A map of assigned buildings.
+  */
+type AssignedBuildings = Map[Spot, AssignmentInfo]
+
+object AssignmentFactory:
+  def apply(spot: Spot, player: Player, buildingType: BuildingType): (Spot, AssignmentInfo) =
+    spot -> AssignmentInfo(player, buildingType)
+
+object AssignedBuildingsAdapter:
+
+  /** An adapter to convert a map of assigned buildings to a map of players and their buildings.
     */
-  def empty(players: Seq[Player]): Buildings =
-    players.map(player => (player, Seq.empty[Building])).toMap
+  extension (assignedBuildings: AssignedBuildings)
+    def asPlayerMap: Map[Player, Seq[BuildingType]] =
+      assignedBuildings.foldLeft(Map.empty[Player, Seq[BuildingType]])((playerMap, assignment) =>
+        playerMap.updated(
+          assignment._2.player,
+          playerMap.getOrElse(assignment._2.player, Seq.empty[BuildingType]) :+ assignment._2.buildingType
+        )
+      )

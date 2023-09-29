@@ -12,6 +12,10 @@ type StructureSpot = UnorderedTriple[Hexagon]
   */
 type RoadSpot = UnorderedPair[StructureSpot]
 
+/** A spot for a structure or a road.
+  */
+type Spot = StructureSpot | RoadSpot
+
 /** A map made of hexagonal tiles.
   */
 class HexagonalTiledMap(layers: Int) extends UndirectedGraph[StructureSpot, RoadSpot]:
