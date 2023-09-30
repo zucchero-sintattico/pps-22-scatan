@@ -36,29 +36,30 @@ body {
     opacity: 0;
 }
 
-.player1 {
+.player-1 {
     fill: #ff0000;
     stroke: #ff0000;
     opacity: 1;
 }
 
-.player2 {
+.player-2 {
     fill: #0000ff;
     stroke: #0000ff;
     opacity: 1;
 }
 
-.player3 {
+.player-3 {
     fill: #00ff00;
     stroke: #00ff00;
     opacity: 1;
 }
 
-.player4 {
+.player-4 {
     fill: #ffff00;
     stroke: #ffff00;
     opacity: 1;
 }
+
 /* end Game */
 
 .home-view {
@@ -151,4 +152,66 @@ body {
 
 .setup-menu-button:first-of-type {
     margin-top: 2.5em;
+}
+
+/* Game */
+.game-view-left-tab {
+    display: inline-flex;
+    flex-direction: column;
+    width: 25%;
+    margin-top: 5em;
+    background-color: white;
+    border-radius: 2em;
+    vertical-align: top;
+    padding: 2em;
+}
+
+.game-view-game-tab {
+    text-align: center;
+    display: inline-block;
+    width: 50%;
+    margin-right: auto;
+}
+
+.game-view-player {
+    font-size: 3em;
+}
+
+.game-view-buttons {
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+.game-view-button {
+    width: 30%;
+    height: 3em;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 1em;
+}
+
+.roll-dice-button {
+    background-color: #b5ffa0;
+}
+
+.end-turn-button {
+    background-color: #fb9b9b;
+}
+
+.game-view-moves {
+    margin-top: 1em;
+    font-size: 2em;
+}
+
+.game-view-move {
+    width: fit-content;
+    margin-top: 0.8em;
+    padding: 0.3em 0.6em;
+    font-size: 1em;
+    text-align: center;
+    background-color: #ffc977;
+    border-radius: 1em;
+    box-shadow: 0 0 0.5em 0.2em rgba(0, 0, 0, 0.65);
 }
