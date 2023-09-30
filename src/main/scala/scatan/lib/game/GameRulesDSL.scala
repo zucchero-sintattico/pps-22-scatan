@@ -28,7 +28,7 @@ trait GameRulesDSL[State <: BasicState, P, A <: Action[State]]:
 
   def Turn = new Turn()
   class Turn:
-    def canEndIn(phase: P): Unit = configuration.endingPhase = Some(phase)
+    def canEndIn(phase: Set[P]): Unit = configuration.endingPhase = phase
 
 object GameRulesDSL:
 
@@ -36,7 +36,7 @@ object GameRulesDSL:
     var playersSizes = Seq.empty[Int]
     var initialState: Option[Seq[Player] => State] = None
     var initialPhase: Option[P] = None
-    var endingPhase: Option[P] = None
+    var endingPhase: Set[P] = Set.empty
     var phasesMap: Map[P, PartialFunction[A, P]] = Map.empty
 
   def fromSinglePhase[State <: BasicState, P, A <: Action[State]](players: Range, phase: P): GameRulesDSL[State, P, A] =
@@ -44,4 +44,4 @@ object GameRulesDSL:
       import scala.language.postfixOps
       Players canBe players
       Start withPhase phase
-      Turn canEndIn phase
+      Turn canEndIn Set(phase)

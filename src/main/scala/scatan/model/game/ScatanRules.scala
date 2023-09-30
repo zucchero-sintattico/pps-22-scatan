@@ -9,8 +9,17 @@ object ScatanRules extends GameRulesDSL[ScatanState, ScatanPhases, ScatanActions
 
   Players canBe (3 to 4)
   Start withState { players => ScatanState(players) }
-  Start withPhase Initial
-  Turn canEndIn Playing
+  Start withPhase InitialSettlmentAssignment
+  Turn canEndIn Set(Playing)
+
+  When in InitialSettlmentAssignment phase {
+    case BuildSettlement(_, _)     => InitialRoadAssignment
+    case EndInitialAssignmentPhase => Initial
+  }
+
+  When in InitialRoadAssignment phase { case BuildRoad(_, _) =>
+    InitialSettlmentAssignment
+  }
 
   When in Initial phase {
     case RollDice(7) => RobberPlacement
@@ -26,11 +35,11 @@ object ScatanRules extends GameRulesDSL[ScatanState, ScatanPhases, ScatanActions
   }
 
   When in Playing phase {
-    case BuildCity           => Playing
-    case BuildRoad           => Playing
-    case BuildSettlement     => Playing
-    case BuyDevelopmentCard  => Playing
-    case PlayDevelopmentCard => Playing
-    case TradeWithBank       => Playing
-    case TradeWithPlayer     => Playing
+    case BuildCity             => Playing
+    case BuildRoad(_, _)       => Playing
+    case BuildSettlement(_, _) => Playing
+    case BuyDevelopmentCard    => Playing
+    case PlayDevelopmentCard   => Playing
+    case TradeWithBank         => Playing
+    case TradeWithPlayer       => Playing
   }
