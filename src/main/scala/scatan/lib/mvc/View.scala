@@ -3,6 +3,7 @@ package scatan.lib.mvc
 trait View[State <: Model.State]:
   def show(): Unit
   def hide(): Unit
+  def error(message: String): Unit
   private[mvc] def updateState(state: State): Unit = ()
 
 /** The View object.
