@@ -46,7 +46,7 @@ class GameDSLTest extends BaseTest:
   it should "allow to specify the phase in which a turn can end" in {
     object GameRules extends MyGameDSL:
       import MyPhases.*
-      Turn canEndIn Set(Play)
+      Turn canEndIn Play
     GameRules.configuration.endingPhase shouldBe Set(MyPhases.Play)
   }
 

@@ -10,7 +10,7 @@ object ScatanRules extends GameRulesDSL[ScatanState, ScatanPhases, ScatanActions
   Players canBe (3 to 4)
   Start withState { players => ScatanState(players) }
   Start withPhase InitialSettlmentAssignment
-  Turn canEndIn Set(Playing)
+  Turn canEndIn Playing
 
   When in InitialSettlmentAssignment phase {
     case BuildSettlement(_, _)     => InitialRoadAssignment
