@@ -11,6 +11,7 @@ import scatan.model.game.ScatanPhases
 import scatan.model.game.ScatanActions
 import scatan.views.game.components.GameMapComponent
 import scatan.views.game.components.LeftTabComponent
+import scatan.views.game.components.CardsComponent
 
 trait GameView extends View[ApplicationState]
 
@@ -34,5 +35,6 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
         LeftTabComponent.buttonsComponent,
         LeftTabComponent.possibleMovesComponent
       ),
-      GameMapComponent.mapComponent
+      GameMapComponent.mapComponent,
+      CardsComponent.resourceCardComponent
     )

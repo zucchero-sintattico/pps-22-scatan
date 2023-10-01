@@ -14,6 +14,7 @@ import scatan.lib.mvc.application.Application
 import scatan.controllers.game.PositioningHandler
 import scatan.views.game.components.GameMapComponent
 import scatan.controllers.game.InitialAssignmentController
+import scatan.views.game.components.CardsComponent
 
 trait InitialAssignmentView extends View[ApplicationState]:
   def switchToGame(): Unit
@@ -42,5 +43,6 @@ private class ScalaJsInitialAssignmentView(
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.possibleMovesComponent
       ),
-      GameMapComponent.mapComponent
+      GameMapComponent.mapComponent,
+      CardsComponent.resourceCardComponent
     )
