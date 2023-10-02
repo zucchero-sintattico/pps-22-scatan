@@ -4,10 +4,11 @@ import scatan.controllers.home.HomeController
 import com.raquo.laminar.api.L.*
 import scatan.Pages
 import scatan.lib.mvc.{BaseScalaJSView, View}
+import scatan.model.ApplicationState
 
 /** This is the view for the home page.
   */
-trait HomeView extends View
+trait HomeView extends View[ApplicationState]
 
 object HomeView:
   def apply(container: String, requirements: View.Requirements[HomeController]): HomeView =

@@ -8,7 +8,7 @@ import scatan.model.ApplicationState
 
 /** This is the controller for the home page.
   */
-trait HomeController extends Controller
+trait HomeController extends Controller[ApplicationState]
 
 object HomeController:
   def apply(requirements: Controller.Requirements[HomeView, ApplicationState]): HomeController =
