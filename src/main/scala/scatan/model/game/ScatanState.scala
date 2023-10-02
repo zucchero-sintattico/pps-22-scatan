@@ -7,10 +7,10 @@ import scatan.model.game.{ScatanState, ScatanStateImpl}
 import scatan.model.GameMap
 import scatan.model.map.Spot
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.game.state.ScoreKnowledge
 
 trait ScatanState:
   def players: Seq[Player]
-  def isOver: Boolean = scores.exists(_._2 >= 10)
   def assignedBuildings: AssignedBuildings
   def emptySpot: Seq[Spot]
   def developmentCards: DevelopmentCards
@@ -23,7 +23,6 @@ trait ScatanState:
   def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
-  def winner: Option[Player] = if isOver then Some(scores.maxBy(_._2)._1) else None
 
 object ScatanState:
   /** Creates a new game with the given players The game must have 3 or 4 players The game map is created with a fixed
@@ -55,11 +54,13 @@ object ScatanState:
   ): ScatanState =
     ScatanStateImpl(players, gameMap, assignedBuildings, resourceCards, developmentCardsOfPlayers)
 
-  def ended(_players: Seq[Player]) =
-    new ScatanState:
-      val state = ScatanState.apply(_players)
-      export state.*
-      override def isOver: Boolean = true
+  // def ended(_players: Seq[Player]) =
+  //   new ScatanState:
+  //     val state = ScatanState.apply(_players)
+  //     export state.*
+  //     override def isOver: Boolean = true
+
+trait ScatanStateWithScore extends ScatanState with ScoreKnowledge
 
 private final case class ScatanStateImpl(
     players: Seq[Player],
@@ -68,7 +69,7 @@ private final case class ScatanStateImpl(
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-) extends ScatanState:
+) extends ScatanStateWithScore:
 
   def emptySpot: Seq[Spot] =
     Seq(gameMap.nodes, gameMap.edges).flatten
@@ -131,27 +132,3 @@ private final case class ScatanStateImpl(
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
     val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
     this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
-
-  private def partialScoresWithAwards: Scores =
-    val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
-    playersWithAwards.foldLeft(Score.empty(players))((scores, playerWithCount) =>
-      scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
-    )
-
-  private def partialScoresWithBuildings: Scores =
-    def buildingScore(buildingType: BuildingType): Int = buildingType match
-      case BuildingType.Settlement => 1
-      case BuildingType.City       => 2
-      case BuildingType.Road       => 0
-    assignedBuildings.asPlayerMap.foldLeft(Score.empty(players))((scores, buildingsOfPlayer) =>
-      scores.updated(
-        buildingsOfPlayer._1,
-        buildingsOfPlayer._2.foldLeft(0)((score, buildingType) => score + buildingScore(buildingType))
-      )
-    )
-
-  import cats.syntax.semigroup.*
-  import scatan.model.components.Score.given
-  def scores: Scores =
-    val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
-    partialScores.foldLeft(Score.empty(players))(_ |+| _)

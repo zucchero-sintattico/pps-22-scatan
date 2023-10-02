@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "3.3.0"
+ThisBuild / scalaVersion := "3.3.1"
 
 wartremoverWarnings ++= Warts.all
 wartremoverWarnings -= Wart.Equals
