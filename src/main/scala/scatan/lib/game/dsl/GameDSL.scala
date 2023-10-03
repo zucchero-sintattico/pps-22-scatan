@@ -17,3 +17,6 @@ trait GameDSL[State, PhaseType, StepType, ActionType, Player]:
     given PhasesDSLContext[State, PhaseType, StepType, ActionType, Player] =
       PhasesDSLContext[State, PhaseType, StepType, ActionType, Player]()
     init
+
+  def StartWithPhase(phase: PhaseType): Unit =
+    rules = rules.copy(initialPhase = phase)

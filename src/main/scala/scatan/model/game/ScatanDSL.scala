@@ -16,6 +16,8 @@ object ScatanDSL extends GameDSL[ScatanState, ScatanPhases, ScatanSteps, ScatanA
     canBe(3 to 4)
   }
 
+  StartWithPhase(ScatanPhases.Setup)
+
   Phases {
     On(ScatanPhases.Setup) {
 

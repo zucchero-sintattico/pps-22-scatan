@@ -8,7 +8,8 @@ final case class Rules[State, P, S, A, Player](
     allowedActions: Map[GameStatus[P, S], Seq[A]],
     turnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
     nextPhase: Map[P, P],
-    nextStep: Map[(GameStatus[P, S], A), S]
+    nextStep: Map[(GameStatus[P, S], A), S],
+    endingStatus: Map[P, S]
 )
 
 object Rules:
@@ -21,5 +22,6 @@ object Rules:
       allowedActions = Map.empty,
       turnIteratorFactories = Map.empty,
       nextPhase = Map.empty,
-      nextStep = Map.empty
+      nextStep = Map.empty,
+      endingStatus = Map.empty
     )

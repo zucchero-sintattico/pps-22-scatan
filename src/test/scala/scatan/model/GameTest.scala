@@ -4,8 +4,9 @@ import scatan.BaseTest
 import scatan.lib.game.dsl.GameDSL
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
+import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
-import scatan.lib.game.{Game, GameRulesDSL, GameStatus}
+import scatan.lib.game.{Game, GameStatus}
 import scatan.model.game.ScatanActions.RollDice
 import scatan.model.game.{ScatanActions, ScatanDSL, ScatanPhases, ScatanPlayer, ScatanState, ScatanSteps}
 
@@ -73,9 +74,10 @@ class GameTest extends BaseTest:
 
   def nextTurn(game: ScatanGame): ScatanGame =
     given effect: Effect[RollDice.type, ScatanState] with
-      def apply(state: ScatanState): ScatanState =
-        identity(state)
-    game.play(RollDice).get
+      def apply(state: ScatanState): Option[ScatanState] =
+        Some(identity(state))
+    val gameAfterRoll = game.play(RollDice).get
+    gameAfterRoll.nextTurn.get
 
   it should "allow to change turn" in {
     val game = Game(threePlayers)
@@ -88,8 +90,6 @@ class GameTest extends BaseTest:
 
   it should "do a circular turn" in {
     var game = Game(threePlayers)
-    def nextTurn(game: ScatanGame): ScatanGame =
-      game.play(RollDice(1)).nextTurn
     for i <- 1 to 10
     do
       game.turn.number shouldBe i
