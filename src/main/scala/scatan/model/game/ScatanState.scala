@@ -165,24 +165,19 @@ private final case class ScatanStateImpl(
   def scores: Scores =
     val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
     partialScores.foldLeft(Score.empty(players))(_ |+| _)
-  def assignResourcesFromNumber(number: Int): ScatanState =
-    // get all hexagons with that number, and check that they are not desert or robber
-    val hexagonWithTileContentOfNumber = gameMap.toContent
-      .filter(_._1 != robberPlacement)
-      .filter(_._2.number.isDefined)
-      .filter(_._2.number.get == number)
+
+  def assignResourceFromHexagons(hexagonWithTileContent: Map[Hexagon, TileContent]) =
     val spotsWithTileContentOfNumber =
-      hexagonWithTileContentOfNumber.foldLeft(Map.empty[StructureSpot, TileContent])(
-        (spotWithTileContent, hexagonWithTile) =>
-          val spotWithTile = (gameMap.nodes.filter(_.contains(hexagonWithTile._1)).head, hexagonWithTile._2)
-          spotWithTileContent.updated(spotWithTile._1, spotWithTile._2)
+      hexagonWithTileContent.foldLeft(Map.empty[StructureSpot, TileContent])((spotWithTileContent, hexagonWithTile) =>
+        val spotWithTile = (gameMap.nodes.filter(_.contains(hexagonWithTile._1)).head, hexagonWithTile._2)
+        spotWithTileContent.updated(spotWithTile._1, spotWithTile._2)
       )
     val assignedSpotsOfNumber = spotsWithTileContentOfNumber.filter(m => assignedBuildings.contains(m._1))
     // Assigned buildings in that spots
     val buildingsInAssignedSpots =
       assignedBuildings.getStructureSpots().filter(s => assignedSpotsOfNumber.contains(s._1))
 
-    val newResources = buildingsInAssignedSpots.foldLeft(resourceCards)((resourceOfPlayer, buildingInSpot) =>
+    val updatedResourceCards = buildingsInAssignedSpots.foldLeft(resourceCards)((resourceOfPlayer, buildingInSpot) =>
       val tileContent = assignedSpotsOfNumber(buildingInSpot._1)
       val player = buildingInSpot._2.player
       val buildingType = buildingInSpot._2.buildingType
@@ -192,35 +187,30 @@ private final case class ScatanStateImpl(
             resourceOfPlayer
               .updated(
                 player,
-                resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType] match
-                  case ResourceType.Wood  => ResourceType.Wood
-                  case ResourceType.Brick => ResourceType.Brick
-                  case ResourceType.Sheep => ResourceType.Sheep
-                  case ResourceType.Wheat => ResourceType.Wheat
-                  case ResourceType.Rock  => ResourceType.Rock
-                )
+                resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType])
               )
           case BuildingType.City =>
             resourceOfPlayer.updated(
               player,
-              resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType] match
-                case ResourceType.Wood  => ResourceType.Wood
-                case ResourceType.Brick => ResourceType.Brick
-                case ResourceType.Sheep => ResourceType.Sheep
-                case ResourceType.Wheat => ResourceType.Wheat
-                case ResourceType.Rock  => ResourceType.Rock
-              ) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType] match
-                case ResourceType.Wood  => ResourceType.Wood
-                case ResourceType.Brick => ResourceType.Brick
-                case ResourceType.Sheep => ResourceType.Sheep
-                case ResourceType.Wheat => ResourceType.Wheat
-                case ResourceType.Rock  => ResourceType.Rock
+              resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType]) :+ ResourceCard(
+                tileContent.terrain.asInstanceOf[ResourceType]
               )
             )
+          case _ => resourceOfPlayer
       else resourceOfPlayer
     )
 
-    this.copy(resourceCards = newResources)
+    this.copy(resourceCards = updatedResourceCards)
+
+  def assignResourcesFromNumber(number: Int): ScatanState =
+    val hexagonsFilteredByNumber = gameMap.toContent
+      .filter(
+        (
+            hexagon,
+            tileContent
+        ) => tileContent.number.isDefined && tileContent.number.get == number && hexagon != robberPlacement
+      )
+    assignResourceFromHexagons(hexagonsFilteredByNumber)
 
     // collect all (spot, tilecontent) in that hexagons
 
