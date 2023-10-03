@@ -2,121 +2,57 @@ package scatan.lib.game
 
 import scatan.lib.game
 import scatan.lib.game.GamePhases.Setup
-import scatan.lib.game.PhaseDSLOps.PhaseDSLContext
-import scatan.lib.game.PhasesDSLOps.{On, PhasesDSLContext}
-import scatan.lib.game.PlayersDSLOps.{PlayersDSLContext, canBe}
-import scatan.lib.game.TurnDSLOps.{CanEndIn, Iterate, NextPhase, TurnDSLContext, circularWithBack, normal}
+import scatan.lib.game.dsl.GameDSL
+import scatan.lib.game.dsl.PlayersDSLOps.{PlayersDSLContext, canBe}
+import scatan.lib.game.dsl.TurnDSLOps.{CanEndIn, Iterate, NextPhase, StartIn, TurnDSLContext, circularWithBack, normal}
 
 import scala.language.postfixOps
 
-final case class PhaseRules[State, StepType](
-    turn: Seq[Player] => Iterator[Player],
-    steps: Map[StepType, PartialFunction[Action[State], StepType]],
-    canEndIn: StepType
+final case class PhaseRules[State, PhaseType, StepType, ActionType](
+    iteratorFactory: Seq[Player] => Iterator[Player],
+    turnIterator: Iterator[Player],
+    stepActions: Map[StepType, PartialFunction[ActionType, StepType]],
+    startIn: StepType,
+    canEndIn: StepType,
+    nextPhase: PhaseType
 )
 
-final case class GameRules[State, PhaseType, StepType](
+final case class GameRules[State, PhaseType, StepType, ActionType](
     playersSize: Set[Int],
-    phases: Map[PhaseType, PhaseRules[State, StepType]]
+    phases: Map[PhaseType, PhaseRules[State, PhaseType, StepType, ActionType]]
 )
-
-object PlayersDSLOps:
-  case class PlayersDSLContext()(using val dsl: GameDSL[?, ?, ?])
-
-  def canBe(playersSizes: Int*)(using playersDSLContext: PlayersDSLContext): Unit =
-    playersDSLContext.dsl.rules = playersDSLContext.dsl.rules.copy(playersSize = playersSizes.toSet)
-
-  def canBe(playersSizes: Set[Int])(using playersDSLContext: PlayersDSLContext): Unit =
-    playersDSLContext.dsl.rules = playersDSLContext.dsl.rules.copy(playersSize = playersSizes)
-
-  def canBe(playersSizes: Range)(using playersDSLContext: PlayersDSLContext): Unit =
-    playersDSLContext.dsl.rules = playersDSLContext.dsl.rules.copy(playersSize = playersSizes.toSet)
-
-object TurnDSLOps:
-  case class TurnDSLContext[PhaseType](phase: PhaseType)(using val dsl: GameDSL[?, ?, ?])
-
-  def CanEndIn[StepType](step: StepType)(using turnDSLContext: TurnDSLContext[?]): Unit =
-    ???
-
-  def Iterate(apply: Seq[Player] => Iterator[Player])(using turnDSLContext: TurnDSLContext[?]): Unit =
-    ???
-
-  def NextPhase[PhaseType](nextPhase: PhaseType)(using turnDSLContext: TurnDSLContext[?]): Unit =
-    ???
-
-  val normal = (players: Seq[Player]) => Iterator.continually(players).flatten
-  val reverse = (players: Seq[Player]) => Iterator.continually(players.reverse).flatten
-  val random = (players: Seq[Player]) => Iterator.continually(scala.util.Random.shuffle(players)).flatten
-  val circularWithBack = (players: Seq[Player]) => (players ++ players.reverse).iterator
-
-object PhaseDSLOps:
-  case class PhaseDSLContext[State, PhaseType, StepType](phase: PhaseType)(using
-      val dsl: GameDSL[State, PhaseType, StepType]
-  )
-
-  def Turn(init: TurnDSLContext[?] ?=> Unit)(using
-      phaseDSLContext: PhaseDSLContext[?, ?, ?]
-  ): Unit =
-    given TurnDSLContext[?] = TurnDSLContext(phaseDSLContext.phase)(using phaseDSLContext.dsl)
-    init
-
-  def When[StepType](step: StepType)(init: PartialFunction[Action[?], StepType])(using
-      phaseDSLContext: PhaseDSLContext[?, ?, StepType]
-  ): Unit =
-    ???
-
-object PhasesDSLOps:
-  case class PhasesDSLContext[State, PhaseType, StepType]()(using
-      val dsl: GameDSL[State, PhaseType, StepType]
-  )
-
-  def On[State, PhaseType, StepType](using phasesDSLContext: PhasesDSLContext[State, PhaseType, StepType])(
-      phase: PhaseType
-  )(
-      init: PhaseDSLContext[State, PhaseType, StepType] ?=> Unit
-  ): Unit =
-    given PhaseDSLContext[State, PhaseType, StepType] = PhaseDSLContext(phase)(using phasesDSLContext.dsl)
-    init
-
-trait GameDSL[State, PhaseType, StepType]:
-  var rules: GameRules[State, PhaseType, StepType] = GameRules(Set.empty, Map.empty)
-
-  given GameDSL[State, PhaseType, StepType] = this
-
-  given PlayersDSLContext = PlayersDSLContext()
-  def Players(init: PlayersDSLContext ?=> Unit): Unit =
-    init
-
-  given PhasesDSLContext[State, PhaseType, StepType] = PhasesDSLContext()
-  def Phases(init: PhasesDSLContext[State, PhaseType, StepType] ?=> Unit): Unit =
-    init
 
 case class MyState()
 enum GamePhases:
   case Setup
   case Game
 
-enum Steps:
+enum ScatanSteps:
   case SetupSettlement
   case SetupRoad
   case Setupped
-  case Roll
+  case Starting
   case PlaceRobber
   case StoleCard
   case Playing
 
-enum Actions extends Action[MyState](identity):
-  case SetupSettlement
-  case SetupRoad
-
-  case Roll(roll: Int)
+enum ActionType:
+  case Roll
+  case RollSeven
   case PlaceRobber
   case StoleCard
-  case Play
+  case BuyDevelopmentCard
+  case PlayDevelopmentCard
+  case TradeWithPlayer
+  case TradeWithBank
+  case BuildRoad
+  case BuildSettlement
+  case BuildCity
 
-object MyDSL extends GameDSL[MyState, GamePhases, Steps]:
-  import PhasesDSLOps.*
-  import PhaseDSLOps.*
+object MyDSL extends GameDSL[MyState, GamePhases, ScatanSteps, ActionType]:
+  import scatan.lib.game.dsl.PhasesDSLOps.*
+  import scatan.lib.game.dsl.PhaseDSLOps.*
+  import ScatanSteps.*
 
   Players {
     canBe(3, 4)
@@ -128,12 +64,17 @@ object MyDSL extends GameDSL[MyState, GamePhases, Steps]:
 
       Turn {
         Iterate(circularWithBack)
-        CanEndIn(Steps.Setupped)
+        StartIn(SetupSettlement)
+        CanEndIn(Setupped)
         NextPhase(GamePhases.Game)
       }
 
-      When(Steps.SetupSettlement) { case Actions.SetupSettlement =>
-        Steps.SetupRoad
+      When(SetupSettlement) {
+        ActionType.BuildSettlement -> SetupRoad
+      }
+
+      When(SetupRoad) {
+        ActionType.BuildRoad -> Setupped
       }
 
     }
@@ -142,8 +83,37 @@ object MyDSL extends GameDSL[MyState, GamePhases, Steps]:
 
       Turn {
         Iterate(normal)
-        CanEndIn(Steps.Playing)
+        StartIn(Starting)
+        CanEndIn(Playing)
+      }
+
+      When(Starting) {
+        ActionType.Roll -> Playing
+        ActionType.RollSeven -> PlaceRobber
+        ActionType.PlayDevelopmentCard -> Starting
+      }
+
+      When(PlaceRobber) {
+        ActionType.PlaceRobber -> StoleCard
+      }
+
+      When(StoleCard) {
+        ActionType.StoleCard -> Playing
+      }
+
+      When(Playing) {
+        ActionType.BuyDevelopmentCard -> Playing
+        ActionType.PlayDevelopmentCard -> Playing
+        ActionType.TradeWithPlayer -> Playing
+        ActionType.TradeWithBank -> Playing
+        ActionType.BuildRoad -> Playing
+        ActionType.BuildSettlement -> Playing
+        ActionType.BuildCity -> Playing
       }
 
     }
   }
+
+@main def main(): Unit =
+  println("Hello world!")
+  println(MyDSL.rules)

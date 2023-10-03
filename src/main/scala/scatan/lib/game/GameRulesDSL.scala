@@ -6,7 +6,7 @@ given Conversion[GameRulesDSL[?, ?, ?], GameRules[?, ?, ?]] = _.configuration
 
 trait GameRulesDSL[State <: BasicState, P, A <: Action[State]]:
 
-  val configuration = GameRules[State, P, A]()
+  val configuration = GameRulesDSL.GameRules[State, P, A]()
 
   def Players = new Players()
   class Players:
