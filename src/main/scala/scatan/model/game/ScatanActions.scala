@@ -22,7 +22,10 @@ enum ScatanActions(effect: ScatanState => ScatanState) extends Action[ScatanStat
   case EndInitialAssignmentPhase extends ScatanActions(identity)
 
 object ScatanActions:
-  private def RollEffect(result: Int): ScatanState => ScatanState = identity
+  private def RollEffect(result: Int): ScatanState => ScatanState =
+    // choose a random number between 1 and 6
+    val result = scala.util.Random.between(1, 7)
+    _.assignResourcesFromNumber(result)
   private def PlaceRobberEffect(hexagon: Hexagon): ScatanState => ScatanState = identity
   private def StoleCardEffect(player: String): ScatanState => ScatanState = identity
   private def BuildRoadEffect(spot: RoadSpot, player: Player): ScatanState => ScatanState =

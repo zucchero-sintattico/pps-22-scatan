@@ -8,6 +8,7 @@ wartremoverWarnings -= Wart.IterableOps
 wartremoverWarnings -= Wart.DefaultArguments
 wartremoverWarnings -= Wart.AsInstanceOf
 wartremoverWarnings -= Wart.OptionPartial
+wartremoverWarnings -= Wart.IsInstanceOf
 
 lazy val scatan = (project in file("."))
   .enablePlugins(ScalaJSPlugin)
