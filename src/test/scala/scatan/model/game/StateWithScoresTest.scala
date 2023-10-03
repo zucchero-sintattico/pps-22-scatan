@@ -6,7 +6,7 @@ import scatan.model.game.ScatanState
 
 class StateWithScoresTest extends BasicStateTest:
 
-  "A Game with Scores" should "have an empty scoreboard initially" in {
+  "A State with Scores" should "have an empty scoreboard initially" in {
     val state = ScatanState(threePlayers)
     state.scores should be(Score.empty(threePlayers))
   }

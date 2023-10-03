@@ -7,22 +7,27 @@ import scatan.model.game.{ScatanState, ScatanStateImpl}
 import scatan.model.GameMap
 import scatan.model.map.Spot
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.map.Hexagon
+import scatan.model.map.TileContent
 
 trait ScatanState:
   def players: Seq[Player]
-  def isOver: Boolean = scores.exists(_._2 >= 10)
-  def assignedBuildings: AssignedBuildings
   def emptySpot: Seq[Spot]
+  def assignedBuildings: AssignedBuildings
+  def robberPlacement: Hexagon
+  def moveRobber(hexagon: Hexagon): ScatanState
   def developmentCards: DevelopmentCards
   def resourceCards: ResourceCards
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
   def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState
+  def assignResourcesFromNumber(diceRoll: Int): ScatanState
   def assignBuilding(position: Spot, buildingType: BuildingType, player: Player): ScatanState
   def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
+  def isOver: Boolean = scores.exists(_._2 >= 10)
   def winner: Option[Player] = if isOver then Some(scores.maxBy(_._2)._1) else None
 
 object ScatanState:
@@ -41,6 +46,7 @@ object ScatanState:
       players,
       GameMap(),
       Map.empty,
+      Hexagon(0, 0, 0),
       ResourceCard.empty(players),
       DevelopmentCardsOfPlayers.empty(players),
       Award.empty()
@@ -50,10 +56,11 @@ object ScatanState:
       players: Seq[Player],
       gameMap: GameMap,
       assignedBuildings: AssignedBuildings,
+      robberPlacement: Hexagon,
       resourceCards: ResourceCards,
       developmentCardsOfPlayers: DevelopmentCards
   ): ScatanState =
-    ScatanStateImpl(players, gameMap, assignedBuildings, resourceCards, developmentCardsOfPlayers)
+    ScatanStateImpl(players, gameMap, assignedBuildings, robberPlacement, resourceCards, developmentCardsOfPlayers)
 
   def ended(_players: Seq[Player]) =
     new ScatanState:
@@ -65,6 +72,7 @@ private final case class ScatanStateImpl(
     players: Seq[Player],
     gameMap: GameMap,
     assignedBuildings: AssignedBuildings,
+    robberPlacement: Hexagon,
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
@@ -155,3 +163,19 @@ private final case class ScatanStateImpl(
   def scores: Scores =
     val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
     partialScores.foldLeft(Score.empty(players))(_ |+| _)
+  // def assignResourcesFromNumber(number: Int): ScatanState =
+  //   // get all hexagons with that number, and check that they are not desert or robber
+  //   val hexegonWithTileContentOfNumber = gameMap.toContent
+  //     .filterKeys(_ != robberPlacement)
+  //     .filter(_._2.number.get == number)
+  //     .toSeq
+  //   // check all spot in that hexagons
+  //   val spotsWithNumber = ???
+  //   // for each spot, check if there is a building
+  //   val buildingsInSelectedSpots = ???
+  //   // for each building, assign the corresponding resource card to the player
+  //   // if there is a city, assign 2 cards
+  //   val playersWithResourceCards = ???
+  //   this.copy(resourceCards = playersWithResourceCards)
+
+  def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)

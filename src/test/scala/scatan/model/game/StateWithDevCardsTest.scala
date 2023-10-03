@@ -6,7 +6,7 @@ import scatan.model.game.ScatanState
 
 class StateWithDevCardsTest extends BasicStateTest:
 
-  "A Game with development cards" should "have empty development cards when game start" in {
+  "A State with development cards" should "have empty development cards when game start" in {
     val state = ScatanState(threePlayers)
     state.developmentCards(threePlayers.head) should be(Seq.empty[DevelopmentCard])
   }
