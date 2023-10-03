@@ -1,12 +1,12 @@
 package scatan.lib.game.ops
 
-import scatan.lib.game.NewGame
+import scatan.lib.game.Game
 
 trait Effect[A, S]:
   def apply(state: S): Option[S]
 
 object GamePlayOps:
-  extension [State, PhaseType, StepType, Action, Player](game: NewGame[State, PhaseType, StepType, Action, Player])
+  extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
 
     /** Get the actions allowed in the current status
       * @return
@@ -30,9 +30,9 @@ object GamePlayOps:
       * @return
       *   Some(newState) if the action is allowed, None otherwise
       */
-    def play[A <: Action](
-        action: A
-    )(using effect: Effect[A, State]): Option[NewGame[State, PhaseType, StepType, Action, Player]] =
+    def play(
+        action: Action
+    )(using effect: Effect[action.type, State]): Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         newState <- effect(game.state)
         newStep = game.rules.nextStep((game.status, action))

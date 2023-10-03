@@ -1,11 +1,11 @@
 package scatan.lib.game.ops
 
-import scatan.lib.game.{NewGame, Turn}
+import scatan.lib.game.{Game, Turn}
 
 object GameTurnOps:
-  extension [State, PhaseType, StepType, Action, Player](game: NewGame[State, PhaseType, StepType, Action, Player])
+  extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
 
-    private def nextTurnInSamePhase: Option[NewGame[State, PhaseType, StepType, Action, Player]] =
+    private def nextTurnInSamePhase: Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         nextStep <- game.rules.initialSteps.get(game.status.phase)
         nextStatus = game.status.copy(
@@ -18,7 +18,7 @@ object GameTurnOps:
         status = nextStatus
       )
 
-    private def nextTurnInNextPhase: Option[NewGame[State, PhaseType, StepType, Action, Player]] =
+    private def nextTurnInNextPhase: Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         nextPhase <- game.rules.nextPhase.get(game.status.phase)
         initialStep <- game.rules.initialSteps.get(nextPhase)
@@ -38,6 +38,6 @@ object GameTurnOps:
       *   None if the game is over or it is not allowed to advance to the next turn in the current status, or a new game
       *   with the next turn.
       */
-    def nextTurn: Option[NewGame[State, PhaseType, StepType, Action, Player]] =
+    def nextTurn: Option[Game[State, PhaseType, StepType, Action, Player]] =
       if game.playersIterator.hasNext then nextTurnInSamePhase
       else nextTurnInNextPhase

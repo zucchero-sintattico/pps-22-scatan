@@ -5,18 +5,10 @@ import scatan.model.game.ScatanPhases
 
 class ScatanPhasesTest extends BaseTest:
 
-  "A Scatan Phase" should "be initial" in {
-    ScatanPhases.Initial
+  "A Scatan Phase" should "be setup" in {
+    ScatanPhases.Setup
   }
 
-  it should "be robber placement" in {
-    ScatanPhases.RobberPlacement
-  }
-
-  it should "be card stealing" in {
-    ScatanPhases.CardStealing
-  }
-
-  it should "be playing" in {
-    ScatanPhases.Playing
+  it should "be game" in {
+    ScatanPhases.Game
   }

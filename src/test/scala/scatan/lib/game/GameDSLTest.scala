@@ -1,18 +1,19 @@
 package scatan.lib.game
 
-import scatan.lib.game.{Action, Game, GameRulesDSL, Player}
+import scatan.lib.game.{Game, GameRulesDSL}
+import scatan.model.game.ScatanPlayer
 import scatan.{BaseTest, model}
 
 class GameDSLTest extends BaseTest:
 
-  case class MyState(players: Seq[Player], isOver: Boolean = false, winner: Option[Player] = None)
+  case class MyState(players: Seq[ScatanPlayer], isOver: Boolean = false, winner: Option[ScatanPlayer] = None)
   enum MyPhases:
     case Setup, Play
 
   enum MyActions(effect: MyState => MyState = identity) extends Action(effect):
     case DoSomething
 
-  type MyGame = Game[MyState, MyPhases, MyActions]
+  type MyGame = Game[MyState, MyPhases, MyActions
   type MyGameDSL = GameRulesDSL[MyState, MyPhases, MyActions]
 
   "The GameRules DSL" should "retrieve a configuration" in {

@@ -1,23 +1,22 @@
 package scatan.lib.game.dsl
 
 import TurnDSLOps.TurnDSLContext
-import scatan.lib.game.Action
 
 object PhaseDSLOps:
-  case class PhaseDSLContext[State, PhaseType, StepType, ActionType](phase: PhaseType)(using
-      val dsl: GameDSL[State, PhaseType, StepType, ActionType]
+  case class PhaseDSLContext[State, PhaseType, StepType, ActionType, Player](phase: PhaseType)(using
+      val dsl: GameDSL[State, PhaseType, StepType, ActionType, Player]
   )
 
-  def Turn[State, PhaseType, StepType, ActionType](
-      init: TurnDSLContext[State, PhaseType, StepType, ActionType] ?=> Unit
+  def Turn[State, PhaseType, StepType, ActionType, Player](
+      init: TurnDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit
   )(using
-      phaseDSLContext: PhaseDSLContext[State, PhaseType, StepType, ActionType]
+      phaseDSLContext: PhaseDSLContext[State, PhaseType, StepType, ActionType, Player]
   ): Unit =
-    given TurnDSLContext[State, PhaseType, StepType, ActionType] =
-      TurnDSLContext[State, PhaseType, StepType, ActionType](phaseDSLContext.phase)(using phaseDSLContext.dsl)
+    given TurnDSLContext[State, PhaseType, StepType, ActionType, Player] =
+      TurnDSLContext[State, PhaseType, StepType, ActionType, Player](phaseDSLContext.phase)(using phaseDSLContext.dsl)
     init
 
-  def When[State, PhaseType, StepType, ActionType](step: StepType)(init: (ActionType, StepType)*)(using
-      phaseDSLContext: PhaseDSLContext[State, PhaseType, StepType, ActionType]
+  def When[State, PhaseType, StepType, ActionType, Player](step: StepType)(init: (ActionType, StepType)*)(using
+      phaseDSLContext: PhaseDSLContext[State, PhaseType, StepType, ActionType, Player]
   ): Unit =
     ???

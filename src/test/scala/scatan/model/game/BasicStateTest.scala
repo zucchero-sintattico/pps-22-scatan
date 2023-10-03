@@ -1,13 +1,12 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.lib.game.Player
 import scatan.model.game.ScatanState
 
 abstract class BasicStateTest extends BaseTest:
 
-  private def players(n: Int): Seq[Player] =
-    (1 to n).map(i => Player(s"Player $i"))
+  private def players(n: Int): Seq[ScatanPlayer] =
+    (1 to n).map(i => ScatanPlayer(s"Player $i"))
 
   val threePlayers = players(3)
   val fourPlayers = players(4)

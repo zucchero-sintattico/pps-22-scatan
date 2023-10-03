@@ -1,10 +1,11 @@
 package scatan.lib.game
 
 import scatan.BaseTest
+import scatan.model.game.ScatanPlayer
 
 class TurnTest extends BaseTest:
 
-  val player = Player("a")
+  val player = ScatanPlayer("a")
 
   "A turn" should "have a number" in {
     val turn = Turn(1, player)
@@ -24,7 +25,7 @@ class TurnTest extends BaseTest:
 
   it should "be nextable passing next player" in {
     val turn = Turn(1, player)
-    val nextTurn = turn.next(Player("b"))
+    val nextTurn = turn.next(ScatanPlayer("b"))
     nextTurn.number shouldBe 2
-    nextTurn.player shouldBe Player("b")
+    nextTurn.player shouldBe ScatanPlayer("b")
   }
