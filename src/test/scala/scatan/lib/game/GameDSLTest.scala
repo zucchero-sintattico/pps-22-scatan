@@ -47,7 +47,7 @@ class GameDSLTest extends BaseTest:
     object GameRules extends MyGameDSL:
       import MyPhases.*
       Turn canEndIn Play
-    GameRules.configuration.endingPhase shouldBe Set(MyPhases.Play)
+    GameRules.configuration.endingPhase shouldBe Some(MyPhases.Play)
   }
 
   it should "allow to specify the phase map" in {

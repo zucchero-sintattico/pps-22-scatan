@@ -2,9 +2,9 @@ package scatan.model
 
 import scatan.BaseTest
 import scatan.lib.game.{Game, GameRulesDSL, Player}
-import scatan.model.game.ScatanActions.RollDice
-import scatan.model.game.ScatanStateImpl
-import scatan.model.game.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
+import scatan.model.game.ScatanActions.{BuildRoad, RollDice}
+import scatan.model.game.{ScatanActions, ScatanPhases, ScatanRules, ScatanState, ScatanStateImpl}
+import scatan.model.map.{RoadSpot, StructureSpot}
 
 class GameTest extends BaseTest:
 
@@ -61,7 +61,7 @@ class GameTest extends BaseTest:
 
   it should "have a phase" in {
     val game = Game(threePlayers)
-    game.phase shouldBe ScatanPhases.Initial
+    game.phase shouldBe ScatanPhases.InitialSettlmentAssignment
   }
 
   it should "have a turn" in {
@@ -73,7 +73,12 @@ class GameTest extends BaseTest:
   it should "allow to change turn" in {
     val game = Game(threePlayers)
     def nextTurn(game: ScatanGame): ScatanGame =
-      game.play(RollDice(1)).nextTurn
+      val firstStructureSpot = game.state.emptySpot.find(_.isInstanceOf[StructureSpot]).get.asInstanceOf[StructureSpot]
+      val firstRoadSpot = game.state.emptySpot.find(_.isInstanceOf[RoadSpot]).get.asInstanceOf[RoadSpot]
+      game
+        .play(ScatanActions.BuildSettlement(firstStructureSpot, game.turn.player))
+        .play(ScatanActions.BuildRoad(firstRoadSpot, game.turn.player))
+        .nextTurn
     val newGame = nextTurn(game)
     println(newGame)
     newGame.turn.number shouldBe 2
@@ -83,7 +88,12 @@ class GameTest extends BaseTest:
   it should "do a circular turn" in {
     var game = Game(threePlayers)
     def nextTurn(game: ScatanGame): ScatanGame =
-      game.play(RollDice(1)).nextTurn
+      val firstStructureSpot = game.state.emptySpot.find(_.isInstanceOf[StructureSpot]).get.asInstanceOf[StructureSpot]
+      val firstRoadSpot = game.state.emptySpot.find(_.isInstanceOf[RoadSpot]).get.asInstanceOf[RoadSpot]
+      game
+        .play(ScatanActions.BuildSettlement(firstStructureSpot, game.turn.player))
+        .play(ScatanActions.BuildRoad(firstRoadSpot, game.turn.player))
+        .nextTurn
     for i <- 1 to 10
     do
       game.turn.number shouldBe i
