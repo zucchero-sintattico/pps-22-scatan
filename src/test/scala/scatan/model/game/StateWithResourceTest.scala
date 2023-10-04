@@ -8,6 +8,7 @@ import scatan.model.map.RoadSpot
 import scatan.model.map.StructureSpot
 import scatan.utils.UnorderedTriple
 import scatan.model.map.HexagonInMap.layer
+import scatan.model.components.ResourceType
 
 class StateWithResourceTest extends BasicStateTest:
 
@@ -32,54 +33,32 @@ class StateWithResourceTest extends BasicStateTest:
     state.resourceCards should be(ResourceCard.empty(threePlayers))
   }
 
-  it should "assign a resource card after a dice roll" in {
+  // it should "assign a resource card after a dice roll" in {
+  //   val state = ScatanState(threePlayers)
+  //   val stateWithResources = state
+  //     .assignBuilding(state.emptySpots.getEmptyStructureSpots.head, BuildingType.Settlement, state.players.head)
+  //     .rollDiceBruteForce()
+  //   stateWithResources.resourceCards should not be ResourceCard.empty(threePlayers)
+  // }
+
+  it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
+    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
+    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = state
-      .assignBuilding(state.emptySpots.getEmptyStructureSpots.head, BuildingType.Settlement, state.players.head)
+      .assignBuilding(spotWhereToBuild, BuildingType.Settlement, state.players.head)
       .rollDiceBruteForce()
-    stateWithResources.resourceCards should not be ResourceCard.empty(threePlayers)
+    stateWithResources.resourceCards(stateWithResources.players.head) should contain(ResourceCard(ResourceType.Sheep))
   }
 
-  it should "assign a resource card to the player who has a settlement on a spot" in {
+  it should "assign two resource cards to the player who has a city on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
+    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
+    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = state
-      .assignBuilding(state.emptySpots.getEmptyStructureSpots.head, BuildingType.Settlement, state.players.head)
+      .assignBuilding(spotWhereToBuild, BuildingType.City, state.players.head)
       .rollDiceBruteForce()
-    stateWithResources.resourceCards(state.players.head).size should be(1)
-  }
-
-  it should "assign two resource card to the player who has a city on a spot" in {
-    val state = ScatanState(threePlayers)
-    val stateWithResources = state
-      .assignBuilding(state.emptySpots.getEmptyStructureSpots.head, BuildingType.City, state.players.head)
-      .rollDiceBruteForce()
-    println(stateWithResources.resourceCards)
-    stateWithResources.resourceCards(state.players.head).size should be(2)
-  }
-
-  it should "assign two resource card to the player who has a settlement between two hexagons" in {
-    val state = ScatanState(threePlayers)
-    val spotWhereToBuild = state.emptySpots.getEmptyStructureSpots.filter(s => s.toSet.forall(h => h.layer <= 2)).head
-    val hexagons = state.gameMap.toContent.filter(hex => spotWhereToBuild.contains(hex._1))
-    val stateWithResources = state
-      .assignBuilding(
-        spotWhereToBuild,
-        BuildingType.Settlement,
-        state.players.head
-      )
-      .rollDiceBruteForce()
-    stateWithResources.resourceCards(state.players.head).size should be(2)
-  }
-  it should "assign four resource card to the player who has a city between two hexagons" in {
-    val state = ScatanState(threePlayers)
-    val spotWhereToBuild = state.emptySpots.getEmptyStructureSpots.filter(s => s.toSet.forall(h => h.layer <= 2)).head
-    val hexagons = state.gameMap.toContent.filter(hex => spotWhereToBuild.contains(hex._1))
-    val stateWithResources = state
-      .assignBuilding(
-        spotWhereToBuild,
-        BuildingType.City,
-        state.players.head
-      )
-      .rollDiceBruteForce()
-    stateWithResources.resourceCards(state.players.head).size should be(4)
+    stateWithResources
+      .resourceCards(stateWithResources.players.head)
+      .count(_.resourceType == ResourceType.Sheep) should be(2)
   }

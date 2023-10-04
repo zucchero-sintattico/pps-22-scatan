@@ -11,10 +11,14 @@ import scatan.model.map.Hexagon
 import scatan.model.map.TileContent
 import scatan.model.map.StructureSpot
 import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
+import scatan.model.map.HexagonInMap.layer
+import scatan.model.map.RoadSpot
 
 trait ScatanState:
   def players: Seq[Player]
   def emptySpots: Seq[Spot]
+  def emptyStructureSpot: Seq[StructureSpot]
+  def emptyRoadSpot: Seq[RoadSpot]
   def assignedBuildings: AssignedBuildings
   def robberPlacement: Hexagon
   def moveRobber(hexagon: Hexagon): ScatanState
@@ -75,6 +79,18 @@ private final case class ScatanStateImpl(
     Seq(gameMap.nodes, gameMap.edges).flatten
       .filter(!assignedBuildings.isDefinedAt(_))
 
+  def emptyStructureSpot: Seq[StructureSpot] =
+    gameMap.nodes
+      .filter(!assignedBuildings.isDefinedAt(_))
+      .filter(_.toSet.exists(_.layer <= gameMap.withTerrainLayers))
+      .toSeq
+
+  def emptyRoadSpot: Seq[RoadSpot] =
+    gameMap.edges
+      .filter(!assignedBuildings.isDefinedAt(_))
+      .filter(_.toSet.exists(_.toSet.exists(_.layer <= gameMap.withTerrainLayers)))
+      .toSeq
+
   /** Returns a map of the current awards in the game, including the longest road and largest army. The longest road is
     * awarded to the player with the longest continuous road of at least 5 segments. The largest army is awarded to the
     * player with the most knight development cards played.
@@ -130,8 +146,15 @@ private final case class ScatanStateImpl(
     *   A new ScatanState with the specified building assigned to the specified player at the specified spot.
     */
   override def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
+    val buildingUpdated =
+      spot match
+        case s: RoadSpot if emptyRoadSpot.contains(s) =>
+          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
+        case s: StructureSpot if emptyStructureSpot.contains(s) =>
+          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
+        case _ => assignedBuildings
     this.copy(
-      assignedBuildings = assignedBuildings + AssignmentFactory(spot, player, buildingType),
+      assignedBuildings = buildingUpdated,
       assignedAwards = awards
     )
 
@@ -242,22 +265,6 @@ private final case class ScatanStateImpl(
     val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
     partialScores.foldLeft(Score.empty(players))(_ |+| _)
 
-  /** Returns a map of structure spots with their corresponding tile content from a map of hexagons with their tile
-    * content.
-    *
-    * @param hexagons
-    *   a map of hexagons with their corresponding tile content
-    * @return
-    *   a map of structure spots with their corresponding tile content
-    */
-  private def getSpotsWithTileContentFromHexagons(
-      hexagons: Map[Hexagon, TileContent]
-  ): Map[StructureSpot, TileContent] =
-    hexagons.foldLeft(Map.empty[StructureSpot, TileContent])((spotsWithTileContent, hexagonWithTile) =>
-      val spotWithTile = (gameMap.nodes.filter(_.contains(hexagonWithTile._1)).head, hexagonWithTile._2)
-      spotsWithTileContent.updated(spotWithTile._1, spotWithTile._2)
-    )
-
   /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
     * @param hexagonsWithTileContent
     *   a map of hexagons with their corresponding tile content
@@ -265,36 +272,43 @@ private final case class ScatanStateImpl(
     *   a new ScatanState with updated resource cards for each player
     */
   def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]) =
-    val assignedSpotsWithTileContent =
-      getSpotsWithTileContentFromHexagons(hexagonsWithTileContent)
-        .filter((spot, content) => assignedBuildings.contains(spot))
     val buildingsInAssignedSpots =
-      assignedBuildings
-        .getStructureSpots()
-        .filter((structureSpot, assignmentInfo) => assignedSpotsWithTileContent.contains(structureSpot))
-    val updatedResourceCards = buildingsInAssignedSpots.foldLeft(resourceCards)((resourceOfPlayer, buildingInSpot) =>
-      val tileContent = assignedSpotsWithTileContent(buildingInSpot._1)
-      val player = buildingInSpot._2.player
-      val buildingType = buildingInSpot._2.buildingType
-      if tileContent.terrain.isInstanceOf[ResourceType] then
-        buildingType match
-          case BuildingType.Settlement =>
-            resourceOfPlayer
-              .updated(
-                player,
-                resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType])
-              )
-          case BuildingType.City =>
-            resourceOfPlayer.updated(
-              player,
-              resourceOfPlayer(player) :+ ResourceCard(tileContent.terrain.asInstanceOf[ResourceType]) :+ ResourceCard(
-                tileContent.terrain.asInstanceOf[ResourceType]
-              )
-            )
+      assignedBuildings.filter((s, _) =>
+        s match
+          case structure: StructureSpot => structure.toSet.intersect(hexagonsWithTileContent.keys.toSet).nonEmpty
+          case _: RoadSpot              => false
+      )
+    val resourceCardsUpdated =
+      buildingsInAssignedSpots.foldLeft(resourceCards)((resourceOfPlayer, buildingInAssignedSpot) =>
+        buildingInAssignedSpot._1 match
+          case structure: StructureSpot =>
+            val resourceToAdd = structure.toSet.toList.collect(hexagonsWithTileContent)
+            var resourceCardsOfPlayerUpdated = resourceOfPlayer
+            resourceToAdd.foreach { r =>
+              r match
+                case TileContent(terrain: ResourceType, _) =>
+                  buildingInAssignedSpot._2.buildingType match
+                    case BuildingType.Settlement =>
+                      resourceCardsOfPlayerUpdated = resourceCardsOfPlayerUpdated.updated(
+                        buildingInAssignedSpot._2.player,
+                        resourceCardsOfPlayerUpdated(buildingInAssignedSpot._2.player) :+ ResourceCard(terrain)
+                      )
+                    case BuildingType.City =>
+                      resourceCardsOfPlayerUpdated = resourceCardsOfPlayerUpdated.updated(
+                        buildingInAssignedSpot._2.player,
+                        resourceCardsOfPlayerUpdated(buildingInAssignedSpot._2.player) :+ ResourceCard(
+                          terrain
+                        ) :+ ResourceCard(
+                          terrain
+                        )
+                      )
+                    case BuildingType.Road =>
+                case _ =>
+            }
+            resourceCardsOfPlayerUpdated
           case _ => resourceOfPlayer
-      else resourceOfPlayer
-    )
-    this.copy(resourceCards = updatedResourceCards)
+      )
+    this.copy(resourceCards = resourceCardsUpdated)
 
   /** Assigns resources from the hexagons that have the given number and are not occupied by the robber.
     * @param number
@@ -310,6 +324,7 @@ private final case class ScatanStateImpl(
             tileContent
         ) => tileContent.number.isDefined && tileContent.number.get == number && hexagon != robberPlacement
       )
+
     assignResourceFromHexagons(hexagonsFilteredByNumber)
 
   /** Returns a new ScatanState with the robber moved to the specified hexagon.
