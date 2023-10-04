@@ -46,7 +46,8 @@ class RulesOpsTest extends BaseTest:
   }
 
   it should "allow to specify the possible actions with the next step for a given GameStatus" in {
-    val newRules = rules.withActions(GameStatus(MyPhases.Game, Steps.Initial) -> Map(Actions.StartGame -> Steps.Initial))
+    val newRules =
+      rules.withActions(GameStatus(MyPhases.Game, Steps.Initial) -> Map(Actions.StartGame -> Steps.Initial))
     newRules.actions(GameStatus(MyPhases.Game, Steps.Initial)) should be(Map(Actions.StartGame -> Steps.Initial))
   }
 
