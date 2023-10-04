@@ -1,9 +1,9 @@
 package scatan.lib.game
 
-/**
- * Represents a turn in a game.
- * @tparam Player The type of player that is taking the turn.
- */
+/** Represents a turn in a game.
+  * @tparam Player
+  *   The type of player that is taking the turn.
+  */
 trait Turn[Player]:
   def number: Int
   def player: Player
