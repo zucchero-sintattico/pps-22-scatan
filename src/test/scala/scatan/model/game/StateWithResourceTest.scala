@@ -33,14 +33,6 @@ class StateWithResourceTest extends BasicStateTest:
     state.resourceCards should be(ResourceCard.empty(threePlayers))
   }
 
-  // it should "assign a resource card after a dice roll" in {
-  //   val state = ScatanState(threePlayers)
-  //   val stateWithResources = state
-  //     .assignBuilding(state.emptySpots.getEmptyStructureSpots.head, BuildingType.Settlement, state.players.head)
-  //     .rollDiceBruteForce()
-  //   stateWithResources.resourceCards should not be ResourceCard.empty(threePlayers)
-  // }
-
   it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1

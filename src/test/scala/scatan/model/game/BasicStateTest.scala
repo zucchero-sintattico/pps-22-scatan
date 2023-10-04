@@ -13,16 +13,7 @@ abstract class BasicStateTest extends BaseTest:
     (1 to n).map(i => Player(s"Player $i"))
 
   protected def emptySpot(state: ScatanState): Spot = state.emptySpots.head
-  extension (emptySpots: Seq[Spot])
-    def getEmptyRoadSpots: Seq[RoadSpot] =
-      emptySpots
-        .filter(_.isInstanceOf[RoadSpot])
-        .map(_.asInstanceOf[RoadSpot])
 
-    def getEmptyStructureSpots: Seq[StructureSpot] =
-      emptySpots
-        .filter(_.isInstanceOf[StructureSpot])
-        .map(_.asInstanceOf[StructureSpot])
   val threePlayers = players(3)
   val fourPlayers = players(4)
 
