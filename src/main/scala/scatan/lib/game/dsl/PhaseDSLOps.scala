@@ -1,13 +1,16 @@
 package scatan.lib.game.dsl
 
 import TurnDSLOps.TurnDSLContext
+import scatan.lib.game.GameStatus
+import scatan.lib.game.ops.RulesOps.withActions
 
 object PhaseDSLOps:
   case class PhaseDSLContext[State, PhaseType, StepType, ActionType, Player](phase: PhaseType)(using
-      val dsl: GameDSL[State, PhaseType, StepType, ActionType, Player]
+      val dsl: TypedGameDSL[State, PhaseType, StepType, ActionType, Player]
   ):
     def addStepToPhase(phase: PhaseType, step: StepType, actions: Map[ActionType, StepType]): Unit =
-      ???
+      val status = GameStatus(phase, step)
+      dsl.rules = dsl.rules.withActions(status, actions)
 
   def Turn[State, PhaseType, StepType, ActionType, Player](
       init: TurnDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit

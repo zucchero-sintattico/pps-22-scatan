@@ -1,6 +1,6 @@
 package scatan.model
 
-import scatan.lib.game.dsl.GameDSL
+import scatan.lib.game.dsl.TypedGameDSL
 import scatan.lib.game.{Game, Rules}
 import scatan.lib.mvc.Model
 import scatan.model.game.{ScatanActions, ScatanDSL, ScatanPhases, ScatanPlayer, ScatanState, ScatanSteps}

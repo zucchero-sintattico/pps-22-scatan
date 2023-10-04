@@ -1,19 +1,19 @@
 package scatan.model
 
 import scatan.BaseTest
-import scatan.lib.game.dsl.GameDSL
+import scatan.lib.game.dsl.TypedGameDSL
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus}
-import scatan.model.game.ScatanActions.RollDice
+import scatan.model.game.ScatanActions.*
 import scatan.model.game.{ScatanActions, ScatanDSL, ScatanPhases, ScatanPlayer, ScatanState, ScatanSteps}
 
 class GameTest extends BaseTest:
 
   type ScatanGame = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
-  type ScatanDSL = GameDSL[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
+  type ScatanDSL = TypedGameDSL[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
 
   given ScatanRules = ScatanDSL.rules
 
@@ -73,9 +73,8 @@ class GameTest extends BaseTest:
   }
 
   def nextTurn(game: ScatanGame): ScatanGame =
-    given effect: Effect[RollDice.type, ScatanState] with
-      def apply(state: ScatanState): Option[ScatanState] =
-        Some(identity(state))
+    given Effect[BuildSettlement.type, ScatanState] = Some(_)
+    given Effect[BuildRoad.type, ScatanState] = Some(_)
     val gameAfterRoll = game.play(RollDice).get
     gameAfterRoll.nextTurn.get
 

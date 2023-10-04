@@ -1,22 +1,23 @@
 package scatan.lib.game.dsl
 
-import scatan.lib.game.Rules
-import scatan.lib.game.dsl.PhasesDSLOps.PhasesDSLContext
-import scatan.lib.game.dsl.PlayersDSLOps.PlayersDSLContext
+/** A type-safe DSL for defining games.
+  * @tparam Player
+  *   The type of player in the game.
+  * @tparam State
+  *   The type of the game state.
+  * @tparam PhaseType
+  *   The type of the phase of the game.
+  * @tparam StepType
+  *   The type of the step of the game.
+  * @tparam ActionType
+  *   The type of the action of the game.
+  */
+trait GameDSL:
+  type Player
+  type State
+  type PhaseType
+  type StepType
+  type ActionType
 
-trait GameDSL[State, PhaseType, StepType, ActionType, Player]:
-  var rules: Rules[State, PhaseType, StepType, ActionType, Player] = Rules.empty
-
-  given GameDSL[State, PhaseType, StepType, ActionType, Player] = this
-
-  def Players(init: PlayersDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit): Unit =
-    given PlayersDSLContext[State, PhaseType, StepType, ActionType, Player] = PlayersDSLContext()
-    init
-
-  def Phases(init: PhasesDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit): Unit =
-    given PhasesDSLContext[State, PhaseType, StepType, ActionType, Player] =
-      PhasesDSLContext[State, PhaseType, StepType, ActionType, Player]()
-    init
-
-  def StartWithPhase(phase: PhaseType): Unit =
-    rules = rules.copy(initialPhase = phase)
+  private val typedDSL = new TypedGameDSL[State, PhaseType, StepType, ActionType, Player] {}
+  export typedDSL.*

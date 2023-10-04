@@ -1,6 +1,6 @@
 package scatan.model.game
 
-import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps}
+import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps, TypedGameDSL}
 import scatan.lib.game.dsl.PlayersDSLOps.*
 import scatan.lib.game.dsl.PhaseDSLOps.*
 import scatan.lib.game.dsl.PhasesDSLOps.*
@@ -9,7 +9,13 @@ import scatan.model.game.{ScatanActions, ScatanPhases, ScatanState}
 
 import scala.language.postfixOps
 
-object ScatanDSL extends GameDSL[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]:
+object ScatanDSL extends GameDSL:
+  override type Player = ScatanPlayer
+  override type State = ScatanState
+  override type PhaseType = ScatanPhases
+  override type StepType = ScatanSteps
+  override type ActionType = ScatanActions
+
   import ScatanSteps.*
 
   Players {

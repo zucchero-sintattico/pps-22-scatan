@@ -9,7 +9,8 @@ final case class Game[State, PhaseType, StepType, ActionType, Player](
     status: GameStatus[PhaseType, StepType],
     playersIterator: Iterator[Player],
     rules: Rules[State, PhaseType, StepType, ActionType, Player]
-)
+):
+  require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
 
 object Game:
   def apply[State, PhaseType, StepType, ActionType, Player](
@@ -17,6 +18,7 @@ object Game:
   )(using
       rules: Rules[State, PhaseType, StepType, ActionType, Player]
   ): Game[State, PhaseType, StepType, ActionType, Player] =
+    require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
     Game(
       players = players,
       state = rules.initialState,
