@@ -14,7 +14,7 @@ import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
 
 trait ScatanState:
   def players: Seq[Player]
-  def emptySpot: Seq[Spot]
+  def emptySpots: Seq[Spot]
   def assignedBuildings: AssignedBuildings
   def robberPlacement: Hexagon
   def moveRobber(hexagon: Hexagon): ScatanState
@@ -80,7 +80,7 @@ private final case class ScatanStateImpl(
     assignedAwards: Awards = Award.empty()
 ) extends ScatanState:
 
-  def emptySpot: Seq[Spot] =
+  def emptySpots: Seq[Spot] =
     Seq(gameMap.nodes, gameMap.edges).flatten
       .filter(!assignedBuildings.isDefinedAt(_))
 
@@ -175,8 +175,7 @@ private final case class ScatanStateImpl(
     )
   def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]) =
     val assignedSpotsWithTileContent =
-      this
-        .getSpotsWithTileContentFromHexagons(hexagonsWithTileContent)
+      getSpotsWithTileContentFromHexagons(hexagonsWithTileContent)
         .filter((spot, content) => assignedBuildings.contains(spot))
     val buildingsInAssignedSpots =
       assignedBuildings

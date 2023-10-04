@@ -14,7 +14,7 @@ class StateWithScoresTest extends BasicStateTest:
   it should "increment score if assign a building" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptySpot.iterator
+    val it = state.emptySpots.iterator
     val stateWithSettlementPlaced = state.assignBuilding(it.next(), BuildingType.Settlement, player1)
     stateWithSettlementPlaced.scores(player1) should be(1)
     val stateWithSettlementAndCity =
@@ -28,7 +28,7 @@ class StateWithScoresTest extends BasicStateTest:
   it should "increment score either if assign an award or a building" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptySpot.iterator
+    val it = state.emptySpots.iterator
     val stateWithSettlementAndAward = state
       .assignBuilding(it.next(), BuildingType.Settlement, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)
@@ -42,7 +42,7 @@ class StateWithScoresTest extends BasicStateTest:
   it should "recognize if there is a winner" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptySpot.iterator
+    val it = state.emptySpots.iterator
     val stateWithAWinner = state
       .assignBuilding(it.next(), BuildingType.Settlement, player1)
       .assignBuilding(it.next(), BuildingType.Settlement, player1)
