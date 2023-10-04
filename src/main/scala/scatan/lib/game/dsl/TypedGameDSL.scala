@@ -3,7 +3,7 @@ package scatan.lib.game.dsl
 import scatan.lib.game.Rules
 import scatan.lib.game.dsl.PhasesDSLOps.PhasesDSLContext
 import scatan.lib.game.dsl.PlayersDSLOps.PlayersDSLContext
-import scatan.lib.game.ops.RulesOps.withStartingPhase
+import scatan.lib.game.ops.RulesOps.*
 
 /** A DSL for defining a game.
   * @tparam State
@@ -19,7 +19,6 @@ import scatan.lib.game.ops.RulesOps.withStartingPhase
   */
 trait TypedGameDSL[State, PhaseType, StepType, ActionType, Player]:
   var rules: Rules[State, PhaseType, StepType, ActionType, Player] = Rules.empty
-
   given TypedGameDSL[State, PhaseType, StepType, ActionType, Player] = this
 
   def Players(init: PlayersDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit): Unit =
@@ -31,5 +30,11 @@ trait TypedGameDSL[State, PhaseType, StepType, ActionType, Player]:
       PhasesDSLContext[State, PhaseType, StepType, ActionType, Player]()
     init
 
+  def Winner(winner: State => Option[Player]): Unit =
+    rules = rules.withWinner(winner)
+
   def StartWithPhase(phase: PhaseType): Unit =
     rules = rules.withStartingPhase(phase)
+
+  def StartWithStateFactory(stateFactory: Seq[Player] => State): Unit =
+    rules = rules.withStartingStateFactory(stateFactory)

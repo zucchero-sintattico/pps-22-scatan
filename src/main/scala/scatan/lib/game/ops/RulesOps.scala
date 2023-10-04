@@ -2,6 +2,8 @@ package scatan.lib.game.ops
 
 import scatan.lib.game.{GameStatus, Rules}
 
+/** Operations on [[Rules]] related to their construction.
+  */
 object RulesOps:
   extension [State, P, S, A, Player](rules: Rules[State, P, S, A, Player])
 
@@ -13,6 +15,9 @@ object RulesOps:
       */
     def withPlayerSizes(sizes: Set[Int]): Rules[State, P, S, A, Player] =
       rules.copy(allowedPlayersSizes = sizes)
+
+    def withStartingStateFactory(stateFactory: Seq[Player] => State): Rules[State, P, S, A, Player] =
+      rules.copy(initialStateFactory = stateFactory)
 
     /** Set the starting phase for this game.
       * @param phase
@@ -78,3 +83,12 @@ object RulesOps:
       */
     def withActions(actions: (GameStatus[P, S], Map[A, S])): Rules[State, P, S, A, Player] =
       rules.copy(actions = rules.actions + actions)
+
+    /** Set the winner for a state.
+      * @param winner
+      *   The winner function
+      * @return
+      *   A new set of rules with the winner function.
+      */
+    def withWinner(winner: State => Option[Player]): Rules[State, P, S, A, Player] =
+      rules.copy(winner = winner)

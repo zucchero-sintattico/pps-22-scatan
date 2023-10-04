@@ -2,7 +2,12 @@ package scatan.lib.game.ops
 
 import scatan.lib.game.Game
 
+/** Operations on [[Game]] related to winning and losing.
+  */
 object GameWinOps:
+
+  import reflect.Selectable.reflectiveSelectable
+  import scala.language.reflectiveCalls
 
   extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
 
@@ -10,10 +15,11 @@ object GameWinOps:
       * @return
       *   true if the game is over.
       */
-    def isOver: Boolean = false // TODO: Implement
+    def isOver: Boolean =
+      game.winner.isDefined
 
     /** Returns the winner of the game, if any.
       * @return
       *   the winner of the game, if any.
       */
-    def winner: Option[Player] = None // TODO: Implement
+    def winner: Option[Player] = game.rules.winner(game.state)

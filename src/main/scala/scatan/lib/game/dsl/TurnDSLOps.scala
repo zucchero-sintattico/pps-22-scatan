@@ -3,6 +3,8 @@ package scatan.lib.game.dsl
 import scatan.lib.game.ops.RulesOps.*
 import scatan.model.game.ScatanPlayer
 
+/** Operations for defining the rules of a turn-based game.
+  */
 object TurnDSLOps:
   case class TurnDSLContext[State, PhaseType, StepType, ActionType, Player](phase: PhaseType)(using
       val dsl: TypedGameDSL[State, PhaseType, StepType, ActionType, Player]

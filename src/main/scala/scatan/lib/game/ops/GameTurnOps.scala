@@ -2,6 +2,8 @@ package scatan.lib.game.ops
 
 import scatan.lib.game.{Game, Turn}
 
+/** Operations on [[Game]] related to advancing the game to the next turn.
+  */
 object GameTurnOps:
   extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
 

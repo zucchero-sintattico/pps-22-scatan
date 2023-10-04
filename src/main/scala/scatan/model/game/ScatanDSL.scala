@@ -22,7 +22,10 @@ object ScatanDSL extends GameDSL:
     canBe(3 to 4)
   }
 
+  StartWithStateFactory(ScatanState(_))
   StartWithPhase(ScatanPhases.Setup)
+
+  Winner(_.winner)
 
   Phases {
     On(ScatanPhases.Setup) {

@@ -20,4 +20,5 @@ trait GameDSL:
   type ActionType
 
   private val typedDSL = new TypedGameDSL[State, PhaseType, StepType, ActionType, Player] {}
-  export typedDSL.*
+
+  export typedDSL.{isOver as _, winner as _, *}

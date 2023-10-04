@@ -2,9 +2,17 @@ package scatan.lib.game.ops
 
 import scatan.lib.game.Game
 
+/** An effect is a function that takes a state and returns a new state if the effect is applicable.
+  * @tparam A
+  *   the type of the action
+  * @tparam S
+  *   the type of the state
+  */
 trait Effect[A, S]:
   def apply(state: S): Option[S]
 
+/** Operations on [[Game]] related to playable actions.
+  */
 object GamePlayOps:
   extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
 
