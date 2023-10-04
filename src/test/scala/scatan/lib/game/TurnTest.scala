@@ -29,5 +29,3 @@ class TurnTest extends BaseTest:
     turn.number shouldBe 1
     turn.player shouldBe player
   }
-
-

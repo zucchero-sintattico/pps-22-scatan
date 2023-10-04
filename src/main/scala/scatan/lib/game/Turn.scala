@@ -17,8 +17,6 @@ trait Turn[Player]:
     */
   def player: Player
 
-
-
 object Turn:
   /** Create a new turn.
     * @param number
