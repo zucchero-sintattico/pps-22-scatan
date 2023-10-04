@@ -31,7 +31,7 @@ trait TypedGameDSL[State, PhaseType, StepType, ActionType, Player]:
     init
 
   def Winner(winner: State => Option[Player]): Unit =
-    rules = rules.withWinner(winner)
+    rules = rules.withWinnerFunction(winner)
 
   def StartWithPhase(phase: PhaseType): Unit =
     rules = rules.withStartingPhase(phase)

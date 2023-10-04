@@ -10,7 +10,7 @@ object GameTurnOps:
 
     private def nextTurnInSamePhase: Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
-        nextStep <- game.rules.initialSteps.get(game.gameStatus.phase)
+        nextStep <- game.rules.startingSteps.get(game.gameStatus.phase)
         nextStatus = game.gameStatus.copy(
           step = nextStep
         )
@@ -24,8 +24,8 @@ object GameTurnOps:
     private def nextTurnInNextPhase: Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         nextPhase <- game.rules.nextPhase.get(game.gameStatus.phase)
-        initialStep <- game.rules.initialSteps.get(nextPhase)
-        nextPlayersIterator <- game.rules.turnIteratorFactories.get(nextPhase).map(_.apply(game.players))
+        initialStep <- game.rules.startingSteps.get(nextPhase)
+        nextPlayersIterator <- game.rules.phaseTurnIteratorFactories.get(nextPhase).map(_.apply(game.players))
         nextPlayer <- nextPlayersIterator.nextOption()
         nextTurn = game.turn.next(nextPlayer)
       yield game.copy(

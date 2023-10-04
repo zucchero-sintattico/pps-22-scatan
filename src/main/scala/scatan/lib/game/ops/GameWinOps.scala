@@ -22,4 +22,4 @@ object GameWinOps:
       * @return
       *   the winner of the game, if any.
       */
-    def winner: Option[Player] = game.rules.winner(game.state)
+    def winner: Option[Player] = game.rules.winnerFunction(game.state)

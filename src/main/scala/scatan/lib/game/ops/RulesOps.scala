@@ -13,11 +13,11 @@ object RulesOps:
       * @return
       *   A new set of rules with the allowed number of players set.
       */
-    def withPlayerSizes(sizes: Set[Int]): Rules[State, P, S, A, Player] =
+    def withAllowedPlayersSizes(sizes: Set[Int]): Rules[State, P, S, A, Player] =
       rules.copy(allowedPlayersSizes = sizes)
 
     def withStartingStateFactory(stateFactory: Seq[Player] => State): Rules[State, P, S, A, Player] =
-      rules.copy(initialStateFactory = stateFactory)
+      rules.copy(startingStateFactory = stateFactory)
 
     /** Set the starting phase for this game.
       * @param phase
@@ -26,7 +26,7 @@ object RulesOps:
       *   A new set of rules with the starting phase set.
       */
     def withStartingPhase(phase: P): Rules[State, P, S, A, Player] =
-      rules.copy(initialPhase = phase)
+      rules.copy(startingPhase = phase)
 
     /** Set the initial step for a phase.
       * @param phase
@@ -36,8 +36,8 @@ object RulesOps:
       * @return
       *   A new set of rules with the initial step set.
       */
-    def withInitialStep(phase: P, step: S): Rules[State, P, S, A, Player] =
-      rules.copy(initialSteps = rules.initialSteps + (phase -> step))
+    def withStartingStep(phase: P, step: S): Rules[State, P, S, A, Player] =
+      rules.copy(startingSteps = rules.startingSteps + (phase -> step))
 
     /** Set the ending step for a phase.
       * @param phase
@@ -62,7 +62,7 @@ object RulesOps:
         phase: P,
         factory: Seq[Player] => Iterator[Player]
     ): Rules[State, P, S, A, Player] =
-      rules.copy(turnIteratorFactories = rules.turnIteratorFactories + (phase -> factory))
+      rules.copy(phaseTurnIteratorFactories = rules.phaseTurnIteratorFactories + (phase -> factory))
 
     /** Set the next phase for a phase.
       * @param phase
@@ -90,5 +90,5 @@ object RulesOps:
       * @return
       *   A new set of rules with the winner function.
       */
-    def withWinner(winner: State => Option[Player]): Rules[State, P, S, A, Player] =
-      rules.copy(winner = winner)
+    def withWinnerFunction(winner: State => Option[Player]): Rules[State, P, S, A, Player] =
+      rules.copy(winnerFunction = winner)

@@ -1,6 +1,6 @@
 package scatan.lib.game.dsl
 
-import scatan.lib.game.ops.RulesOps.withPlayerSizes
+import scatan.lib.game.ops.RulesOps.withAllowedPlayersSizes
 
 /** Operations for the players DSL.
   */
@@ -12,7 +12,7 @@ object PlayersDSLOps:
   def canBe[State, PhaseType, StepType, ActionType, Player](sizes: Set[Int])(using
       playersDSLContext: PlayersDSLContext[State, PhaseType, StepType, ActionType, Player]
   ): Unit =
-    playersDSLContext.dsl.rules = playersDSLContext.dsl.rules.withPlayerSizes(sizes)
+    playersDSLContext.dsl.rules = playersDSLContext.dsl.rules.withAllowedPlayersSizes(sizes)
 
   def canBe[State, PhaseType, StepType, ActionType, Player](sizes: Int*)(using
       playersDSLContext: PlayersDSLContext[State, PhaseType, StepType, ActionType, Player]

@@ -13,7 +13,7 @@ object TurnDSLOps:
   def StartIn[State, PhaseType, StepType, ActionType, Player](step: StepType)(using
       turnDSLContext: TurnDSLContext[State, PhaseType, StepType, ActionType, Player]
   ): Unit =
-    turnDSLContext.dsl.rules = turnDSLContext.dsl.rules.withInitialStep(turnDSLContext.phase, step)
+    turnDSLContext.dsl.rules = turnDSLContext.dsl.rules.withStartingStep(turnDSLContext.phase, step)
 
   def CanEndIn[State, PhaseType, StepType, ActionType, Player](
       step: StepType

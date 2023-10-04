@@ -53,11 +53,11 @@ object Game:
       rules: Rules[State, PhaseType, StepType, ActionType, Player]
   ): Game[State, PhaseType, StepType, ActionType, Player] =
     require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
-    val iterator = rules.turnIteratorFactories.get(rules.initialPhase).map(_(players)).getOrElse(players.iterator)
+    val iterator = rules.phaseTurnIteratorFactories.get(rules.startingPhase).map(_(players)).getOrElse(players.iterator)
     Game(
       players = players,
-      state = rules.initialStateFactory(players),
-      gameStatus = GameStatus(rules.initialPhase, rules.initialSteps(rules.initialPhase)),
+      state = rules.startingStateFactory(players),
+      gameStatus = GameStatus(rules.startingPhase, rules.startingSteps(rules.startingPhase)),
       turn = Turn[Player](1, iterator.next()),
       playersIterator = iterator,
       rules = rules

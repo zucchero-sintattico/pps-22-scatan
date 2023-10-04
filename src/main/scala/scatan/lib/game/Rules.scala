@@ -1,17 +1,17 @@
 package scatan.lib.game
 
 /** Rules of a game.
-  * @param initialStateFactory
+  * @param startingStateFactory
   *   initial state of the game
-  * @param initialPhase
+  * @param startingPhase
   *   initial phase of the game
-  * @param initialSteps
+  * @param startingSteps
   *   initial steps of the game for each phase
   * @param actions
   *   actions of the game for each game status
   * @param allowedPlayersSizes
   *   allowed players sizes
-  * @param turnIteratorFactories
+  * @param phaseTurnIteratorFactories
   *   turn iterator factories for each phase
   * @param nextPhase
   *   next phase for each phase
@@ -29,15 +29,15 @@ package scatan.lib.game
   *   player of the game
   */
 final case class Rules[State, P, S, A, Player](
-    initialStateFactory: Seq[Player] => State,
-    initialPhase: P,
-    initialSteps: Map[P, S],
+    startingStateFactory: Seq[Player] => State,
+    startingPhase: P,
+    startingSteps: Map[P, S],
     actions: Map[GameStatus[P, S], Map[A, S]],
     allowedPlayersSizes: Set[Int],
-    turnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
+    phaseTurnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
     nextPhase: Map[P, P] = Map.empty,
     endingSteps: Map[P, S],
-    winner: State => Option[Player] = (_: State) => None
+    winnerFunction: State => Option[Player] = (_: State) => None
 ):
   /** Returns allowed actions for each game status.
     * @return
@@ -60,12 +60,12 @@ final case class Rules[State, P, S, A, Player](
 object Rules:
   def empty[State, P, S, A, Player]: Rules[State, P, S, A, Player] =
     Rules[State, P, S, A, Player](
-      initialStateFactory = (_: Seq[Player]) => null.asInstanceOf[State],
-      initialPhase = null.asInstanceOf[P],
+      startingStateFactory = (_: Seq[Player]) => null.asInstanceOf[State],
+      startingPhase = null.asInstanceOf[P],
       actions = Map.empty,
       allowedPlayersSizes = Set.empty,
-      initialSteps = Map.empty,
-      turnIteratorFactories = Map.empty,
+      startingSteps = Map.empty,
+      phaseTurnIteratorFactories = Map.empty,
       nextPhase = Map.empty,
       endingSteps = Map.empty
     )
@@ -74,12 +74,12 @@ object Rules:
       initialStateFactory: Seq[Player] => State
   ): Rules[State, P, S, A, Player] =
     Rules[State, P, S, A, Player](
-      initialStateFactory = initialStateFactory,
-      initialPhase = null.asInstanceOf[P],
+      startingStateFactory = initialStateFactory,
+      startingPhase = null.asInstanceOf[P],
       actions = Map.empty,
       allowedPlayersSizes = Set.empty,
-      initialSteps = Map.empty,
-      turnIteratorFactories = Map.empty,
+      startingSteps = Map.empty,
+      phaseTurnIteratorFactories = Map.empty,
       nextPhase = Map.empty,
       endingSteps = Map.empty
     )

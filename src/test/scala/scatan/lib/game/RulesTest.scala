@@ -17,19 +17,19 @@ class RulesTest extends BaseTest:
   }
 
   it should "have an initial state factory" in {
-    emptyGameRules.initialStateFactory shouldBe a[Seq[Player] => State]
-    emptyGameRules.initialStateFactory(players) shouldBe a[State]
-    emptyGameRules.initialStateFactory(players) shouldBe State()
+    emptyGameRules.startingStateFactory shouldBe a[Seq[Player] => State]
+    emptyGameRules.startingStateFactory(players) shouldBe a[State]
+    emptyGameRules.startingStateFactory(players) shouldBe State()
   }
 
   it should "have a initial phase" in {
-    emptyGameRules.initialPhase shouldBe a[Phases]
-    emptyGameRules.initialPhase shouldBe Phases.Game
+    emptyGameRules.startingPhase shouldBe a[Phases]
+    emptyGameRules.startingPhase shouldBe Phases.Game
   }
 
   it should "have a initial steps" in {
-    emptyGameRules.initialSteps shouldBe a[Map[Phases, Steps]]
-    emptyGameRules.initialSteps shouldBe Map(Phases.Game -> Steps.Initial)
+    emptyGameRules.startingSteps shouldBe a[Map[Phases, Steps]]
+    emptyGameRules.startingSteps shouldBe Map(Phases.Game -> Steps.Initial)
   }
 
   it should "have a actions" in {
@@ -45,9 +45,9 @@ class RulesTest extends BaseTest:
   }
 
   it should "have a turn iterator factories" in {
-    emptyGameRules.turnIteratorFactories shouldBe a[Map[Phases, Seq[Player] => Iterator[Player]]]
-    emptyGameRules.turnIteratorFactories.get(Phases.Game) shouldBe a[Some[Seq[Player] => Iterator[Player]]]
-    val iterator = emptyGameRules.turnIteratorFactories(Phases.Game)(players)
+    emptyGameRules.phaseTurnIteratorFactories shouldBe a[Map[Phases, Seq[Player] => Iterator[Player]]]
+    emptyGameRules.phaseTurnIteratorFactories.get(Phases.Game) shouldBe a[Some[Seq[Player] => Iterator[Player]]]
+    val iterator = emptyGameRules.phaseTurnIteratorFactories(Phases.Game)(players)
     iterator shouldBe a[Iterator[Player]]
     iterator.toSeq shouldBe players
   }
@@ -63,8 +63,8 @@ class RulesTest extends BaseTest:
   }
 
   it should "have a winner" in {
-    emptyGameRules.winner shouldBe a[State => Option[Player]]
-    emptyGameRules.winner(State()) shouldBe None
+    emptyGameRules.winnerFunction shouldBe a[State => Option[Player]]
+    emptyGameRules.winnerFunction(State()) shouldBe None
   }
 
   it should "have allowed actions" in {
