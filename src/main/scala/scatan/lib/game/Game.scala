@@ -19,11 +19,12 @@ object Game:
       rules: Rules[State, PhaseType, StepType, ActionType, Player]
   ): Game[State, PhaseType, StepType, ActionType, Player] =
     require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
+    val iterator = rules.turnIteratorFactories.get(rules.initialPhase).map(_(players)).getOrElse(players.iterator)
     Game(
       players = players,
       state = rules.initialState,
       status = GameStatus(rules.initialPhase, rules.initialSteps(rules.initialPhase)),
-      turn = Turn[Player](1, players.head),
-      playersIterator = rules.turnIteratorFactories.get(rules.initialPhase).map(_(players)).getOrElse(players.iterator),
+      turn = Turn[Player](1, iterator.next()),
+      playersIterator = iterator,
       rules = rules
     )

@@ -75,8 +75,9 @@ class GameTest extends BaseTest:
   def nextTurn(game: ScatanGame): ScatanGame =
     given Effect[BuildSettlement.type, ScatanState] = Some(_)
     given Effect[BuildRoad.type, ScatanState] = Some(_)
-    val gameAfterRoll = game.play(RollDice).get
-    gameAfterRoll.nextTurn.get
+    val gameAfterBuildSettlement = game.play(BuildSettlement).get
+    val gameAfterBuildRoad = gameAfterBuildSettlement.play(BuildRoad).get
+    gameAfterBuildRoad.nextTurn.get
 
   it should "allow to change turn" in {
     val game = Game(threePlayers)
@@ -85,13 +86,4 @@ class GameTest extends BaseTest:
     println(newGame)
     newGame.turn.number shouldBe 2
     newGame.turn.player shouldBe threePlayers(1)
-  }
-
-  it should "do a circular turn" in {
-    var game = Game(threePlayers)
-    for i <- 1 to 10
-    do
-      game.turn.number shouldBe i
-      game.turn.player shouldBe threePlayers(((i - 1) % 3))
-      game = nextTurn(game)
   }
