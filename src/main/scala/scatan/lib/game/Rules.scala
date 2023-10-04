@@ -35,7 +35,7 @@ final case class Rules[State, P, S, A, Player](
     actions: Map[GameStatus[P, S], Map[A, S]],
     allowedPlayersSizes: Set[Int],
     turnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
-    nextPhase: Map[P, P],
+    nextPhase: Map[P, P] = Map.empty,
     endingSteps: Map[P, S],
     winner: State => Option[Player] = (_: State) => None
 ):
@@ -51,7 +51,7 @@ final case class Rules[State, P, S, A, Player](
     * @return
     *   next steps for each game status and action
     */
-  def nextStep: Map[(GameStatus[P, S], A), S] = actions.flatMap { case (status, actions) =>
+  def nextSteps: Map[(GameStatus[P, S], A), S] = actions.flatMap { case (status, actions) =>
     actions.map { case (action, step) =>
       (status, action) -> step
     }
@@ -61,6 +61,20 @@ object Rules:
   def empty[State, P, S, A, Player]: Rules[State, P, S, A, Player] =
     Rules[State, P, S, A, Player](
       initialStateFactory = (_: Seq[Player]) => null.asInstanceOf[State],
+      initialPhase = null.asInstanceOf[P],
+      actions = Map.empty,
+      allowedPlayersSizes = Set.empty,
+      initialSteps = Map.empty,
+      turnIteratorFactories = Map.empty,
+      nextPhase = Map.empty,
+      endingSteps = Map.empty
+    )
+
+  def fromStateFactory[State, P, S, A, Player](
+      initialStateFactory: Seq[Player] => State
+  ): Rules[State, P, S, A, Player] =
+    Rules[State, P, S, A, Player](
+      initialStateFactory = initialStateFactory,
       initialPhase = null.asInstanceOf[P],
       actions = Map.empty,
       allowedPlayersSizes = Set.empty,

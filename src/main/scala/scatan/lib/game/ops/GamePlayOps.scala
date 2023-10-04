@@ -43,7 +43,7 @@ object GamePlayOps:
     )(using effect: Effect[action.type, State]): Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         newState <- effect(game.state)
-        newStep = game.rules.nextStep((game.status, action))
+        newStep = game.rules.nextSteps((game.status, action))
         newStatus = game.status.copy(
           step = newStep
         )

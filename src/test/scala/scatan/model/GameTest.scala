@@ -73,9 +73,9 @@ class GameTest extends BaseTest:
   }
 
   def nextTurn(game: ScatanGame): ScatanGame =
-    given Effect[BuildSettlement.type, ScatanState] = Some(_)
-    given Effect[BuildRoad.type, ScatanState] = Some(_)
+    given Effect[BuildSettlement.type, ScatanState] = BuildSettlementEffect()
     val gameAfterBuildSettlement = game.play(BuildSettlement).get
+    given Effect[BuildRoad.type, ScatanState] = BuildRoadEffect()
     val gameAfterBuildRoad = gameAfterBuildSettlement.play(BuildRoad).get
     gameAfterBuildRoad.nextTurn.get
 
