@@ -42,6 +42,7 @@ object GamePlayOps:
         action: Action
     )(using effect: Effect[action.type, State]): Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
+        _ <- canPlay(action).option
         newState <- effect(game.state)
         newStep = game.rules.nextSteps((game.gameStatus, action))
         newStatus = game.gameStatus.copy(
@@ -52,3 +53,7 @@ object GamePlayOps:
           gameStatus = newStatus
         )
       yield newGame
+
+  extension (bool: Boolean)
+    def option: Option[Unit] =
+      if bool then Some(()) else None

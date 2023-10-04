@@ -20,6 +20,7 @@ object EmptyDomain:
     case Initial
   enum Actions:
     case StartGame
+    case NotPlayableAction
 
   object EmptyGameDSL extends GameDSL:
     override type State = EmptyDomain.State
