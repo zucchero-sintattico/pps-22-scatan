@@ -33,15 +33,6 @@ trait ScatanState:
   def winner: Option[Player] = if isOver then Some(scores.maxBy(_._2)._1) else None
 
 object ScatanState:
-  /** Creates a new game with the given players The game must have 3 or 4 players The game map is created with a fixed
-    * number of hexagons The buildings are empty The resource cards are empty The development cards are empty The awards
-    * are empty
-    *
-    * @param players
-    *   the players of the game
-    * @return
-    *   the new game
-    */
   def apply(players: Seq[Player]): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
     ScatanStateImpl(
@@ -84,6 +75,12 @@ private final case class ScatanStateImpl(
     Seq(gameMap.nodes, gameMap.edges).flatten
       .filter(!assignedBuildings.isDefinedAt(_))
 
+  /** Returns a map of the current awards in the game, including the longest road and largest army. The longest road is
+    * awarded to the player with the longest continuous road of at least 5 segments. The largest army is awarded to the
+    * player with the most knight development cards played.
+    * @return
+    *   a map of the current awards in the game
+    */
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
@@ -107,17 +104,51 @@ private final case class ScatanStateImpl(
                                        else precedentLargestArmy)
     )
 
+  /** Verifies if a player has enough resources to pay a certain cost.
+    *
+    * @param player
+    *   the player to verify the resources of
+    * @param cost
+    *   the cost to verify
+    * @return
+    *   true if the player has enough resources to pay the cost, false otherwise
+    */
   private def verifyResourceCost(player: Player, cost: Cost): Boolean =
     cost.foldLeft(true)((result, resourceCost) =>
       result && resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
     )
 
+  /** Returns a new ScatanState with the specified building assigned to the specified player at the specified spot.
+    *
+    * @param spot
+    *   The spot where the building will be assigned.
+    * @param buildingType
+    *   The type of building to be assigned.
+    * @param player
+    *   The player to whom the building will be assigned.
+    * @return
+    *   A new ScatanState with the specified building assigned to the specified player at the specified spot.
+    */
   override def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
     this.copy(
       assignedBuildings = assignedBuildings + AssignmentFactory(spot, player, buildingType),
       assignedAwards = awards
     )
 
+  /** Builds a new ScatanState with the specified building at the specified position for the specified player. If the
+    * player has enough resources to build the specified building, the resources are consumed and the building is
+    * assigned to the player. Otherwise, the current state is returned.
+    *
+    * @param position
+    *   The position where the building will be built.
+    * @param buildingType
+    *   The type of building to be built.
+    * @param player
+    *   The player who will build the building.
+    * @return
+    *   A new ScatanState with the specified building at the specified position for the specified player, or the current
+    *   state if the player does not have enough resources.
+    */
   override def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
     if verifyResourceCost(player, buildingType.cost) then
       val remainingResourceCards = buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
@@ -127,27 +158,67 @@ private final case class ScatanStateImpl(
       gameWithConsumedResources.assignBuilding(position, buildingType, player)
     else this
 
-  override def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState =
+  /** Assigns a resource card to a player and returns a new ScatanState with the updated resourceCards map.
+    *
+    * @param player
+    *   the player to assign the resource card to
+    * @param resourceCard
+    *   the resource card to assign to the player
+    * @return
+    *   a new ScatanState with the updated resourceCards map
+    */
+  def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState =
     this.copy(
       resourceCards = resourceCards.updated(player, resourceCards(player) :+ resourceCard)
     )
 
-  override def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
+  /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
+    * added to the player's list of development cards. The assigned awards remain the same.
+    *
+    * @param player
+    *   The player to assign the development card to.
+    * @param developmentCard
+    *   The development card to assign to the player.
+    * @return
+    *   A new ScatanState with the development card assigned to the player.
+    */
+  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
     this.copy(
       developmentCards = developmentCards.updated(player, developmentCards(player) :+ developmentCard),
       assignedAwards = awards
     )
 
+  /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
+    * and assigned awards.
+    * @param player
+    *   the player who is consuming the development card
+    * @param developmentCard
+    *   the development card to be consumed
+    * @return
+    *   a new ScatanState with the updated development cards and assigned awards
+    */
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
     val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
     this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
 
+  /** Calculates the partial scores of the players with the awards they have received.
+    * @return
+    *   a `Scores` object representing the partial scores of the players with the awards they have received.
+    */
   private def partialScoresWithAwards: Scores =
     val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
     playersWithAwards.foldLeft(Score.empty(players))((scores, playerWithCount) =>
       scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
     )
 
+  /** Calculates the partial scores of each player, taking into account the buildings they have assigned. The score for
+    * each building type is as follows:
+    *   - Settlement: 1 point
+    *   - City: 2 points
+    *   - Road: 0 points
+    * @return
+    *   a Scores object containing the partial scores of each player
+    */
   private def partialScoresWithBuildings: Scores =
     def buildingScore(buildingType: BuildingType): Int = buildingType match
       case BuildingType.Settlement => 1
@@ -160,12 +231,25 @@ private final case class ScatanStateImpl(
       )
     )
 
-  import cats.syntax.semigroup.*
-  import scatan.model.components.Score.given
+  /** Returns the total scores of the players in the game. The scores are calculated by combining the partial scores
+    * with awards and buildings.
+    * @return
+    *   the total scores of the players
+    */
   def scores: Scores =
+    import cats.syntax.semigroup.*
+    import scatan.model.components.Score.given
     val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
     partialScores.foldLeft(Score.empty(players))(_ |+| _)
 
+  /** Returns a map of structure spots with their corresponding tile content from a map of hexagons with their tile
+    * content.
+    *
+    * @param hexagons
+    *   a map of hexagons with their corresponding tile content
+    * @return
+    *   a map of structure spots with their corresponding tile content
+    */
   private def getSpotsWithTileContentFromHexagons(
       hexagons: Map[Hexagon, TileContent]
   ): Map[StructureSpot, TileContent] =
@@ -173,6 +257,13 @@ private final case class ScatanStateImpl(
       val spotWithTile = (gameMap.nodes.filter(_.contains(hexagonWithTile._1)).head, hexagonWithTile._2)
       spotsWithTileContent.updated(spotWithTile._1, spotWithTile._2)
     )
+
+  /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
+    * @param hexagonsWithTileContent
+    *   a map of hexagons with their corresponding tile content
+    * @return
+    *   a new ScatanState with updated resource cards for each player
+    */
   def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]) =
     val assignedSpotsWithTileContent =
       getSpotsWithTileContentFromHexagons(hexagonsWithTileContent)
@@ -205,6 +296,12 @@ private final case class ScatanStateImpl(
     )
     this.copy(resourceCards = updatedResourceCards)
 
+  /** Assigns resources from the hexagons that have the given number and are not occupied by the robber.
+    * @param number
+    *   the number of the hexagons to filter by
+    * @return
+    *   a new ScatanState with the assigned resources
+    */
   def assignResourcesFromNumber(number: Int): ScatanState =
     val hexagonsFilteredByNumber = gameMap.toContent
       .filter(
@@ -215,4 +312,11 @@ private final case class ScatanStateImpl(
       )
     assignResourceFromHexagons(hexagonsFilteredByNumber)
 
+  /** Returns a new ScatanState with the robber moved to the specified hexagon.
+    *
+    * @param hexagon
+    *   the hexagon to move the robber to
+    * @return
+    *   a new ScatanState with the robber moved to the specified hexagon
+    */
   def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)
