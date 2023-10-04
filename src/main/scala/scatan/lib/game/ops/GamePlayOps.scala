@@ -21,7 +21,7 @@ object GamePlayOps:
       *   the allowed actions
       */
     def allowedActions: Set[Action] =
-      game.rules.allowedActions(game.status)
+      game.rules.allowedActions(game.gameStatus)
 
     /** Check if the current player can play the given action in this status
       * @param actionType
@@ -43,12 +43,12 @@ object GamePlayOps:
     )(using effect: Effect[action.type, State]): Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         newState <- effect(game.state)
-        newStep = game.rules.nextSteps((game.status, action))
-        newStatus = game.status.copy(
+        newStep = game.rules.nextSteps((game.gameStatus, action))
+        newStatus = game.gameStatus.copy(
           step = newStep
         )
         newGame = game.copy(
           state = newState,
-          status = newStatus
+          gameStatus = newStatus
         )
       yield newGame

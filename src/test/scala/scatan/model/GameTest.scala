@@ -63,7 +63,7 @@ class GameTest extends BaseTest:
 
   it should "have a status" in {
     val game = Game(threePlayers)
-    game.status shouldBe GameStatus(ScatanPhases.Setup, ScatanSteps.SetupSettlement)
+    game.gameStatus shouldBe GameStatus(ScatanPhases.Setup, ScatanSteps.SetupSettlement)
   }
 
   it should "have a turn" in {

@@ -19,7 +19,7 @@ final case class GameStatus[P, S](phase: P, step: S)
   *   the state
   * @param turn
   *   the current turn
-  * @param status
+  * @param gameStatus
   *   the current status
   * @param playersIterator
   *   the iterator of players
@@ -40,7 +40,7 @@ final case class Game[State, PhaseType, StepType, ActionType, Player](
     players: Seq[Player],
     state: State,
     turn: Turn[Player],
-    status: GameStatus[PhaseType, StepType],
+    gameStatus: GameStatus[PhaseType, StepType],
     playersIterator: Iterator[Player],
     rules: Rules[State, PhaseType, StepType, ActionType, Player]
 ):
@@ -57,7 +57,7 @@ object Game:
     Game(
       players = players,
       state = rules.initialStateFactory(players),
-      status = GameStatus(rules.initialPhase, rules.initialSteps(rules.initialPhase)),
+      gameStatus = GameStatus(rules.initialPhase, rules.initialSteps(rules.initialPhase)),
       turn = Turn[Player](1, iterator.next()),
       playersIterator = iterator,
       rules = rules
