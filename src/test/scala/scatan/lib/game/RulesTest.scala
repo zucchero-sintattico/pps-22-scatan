@@ -2,8 +2,7 @@ package scatan.lib.game
 
 import scatan.BaseTest
 
-class RulesTest extends BaseTest:
-
+object EmptyDomain:
   case class State()
   case class Player(name: String)
   enum Phases:
@@ -13,7 +12,7 @@ class RulesTest extends BaseTest:
   enum Actions:
     case StartGame
 
-  val emptyGameRules = Rules[State, Phases, Steps, Actions, Player](
+  def rules(players: Seq[Player]) = Rules[State, Phases, Steps, Actions, Player](
     initialStateFactory = (_) => State(),
     initialPhase = Phases.Game,
     initialSteps = Map(Phases.Game -> Steps.Initial),
@@ -25,7 +24,11 @@ class RulesTest extends BaseTest:
     winner = (_ => None)
   )
 
+class RulesTest extends BaseTest:
+
+  import EmptyDomain.*
   val players = Seq(Player("Alice"), Player("Bob"), Player("Carol"))
+  val emptyGameRules = EmptyDomain.rules(players)
 
   "The Rules" should "exists" in {
     Rules
@@ -94,10 +97,8 @@ class RulesTest extends BaseTest:
   }
 
   it should "have a next steps" in {
-    emptyGameRules.nextSteps shouldBe a[Map[GameStatus[Phases, Steps], Steps]]
+    emptyGameRules.nextSteps shouldBe a[Map[(GameStatus[Phases, Steps], Actions), Steps]]
     emptyGameRules.nextSteps shouldBe Map(
-      GameStatus(Phases.Game, Steps.Initial) -> Steps.Initial
+      (GameStatus(Phases.Game, Steps.Initial), Actions.StartGame) -> Steps.Initial
     )
   }
-  
-  

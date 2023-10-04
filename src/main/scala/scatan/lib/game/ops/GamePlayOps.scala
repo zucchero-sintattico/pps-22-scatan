@@ -20,7 +20,7 @@ object GamePlayOps:
       * @return
       *   the allowed actions
       */
-    def allowedActions: Seq[Action] =
+    def allowedActions: Set[Action] =
       game.rules.allowedActions(game.status)
 
     /** Check if the current player can play the given action in this status

@@ -43,8 +43,8 @@ final case class Rules[State, P, S, A, Player](
     * @return
     *   allowed actions for each game status
     */
-  def allowedActions: Map[GameStatus[P, S], Seq[A]] = actions.map { case (status, actions) =>
-    status -> actions.keys.toSeq
+  def allowedActions: Map[GameStatus[P, S], Set[A]] = actions.map { case (status, actions) =>
+    status -> actions.keys.toSet
   }
 
   /** Returns next steps for each game status and action.
