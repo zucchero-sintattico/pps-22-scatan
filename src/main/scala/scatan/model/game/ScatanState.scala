@@ -43,11 +43,11 @@ object ScatanState:
     )
 
   def apply(
-             players: Seq[ScatanPlayer],
-             gameMap: GameMap,
-             buildings: Buildings,
-             resourceCards: ResourceCards,
-             developmentCardsOfPlayers: DevelopmentCards
+      players: Seq[ScatanPlayer],
+      gameMap: GameMap,
+      buildings: Buildings,
+      resourceCards: ResourceCards,
+      developmentCardsOfPlayers: DevelopmentCards
   ): ScatanState =
     ScatanStateImpl(players, gameMap, buildings, resourceCards, developmentCardsOfPlayers)
 
@@ -58,28 +58,30 @@ object ScatanState:
       override def isOver: Boolean = true
 
 private final case class ScatanStateImpl(
-                                          players: Seq[ScatanPlayer],
-                                          gameMap: GameMap,
-                                          buildings: Buildings,
-                                          resourceCards: ResourceCards,
-                                          developmentCards: DevelopmentCards,
-                                          assignedAwards: Awards = Award.empty()
+    players: Seq[ScatanPlayer],
+    gameMap: GameMap,
+    buildings: Buildings,
+    resourceCards: ResourceCards,
+    developmentCards: DevelopmentCards,
+    assignedAwards: Awards = Award.empty()
 ) extends ScatanState:
 
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
-      buildings.foldLeft(precedentLongestRoad.getOrElse((ScatanPlayer(""), 0)))((playerWithLongestRoad, buildingsOfPlayer) =>
-        val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
-        if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
-        else playerWithLongestRoad
+      buildings.foldLeft(precedentLongestRoad.getOrElse((ScatanPlayer(""), 0)))(
+        (playerWithLongestRoad, buildingsOfPlayer) =>
+          val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
+          if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+          else playerWithLongestRoad
       )
     val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
     val largestArmy =
-      developmentCards.foldLeft(precedentLargestArmy.getOrElse(ScatanPlayer(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
-        val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
-        if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
-        else playerWithLargestArmy
+      developmentCards.foldLeft(precedentLargestArmy.getOrElse(ScatanPlayer(""), 0))(
+        (playerWithLargestArmy, cardsOfPlayer) =>
+          val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+          if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+          else playerWithLargestArmy
       )
     Map(
       Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
