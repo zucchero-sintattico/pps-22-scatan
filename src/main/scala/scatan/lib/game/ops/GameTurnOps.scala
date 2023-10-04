@@ -24,10 +24,16 @@ object GameTurnOps:
     private def nextTurnInNextPhase: Option[Game[State, PhaseType, StepType, Action, Player]] =
       for
         nextPhase <- game.rules.nextPhase.get(game.gameStatus.phase)
+        p <- { println(s"nextPhase: $nextPhase"); println(game.rules.startingSteps); Some(1) }
+
         initialStep <- game.rules.startingSteps.get(nextPhase)
+        p <- { println(s"initialStep: $initialStep"); Some(1) }
         nextPlayersIterator <- game.rules.phaseTurnIteratorFactories.get(nextPhase).map(_.apply(game.players))
+        p <- { println(s"nextPlayersIterator: $nextPlayersIterator"); Some(1) }
         nextPlayer <- nextPlayersIterator.nextOption()
+        p <- { println(s"nextPlayer: $nextPlayer"); Some(1) }
         nextTurn = game.turn.next(nextPlayer)
+        p <- { println(s"nextTurn: $nextTurn"); Some(1) }
       yield game.copy(
         turn = nextTurn,
         gameStatus = game.gameStatus.copy(

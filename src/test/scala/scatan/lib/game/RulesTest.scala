@@ -23,19 +23,19 @@ class RulesTest extends BaseTest:
   }
 
   it should "have a initial phase" in {
-    emptyGameRules.startingPhase shouldBe a[Phases]
-    emptyGameRules.startingPhase shouldBe Phases.Game
+    emptyGameRules.startingPhase shouldBe a[MyPhases]
+    emptyGameRules.startingPhase shouldBe MyPhases.Game
   }
 
   it should "have a initial steps" in {
-    emptyGameRules.startingSteps shouldBe a[Map[Phases, Steps]]
-    emptyGameRules.startingSteps shouldBe Map(Phases.Game -> Steps.Initial)
+    emptyGameRules.startingSteps shouldBe a[Map[MyPhases, Steps]]
+    emptyGameRules.startingSteps shouldBe Map(MyPhases.Game -> Steps.Initial, MyPhases.GameOver -> Steps.Initial)
   }
 
   it should "have a actions" in {
-    emptyGameRules.actions shouldBe a[Map[GameStatus[Phases, Steps], Map[Actions, Steps]]]
+    emptyGameRules.actions shouldBe a[Map[GameStatus[MyPhases, Steps], Map[Actions, Steps]]]
     emptyGameRules.actions shouldBe Map(
-      GameStatus(Phases.Game, Steps.Initial) -> Map(Actions.StartGame -> Steps.Initial)
+      GameStatus(MyPhases.Game, Steps.Initial) -> Map(Actions.StartGame -> Steps.Initial)
     )
   }
 
@@ -45,21 +45,21 @@ class RulesTest extends BaseTest:
   }
 
   it should "have a turn iterator factories" in {
-    emptyGameRules.phaseTurnIteratorFactories shouldBe a[Map[Phases, Seq[Player] => Iterator[Player]]]
-    emptyGameRules.phaseTurnIteratorFactories.get(Phases.Game) shouldBe a[Some[Seq[Player] => Iterator[Player]]]
-    val iterator = emptyGameRules.phaseTurnIteratorFactories(Phases.Game)(players)
+    emptyGameRules.phaseTurnIteratorFactories shouldBe a[Map[MyPhases, Seq[Player] => Iterator[Player]]]
+    emptyGameRules.phaseTurnIteratorFactories.get(MyPhases.Game) shouldBe a[Some[Seq[Player] => Iterator[Player]]]
+    val iterator = emptyGameRules.phaseTurnIteratorFactories(MyPhases.Game)(players)
     iterator shouldBe a[Iterator[Player]]
     iterator.toSeq shouldBe players
   }
 
   it should "have a next phase" in {
-    emptyGameRules.nextPhase shouldBe a[Map[Phases, Phases]]
-    emptyGameRules.nextPhase shouldBe Map(Phases.Game -> Phases.Game)
+    emptyGameRules.nextPhase shouldBe a[Map[MyPhases, MyPhases]]
+    emptyGameRules.nextPhase shouldBe Map(MyPhases.Game -> MyPhases.GameOver, MyPhases.GameOver -> MyPhases.GameOver)
   }
 
   it should "have a ending steps" in {
-    emptyGameRules.endingSteps shouldBe a[Map[Phases, Steps]]
-    emptyGameRules.endingSteps shouldBe Map(Phases.Game -> Steps.Initial)
+    emptyGameRules.endingSteps shouldBe a[Map[MyPhases, Steps]]
+    emptyGameRules.endingSteps shouldBe Map(MyPhases.Game -> Steps.Initial, MyPhases.GameOver -> Steps.Initial)
   }
 
   it should "have a winner" in {
@@ -68,15 +68,15 @@ class RulesTest extends BaseTest:
   }
 
   it should "have allowed actions" in {
-    emptyGameRules.allowedActions shouldBe a[Map[GameStatus[Phases, Steps], Set[Actions]]]
+    emptyGameRules.allowedActions shouldBe a[Map[GameStatus[MyPhases, Steps], Set[Actions]]]
     emptyGameRules.allowedActions shouldBe Map(
-      GameStatus(Phases.Game, Steps.Initial) -> Set(Actions.StartGame)
+      GameStatus(MyPhases.Game, Steps.Initial) -> Set(Actions.StartGame)
     )
   }
 
   it should "have a next steps" in {
-    emptyGameRules.nextSteps shouldBe a[Map[(GameStatus[Phases, Steps], Actions), Steps]]
+    emptyGameRules.nextSteps shouldBe a[Map[(GameStatus[MyPhases, Steps], Actions), Steps]]
     emptyGameRules.nextSteps shouldBe Map(
-      (GameStatus(Phases.Game, Steps.Initial), Actions.StartGame) -> Steps.Initial
+      (GameStatus(MyPhases.Game, Steps.Initial), Actions.StartGame) -> Steps.Initial
     )
   }

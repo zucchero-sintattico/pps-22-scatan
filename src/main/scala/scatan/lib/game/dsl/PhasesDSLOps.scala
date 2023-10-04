@@ -16,6 +16,6 @@ object PhasesDSLOps:
   )(
       init: PhaseDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit
   ): Unit =
-    given PhaseDSLContext[State, PhaseType, StepType, ActionType, Player] =
+    given context: PhaseDSLContext[State, PhaseType, StepType, ActionType, Player] =
       PhaseDSLContext[State, PhaseType, StepType, ActionType, Player](phase)(using phasesDSLContext.dsl)
-    init
+    init(using context)

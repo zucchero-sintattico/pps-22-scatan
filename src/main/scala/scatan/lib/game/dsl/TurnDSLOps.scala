@@ -1,7 +1,6 @@
 package scatan.lib.game.dsl
 
 import scatan.lib.game.ops.RulesOps.*
-import scatan.model.game.ScatanPlayer
 
 /** Operations for defining the rules of a turn-based game.
   */
@@ -30,7 +29,8 @@ object TurnDSLOps:
   ): Unit =
     turnDSLContext.dsl.rules = turnDSLContext.dsl.rules.withNextPhase(turnDSLContext.phase, phase)
 
-  val normal = (players: Seq[ScatanPlayer]) => Iterator.continually(players).flatten
-  val reverse = (players: Seq[ScatanPlayer]) => Iterator.continually(players.reverse).flatten
-  val random = (players: Seq[ScatanPlayer]) => Iterator.continually(scala.util.Random.shuffle(players)).flatten
-  val circularWithBack = (players: Seq[ScatanPlayer]) => (players ++ players.reverse).iterator
+  def once[Player] = (players: Seq[Player]) => players.iterator
+  def normal[Player] = (players: Seq[Player]) => Iterator.continually(players).flatten
+  def reverse[Player] = (players: Seq[Player]) => Iterator.continually(players.reverse).flatten
+  def random[Player] = (players: Seq[Player]) => Iterator.continually(scala.util.Random.shuffle(players)).flatten
+  def circularWithBack[Player] = (players: Seq[Player]) => (players ++ players.reverse).iterator

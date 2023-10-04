@@ -24,7 +24,7 @@ class GameTest extends BaseTest:
 
   it should "have a game status" in {
     val game = Game(players)
-    game.gameStatus should be(GameStatus(Phases.Game, Steps.Initial))
+    game.gameStatus should be(GameStatus(MyPhases.Game, Steps.Initial))
   }
 
   it should "have a players iterator" in {
