@@ -1,5 +1,6 @@
 package scatan.lib.game.ops
 
+import scatan.lib.game.ops.TurnOps.next
 import scatan.lib.game.{Game, Turn}
 
 /** Operations on [[Game]] related to advancing the game to the next turn.

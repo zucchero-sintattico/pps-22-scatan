@@ -1,6 +1,7 @@
 package scatan.lib.game
 
 import scatan.BaseTest
+import scatan.lib.game.ops.TurnOps.next
 import scatan.model.game.ScatanPlayer
 
 class TurnTest extends BaseTest:
@@ -28,4 +29,10 @@ class TurnTest extends BaseTest:
     val nextTurn = turn.next(ScatanPlayer("b"))
     nextTurn.number shouldBe 2
     nextTurn.player shouldBe ScatanPlayer("b")
+  }
+
+  it should "be possible to create an initial turn" in {
+    val turn = Turn.initial(player)
+    turn.number shouldBe 1
+    turn.player shouldBe player
   }
