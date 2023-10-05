@@ -9,8 +9,9 @@ import scatan.model.map.StructureSpot
 import scatan.utils.UnorderedTriple
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.components.ResourceType
-import scatan.model.game.ops.BuildingCapacity.assignBuilding
-import scatan.model.game.ops.EmptySpotsManagement.emptyStructureSpot
+import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
+import scatan.model.game.ops.CardOps.assignResourcesFromNumber
 
 class StateWithResourceTest extends BasicStateTest:
 

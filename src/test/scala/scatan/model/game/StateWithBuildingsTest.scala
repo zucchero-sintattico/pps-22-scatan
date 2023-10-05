@@ -6,9 +6,8 @@ import scatan.model.components.{AssignedBuildings, BuildingType}
 import scatan.model.game.ScatanState
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.AssignmentInfo
-import scatan.model.game.ops.BuildingCapacity.assignBuilding
-import scatan.model.game.ops.BuildingCapacity.build
-import scatan.model.game.ops.CardsManagement.assignResourceCard
+import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
+import scatan.model.game.ops.CardOps.assignResourceCard
 
 class StateWithBuildingsTest extends BasicStateTest:
 

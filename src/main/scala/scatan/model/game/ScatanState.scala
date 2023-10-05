@@ -81,3 +81,8 @@ final case class ScatanState(
       Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
                                        else precedentLargestArmy)
     )
+
+  def isOver: Boolean = true
+
+  def winner: Option[Player] =
+    Option.empty[Player]
