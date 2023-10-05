@@ -6,6 +6,8 @@ import scatan.model.map.Hexagon
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.lib.game.Player
 import scatan.model.components.BuildingType
+import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.game.ops.CardOps.assignResourcesFromNumber
 
 enum ScatanActions(effect: ScatanState => ScatanState) extends Action[ScatanState](effect):
   case RollDice(result: Int) extends ScatanActions(ScatanActions.RollEffect(result))
@@ -22,7 +24,10 @@ enum ScatanActions(effect: ScatanState => ScatanState) extends Action[ScatanStat
   case EndInitialAssignmentPhase extends ScatanActions(identity)
 
 object ScatanActions:
-  private def RollEffect(result: Int): ScatanState => ScatanState = identity
+  private def RollEffect(result: Int): ScatanState => ScatanState =
+    // choose a random number between 1 and 6
+    val result = scala.util.Random.between(1, 7)
+    _.assignResourcesFromNumber(result)
   private def PlaceRobberEffect(hexagon: Hexagon): ScatanState => ScatanState = identity
   private def StoleCardEffect(player: String): ScatanState => ScatanState = identity
   private def BuildRoadEffect(spot: RoadSpot, player: Player): ScatanState => ScatanState =

@@ -4,13 +4,16 @@ import scatan.BaseTest
 import scatan.lib.game.Player
 import scatan.model.game.ScatanState
 import scatan.model.map.Spot
+import scatan.model.map.RoadSpot
+import scatan.model.map.StructureSpot
+import scatan.model.game.ops.EmptySpotsOps.emptySpots
 
 abstract class BasicStateTest extends BaseTest:
 
   private def players(n: Int): Seq[Player] =
     (1 to n).map(i => Player(s"Player $i"))
 
-  protected def emptySpot(state: ScatanState): Spot = state.emptySpot.head
+  protected def emptySpot(state: ScatanState): Spot = state.emptySpots.head
 
   val threePlayers = players(3)
   val fourPlayers = players(4)

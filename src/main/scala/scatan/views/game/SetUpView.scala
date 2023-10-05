@@ -97,12 +97,12 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
       ),
       button(
         cls := "setup-menu-button",
-        onClick --> (_ => this.switchToHome()),
-        "Back"
+        onClick --> (_ => this.switchToGame()),
+        "Start"
       ),
       button(
         cls := "setup-menu-button",
-        onClick --> (_ => this.switchToGame()),
-        "Start"
+        onClick --> (_ => this.switchToHome()),
+        "Back"
       )
     )

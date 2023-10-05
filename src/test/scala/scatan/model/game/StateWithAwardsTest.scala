@@ -4,6 +4,9 @@ import scatan.lib.game.Player
 import scatan.model.components.{Award, AwardType, DevelopmentCard, DevelopmentType}
 import scatan.model.components.{AssignedBuildings, BuildingType}
 import scatan.model.game.ScatanState
+import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.game.ops.EmptySpotsOps.{emptyStructureSpot, emptyRoadSpot}
+import scatan.model.game.ops.CardOps.assignDevelopmentCard
 
 class StateWithAwardsTest extends BasicStateTest:
 
@@ -16,7 +19,7 @@ class StateWithAwardsTest extends BasicStateTest:
   it should "assign a LongestRoad award if there are conditions" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptySpot.iterator
+    val it = state.emptyStructureSpot.iterator
     val stateWithAwardReached = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)
@@ -40,7 +43,7 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptySpot.iterator
+    val it = state.emptyRoadSpot.iterator
     val state2 = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)
@@ -61,7 +64,7 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptySpot.iterator
+    val it = state.emptyRoadSpot.iterator
     val state2 = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)

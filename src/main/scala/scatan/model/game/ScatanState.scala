@@ -3,78 +3,68 @@ package scatan.model.game
 import cats.instances.long
 import scatan.lib.game.Player
 import scatan.model.components.*
-import scatan.model.game.{ScatanState, ScatanStateImpl}
+import scatan.model.game.ScatanState
 import scatan.model.GameMap
 import scatan.model.map.Spot
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.game.state.ScoreKnowledge
-
-trait ScatanState:
-  def players: Seq[Player]
-  def assignedBuildings: AssignedBuildings
-  def emptySpot: Seq[Spot]
-  def developmentCards: DevelopmentCards
-  def resourceCards: ResourceCards
-  def awards: Awards
-  def gameMap: GameMap
-  def scores: Scores
-  def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState
-  def assignBuilding(position: Spot, buildingType: BuildingType, player: Player): ScatanState
-  def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState
-  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
-  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
+import scatan.model.map.Hexagon
+import scatan.model.map.TileContent
+import scatan.model.map.StructureSpot
+import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
+import scatan.model.map.HexagonInMap.layer
+import scatan.model.map.RoadSpot
+import scatan.model.game.ops.BasicScatanState
+import scatan.model.game.ops.ScoreOps
+import scatan.model.game.ops.EmptySpotsOps
 
 object ScatanState:
-  /** Creates a new game with the given players The game must have 3 or 4 players The game map is created with a fixed
-    * number of hexagons The buildings are empty The resource cards are empty The development cards are empty The awards
-    * are empty
-    *
-    * @param players
-    *   the players of the game
-    * @return
-    *   the new game
-    */
   def apply(players: Seq[Player]): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
-    ScatanStateImpl(
+    ScatanState(
       players,
       GameMap(),
       Map.empty,
+      Hexagon(0, 0, 0),
       ResourceCard.empty(players),
       DevelopmentCardsOfPlayers.empty(players),
       Award.empty()
     )
 
-  def apply(
-      players: Seq[Player],
-      gameMap: GameMap,
-      assignedBuildings: AssignedBuildings,
-      resourceCards: ResourceCards,
-      developmentCardsOfPlayers: DevelopmentCards
-  ): ScatanState =
-    ScatanStateImpl(players, gameMap, assignedBuildings, resourceCards, developmentCardsOfPlayers)
-
-  // def ended(_players: Seq[Player]) =
-  //   new ScatanState:
-  //     val state = ScatanState.apply(_players)
-  //     export state.*
-  //     override def isOver: Boolean = true
-
-trait ScatanStateWithScore extends ScatanState with ScoreKnowledge
-
-private final case class ScatanStateImpl(
+  def ended(_players: Seq[Player]) =
+    ScatanState(
+      _players,
+      GameMap(),
+      Map.empty,
+      Hexagon(0, 0, 0),
+      ResourceCard.empty(_players),
+      DevelopmentCardsOfPlayers.empty(_players),
+      Award.empty()
+    )
+final case class ScatanState(
     players: Seq[Player],
     gameMap: GameMap,
     assignedBuildings: AssignedBuildings,
+    robberPlacement: Hexagon,
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-) extends ScatanStateWithScore:
+) extends BasicScatanState[ScatanState]:
 
-  def emptySpot: Seq[Spot] =
-    Seq(gameMap.nodes, gameMap.edges).flatten
-      .filter(!assignedBuildings.isDefinedAt(_))
+  /** Returns a new ScatanState with the robber moved to the specified hexagon.
+    *
+    * @param hexagon
+    *   the hexagon to move the robber to
+    * @return
+    *   a new ScatanState with the robber moved to the specified hexagon
+    */
+  def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)
 
+  /** Returns a map of the current awards and their respective players. The awards are Longest Road and Largest Army.
+    * Longest Road is awarded to the player with the longest continuous road of at least 5 segments. Largest Army is
+    * awarded to the player with the most Knight development cards played.
+    * @return
+    *   a map of the current awards and their respective players.
+    */
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
@@ -98,37 +88,7 @@ private final case class ScatanStateImpl(
                                        else precedentLargestArmy)
     )
 
-  private def verifyResourceCost(player: Player, cost: Cost): Boolean =
-    cost.foldLeft(true)((result, resourceCost) =>
-      result && resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
-    )
+  def isOver: Boolean = true
 
-  override def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
-    this.copy(
-      assignedBuildings = assignedBuildings + AssignmentFactory(spot, player, buildingType),
-      assignedAwards = awards
-    )
-
-  override def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
-    if verifyResourceCost(player, buildingType.cost) then
-      val remainingResourceCards = buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
-        cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
-      )
-      val gameWithConsumedResources = this.copy(resourceCards = resourceCards.updated(player, remainingResourceCards))
-      gameWithConsumedResources.assignBuilding(position, buildingType, player)
-    else this
-
-  override def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState =
-    this.copy(
-      resourceCards = resourceCards.updated(player, resourceCards(player) :+ resourceCard)
-    )
-
-  override def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
-    this.copy(
-      developmentCards = developmentCards.updated(player, developmentCards(player) :+ developmentCard),
-      assignedAwards = awards
-    )
-
-  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
-    val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
-    this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
+  def winner: Option[Player] =
+    Option.empty[Player]
