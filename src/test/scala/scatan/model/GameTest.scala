@@ -1,6 +1,9 @@
 package scatan.model
 
 import scatan.BaseTest
+import scatan.lib.game.Game
+import scatan.model.game.config.{ScatanActions, ScatanPhases}
+import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
@@ -73,7 +76,9 @@ class GameTest extends BaseTest:
   }
 
   def nextTurn(game: ScatanGame): ScatanGame =
-    given Effect[BuildSettlement.type, ScatanState] = BuildSettlementEffect()
+    val spotToBuild = game.state.emptySpot.collect { case s: StructureSpot => s }.head
+    given Effect[BuildSettlement.type, ScatanState] =
+      BuildSettlementEffect(spotToBuild, game.turn.player)
     val gameAfterBuildSettlement = game.play(BuildSettlement).get
     given Effect[BuildRoad.type, ScatanState] = BuildRoadEffect()
     val gameAfterBuildRoad = gameAfterBuildSettlement.play(BuildRoad).get
@@ -81,7 +86,6 @@ class GameTest extends BaseTest:
 
   it should "allow to change turn" in {
     val game = Game(threePlayers)
-
     val newGame = nextTurn(game)
     println(newGame)
     newGame.turn.number shouldBe 2

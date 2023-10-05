@@ -10,29 +10,21 @@ import scatan.model.ApplicationState
 import scatan.model.game.ScatanState
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.model.components.BuildingType
-import scatan.lib.mvc.Model
-import scatan.model.game.ScatanGame
+import scatan.views.game.InitialAssignmentView
 import scatan.model.game.ScatanModelOps.{updateGame, onError}
 
-trait PositioningHandler:
-  def onRoadSpot(spot: RoadSpot): Unit
-  def onStructureSpot(spot: StructureSpot): Unit
+trait InitialAssignmentController extends Controller[ApplicationState] with PositioningHandler
 
-trait GameController extends Controller[ApplicationState] with PositioningHandler:
-  def nextTurn(): Unit
-  def rollDice(): Unit
+object InitialAssignmentController:
+  def apply(
+      requirements: Controller.Requirements[InitialAssignmentView, ApplicationState]
+  ): InitialAssignmentController =
+    InitialAssignmentControllerImpl(requirements)
 
-object GameController:
-  def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
-    GameControllerImpl(requirements)
-
-private class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
-    extends BaseController(requirements)
-    with GameController:
-
-  override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
-
-  override def rollDice(): Unit = this.model.updateGame(_.rollDice);
+private class InitialAssignmentControllerImpl(
+    requirements: Controller.Requirements[InitialAssignmentView, ApplicationState]
+) extends BaseController(requirements)
+    with InitialAssignmentController:
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     this.model

@@ -1,6 +1,7 @@
 package scatan.model.game
 
-import scatan.model.components.{Building, BuildingType, Score}
+import scatan.model.game.ScatanState
+import scatan.model.components.{AssignedBuildings, BuildingType, Score}
 
 class StateWithScoresTest extends BasicStateTest:
 
@@ -12,41 +13,45 @@ class StateWithScoresTest extends BasicStateTest:
   it should "increment score if assign a building" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val stateWithSettlementPlaced = state.assignBuilding(Building(BuildingType.Settlement), player1)
+    val it = state.emptySpot.iterator
+    val stateWithSettlementPlaced = state.assignBuilding(it.next(), BuildingType.Settlement, player1)
     stateWithSettlementPlaced.scores(player1) should be(1)
-    val stateWithSettlementAndCity = stateWithSettlementPlaced.assignBuilding(Building(BuildingType.City), player1)
+    val stateWithSettlementAndCity =
+      stateWithSettlementPlaced.assignBuilding(it.next(), BuildingType.City, player1)
     stateWithSettlementAndCity.scores(player1) should be(3)
     val stateWithSettlementCityAndRoad =
-      stateWithSettlementAndCity.assignBuilding(Building(BuildingType.Road), player1)
+      stateWithSettlementAndCity.assignBuilding(it.next(), BuildingType.Road, player1)
     stateWithSettlementCityAndRoad.scores(player1) should be(3)
   }
 
   it should "increment score either if assign an award or a building" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
+    val it = state.emptySpot.iterator
     val stateWithSettlementAndAward = state
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
     stateWithSettlementAndAward.scores(player1) should be(2)
   }
 
   it should "recognize if there is a winner" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
+    val it = state.emptySpot.iterator
     val stateWithAWinner = state
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
-      .assignBuilding(Building(BuildingType.Settlement), player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
+      .assignBuilding(it.next(), BuildingType.Settlement, player1)
     stateWithAWinner.winner should be(Some(player1))
   }

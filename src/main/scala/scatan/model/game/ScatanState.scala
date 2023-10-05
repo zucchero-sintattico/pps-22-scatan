@@ -2,20 +2,23 @@ package scatan.model.game
 
 import cats.instances.long
 import scatan.model.GameMap
+import scatan.model.map.Spot
+import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.*
 import scatan.model.game.config.ScatanPlayer
 
 trait ScatanState:
   def players: Seq[ScatanPlayer]
   def isOver: Boolean = scores.exists(_._2 >= 10)
-  def buildings: Buildings
+  def assignedBuildings: AssignedBuildings
+  def emptySpot: Seq[Spot]
   def developmentCards: DevelopmentCards
   def resourceCards: ResourceCards
   def awards: Awards
   def gameMap: GameMap
   def scores: Scores
-  def build(building: Building, player: ScatanPlayer): ScatanState
-  def assignBuilding(building: Building, player: ScatanPlayer): ScatanState
+  def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState
+  def assignBuilding(position: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState
   def assignResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): ScatanState
   def assignDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): ScatanState
   def consumeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): ScatanState
@@ -36,7 +39,7 @@ object ScatanState:
     ScatanStateImpl(
       players,
       GameMap(),
-      Building.empty(players),
+      Map.empty,
       ResourceCard.empty(players),
       DevelopmentCardsOfPlayers.empty(players),
       Award.empty()
@@ -45,11 +48,11 @@ object ScatanState:
   def apply(
       players: Seq[ScatanPlayer],
       gameMap: GameMap,
-      buildings: Buildings,
+      assignedBuildings: AssignedBuildings,
       resourceCards: ResourceCards,
       developmentCardsOfPlayers: DevelopmentCards
   ): ScatanState =
-    ScatanStateImpl(players, gameMap, buildings, resourceCards, developmentCardsOfPlayers)
+    ScatanStateImpl(players, gameMap, assignedBuildings, resourceCards, developmentCardsOfPlayers)
 
   def ended(_players: Seq[ScatanPlayer]) =
     new ScatanState:
@@ -60,18 +63,22 @@ object ScatanState:
 private final case class ScatanStateImpl(
     players: Seq[ScatanPlayer],
     gameMap: GameMap,
-    buildings: Buildings,
+    assignedBuildings: AssignedBuildings,
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
 ) extends ScatanState:
 
+  def emptySpot: Seq[Spot] =
+    Seq(gameMap.nodes, gameMap.edges).flatten
+      .filter(!assignedBuildings.isDefinedAt(_))
+
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
-      buildings.foldLeft(precedentLongestRoad.getOrElse((ScatanPlayer(""), 0)))(
+      assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((ScatanPlayer(""), 0)))(
         (playerWithLongestRoad, buildingsOfPlayer) =>
-          val roads = buildingsOfPlayer._2.filter(_.buildingType == BuildingType.Road)
+          val roads = buildingsOfPlayer._2.filter(_ == BuildingType.Road)
           if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
           else playerWithLongestRoad
       )
@@ -95,19 +102,19 @@ private final case class ScatanStateImpl(
       result && resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
     )
 
-  override def assignBuilding(building: Building, player: ScatanPlayer): ScatanState =
+  override def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState =
     this.copy(
-      buildings = buildings.updated(player, buildings(player) :+ building),
+      assignedBuildings = assignedBuildings + AssignmentFactory(spot, player, buildingType),
       assignedAwards = awards
     )
 
-  override def build(building: Building, player: ScatanPlayer): ScatanState =
-    if verifyResourceCost(player, building.buildingType.cost) then
-      val remainingResourceCards = building.buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
+  override def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState =
+    if verifyResourceCost(player, buildingType.cost) then
+      val remainingResourceCards = buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
         cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
       )
       val gameWithConsumedResources = this.copy(resourceCards = resourceCards.updated(player, remainingResourceCards))
-      gameWithConsumedResources.assignBuilding(building, player)
+      gameWithConsumedResources.assignBuilding(position, buildingType, player)
     else this
 
   override def assignResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): ScatanState =
@@ -136,10 +143,10 @@ private final case class ScatanStateImpl(
       case BuildingType.Settlement => 1
       case BuildingType.City       => 2
       case BuildingType.Road       => 0
-    buildings.foldLeft(Score.empty(players))((scores, buildingsOfPlayer) =>
+    assignedBuildings.asPlayerMap.foldLeft(Score.empty(players))((scores, buildingsOfPlayer) =>
       scores.updated(
         buildingsOfPlayer._1,
-        buildingsOfPlayer._2.foldLeft(0)((score, building) => score + buildingScore(building.buildingType))
+        buildingsOfPlayer._2.foldLeft(0)((score, buildingType) => score + buildingScore(buildingType))
       )
     )
 

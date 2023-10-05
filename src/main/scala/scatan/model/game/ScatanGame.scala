@@ -4,19 +4,12 @@ import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules, Turn}
-import scatan.model.game.config.ScatanActions.{
-  PlaceRobber,
-  PlaceRobberEffect,
-  RollDice,
-  RollEffect,
-  RollSeven,
-  RollSevenEffect,
-  StoleCard,
-  StoleCardEffect
-}
+import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.map.Hexagon
 import scala.util.Random
+import scatan.model.map.RoadSpot
+import scatan.model.map.StructureSpot
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -49,8 +42,9 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def stoleCard(player: ScatanPlayer): Option[ScatanGame] =
     game.play(StoleCard)(using StoleCardEffect(player)).map(ScatanGame.apply)
 
-  def buildRoad: Option[ScatanGame] = ???
-  def buildSettlement: Option[ScatanGame] = ???
+  def buildRoad(road: RoadSpot): Option[ScatanGame] = ???
+  def buildSettlement(spot: StructureSpot): Option[ScatanGame] =
+    game.play(ScatanActions.BuildSettlement)(using BuildSettlementEffect(spot, game.turn.player)).map(ScatanGame.apply)
   def buildCity: Option[ScatanGame] = ???
   def buildDevelopmentCard: Option[ScatanGame] = ???
   def playDevelopmentCard: Option[ScatanGame] = ???

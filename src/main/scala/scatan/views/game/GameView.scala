@@ -4,7 +4,11 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, Model, View}
 import scatan.model.{ApplicationState, GameMap}
-import scatan.views.game.components.GameMapComponent.getMapComponent
+import com.raquo.laminar.modifiers.RenderableNode
+import com.raquo.laminar.nodes.ChildNode.Base
+import scatan.views.game.components.GameMapComponent
+import scatan.views.game.components.LeftTabComponent
+import scatan.views.game.components.CardsComponent
 
 trait GameView extends View[ApplicationState]
 
@@ -16,21 +20,18 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
     extends BaseScalaJSView[ApplicationState, GameController](container, requirements)
     with GameView:
 
-  val gameMap = GameMap()
+  given Signal[ApplicationState] = this.reactiveState
+  given GameController = this.controller
 
   import com.raquo.laminar.api.features.unitArrows
   override def element: Element =
     div(
-      display := "block",
-      width := "50%",
-      margin := "auto",
-      h1(
-        child.text <-- this.reactiveState
-          .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
+      div(
+        className := LeftTabComponent.leftTabCssClass,
+        LeftTabComponent.currentPlayerComponent,
+        LeftTabComponent.buttonsComponent,
+        LeftTabComponent.possibleMovesComponent
       ),
-      button(
-        "End Turn",
-        onClick --> this.controller.nextTurn()
-      ),
-      getMapComponent(gameMap)
+      GameMapComponent.mapComponent,
+      CardsComponent.resourceCardComponent
     )

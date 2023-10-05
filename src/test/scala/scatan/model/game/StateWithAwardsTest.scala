@@ -1,24 +1,28 @@
 package scatan.model.game
 
+import scatan.model.components.{Award, AwardType, DevelopmentCard, DevelopmentType}
+import scatan.model.components.{AssignedBuildings, BuildingType}
+import scatan.model.game.ScatanState
 import scatan.model.components.*
 
 class StateWithAwardsTest extends BasicStateTest:
 
   "A State with Awards" should "have awards initially not assigned" in {
     val state = ScatanState(threePlayers)
-    state.awards(Award(AwardType.LongestRoad)) shouldBe None
-    state.awards(Award(AwardType.LargestArmy)) shouldBe None
+    state.awards(Award(AwardType.LongestRoad)) should be(None)
+    state.awards(Award(AwardType.LargestArmy)) should be(None)
   }
 
   it should "assign a LongestRoad award if there are conditions" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
+    val it = state.emptySpot.iterator
     val stateWithAwardReached = state
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
     stateWithAwardReached.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
   }
 
@@ -36,18 +40,19 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
+    val it = state.emptySpot.iterator
     val state2 = state
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
     val state3 = state2
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
     state2.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
     state3.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
   }
@@ -56,19 +61,20 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
+    val it = state.emptySpot.iterator
     val state2 = state
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
-      .assignBuilding(Building(BuildingType.Road), player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
+      .assignBuilding(it.next(), BuildingType.Road, player1)
     val state3 = state2
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
-      .assignBuilding(Building(BuildingType.Road), player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
+      .assignBuilding(it.next(), BuildingType.Road, player2)
     state2.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
     state3.awards(Award(AwardType.LongestRoad)) should be(Some((player2, 6)))
   }
