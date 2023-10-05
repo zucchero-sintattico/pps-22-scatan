@@ -1,4 +1,4 @@
-package scatan.model.game.state
+package scatan.model.game.ops
 
 import scatan.lib.game.Player
 import scatan.model.map.Spot
@@ -22,5 +22,4 @@ trait BasicScatanState[S <: BasicScatanState[S]]:
   def robberPlacement: Hexagon
   def developmentCards: DevelopmentCards
   def resourceCards: ResourceCards
-  def awards: Awards
   def moveRobber(hexagon: Hexagon): S

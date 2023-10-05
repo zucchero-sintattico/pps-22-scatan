@@ -1,4 +1,4 @@
-package scatan.model.game.state
+package scatan.model.game.ops
 
 import scatan.model.map.Spot
 import scatan.model.map.StructureSpot
@@ -6,7 +6,7 @@ import scatan.model.map.RoadSpot
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.game.ScatanState
 
-object EmptySpotsManagement:
+object EmptySpotsOps:
 
   extension (state: ScatanState)
     def emptySpots: Seq[Spot] =

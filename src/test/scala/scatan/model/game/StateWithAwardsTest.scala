@@ -4,9 +4,8 @@ import scatan.lib.game.Player
 import scatan.model.components.{Award, AwardType, DevelopmentCard, DevelopmentType}
 import scatan.model.components.{AssignedBuildings, BuildingType}
 import scatan.model.game.ScatanState
-import scatan.model.game.state.BuildingCapacity.assignBuilding
-import scatan.model.game.state.EmptySpotsManagement.emptyStructureSpot
-import scatan.model.game.state.EmptySpotsManagement.emptyRoadSpot
+import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.game.ops.EmptySpotsOps.{emptyStructureSpot, emptyRoadSpot}
 
 class StateWithAwardsTest extends BasicStateTest:
 

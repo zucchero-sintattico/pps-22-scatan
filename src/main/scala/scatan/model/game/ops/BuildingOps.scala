@@ -1,4 +1,4 @@
-package scatan.model.game.state
+package scatan.model.game.ops
 
 import scatan.model.map.Spot
 import scatan.lib.game.Player
@@ -9,9 +9,9 @@ import scatan.model.map.StructureSpot
 import scatan.model.components.AssignedBuildings
 import scatan.model.game.ScatanState
 import scatan.model.components.Cost
-import scatan.model.game.state.EmptySpotsManagement.{emptyRoadSpot, emptyStructureSpot}
+import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
 
-object BuildingCapacity:
+object BuildingOps:
   extension (state: ScatanState)
 
     /** Verifies if a player has enough resources to pay a certain cost.
@@ -51,6 +51,7 @@ object BuildingCapacity:
           state.copy(resourceCards = state.resourceCards.updated(player, remainingResourceCards))
         gameWithConsumedResources.assignBuilding(position, buildingType, player)
       else state
+
     def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
       val buildingUpdated =
         spot match

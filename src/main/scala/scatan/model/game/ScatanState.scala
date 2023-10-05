@@ -13,10 +13,9 @@ import scatan.model.map.StructureSpot
 import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.RoadSpot
-import scatan.model.game.state.BasicScatanState
-import scatan.model.game.state.ScoreKnowledge
-import scatan.model.game.state.EmptySpotsManagement
-import scatan.model.game.state.AwardKnowledge
+import scatan.model.game.ops.BasicScatanState
+import scatan.model.game.ops.ScoreOps
+import scatan.model.game.ops.EmptySpotsOps
 
 object ScatanState:
   def apply(players: Seq[Player]): ScatanState =
@@ -49,100 +48,7 @@ final case class ScatanState(
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-) extends BasicScatanState[ScatanState]
-    with ScoreKnowledge[ScatanState]
-    with AwardKnowledge[ScatanState]:
-
-  /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
-    * added to the player's list of development cards. The assigned awards remain the same.
-    *
-    * @param player
-    *   The player to assign the development card to.
-    * @param developmentCard
-    *   The development card to assign to the player.
-    * @return
-    *   A new ScatanState with the development card assigned to the player.
-    */
-  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
-    this.copy(
-      developmentCards = developmentCards.updated(player, developmentCards(player) :+ developmentCard),
-      assignedAwards = awards
-    )
-
-  /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
-    * and assigned awards.
-    * @param player
-    *   the player who is consuming the development card
-    * @param developmentCard
-    *   the development card to be consumed
-    * @return
-    *   a new ScatanState with the updated development cards and assigned awards
-    */
-  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
-    val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
-    this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
-
-  /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
-    * @param hexagonsWithTileContent
-    *   a map of hexagons with their corresponding tile content
-    * @return
-    *   a new ScatanState with updated resource cards for each player
-    */
-  def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]) =
-    val buildingsInAssignedSpots =
-      assignedBuildings.filter((s, _) =>
-        s match
-          case structure: StructureSpot => structure.toSet.intersect(hexagonsWithTileContent.keys.toSet).nonEmpty
-          case _: RoadSpot              => false
-      )
-    val resourceCardsUpdated =
-      buildingsInAssignedSpots.foldLeft(resourceCards)((resourceOfPlayer, buildingInAssignedSpot) =>
-        buildingInAssignedSpot._1 match
-          case structure: StructureSpot =>
-            val resourceToAdd = structure.toSet.toList.collect(hexagonsWithTileContent)
-            var resourceCardsOfPlayerUpdated = resourceOfPlayer
-            resourceToAdd.foreach { r =>
-              r match
-                case TileContent(terrain: ResourceType, _) =>
-                  buildingInAssignedSpot._2.buildingType match
-                    case BuildingType.Settlement =>
-                      resourceCardsOfPlayerUpdated = resourceCardsOfPlayerUpdated.updated(
-                        buildingInAssignedSpot._2.player,
-                        resourceCardsOfPlayerUpdated(buildingInAssignedSpot._2.player) :+ ResourceCard(terrain)
-                      )
-                    case BuildingType.City =>
-                      resourceCardsOfPlayerUpdated = resourceCardsOfPlayerUpdated.updated(
-                        buildingInAssignedSpot._2.player,
-                        resourceCardsOfPlayerUpdated(buildingInAssignedSpot._2.player) :+ ResourceCard(
-                          terrain
-                        ) :+ ResourceCard(
-                          terrain
-                        )
-                      )
-                    case BuildingType.Road =>
-                case _ =>
-            }
-            resourceCardsOfPlayerUpdated
-          case _ => resourceOfPlayer
-      )
-    this.copy(resourceCards = resourceCardsUpdated)
-
-  /** Assigns resources from the hexagons that have the given number and are not occupied by the robber.
-    * @param number
-    *   the number of the hexagons to filter by
-    * @return
-    *   a new ScatanState with the assigned resources
-    */
-  def assignResourcesFromNumber(number: Int): ScatanState =
-    val hexagonsFilteredByNumber = gameMap.toContent
-      .filter(
-        (
-            hexagon,
-            tileContent
-        ) => tileContent.number.isDefined && tileContent.number.get == number && hexagon != robberPlacement
-      )
-
-    assignResourceFromHexagons(hexagonsFilteredByNumber)
+) extends BasicScatanState[ScatanState]:
 
   /** Returns a new ScatanState with the robber moved to the specified hexagon.
     *
@@ -152,3 +58,26 @@ final case class ScatanState(
     *   a new ScatanState with the robber moved to the specified hexagon
     */
   def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)
+
+  def awards: Awards =
+    val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
+    val longestRoad =
+      assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))(
+        (playerWithLongestRoad, buildingsOfPlayer) =>
+          val roads = buildingsOfPlayer._2.filter(_ == BuildingType.Road)
+          if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+          else playerWithLongestRoad
+      )
+    val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
+    val largestArmy =
+      developmentCards.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
+        val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+        if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+        else playerWithLargestArmy
+      )
+    Map(
+      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
+                                       else precedentLongestRoad),
+      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
+                                       else precedentLargestArmy)
+    )
