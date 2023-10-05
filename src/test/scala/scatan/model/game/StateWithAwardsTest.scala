@@ -16,7 +16,7 @@ class StateWithAwardsTest extends BasicStateTest:
   it should "assign a LongestRoad award if there are conditions" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptySpots.iterator
+    val it = state.emptyStructureSpot.iterator
     val stateWithAwardReached = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)
@@ -40,7 +40,7 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptySpots.iterator
+    val it = state.emptyRoadSpot.iterator
     val state2 = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)
@@ -61,7 +61,7 @@ class StateWithAwardsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptySpots.iterator
+    val it = state.emptyRoadSpot.iterator
     val state2 = state
       .assignBuilding(it.next(), BuildingType.Road, player1)
       .assignBuilding(it.next(), BuildingType.Road, player1)

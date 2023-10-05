@@ -5,6 +5,35 @@ import scatan.lib.game.Player
 import scatan.model.components.Score
 import scatan.model.components.BuildingType
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.components.Awards
+import scatan.model.components.Award
+import scatan.model.components.AwardType
+import scatan.model.components.DevelopmentType
+
+trait AwardKnowledge[S <: AwardKnowledge[S]] extends BasicScatanState[S]:
+  def assignedAwards: Awards
+  def awards: Awards =
+    val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
+    val longestRoad =
+      assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))(
+        (playerWithLongestRoad, buildingsOfPlayer) =>
+          val roads = buildingsOfPlayer._2.filter(_ == BuildingType.Road)
+          if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+          else playerWithLongestRoad
+      )
+    val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
+    val largestArmy =
+      developmentCards.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
+        val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+        if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+        else playerWithLargestArmy
+      )
+    Map(
+      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
+                                       else precedentLongestRoad),
+      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
+                                       else precedentLargestArmy)
+    )
 
 trait ScoreKnowledge[S <: ScoreKnowledge[S]] extends BasicScatanState[S]:
 

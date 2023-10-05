@@ -16,10 +16,12 @@ import scatan.model.map.RoadSpot
 import scatan.model.game.state.BasicScatanState
 import scatan.model.game.state.ScoreKnowledge
 import scatan.model.game.state.EmptySpotsManagement
+import scatan.model.game.state.AwardKnowledge
 
 trait ScatanState
     extends BasicScatanState[ScatanState]
     with ScoreKnowledge[ScatanState]
+    with AwardKnowledge[ScatanState]
     with EmptySpotsManagement[ScatanState]
 
 object ScatanState:
@@ -60,36 +62,6 @@ private final case class ScatanStateImpl(
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
 ) extends ScatanState:
-
-  /** Returns a map of the current awards in the game, including the longest road and largest army. The longest road is
-    * awarded to the player with the longest continuous road of at least 5 segments. The largest army is awarded to the
-    * player with the most knight development cards played.
-    * @return
-    *   a map of the current awards in the game
-    */
-  override def awards: Awards =
-    val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
-    val longestRoad =
-      assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))(
-        (playerWithLongestRoad, buildingsOfPlayer) =>
-          val roads = buildingsOfPlayer._2.filter(_ == BuildingType.Road)
-          if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
-          else playerWithLongestRoad
-      )
-    val precedentLargestArmy = assignedAwards(Award(AwardType.LargestArmy))
-    val largestArmy =
-      developmentCards.foldLeft(precedentLargestArmy.getOrElse(Player(""), 0))((playerWithLargestArmy, cardsOfPlayer) =>
-        val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
-        if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
-        else playerWithLargestArmy
-      )
-    Map(
-      Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
-                                       else precedentLongestRoad),
-      Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
-                                       else precedentLargestArmy)
-    )
-
   /** Verifies if a player has enough resources to pay a certain cost.
     *
     * @param player
@@ -193,36 +165,6 @@ private final case class ScatanStateImpl(
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
     val remainingCards = developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
     this.copy(developmentCards = developmentCards.updated(player, remainingCards), assignedAwards = awards)
-
-  /** Calculates the partial scores of the players with the awards they have received.
-    * @return
-    *   a `Scores` object representing the partial scores of the players with the awards they have received.
-    */
-  private def partialScoresWithAwards: Scores =
-    val playersWithAwards = awards.filter(_._2.isDefined).map(_._2.get)
-    playersWithAwards.foldLeft(Score.empty(players))((scores, playerWithCount) =>
-      scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
-    )
-
-  /** Calculates the partial scores of each player, taking into account the buildings they have assigned. The score for
-    * each building type is as follows:
-    *   - Settlement: 1 point
-    *   - City: 2 points
-    *   - Road: 0 points
-    * @return
-    *   a Scores object containing the partial scores of each player
-    */
-  private def partialScoresWithBuildings: Scores =
-    def buildingScore(buildingType: BuildingType): Int = buildingType match
-      case BuildingType.Settlement => 1
-      case BuildingType.City       => 2
-      case BuildingType.Road       => 0
-    assignedBuildings.asPlayerMap.foldLeft(Score.empty(players))((scores, buildingsOfPlayer) =>
-      scores.updated(
-        buildingsOfPlayer._1,
-        buildingsOfPlayer._2.foldLeft(0)((score, buildingType) => score + buildingScore(buildingType))
-      )
-    )
 
   /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
     * @param hexagonsWithTileContent
