@@ -59,6 +59,12 @@ final case class ScatanState(
     */
   def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)
 
+  /** Returns a map of the current awards and their respective players. The awards are Longest Road and Largest Army.
+    * Longest Road is awarded to the player with the longest continuous road of at least 5 segments. Largest Army is
+    * awarded to the player with the most Knight development cards played.
+    * @return
+    *   a map of the current awards and their respective players.
+    */
   def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
