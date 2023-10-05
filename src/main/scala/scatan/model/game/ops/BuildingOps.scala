@@ -24,21 +24,7 @@ object BuildingOps:
         result && state.resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
       )
 
-    /** Builds a new ScatanState with the specified building at the specified position for the specified player. If the
-      * player has enough resources to build the specified building, the resources are consumed and the building is
-      * assigned to the player. Otherwise, the current state is returned.
-      *
-      * @param position
-      *   The position where the building will be built.
-      * @param buildingType
-      *   The type of building to be built.
-      * @param player
-      *   The player who will build the building.
-      * @return
-      *   A new ScatanState with the specified building at the specified position for the specified player, or the
-      *   current state if the player does not have enough resources.
-      */
-    def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState =
+    def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
       if verifyResourceCost(player, buildingType.cost) then
         val remainingResourceCards = buildingType.cost.foldLeft(state.resourceCards(player))((cards, resourceCost) =>
           cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
@@ -46,9 +32,9 @@ object BuildingOps:
         val gameWithConsumedResources =
           state.copy(resourceCards = state.resourceCards.updated(player, remainingResourceCards))
         gameWithConsumedResources.assignBuilding(position, buildingType, player)
-      else state
+      else None
 
-    def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): ScatanState =
+    def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
       val buildingUpdated =
         spot match
           case s: RoadSpot if state.emptyRoadSpot.contains(s) =>
@@ -57,9 +43,11 @@ object BuildingOps:
             state.assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
           case _ => state.assignedBuildings
 
-      if buildingUpdated == state.assignedBuildings then state
+      if buildingUpdated == state.assignedBuildings then None
       else
-        state.copy(
-          assignedBuildings = buildingUpdated,
-          assignedAwards = state.awards
+        Some(
+          state.copy(
+            assignedBuildings = buildingUpdated,
+            assignedAwards = state.awards
+          )
         )

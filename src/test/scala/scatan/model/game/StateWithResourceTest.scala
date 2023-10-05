@@ -11,20 +11,15 @@ import scatan.utils.UnorderedTriple
 class StateWithResourceTest extends BasicStateTest:
 
   extension (state: ScatanState)
-    def rollDiceBruteForce(): ScatanState =
-      state
-        .assignResourcesFromNumber(1)
-        .assignResourcesFromNumber(2)
-        .assignResourcesFromNumber(3)
-        .assignResourcesFromNumber(4)
-        .assignResourcesFromNumber(5)
-        .assignResourcesFromNumber(6)
-        .assignResourcesFromNumber(7)
-        .assignResourcesFromNumber(8)
-        .assignResourcesFromNumber(9)
-        .assignResourcesFromNumber(10)
-        .assignResourcesFromNumber(11)
-        .assignResourcesFromNumber(12)
+    def rollDiceBruteForce(): ScatanState = ???
+    // for
+    //   stateAfterRollOne <- state.assignResourcesFromNumber(1)
+    //   stateAfterRollTwo <- stateAfterRollOne.assignResourcesFromNumber(2)
+    //   stateAfterRollThree <- stateAfterRollTwo.assignResourcesFromNumber(3)
+    //   stateAfterRollFour <- stateAfterRollThree.assignResourcesFromNumber(4)
+    //   stateAfterRollFive <- stateAfterRollFour.assignResourcesFromNumber(5)
+    //   stateAfterRollSix <- stateAfterRollFive.assignResourcesFromNumber(6)
+    // yield stateAfterRollSix
 
   "A State with Resources" should "have an empty resource card deck initially" in {
     val state = ScatanState(threePlayers)
@@ -37,6 +32,7 @@ class StateWithResourceTest extends BasicStateTest:
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = state
       .assignBuilding(spotWhereToBuild, BuildingType.Settlement, state.players.head)
+      .get
       .rollDiceBruteForce()
     stateWithResources.resourceCards(stateWithResources.players.head) should contain(ResourceCard(ResourceType.Sheep))
   }
@@ -47,6 +43,7 @@ class StateWithResourceTest extends BasicStateTest:
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = state
       .assignBuilding(spotWhereToBuild, BuildingType.City, state.players.head)
+      .get
       .rollDiceBruteForce()
     stateWithResources
       .resourceCards(stateWithResources.players.head)

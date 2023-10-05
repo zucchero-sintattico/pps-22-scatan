@@ -40,7 +40,7 @@ object ScatanActions:
 
   def BuildSettlementEffect(spot: StructureSpot, player: ScatanPlayer) = new Effect[BuildSettlement.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] =
-      Some(state.assignBuilding(spot, BuildingType.Settlement, player))
+      state.assignBuilding(spot, BuildingType.Settlement, player)
 
   def BuildCityEffect() = new Effect[BuildCity.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] = Some(state)
