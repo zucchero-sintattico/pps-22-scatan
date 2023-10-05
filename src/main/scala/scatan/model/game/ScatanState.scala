@@ -13,7 +13,6 @@ import scatan.model.map.StructureSpot
 import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.RoadSpot
-import scatan.model.game.ops.BasicScatanState
 import scatan.model.game.ops.ScoreOps
 import scatan.model.game.ops.EmptySpotsOps
 
@@ -48,7 +47,7 @@ final case class ScatanState(
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-) extends BasicScatanState[ScatanState]:
+):
 
   /** Returns a new ScatanState with the robber moved to the specified hexagon.
     *
