@@ -6,7 +6,7 @@ import scatan.model.map.Hexagon
 
 enum ScatanActions:
   case RollDice
-  private[game] case RollSeven
+  case RollSeven
   case PlaceRobber
   case StoleCard
   case BuildRoad
