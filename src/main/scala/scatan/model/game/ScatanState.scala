@@ -27,13 +27,4 @@ final case class ScatanState(
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-):
-
-  /** Returns a new ScatanState with the robber moved to the specified hexagon.
-    *
-    * @param hexagon
-    *   the hexagon to move the robber to
-    * @return
-    *   a new ScatanState with the robber moved to the specified hexagon
-    */
-  def moveRobber(hexagon: Hexagon): ScatanState = this.copy(robberPlacement = hexagon)
+)

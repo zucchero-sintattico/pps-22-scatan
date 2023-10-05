@@ -1,6 +1,7 @@
 package scatan.model.game
 
 import scatan.model.map.Hexagon
+import scatan.model.game.ops.RobberOps.moveRobber
 
 class StateWithRobberTest extends BasicStateTest:
 
