@@ -29,16 +29,6 @@ object ScatanState:
       Award.empty()
     )
 
-  def ended(_players: Seq[ScatanPlayer]) =
-    ScatanState(
-      _players,
-      GameMap(),
-      Map.empty,
-      Hexagon(0, 0, 0),
-      ResourceCard.empty(_players),
-      DevelopmentCardsOfPlayers.empty(_players),
-      Award.empty()
-    )
 final case class ScatanState(
     players: Seq[ScatanPlayer],
     gameMap: GameMap,
