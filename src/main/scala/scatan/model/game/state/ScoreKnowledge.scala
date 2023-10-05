@@ -30,6 +30,7 @@ trait ScoreKnowledge[S <: ScoreKnowledge[S]] extends BasicScatanState[S]:
     import cats.syntax.semigroup.*
     import scatan.model.components.Score.given
     val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
+
     partialScores.foldLeft(Score.empty(players))(_ |+| _)
 
   def isOver: Boolean = scores.exists(_._2 >= 10)

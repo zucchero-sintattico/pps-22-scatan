@@ -26,10 +26,10 @@ trait BasicScatanState[S <: BasicScatanState[S]]:
   def developmentCards: DevelopmentCards
   def resourceCards: ResourceCards
   def awards: Awards
-
   def moveRobber(hexagon: Hexagon): S
   def assignResourcesFromNumber(diceRoll: Int): S
-
   def assignResourceCard(player: Player, resourceCard: ResourceCard): S
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): S
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): S
+  def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): S
+  def build(position: Spot, buildingType: BuildingType, player: Player): S

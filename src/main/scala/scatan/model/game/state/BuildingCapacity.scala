@@ -17,3 +17,4 @@ trait BuildingCapacity[S <: BuildingCapacity[S]] extends BasicScatanState[S]:
         case s: StructureSpot if emptyStructureSpot.contains(s) =>
           assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
         case _ => assignedBuildings
+    ???

@@ -13,28 +13,14 @@ import scatan.model.map.StructureSpot
 import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.RoadSpot
+import scatan.model.game.state.BasicScatanState
+import scatan.model.game.state.ScoreKnowledge
+import scatan.model.game.state.EmptySpotsManagement
 
-trait ScatanState:
-  def players: Seq[Player]
-  def emptySpots: Seq[Spot]
-  def emptyStructureSpot: Seq[StructureSpot]
-  def emptyRoadSpot: Seq[RoadSpot]
-  def assignedBuildings: AssignedBuildings
-  def robberPlacement: Hexagon
-  def moveRobber(hexagon: Hexagon): ScatanState
-  def developmentCards: DevelopmentCards
-  def resourceCards: ResourceCards
-  def awards: Awards
-  def gameMap: GameMap
-  def scores: Scores
-  def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState
-  def assignResourcesFromNumber(diceRoll: Int): ScatanState
-  def assignBuilding(position: Spot, buildingType: BuildingType, player: Player): ScatanState
-  def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState
-  def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
-  def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState
-  def isOver: Boolean = scores.exists(_._2 >= 10)
-  def winner: Option[Player] = if isOver then Some(scores.maxBy(_._2)._1) else None
+trait ScatanState
+    extends BasicScatanState[ScatanState]
+    with ScoreKnowledge[ScatanState]
+    with EmptySpotsManagement[ScatanState]
 
 object ScatanState:
   def apply(players: Seq[Player]): ScatanState =
@@ -75,29 +61,13 @@ private final case class ScatanStateImpl(
     assignedAwards: Awards = Award.empty()
 ) extends ScatanState:
 
-  def emptySpots: Seq[Spot] =
-    Seq(gameMap.nodes, gameMap.edges).flatten
-      .filter(!assignedBuildings.isDefinedAt(_))
-
-  def emptyStructureSpot: Seq[StructureSpot] =
-    gameMap.nodes
-      .filter(!assignedBuildings.isDefinedAt(_))
-      .filter(_.toSet.exists(_.layer <= gameMap.withTerrainLayers))
-      .toSeq
-
-  def emptyRoadSpot: Seq[RoadSpot] =
-    gameMap.edges
-      .filter(!assignedBuildings.isDefinedAt(_))
-      .filter(_.toSet.exists(_.toSet.exists(_.layer <= gameMap.withTerrainLayers)))
-      .toSeq
-
   /** Returns a map of the current awards in the game, including the longest road and largest army. The longest road is
     * awarded to the player with the longest continuous road of at least 5 segments. The largest army is awarded to the
     * player with the most knight development cards played.
     * @return
     *   a map of the current awards in the game
     */
-  def awards: Awards =
+  override def awards: Awards =
     val precedentLongestRoad = assignedAwards(Award(AwardType.LongestRoad))
     val longestRoad =
       assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((Player(""), 0)))(
@@ -172,7 +142,7 @@ private final case class ScatanStateImpl(
     *   A new ScatanState with the specified building at the specified position for the specified player, or the current
     *   state if the player does not have enough resources.
     */
-  override def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
+  def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
     if verifyResourceCost(player, buildingType.cost) then
       val remainingResourceCards = buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
         cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
@@ -253,17 +223,6 @@ private final case class ScatanStateImpl(
         buildingsOfPlayer._2.foldLeft(0)((score, buildingType) => score + buildingScore(buildingType))
       )
     )
-
-  /** Returns the total scores of the players in the game. The scores are calculated by combining the partial scores
-    * with awards and buildings.
-    * @return
-    *   the total scores of the players
-    */
-  def scores: Scores =
-    import cats.syntax.semigroup.*
-    import scatan.model.components.Score.given
-    val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
-    partialScores.foldLeft(Score.empty(players))(_ |+| _)
 
   /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
     * @param hexagonsWithTileContent
