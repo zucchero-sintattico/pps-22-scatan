@@ -1,6 +1,6 @@
 package scatan.model.components
 
-import scatan.model.game.ScatanPlayer
+import scatan.model.game.config.ScatanPlayer
 
 enum ResourceType:
   case Wood

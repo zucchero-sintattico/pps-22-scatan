@@ -3,7 +3,7 @@ package scatan.model.components
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
 import scatan.model.components.ResourceType.*
-import scatan.model.game.ScatanPlayer
+import scatan.model.game.config.ScatanPlayer
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]

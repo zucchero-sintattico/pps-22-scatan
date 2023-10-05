@@ -1,7 +1,8 @@
 package scatan.model
 
 import scatan.lib.mvc.Model
-import scatan.model.game.{ScatanGame, ScatanPlayer}
+import scatan.model.game.ScatanGame
+import scatan.model.game.config.ScatanPlayer
 
 final case class ApplicationState(game: Option[ScatanGame]) extends Model.State:
   def createGame(usernames: String*): ApplicationState =

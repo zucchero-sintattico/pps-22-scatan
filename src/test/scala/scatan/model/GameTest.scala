@@ -1,19 +1,19 @@
 package scatan.model
 
 import scatan.BaseTest
-import scatan.lib.game.dsl.TypedGameDSL
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
-import scatan.lib.game.{Game, GameStatus}
-import scatan.model.game.ScatanActions.*
-import scatan.model.game.{ScatanActions, ScatanDSL, ScatanPhases, ScatanPlayer, ScatanState, ScatanSteps}
+import scatan.lib.game.{Game, GameStatus, Rules}
+import scatan.model.game.config.ScatanActions.*
+import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.game.{ScatanDSL, ScatanState}
 
 class GameTest extends BaseTest:
 
   type ScatanGame = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
-  type ScatanDSL = TypedGameDSL[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
+  type ScatanRules = Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]
 
   given ScatanRules = ScatanDSL.rules
 

@@ -1,7 +1,7 @@
-package scatan.model.game
+package scatan.model.game.config
 
 import scatan.lib.game.ops.Effect
-import scatan.model.game.{ScatanActions, ScatanState}
+import scatan.model.game.ScatanState
 import scatan.model.map.Hexagon
 
 enum ScatanActions:

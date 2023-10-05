@@ -1,4 +1,4 @@
-package scatan.model.game
+package scatan.model.game.config
 
 trait ScatanPlayer:
   def name: String

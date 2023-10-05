@@ -1,7 +1,7 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.model.game.ScatanPhases
+import scatan.model.game.config.ScatanPhases
 
 class ScatanPhasesTest extends BaseTest:
 

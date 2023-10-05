@@ -5,7 +5,7 @@ import scatan.lib.game.dsl.PlayersDSLOps.*
 import scatan.lib.game.dsl.PhaseDSLOps.*
 import scatan.lib.game.dsl.PhasesDSLOps.*
 import scatan.lib.game.dsl.TurnDSLOps.*
-import scatan.model.game.{ScatanActions, ScatanPhases, ScatanState}
+import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 
 import scala.language.postfixOps
 
@@ -16,7 +16,7 @@ object ScatanDSL extends GameDSL:
   override type StepType = ScatanSteps
   override type ActionType = ScatanActions
 
-  import ScatanSteps.*
+  import scatan.model.game.config.ScatanSteps.*
 
   Players {
     canBe(3 to 4)

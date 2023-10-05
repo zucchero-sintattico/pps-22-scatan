@@ -1,7 +1,7 @@
 package scatan.model.components
 
 import cats.kernel.Semigroup
-import scatan.model.game.ScatanPlayer
+import scatan.model.game.config.ScatanPlayer
 
 /** A Map that contains for each player the number of points they have
   */

@@ -3,7 +3,7 @@ package scatan.lib.game.ops
 import scatan.BaseTest
 import scatan.lib.game.Turn
 import scatan.lib.game.ops.TurnOps.next
-import scatan.model.game.ScatanPlayer
+import scatan.model.game.config.ScatanPlayer
 
 class TurnOpsTest extends BaseTest:
 

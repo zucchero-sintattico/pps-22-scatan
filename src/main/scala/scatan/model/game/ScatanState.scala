@@ -3,7 +3,7 @@ package scatan.model.game
 import cats.instances.long
 import scatan.model.GameMap
 import scatan.model.components.*
-import scatan.model.game.{ScatanState, ScatanStateImpl}
+import scatan.model.game.config.ScatanPlayer
 
 trait ScatanState:
   def players: Seq[ScatanPlayer]
