@@ -16,4 +16,5 @@ object ScatanModelOps:
 
   extension (game: Option[ScatanGame])
     def onError(callback: => Unit): Unit = game match
-      case None => callback
+      case None    => callback
+      case Some(_) => ()

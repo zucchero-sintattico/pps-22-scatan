@@ -4,6 +4,7 @@ import scatan.BaseTest
 import scatan.lib.game.Game
 import scatan.model.game.config.{ScatanActions, ScatanPhases}
 import scatan.model.map.{RoadSpot, StructureSpot}
+import scatan.model.game.ops.EmptySpotsOps.emptySpots
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
@@ -76,7 +77,7 @@ class GameTest extends BaseTest:
   }
 
   def nextTurn(game: ScatanGame): ScatanGame =
-    val spotToBuild = game.state.emptySpot.collect { case s: StructureSpot => s }.head
+    val spotToBuild = game.state.emptySpots.collect { case s: StructureSpot => s }.head
     given Effect[BuildSettlement.type, ScatanState] =
       BuildSettlementEffect(spotToBuild, game.turn.player)
     val gameAfterBuildSettlement = game.play(BuildSettlement).get

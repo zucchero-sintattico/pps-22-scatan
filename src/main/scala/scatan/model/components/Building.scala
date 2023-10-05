@@ -3,8 +3,10 @@ package scatan.model.components
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
 import scatan.model.map.Spot
-import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
+import ResourceType.*
+import scatan.model.map.StructureSpot
+import scatan.model.map.RoadSpot
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]
@@ -69,3 +71,7 @@ object AssignedBuildingsAdapter:
           playerMap.getOrElse(assignment._2.player, Seq.empty[BuildingType]) :+ assignment._2.buildingType
         )
       )
+    def getStructureSpots(): Map[StructureSpot, AssignmentInfo] =
+      assignedBuildings.filter(_._1.isInstanceOf[StructureSpot]).asInstanceOf[Map[StructureSpot, AssignmentInfo]]
+    def getRoadSpots(): Seq[RoadSpot] =
+      assignedBuildings.keys.toSeq.collect { case spot: RoadSpot => spot }

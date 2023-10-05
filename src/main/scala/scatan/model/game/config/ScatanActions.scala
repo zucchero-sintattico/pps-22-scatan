@@ -5,6 +5,7 @@ import scatan.model.game.ScatanState
 import scatan.model.map.Hexagon
 import scatan.model.map.StructureSpot
 import scatan.model.components.BuildingType
+import scatan.model.game.ops.BuildingOps.assignBuilding
 
 enum ScatanActions:
   case RollDice
