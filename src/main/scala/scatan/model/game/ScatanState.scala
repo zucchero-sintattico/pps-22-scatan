@@ -1,13 +1,9 @@
 package scatan.model.game
 
-import cats.instances.long
 import scatan.model.GameMap
 import scatan.model.components.*
-import scatan.model.components.AssignedBuildingsAdapter.{asPlayerMap, getStructureSpots}
-import scatan.model.game.ScatanState
+import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.{EmptySpotsOps, ScoreOps}
-import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.*
 
 object ScatanState:

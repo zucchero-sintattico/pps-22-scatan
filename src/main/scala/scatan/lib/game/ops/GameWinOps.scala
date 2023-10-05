@@ -6,7 +6,6 @@ import scatan.lib.game.Game
   */
 object GameWinOps:
 
-  import reflect.Selectable.reflectiveSelectable
   import scala.language.reflectiveCalls
 
   extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])

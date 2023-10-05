@@ -1,9 +1,6 @@
 package scatan.model.game
 
-import scatan.BaseTest
-import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.*
-import scatan.model.game.ScatanState
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
 import scatan.model.game.ops.CardOps.assignResourceCard
 
