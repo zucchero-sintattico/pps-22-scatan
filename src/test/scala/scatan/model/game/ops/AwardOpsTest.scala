@@ -36,11 +36,14 @@ class AwardOpsTest extends BasicStateTest:
   it should "assign a LargestArmy award if there are conditions" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val stateWithAwardReached = state
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-    stateWithAwardReached.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+    val stateWithAwardReached = for
+      stateWithOneKnight <- state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    yield stateWithThreeKnight
+    stateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+      case None        => fail("stateWithAwardReached should be defined")
   }
 
   it should "not reassign LongestRoad if someone else reach same number of roads " in {
@@ -104,31 +107,46 @@ class AwardOpsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val state2 = state
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-    val state3 = state2
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-    state2.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
-    state3.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+    val state2 = for
+      stateWithOneKnight <- state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    yield stateWithThreeKnight
+    val state3 = for
+      stateWithOneKnight <- state2.get.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+    yield stateWithThreeKnight
+    state2 match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+      case None        => fail("state2 should be defined")
+    state3 match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+      case None        => fail("state3 should be defined")
   }
 
   it should "reassign LargestArmy if someone build more knights then the current award owner" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val state2 = state
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-    val state3 = state2
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-      .assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
-    state2.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
-    state3.awards(Award(AwardType.LargestArmy)) should be(Some((player2, 4)))
+    val state2 = for
+      stateWithOneKnight <- state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    yield stateWithThreeKnight
+    val state3 = for
+      stateWithOneKnight <- state2.get.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player2, DevelopmentCard(DevelopmentType.Knight))
+      stateWithFourKnight <- stateWithThreeKnight.assignDevelopmentCard(
+        player2,
+        DevelopmentCard(DevelopmentType.Knight)
+      )
+    yield stateWithFourKnight
+    state2 match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+      case None        => fail("state2 should be defined")
+    state3 match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player2, 4)))
+      case None        => fail("state3 should be defined")
   }

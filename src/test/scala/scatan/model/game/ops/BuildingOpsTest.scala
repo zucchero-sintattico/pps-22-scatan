@@ -47,23 +47,27 @@ class BuildingOpsTest extends BasicStateTest:
   it should "allow to assign buildings if the player has the necessary resources" in {
     val state = ScatanState(threePlayers)
     val spot = spotToBuildStructure(state)
-    val stateWithBuilding = state
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
-      .build(spot, BuildingType.Settlement, threePlayers.head)
-    stateWithBuilding should not be None
-    stateWithBuilding.get.assignedBuildings(spot) should be(
-      AssignmentInfo(threePlayers.head, BuildingType.Settlement)
-    )
+    val stateWithBuilding = for
+      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
+      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
+      stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
+      stateWithBuilding <- stateWithSheep.build(spot, BuildingType.Settlement, threePlayers.head)
+    yield stateWithBuilding
+    stateWithBuilding match
+      case Some(state) =>
+        state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Settlement))
+      case None => fail("stateWithBuilding should be defined")
   }
 
   it should "consume the resources when a building is assigned" in {
     val state = ScatanState(threePlayers)
-    val stateWithBuilding = state
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
-      .assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
-      .build(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head)
-    stateWithBuilding.get.resourceCards(threePlayers.head) should be(Seq.empty[ResourceCard])
+    val stateWithBuilding = for
+      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
+      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
+      stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
+      stateWithBuilding <- stateWithSheep.build(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head)
+    yield stateWithBuilding
+    stateWithBuilding match
+      case Some(state) => state.resourceCards(threePlayers.head) should be(Seq.empty[ResourceCard])
+      case None        => fail("stateWithBuilding should be defined")
   }
