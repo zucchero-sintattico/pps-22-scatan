@@ -14,7 +14,7 @@ class ScoreOpsTest extends BasicStateTest:
     state.scores should be(Score.empty(threePlayers))
   }
 
-  it should "increment score if assign a building" in {
+  it should "increment score to one if assign a settlement" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val it = state.emptyStructureSpot.iterator
@@ -23,7 +23,33 @@ class ScoreOpsTest extends BasicStateTest:
       case Some(stateWithSettlementPlaced) =>
         stateWithSettlementPlaced.scores(player1) should be(1)
       case None => fail("Settlement was not placed")
+  }
 
+  it should "increment score to two if assign a city" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val it = state.emptyStructureSpot.iterator
+    val spotToBuild = it.next()
+    val stateWithSettlementPlaced = state.assignBuilding(spotToBuild, BuildingType.Settlement, player1)
+    stateWithSettlementPlaced match
+      case Some(stateWithSettlementPlaced) =>
+        val stateWithCityPlaced = stateWithSettlementPlaced.assignBuilding(spotToBuild, BuildingType.City, player1)
+        stateWithCityPlaced match
+          case Some(stateWithCityPlaced) =>
+            stateWithCityPlaced.scores(player1) should be(2)
+          case None => fail("City was not placed")
+      case None => fail("Settlement was not placed")
+  }
+
+  it should "not increment score if assign a road" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val it = state.emptyStructureSpot.iterator
+    val stateWithRoadPlaced = state.assignBuilding(it.next(), BuildingType.Road, player1)
+    stateWithRoadPlaced match
+      case Some(stateWithRoadPlaced) =>
+        stateWithRoadPlaced.scores(player1) should be(0)
+      case None => fail("Road was not placed")
   }
 
   it should "increment score either if assign an award or a building" in {

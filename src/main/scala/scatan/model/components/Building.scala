@@ -47,6 +47,8 @@ trait AssignmentInfo:
 
 object AssignmentInfo:
   def apply(player: ScatanPlayer, buildingType: BuildingType): AssignmentInfo = AssignmentInfoImpl(player, buildingType)
+  def unapply(assignmentInfo: AssignmentInfo): Option[(ScatanPlayer, BuildingType)] =
+    Some((assignmentInfo.player, assignmentInfo.buildingType))
   private case class AssignmentInfoImpl(player: ScatanPlayer, buildingType: BuildingType) extends AssignmentInfo
 
 /** A map of assigned buildings.

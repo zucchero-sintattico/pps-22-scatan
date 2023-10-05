@@ -48,10 +48,11 @@ class ResCardOps extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
-    val stateWithResources = state
-      .assignBuilding(spotWhereToBuild, BuildingType.City, state.players.head)
-      .get
-      .tryEveryRollDices()
+    val stateWithResources = for
+      stateWithSettlement <- state.assignBuilding(spotWhereToBuild, BuildingType.Settlement, state.players.head)
+      stateWithCity <- stateWithSettlement.assignBuilding(spotWhereToBuild, BuildingType.City, state.players.head)
+      stateWithResources <- stateWithCity.tryEveryRollDices()
+    yield stateWithResources
     stateWithResources match
       case Some(stateWithResources) =>
         stateWithResources

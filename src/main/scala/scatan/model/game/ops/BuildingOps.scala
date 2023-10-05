@@ -39,9 +39,16 @@ object BuildingOps:
         val remainingResourceCards = buildingType.cost.foldLeft(state.resourceCards(player))((cards, resourceCost) =>
           cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
         )
-        val gameWithConsumedResources =
-          state.copy(resourceCards = state.resourceCards.updated(player, remainingResourceCards))
-        gameWithConsumedResources.assignBuilding(position, buildingType, player)
+        val gameWithBuildingAssigned = assignBuilding(position, buildingType, player)
+        gameWithBuildingAssigned match
+          case Some(game) =>
+            Some(
+              game.copy(
+                resourceCards = game.resourceCards.updated(player, remainingResourceCards),
+                assignedAwards = game.awards
+              )
+            )
+          case None => None
       else None
 
     /** Assigns a building of a certain type on a certain spot for a certain player. If the spot is not empty, the
@@ -54,18 +61,35 @@ object BuildingOps:
       *   Some(ScatanState) if the building is assigned, None otherwise
       */
     def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
-      val buildingUpdated =
-        spot match
-          case s: RoadSpot if state.emptyRoadSpot.contains(s) =>
-            state.assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-          case s: StructureSpot if state.emptyStructureSpot.contains(s) =>
-            state.assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-          case _ => state.assignedBuildings
-      if buildingUpdated == state.assignedBuildings then None
-      else
-        Some(
-          state.copy(
-            assignedBuildings = buildingUpdated,
-            assignedAwards = state.awards
-          )
-        )
+      buildingType match
+        case BuildingType.City =>
+          state.assignedBuildings(spot) match
+            case AssignmentInfo(`player`, BuildingType.Settlement) =>
+              val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
+              Some(
+                state.copy(
+                  assignedBuildings = buildingsUpdated,
+                  assignedAwards = state.awards
+                )
+              )
+            case _ => None
+        case BuildingType.Settlement =>
+          if state.emptyStructureSpot.contains(spot) then
+            val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
+            Some(
+              state.copy(
+                assignedBuildings = buildingsUpdated,
+                assignedAwards = state.awards
+              )
+            )
+          else None
+        case BuildingType.Road =>
+          if state.emptyRoadSpot.contains(spot) then
+            val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
+            Some(
+              state.copy(
+                assignedBuildings = buildingsUpdated,
+                assignedAwards = state.awards
+              )
+            )
+          else None
