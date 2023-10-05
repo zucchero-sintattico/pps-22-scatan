@@ -1,13 +1,11 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
-import scatan.views.game.GameView
+import scatan.controllers.game.{GameController, InitialAssignmentController}
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
-import scatan.views.game.InitialAssignmentView
-import scatan.controllers.game.InitialAssignmentController
 import scatan.model.game.config.ScatanActions
+import scatan.views.game.{GameView, InitialAssignmentView}
 
 object LeftTabComponent:
 

@@ -1,10 +1,10 @@
 package scatan
 
-import scatan.controllers.game.{GameController, SetUpController, InitialAssignmentController}
+import scatan.controllers.game.{GameController, InitialAssignmentController, SetUpController}
 import scatan.controllers.home.{AboutController, HomeController}
 import scatan.lib.mvc.page.{PageFactory, ScalaJSPageFactory}
 import scatan.model.ApplicationState
-import scatan.views.game.{GameView, SetUpView, InitialAssignmentView}
+import scatan.views.game.{GameView, InitialAssignmentView, SetUpView}
 import scatan.views.home.{AboutView, HomeView}
 
 given root: String = "root"

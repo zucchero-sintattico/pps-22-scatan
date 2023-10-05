@@ -2,11 +2,9 @@ package scatan.model.components
 
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
-import scatan.model.map.Spot
+import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
-import ResourceType.*
-import scatan.model.map.StructureSpot
-import scatan.model.map.RoadSpot
+import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]

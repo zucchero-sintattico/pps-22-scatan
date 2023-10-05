@@ -1,18 +1,10 @@
 package scatan.controllers.game
 
-import scatan.Pages
-import scatan.model.ApplicationState
-import scatan.views.game.GameView
-import scatan.Pages
-import scatan.lib.game.Game
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.game.ScatanState
+import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.map.{RoadSpot, StructureSpot}
-import scatan.model.components.BuildingType
-import scatan.lib.mvc.Model
-import scatan.model.game.ScatanGame
-import scatan.model.game.ScatanModelOps.{updateGame, onError}
+import scatan.views.game.GameView
 
 trait PositioningHandler:
   def onRoadSpot(spot: RoadSpot): Unit

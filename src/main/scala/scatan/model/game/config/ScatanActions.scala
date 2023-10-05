@@ -1,11 +1,10 @@
 package scatan.model.game.config
 
 import scatan.lib.game.ops.Effect
-import scatan.model.game.ScatanState
-import scatan.model.map.Hexagon
-import scatan.model.map.StructureSpot
 import scatan.model.components.BuildingType
+import scatan.model.game.ScatanState
 import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.map.{Hexagon, StructureSpot}
 
 enum ScatanActions:
   case RollDice

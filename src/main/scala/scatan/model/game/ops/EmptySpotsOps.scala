@@ -1,10 +1,8 @@
 package scatan.model.game.ops
 
-import scatan.model.map.Spot
-import scatan.model.map.StructureSpot
-import scatan.model.map.RoadSpot
-import scatan.model.map.HexagonInMap.layer
 import scatan.model.game.ScatanState
+import scatan.model.map.HexagonInMap.layer
+import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 object EmptySpotsOps:
 

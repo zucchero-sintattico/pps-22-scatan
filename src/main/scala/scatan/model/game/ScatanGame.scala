@@ -6,10 +6,9 @@ import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules, Turn}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.map.Hexagon
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
+
 import scala.util.Random
-import scatan.model.map.RoadSpot
-import scatan.model.map.StructureSpot
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game

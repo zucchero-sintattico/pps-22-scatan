@@ -2,11 +2,9 @@ package scatan.model.game
 
 import scatan.BaseTest
 import scatan.model.game.ScatanState
-import scatan.model.map.Spot
-import scatan.model.map.RoadSpot
-import scatan.model.map.StructureSpot
-import scatan.model.game.ops.EmptySpotsOps.emptySpots
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.ops.EmptySpotsOps.emptySpots
+import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 abstract class BasicStateTest extends BaseTest:
 

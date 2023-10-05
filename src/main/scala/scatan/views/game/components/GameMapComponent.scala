@@ -1,24 +1,17 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.GameMap
-import scatan.model.map.Hexagon
-import scatan.model.map.TileContent
+import scatan.controllers.game.{GameController, PositioningHandler}
+import scatan.model.{ApplicationState, GameMap}
 import scatan.model.components.ResourceType.*
+import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
 import scatan.model.components.UnproductiveTerrain.*
-import scatan.model.components.Terrain
+import scatan.model.game.ScatanState
+import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.{Hexagon, StructureSpot, TileContent}
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
-import scatan.controllers.game.GameController
-import scatan.controllers.game.PositioningHandler
-import scatan.model.game.ScatanState
-import scatan.model.map.StructureSpot
-import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.AssignmentInfo
-import scatan.views.game.components.ContextMap.viewPlayer
-import scatan.model.components.BuildingType
-import scatan.views.game.components.ContextMap.viewBuildingType
-import scatan.model.ApplicationState
+import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer}
 
 object ContextMap:
 
