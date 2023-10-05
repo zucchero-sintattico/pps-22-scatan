@@ -5,7 +5,7 @@ import scatan.lib.game.Game
 
 class ApplicationStateTest extends BaseTest:
 
-  type UnkownGame = Game[?, ?, ?]
+  type UnkownGame = Game[?, ?, ?, ?, ?]
 
   "An ApplicationState" should "exists" in {
     val applicationState: ApplicationState = ApplicationState()

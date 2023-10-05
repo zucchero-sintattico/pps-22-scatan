@@ -1,9 +1,9 @@
 package scatan.model.components
 
-import scatan.lib.game.Player
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
-import ResourceType.*
+import scatan.model.components.ResourceType.*
+import scatan.model.game.config.ScatanPlayer
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]
@@ -42,7 +42,7 @@ final case class Building(buildingType: BuildingType)
 
 /** A map of players to their buildings
   */
-type Buildings = Map[Player, Seq[Building]]
+type Buildings = Map[ScatanPlayer, Seq[Building]]
 object Building:
   /** Returns a map of players to an empty buildings sequence
     *
@@ -51,5 +51,5 @@ object Building:
     * @return
     *   the empty buildings map
     */
-  def empty(players: Seq[Player]): Buildings =
+  def empty(players: Seq[ScatanPlayer]): Buildings =
     players.map(player => (player, Seq.empty[Building])).toMap

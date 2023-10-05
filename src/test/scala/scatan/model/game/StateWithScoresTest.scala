@@ -1,8 +1,6 @@
 package scatan.model.game
 
-import scatan.model.components.Score
-import scatan.model.components.{Building, BuildingType}
-import scatan.model.game.ScatanState
+import scatan.model.components.{Building, BuildingType, Score}
 
 class StateWithScoresTest extends BasicStateTest:
 
