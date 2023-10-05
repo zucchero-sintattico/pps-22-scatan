@@ -53,20 +53,6 @@ final case class ScatanState(
     with ScoreKnowledge[ScatanState]
     with AwardKnowledge[ScatanState]:
 
-  /** Assigns a resource card to a player and returns a new ScatanState with the updated resourceCards map.
-    *
-    * @param player
-    *   the player to assign the resource card to
-    * @param resourceCard
-    *   the resource card to assign to the player
-    * @return
-    *   a new ScatanState with the updated resourceCards map
-    */
-  def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState =
-    this.copy(
-      resourceCards = resourceCards.updated(player, resourceCards(player) :+ resourceCard)
-    )
-
   /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
     * added to the player's list of development cards. The assigned awards remain the same.
     *
