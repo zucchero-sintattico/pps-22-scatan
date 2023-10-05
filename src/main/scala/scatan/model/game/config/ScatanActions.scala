@@ -3,6 +3,8 @@ package scatan.model.game.config
 import scatan.lib.game.ops.Effect
 import scatan.model.game.ScatanState
 import scatan.model.map.Hexagon
+import scatan.model.map.StructureSpot
+import scatan.model.components.BuildingType
 
 enum ScatanActions:
   case RollDice
@@ -36,8 +38,9 @@ object ScatanActions:
   def BuildRoadEffect() = new Effect[BuildRoad.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] = Some(state)
 
-  def BuildSettlementEffect() = new Effect[BuildSettlement.type, ScatanState]:
-    def apply(state: ScatanState): Option[ScatanState] = Some(state)
+  def BuildSettlementEffect(spot: StructureSpot, player: ScatanPlayer) = new Effect[BuildSettlement.type, ScatanState]:
+    def apply(state: ScatanState): Option[ScatanState] =
+      Some(state.assignBuilding(spot, BuildingType.Settlement, player))
 
   def BuildCityEffect() = new Effect[BuildCity.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] = Some(state)

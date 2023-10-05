@@ -76,7 +76,9 @@ class GameTest extends BaseTest:
   }
 
   def nextTurn(game: ScatanGame): ScatanGame =
-    given Effect[BuildSettlement.type, ScatanState] = BuildSettlementEffect()
+    val spotToBuild = game.state.emptySpot.collect { case s: StructureSpot => s }.head
+    given Effect[BuildSettlement.type, ScatanState] =
+      BuildSettlementEffect(spotToBuild, game.turn.player)
     val gameAfterBuildSettlement = game.play(BuildSettlement).get
     given Effect[BuildRoad.type, ScatanState] = BuildRoadEffect()
     val gameAfterBuildRoad = gameAfterBuildSettlement.play(BuildRoad).get
