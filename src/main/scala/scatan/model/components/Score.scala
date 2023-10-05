@@ -1,11 +1,11 @@
 package scatan.model.components
 
 import cats.kernel.Semigroup
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 
 /** A Map that contains for each player the number of points they have
   */
-type Scores = Map[Player, Int]
+type Scores = Map[ScatanPlayer, Int]
 
 object Score:
 
@@ -22,5 +22,5 @@ object Score:
     * @return
     *   the empty scores map
     */
-  def empty(players: Seq[Player]): Scores =
+  def empty(players: Seq[ScatanPlayer]): Scores =
     players.map(_ -> 0).toMap

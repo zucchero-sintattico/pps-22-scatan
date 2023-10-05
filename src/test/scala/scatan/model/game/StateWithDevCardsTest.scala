@@ -2,7 +2,6 @@ package scatan.model.game
 
 import scatan.lib.game.Game
 import scatan.model.components.{DevelopmentCard, DevelopmentType}
-import scatan.model.game.ScatanState
 
 class StateWithDevCardsTest extends BasicStateTest:
 

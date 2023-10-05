@@ -2,7 +2,6 @@ package scatan.model
 
 import scatan.model.map.HexagonInMap.*
 import scatan.model.map.*
-import map.{MapWithTileContent, TileContentFactory, TileContent}
 
 /** Hexagonal tiled game map of Scatan.
   *

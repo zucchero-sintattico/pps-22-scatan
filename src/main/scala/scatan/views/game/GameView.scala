@@ -1,14 +1,11 @@
 package scatan.views.game
 
-import scatan.controllers.game.GameController
-import scatan.Pages
 import com.raquo.laminar.api.L.*
+import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, Model, View}
 import scatan.model.{ApplicationState, GameMap}
 import com.raquo.laminar.modifiers.RenderableNode
 import com.raquo.laminar.nodes.ChildNode.Base
-import scatan.model.game.ScatanPhases
-import scatan.model.game.ScatanActions
 import scatan.views.game.components.GameMapComponent
 import scatan.views.game.components.LeftTabComponent
 import scatan.views.game.components.CardsComponent

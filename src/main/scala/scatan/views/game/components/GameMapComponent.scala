@@ -13,7 +13,7 @@ import scatan.controllers.game.GameController
 import scatan.controllers.game.PositioningHandler
 import scatan.model.game.ScatanState
 import scatan.model.map.StructureSpot
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.components.AssignmentInfo
 import scatan.views.game.components.ContextMap.viewPlayer
 import scatan.model.components.BuildingType
@@ -22,7 +22,7 @@ import scatan.model.ApplicationState
 
 object ContextMap:
 
-  private var viewPlayers: Map[Player, String] = Map.empty
+  private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
   private val buildings: Map[BuildingType, String] = Map(
     BuildingType.Settlement -> "S",
     BuildingType.City -> "C"
@@ -38,7 +38,7 @@ object ContextMap:
     Sea -> "res/img/hexagonal/water.jpg"
   )
 
-  private def updateAndGetPlayer(player: Player): String =
+  private def updateAndGetPlayer(player: ScatanPlayer): String =
     viewPlayers.get(player) match
       case Some(viewPlayer) => viewPlayer
       case None =>

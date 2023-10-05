@@ -1,6 +1,6 @@
 package scatan.model.components
 
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 
 enum AwardType:
   case LongestRoad
@@ -8,11 +8,11 @@ enum AwardType:
 
 final case class Award(awardType: AwardType)
 
-type Awards = Map[Award, Option[(Player, Int)]]
+type Awards = Map[Award, Option[(ScatanPlayer, Int)]]
 
 object Award:
   def empty(): Awards =
     Map(
-      Award(AwardType.LargestArmy) -> Option.empty[(Player, Int)],
-      Award(AwardType.LongestRoad) -> Option.empty[(Player, Int)]
+      Award(AwardType.LargestArmy) -> Option.empty[(ScatanPlayer, Int)],
+      Award(AwardType.LongestRoad) -> Option.empty[(ScatanPlayer, Int)]
     )

@@ -1,11 +1,11 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.components.{AssignedBuildings, BuildingType}
 import scatan.model.game.ScatanState
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.AssignmentInfo
+import scatan.model.components.{BuildingType, ResourceCard, ResourceType}
 
 class StateWithBuildingsTest extends BasicStateTest:
 
