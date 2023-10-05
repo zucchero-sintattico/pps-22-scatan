@@ -27,7 +27,10 @@ class AwardOpsTest extends BasicStateTest:
       stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next(), BuildingType.Road, player1)
       stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next(), BuildingType.Road, player1)
     yield stateWithFiveRoad
-    stateWithAwardReached.get.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+    stateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+      case None        => fail("stateWithAwardReached should be defined")
+
   }
 
   it should "assign a LargestArmy award if there are conditions" in {
@@ -59,8 +62,13 @@ class AwardOpsTest extends BasicStateTest:
       stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next(), BuildingType.Road, player2)
       stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next(), BuildingType.Road, player2)
     yield stateWithFiveRoad
-    firstStateWithAwardReached.get.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
-    secondStateWithAwardReached.get.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+    firstStateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+      case None        => fail("firstStateWithAwardReached should be defined")
+
+    secondStateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+      case None        => fail("secondStateWithAwardReached should be defined")
   }
 
   it should "reassign LongestRoad if someone build more roads then the current award owner" in {
@@ -83,8 +91,13 @@ class AwardOpsTest extends BasicStateTest:
       stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next(), BuildingType.Road, player2)
       stateWithSixRoad <- stateWithFiveRoad.assignBuilding(it.next(), BuildingType.Road, player2)
     yield stateWithSixRoad
-    firstStateWithAwardReached.get.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
-    secondStateWithAwardReached.get.awards(Award(AwardType.LongestRoad)) should be(Some((player2, 6)))
+    firstStateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
+      case None        => fail("firstStateWithAwardReached should be defined")
+
+    secondStateWithAwardReached match
+      case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player2, 6)))
+      case None        => fail("secondStateWithAwardReached should be defined")
   }
 
   it should "not reassign LargestArmy if someone else reach same number of knights " in {
