@@ -1,7 +1,7 @@
 package scatan.model.game.ops
 
 import scatan.model.game.ScatanState
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.components.ResourceCard
 import scatan.model.components.DevelopmentCard
 import scatan.model.map.{Hexagon, TileContent, StructureSpot, RoadSpot}
@@ -20,7 +20,7 @@ object CardOps:
       * @return
       *   a new ScatanState with the updated resourceCards map
       */
-    def assignResourceCard(player: Player, resourceCard: ResourceCard): ScatanState =
+    def assignResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): ScatanState =
       state.copy(
         resourceCards = state.resourceCards.updated(player, state.resourceCards(player) :+ resourceCard)
       )
@@ -97,7 +97,7 @@ object CardOps:
       * @return
       *   A new ScatanState with the development card assigned to the player.
       */
-    def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
+    def assignDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): ScatanState =
       state.copy(
         developmentCards = state.developmentCards.updated(player, state.developmentCards(player) :+ developmentCard),
         assignedAwards = state.awards
@@ -112,7 +112,7 @@ object CardOps:
       * @return
       *   a new ScatanState with the updated development cards and assigned awards
       */
-    def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): ScatanState =
+    def consumeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): ScatanState =
       val remainingCards =
         state.developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
       state.copy(

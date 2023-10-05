@@ -1,9 +1,9 @@
 package scatan.model.components
 
-import scatan.lib.game.Player
 import scatan.model.components.*
 import scatan.model.components.BuildingType.*
 import scatan.model.map.Spot
+import scatan.model.game.config.ScatanPlayer
 import ResourceType.*
 import scatan.model.map.StructureSpot
 import scatan.model.map.RoadSpot
@@ -44,19 +44,19 @@ object BuildingType:
 /** A building is a structure that can be placed on the map.
   */
 trait AssignmentInfo:
-  def player: Player
+  def player: ScatanPlayer
   def buildingType: BuildingType
 
 object AssignmentInfo:
-  def apply(player: Player, buildingType: BuildingType): AssignmentInfo = AssignmentInfoImpl(player, buildingType)
-  private case class AssignmentInfoImpl(player: Player, buildingType: BuildingType) extends AssignmentInfo
+  def apply(player: ScatanPlayer, buildingType: BuildingType): AssignmentInfo = AssignmentInfoImpl(player, buildingType)
+  private case class AssignmentInfoImpl(player: ScatanPlayer, buildingType: BuildingType) extends AssignmentInfo
 
 /** A map of assigned buildings.
   */
 type AssignedBuildings = Map[Spot, AssignmentInfo]
 
 object AssignmentFactory:
-  def apply(spot: Spot, player: Player, buildingType: BuildingType): (Spot, AssignmentInfo) =
+  def apply(spot: Spot, player: ScatanPlayer, buildingType: BuildingType): (Spot, AssignmentInfo) =
     spot -> AssignmentInfo(player, buildingType)
 
 object AssignedBuildingsAdapter:
@@ -64,8 +64,8 @@ object AssignedBuildingsAdapter:
   /** An adapter to convert a map of assigned buildings to a map of players and their buildings.
     */
   extension (assignedBuildings: AssignedBuildings)
-    def asPlayerMap: Map[Player, Seq[BuildingType]] =
-      assignedBuildings.foldLeft(Map.empty[Player, Seq[BuildingType]])((playerMap, assignment) =>
+    def asPlayerMap: Map[ScatanPlayer, Seq[BuildingType]] =
+      assignedBuildings.foldLeft(Map.empty[ScatanPlayer, Seq[BuildingType]])((playerMap, assignment) =>
         playerMap.updated(
           assignment._2.player,
           playerMap.getOrElse(assignment._2.player, Seq.empty[BuildingType]) :+ assignment._2.buildingType

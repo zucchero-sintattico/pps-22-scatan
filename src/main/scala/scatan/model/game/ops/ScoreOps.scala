@@ -1,7 +1,7 @@
 package scatan.model.game.ops
 
 import scatan.model.components.Scores
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.components.Score
 import scatan.model.components.BuildingType
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
@@ -54,4 +54,4 @@ object ScoreOps:
       partialScores.foldLeft(Score.empty(state.players))(_ |+| _)
 
     def isOver: Boolean = scores.exists(_._2 >= 10)
-    def winner: Option[Player] = if isOver then Some(scores.maxBy(_._2)._1) else None
+    def winner: Option[ScatanPlayer] = if isOver then Some(scores.maxBy(_._2)._1) else None

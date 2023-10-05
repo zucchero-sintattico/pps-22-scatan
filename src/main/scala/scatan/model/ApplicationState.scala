@@ -1,17 +1,13 @@
 package scatan.model
 
-import scatan.lib.game.{Game, GameRulesDSL, Player}
 import scatan.lib.mvc.Model
-import scatan.model.game.{ScatanActions, ScatanPhases, ScatanRules, ScatanState}
-import scatan.model.game.ScatanActions.*
-
-type ScatanGame = Game[ScatanState, ScatanPhases, ScatanActions]
-type ScatanGameDSL = GameRulesDSL[ScatanState, ScatanPhases, ScatanActions]
+import scatan.model.game.ScatanGame
+import scatan.model.game.config.ScatanPlayer
 
 final case class ApplicationState(game: Option[ScatanGame]) extends Model.State:
   def createGame(usernames: String*): ApplicationState =
-    given ScatanGameDSL = ScatanRules
-    ApplicationState(Option(Game(usernames.map(Player(_)))))
+    val players = usernames.map(ScatanPlayer(_))
+    ApplicationState(Option(ScatanGame(players)))
 
 object ApplicationState:
   def apply(): ApplicationState = ApplicationState(Option.empty)

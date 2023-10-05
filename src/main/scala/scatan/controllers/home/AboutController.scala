@@ -1,10 +1,9 @@
 package scatan.controllers.home
 
-import scatan.model.ApplicationState
-import scatan.views.home.AboutView
 import scatan.Pages
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
+import scatan.views.home.AboutView
 
 trait AboutController extends Controller[ApplicationState]
 

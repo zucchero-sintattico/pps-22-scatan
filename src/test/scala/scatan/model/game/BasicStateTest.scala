@@ -1,17 +1,17 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.lib.game.Player
 import scatan.model.game.ScatanState
 import scatan.model.map.Spot
 import scatan.model.map.RoadSpot
 import scatan.model.map.StructureSpot
 import scatan.model.game.ops.EmptySpotsOps.emptySpots
+import scatan.model.game.config.ScatanPlayer
 
 abstract class BasicStateTest extends BaseTest:
 
-  private def players(n: Int): Seq[Player] =
-    (1 to n).map(i => Player(s"Player $i"))
+  private def players(n: Int): Seq[ScatanPlayer] =
+    (1 to n).map(i => ScatanPlayer(s"Player $i"))
 
   protected def emptySpot(state: ScatanState): Spot = state.emptySpots.head
 

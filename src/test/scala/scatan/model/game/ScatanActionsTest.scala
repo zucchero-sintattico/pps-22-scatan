@@ -1,7 +1,7 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.model.game.ScatanActions
+import scatan.model.game.config.ScatanActions
 
 class ScatanActionsTest extends BaseTest:
 

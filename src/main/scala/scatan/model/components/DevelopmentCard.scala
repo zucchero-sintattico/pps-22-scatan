@@ -1,6 +1,6 @@
 package scatan.model.components
 
-import scatan.lib.game.Player
+import scatan.model.game.config.ScatanPlayer
 
 enum DevelopmentType:
   case Knight
@@ -10,8 +10,8 @@ enum DevelopmentType:
   case VictoryPoint
 
 final case class DevelopmentCard(developmentType: DevelopmentType)
-type DevelopmentCards = Map[Player, Seq[DevelopmentCard]]
+type DevelopmentCards = Map[ScatanPlayer, Seq[DevelopmentCard]]
 
 object DevelopmentCardsOfPlayers:
-  def empty(players: Seq[Player]): DevelopmentCards =
+  def empty(players: Seq[ScatanPlayer]): DevelopmentCards =
     players.map(player => (player, Seq.empty[DevelopmentCard])).toMap

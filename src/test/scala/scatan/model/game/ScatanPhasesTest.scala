@@ -1,22 +1,14 @@
 package scatan.model.game
 
 import scatan.BaseTest
-import scatan.model.game.ScatanPhases
+import scatan.model.game.config.ScatanPhases
 
 class ScatanPhasesTest extends BaseTest:
 
-  "A Scatan Phase" should "be initial" in {
-    ScatanPhases.Initial
+  "A Scatan Phase" should "be setup" in {
+    ScatanPhases.Setup
   }
 
-  it should "be robber placement" in {
-    ScatanPhases.RobberPlacement
-  }
-
-  it should "be card stealing" in {
-    ScatanPhases.CardStealing
-  }
-
-  it should "be playing" in {
-    ScatanPhases.Playing
+  it should "be game" in {
+    ScatanPhases.Game
   }

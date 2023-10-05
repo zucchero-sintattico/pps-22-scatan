@@ -1,9 +1,8 @@
 package scatan.views.game
+import com.raquo.laminar.api.L.*
+import org.scalajs.dom.document
 import scatan.Pages
 import scatan.controllers.game.SetUpController
-import com.raquo.laminar.api.L.*
-import scatan.Pages
-import org.scalajs.dom.document
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
 

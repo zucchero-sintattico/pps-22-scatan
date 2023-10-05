@@ -5,11 +5,13 @@ import scatan.controllers.game.GameController
 import scatan.views.game.GameView
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
-import scatan.model.game.ScatanPhases
 import scatan.views.game.InitialAssignmentView
 import scatan.controllers.game.InitialAssignmentController
+import scatan.model.game.config.ScatanActions
 
 object LeftTabComponent:
+
+  extension (action: ScatanActions) def toViewAction: String = action.toString
 
   def leftTabCssClass: String = "game-view-left-tab"
 
@@ -27,30 +29,11 @@ object LeftTabComponent:
       ul(
         children <-- view
           .map(state =>
-            for move <- state.game.map(_.phase.possibleMoves).getOrElse(Seq.empty)
-            yield li(cls := "game-view-move", move)
+            for move <- state.game.map(_.allowedActions.toSeq).getOrElse(Seq.empty)
+            yield li(cls := "game-view-move", move.toViewAction)
           )
       )
     )
-
-  extension (phase: ScatanPhases)
-    def possibleMoves: Seq[String] = phase match
-      case ScatanPhases.InitialRoadAssignment      => Seq("Build Road")
-      case ScatanPhases.InitialSettlmentAssignment => Seq("Build Settlement")
-      case ScatanPhases.Initial                    => Seq("Roll Dice")
-      case ScatanPhases.RobberPlacement            => Seq("Place Robber")
-      case ScatanPhases.CardStealing               => Seq("Steal Card")
-      case ScatanPhases.Playing =>
-        Seq(
-          "Build City",
-          "Build Road",
-          "Build Settlement",
-          "Buy development Card",
-          "Play development Card",
-          "Trade with Bank",
-          "Trade with Player",
-          "End turn"
-        )
 
   def buttonsComponent(using view: Signal[ApplicationState])(using controller: GameController): Element =
     div(

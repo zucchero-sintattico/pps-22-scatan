@@ -3,7 +3,6 @@ package scatan.model.game
 import scatan.model.components.ResourceCard
 import scatan.model.map.Spot
 import scatan.model.components.BuildingType
-import scatan.lib.game.Player
 import scatan.model.map.RoadSpot
 import scatan.model.map.StructureSpot
 import scatan.utils.UnorderedTriple

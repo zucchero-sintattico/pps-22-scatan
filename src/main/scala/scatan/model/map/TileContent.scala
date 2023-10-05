@@ -1,7 +1,5 @@
 package scatan.model.map
 
-import scala.annotation.targetName
-
 import scatan.model.components.Listable.`*`
 import scatan.model.components.Terrain
 import scatan.model.components.ResourceType.*
