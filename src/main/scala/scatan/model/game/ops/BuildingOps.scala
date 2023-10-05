@@ -32,6 +32,7 @@ object BuildingOps:
       * @param buildingType
       * @param player
       * @return
+      *   Some(ScatanState) if the building is built, None otherwise
       */
     def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
       if verifyResourceCost(player, buildingType.cost) then
@@ -50,6 +51,7 @@ object BuildingOps:
       * @param buildingType
       * @param player
       * @return
+      *   Some(ScatanState) if the building is assigned, None otherwise
       */
     def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
       val buildingUpdated =

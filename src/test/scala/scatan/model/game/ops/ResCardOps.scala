@@ -10,7 +10,6 @@ import scatan.utils.UnorderedTriple
 import scatan.model.game.BasicStateTest
 import scatan.model.game.ScatanState
 
-@SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
 class ResCardOps extends BasicStateTest:
 
   extension (state: ScatanState)
