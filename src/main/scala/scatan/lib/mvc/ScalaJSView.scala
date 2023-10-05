@@ -3,7 +3,16 @@ package scatan.lib.mvc
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 
-trait ScalaJSView(val container: String) extends View:
+trait ScalaJSView[State <: Model.State](
+    val container: String,
+    val initialState: State
+) extends View[State]:
+
+  private val _reactiveState = Var[State](initialState)
+  val reactiveState: Signal[State] = _reactiveState.signal
+  override def updateState(state: State): Unit =
+    _reactiveState.writer.onNext(state)
+
   def element: Element
 
   override def show(): Unit =
@@ -17,8 +26,13 @@ trait ScalaJSView(val container: String) extends View:
     render(containerElement, div())
 
 object ScalaJSView:
-  type Factory[C <: Controller, V <: View] = (String, View.Requirements[C]) => V
+  type Factory[C <: Controller[?], V <: View[?]] = (String, View.Requirements[C]) => V
 
-abstract class BaseScalaJSView[C <: Controller](container: String, requirements: View.Requirements[C])
-    extends BaseView(requirements)
-    with ScalaJSView(container)
+abstract class BaseScalaJSView[State <: Model.State, C <: Controller[State]](
+    container: String,
+    requirements: View.Requirements[C]
+) extends BaseView[State, C](requirements)
+    with ScalaJSView[State](
+      container,
+      requirements.controller.state
+    )

@@ -6,7 +6,7 @@ import scatan.views.game.SetUpView
 
 /** This is the controller for the setup page.
   */
-trait SetUpController extends Controller:
+trait SetUpController extends Controller[ApplicationState]:
   def startGame(usernames: String*): Unit
 
 object SetUpController:
