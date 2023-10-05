@@ -6,6 +6,7 @@ import scatan.model.map.Hexagon
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.lib.game.Player
 import scatan.model.components.BuildingType
+import scatan.model.game.state.BuildingCapacity.assignBuilding
 
 enum ScatanActions(effect: ScatanState => ScatanState) extends Action[ScatanState](effect):
   case RollDice(result: Int) extends ScatanActions(ScatanActions.RollEffect(result))

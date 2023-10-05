@@ -4,21 +4,23 @@ import scatan.model.map.Spot
 import scatan.model.map.StructureSpot
 import scatan.model.map.RoadSpot
 import scatan.model.map.HexagonInMap.layer
+import scatan.model.game.ScatanState
 
-trait EmptySpotsManagement[S <: EmptySpotsManagement[S]] extends BasicScatanState[S]:
+object EmptySpotsManagement:
 
-  def emptySpots: Seq[Spot] =
-    Seq(gameMap.nodes, gameMap.edges).flatten
-      .filter(!assignedBuildings.isDefinedAt(_))
+  extension (state: ScatanState)
+    def emptySpots: Seq[Spot] =
+      Seq(state.gameMap.nodes, state.gameMap.edges).flatten
+        .filter(!state.assignedBuildings.isDefinedAt(_))
 
-  def emptyStructureSpot: Seq[StructureSpot] =
-    gameMap.nodes
-      .filter(!assignedBuildings.isDefinedAt(_))
-      .filter(_.toSet.exists(_.layer <= gameMap.withTerrainLayers))
-      .toSeq
+    def emptyStructureSpot: Seq[StructureSpot] =
+      state.gameMap.nodes
+        .filter(!state.assignedBuildings.isDefinedAt(_))
+        .filter(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers))
+        .toSeq
 
-  def emptyRoadSpot: Seq[RoadSpot] =
-    gameMap.edges
-      .filter(!assignedBuildings.isDefinedAt(_))
-      .filter(_.toSet.exists(_.toSet.exists(_.layer <= gameMap.withTerrainLayers)))
-      .toSeq
+    def emptyRoadSpot: Seq[RoadSpot] =
+      state.gameMap.edges
+        .filter(!state.assignedBuildings.isDefinedAt(_))
+        .filter(_.toSet.exists(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers)))
+        .toSeq

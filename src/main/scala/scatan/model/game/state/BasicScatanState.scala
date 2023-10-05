@@ -18,9 +18,6 @@ import scatan.model.components.DevelopmentCard
 trait BasicScatanState[S <: BasicScatanState[S]]:
   def players: Seq[Player]
   def gameMap: GameMap
-  def emptySpots: Seq[Spot]
-  def emptyStructureSpot: Seq[StructureSpot]
-  def emptyRoadSpot: Seq[RoadSpot]
   def assignedBuildings: AssignedBuildings
   def robberPlacement: Hexagon
   def developmentCards: DevelopmentCards
@@ -31,5 +28,3 @@ trait BasicScatanState[S <: BasicScatanState[S]]:
   def assignResourceCard(player: Player, resourceCard: ResourceCard): S
   def assignDevelopmentCard(player: Player, developmentCard: DevelopmentCard): S
   def consumeDevelopmentCard(player: Player, developmentCard: DevelopmentCard): S
-  def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): S
-  def build(position: Spot, buildingType: BuildingType, player: Player): S

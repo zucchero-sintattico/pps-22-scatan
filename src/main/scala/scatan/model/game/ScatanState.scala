@@ -3,7 +3,7 @@ package scatan.model.game
 import cats.instances.long
 import scatan.lib.game.Player
 import scatan.model.components.*
-import scatan.model.game.{ScatanState, ScatanStateImpl}
+import scatan.model.game.ScatanState
 import scatan.model.GameMap
 import scatan.model.map.Spot
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
@@ -18,16 +18,10 @@ import scatan.model.game.state.ScoreKnowledge
 import scatan.model.game.state.EmptySpotsManagement
 import scatan.model.game.state.AwardKnowledge
 
-trait ScatanState
-    extends BasicScatanState[ScatanState]
-    with ScoreKnowledge[ScatanState]
-    with AwardKnowledge[ScatanState]
-    with EmptySpotsManagement[ScatanState]
-
 object ScatanState:
   def apply(players: Seq[Player]): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
-    ScatanStateImpl(
+    ScatanState(
       players,
       GameMap(),
       Map.empty,
@@ -37,23 +31,17 @@ object ScatanState:
       Award.empty()
     )
 
-  def apply(
-      players: Seq[Player],
-      gameMap: GameMap,
-      assignedBuildings: AssignedBuildings,
-      robberPlacement: Hexagon,
-      resourceCards: ResourceCards,
-      developmentCardsOfPlayers: DevelopmentCards
-  ): ScatanState =
-    ScatanStateImpl(players, gameMap, assignedBuildings, robberPlacement, resourceCards, developmentCardsOfPlayers)
-
   def ended(_players: Seq[Player]) =
-    new ScatanState:
-      val state = ScatanState.apply(_players)
-      export state.*
-      override def isOver: Boolean = true
-
-private final case class ScatanStateImpl(
+    ScatanState(
+      _players,
+      GameMap(),
+      Map.empty,
+      Hexagon(0, 0, 0),
+      ResourceCard.empty(_players),
+      DevelopmentCardsOfPlayers.empty(_players),
+      Award.empty()
+    )
+final case class ScatanState(
     players: Seq[Player],
     gameMap: GameMap,
     assignedBuildings: AssignedBuildings,
@@ -61,67 +49,9 @@ private final case class ScatanStateImpl(
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     assignedAwards: Awards = Award.empty()
-) extends ScatanState:
-  /** Verifies if a player has enough resources to pay a certain cost.
-    *
-    * @param player
-    *   the player to verify the resources of
-    * @param cost
-    *   the cost to verify
-    * @return
-    *   true if the player has enough resources to pay the cost, false otherwise
-    */
-  private def verifyResourceCost(player: Player, cost: Cost): Boolean =
-    cost.foldLeft(true)((result, resourceCost) =>
-      result && resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
-    )
-
-  /** Returns a new ScatanState with the specified building assigned to the specified player at the specified spot.
-    *
-    * @param spot
-    *   The spot where the building will be assigned.
-    * @param buildingType
-    *   The type of building to be assigned.
-    * @param player
-    *   The player to whom the building will be assigned.
-    * @return
-    *   A new ScatanState with the specified building assigned to the specified player at the specified spot.
-    */
-  override def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
-    val buildingUpdated =
-      spot match
-        case s: RoadSpot if emptyRoadSpot.contains(s) =>
-          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-        case s: StructureSpot if emptyStructureSpot.contains(s) =>
-          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-        case _ => assignedBuildings
-    this.copy(
-      assignedBuildings = buildingUpdated,
-      assignedAwards = awards
-    )
-
-  /** Builds a new ScatanState with the specified building at the specified position for the specified player. If the
-    * player has enough resources to build the specified building, the resources are consumed and the building is
-    * assigned to the player. Otherwise, the current state is returned.
-    *
-    * @param position
-    *   The position where the building will be built.
-    * @param buildingType
-    *   The type of building to be built.
-    * @param player
-    *   The player who will build the building.
-    * @return
-    *   A new ScatanState with the specified building at the specified position for the specified player, or the current
-    *   state if the player does not have enough resources.
-    */
-  def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
-    if verifyResourceCost(player, buildingType.cost) then
-      val remainingResourceCards = buildingType.cost.foldLeft(resourceCards(player))((cards, resourceCost) =>
-        cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
-      )
-      val gameWithConsumedResources = this.copy(resourceCards = resourceCards.updated(player, remainingResourceCards))
-      gameWithConsumedResources.assignBuilding(position, buildingType, player)
-    else this
+) extends BasicScatanState[ScatanState]
+    with ScoreKnowledge[ScatanState]
+    with AwardKnowledge[ScatanState]:
 
   /** Assigns a resource card to a player and returns a new ScatanState with the updated resourceCards map.
     *

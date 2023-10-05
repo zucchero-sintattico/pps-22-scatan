@@ -6,15 +6,61 @@ import scatan.model.components.BuildingType
 import scatan.model.map.RoadSpot
 import scatan.model.components.AssignmentInfo
 import scatan.model.map.StructureSpot
+import scatan.model.components.AssignedBuildings
+import scatan.model.game.ScatanState
+import scatan.model.components.Cost
+import scatan.model.game.state.EmptySpotsManagement.{emptyRoadSpot, emptyStructureSpot}
 
-trait BuildingCapacity[S <: BuildingCapacity[S]] extends BasicScatanState[S]:
-  def build(position: Spot, buildingType: BuildingType, player: Player): S
-  def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): S =
-    val buildingUpdated =
-      spot match
-        case s: RoadSpot if emptyRoadSpot.contains(s) =>
-          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-        case s: StructureSpot if emptyStructureSpot.contains(s) =>
-          assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
-        case _ => assignedBuildings
-    ???
+object BuildingCapacity:
+  extension (state: ScatanState)
+
+    /** Verifies if a player has enough resources to pay a certain cost.
+      *
+      * @param player
+      *   the player to verify the resources of
+      * @param cost
+      *   the cost to verify
+      * @return
+      *   true if the player has enough resources to pay the cost, false otherwise
+      */
+    private def verifyResourceCost(player: Player, cost: Cost): Boolean =
+      cost.foldLeft(true)((result, resourceCost) =>
+        result && state.resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
+      )
+
+    /** Builds a new ScatanState with the specified building at the specified position for the specified player. If the
+      * player has enough resources to build the specified building, the resources are consumed and the building is
+      * assigned to the player. Otherwise, the current state is returned.
+      *
+      * @param position
+      *   The position where the building will be built.
+      * @param buildingType
+      *   The type of building to be built.
+      * @param player
+      *   The player who will build the building.
+      * @return
+      *   A new ScatanState with the specified building at the specified position for the specified player, or the
+      *   current state if the player does not have enough resources.
+      */
+    def build(position: Spot, buildingType: BuildingType, player: Player): ScatanState =
+      if verifyResourceCost(player, buildingType.cost) then
+        val remainingResourceCards = buildingType.cost.foldLeft(state.resourceCards(player))((cards, resourceCost) =>
+          cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
+        )
+        val gameWithConsumedResources =
+          state.copy(resourceCards = state.resourceCards.updated(player, remainingResourceCards))
+        gameWithConsumedResources.assignBuilding(position, buildingType, player)
+      else state
+    def assignBuilding(spot: Spot, buildingType: BuildingType, player: Player): ScatanState =
+      val buildingUpdated =
+        spot match
+          case s: RoadSpot if state.emptyRoadSpot.contains(s) =>
+            state.assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
+          case s: StructureSpot if state.emptyStructureSpot.contains(s) =>
+            state.assignedBuildings.updated(s, AssignmentInfo(player, buildingType))
+          case _ => state.assignedBuildings
+
+      state.copy(
+        assignedBuildings = buildingUpdated,
+        assignedAwards = state.awards
+      )

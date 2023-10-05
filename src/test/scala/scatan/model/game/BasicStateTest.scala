@@ -6,6 +6,7 @@ import scatan.model.game.ScatanState
 import scatan.model.map.Spot
 import scatan.model.map.RoadSpot
 import scatan.model.map.StructureSpot
+import scatan.model.game.state.EmptySpotsManagement.emptySpots
 
 abstract class BasicStateTest extends BaseTest:
 
