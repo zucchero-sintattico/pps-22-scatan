@@ -7,9 +7,7 @@ import scatan.Pages
 import scatan.lib.game.Game
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.game.{ScatanActions, ScatanPhases, ScatanState}
 
-type ScatanGame = Game[ScatanState, ScatanPhases, ScatanActions]
 trait GameController extends Controller[ApplicationState]:
   def nextTurn(): Unit
 
@@ -22,9 +20,5 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     with GameController:
 
   override def nextTurn(): Unit =
-    this.model.state.game match
-      case Some(game) =>
-        val newGame = game.play(ScatanActions.RollDice(1)).nextTurn
-        this.model.update(_.copy(game = Some(newGame)))
-      case None =>
-        ()
+    this.model.state.game
+      .foreach(_.nextTurn.foreach(nextTurnGame => this.model.update(_.copy(game = Some(nextTurnGame)))))

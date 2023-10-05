@@ -1,6 +1,7 @@
 package scatan.views.game
 
 import com.raquo.laminar.api.L.*
+import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, Model, View}
 import scatan.model.{ApplicationState, GameMap}
 import scatan.views.game.components.GameMapComponent.getMapComponent
