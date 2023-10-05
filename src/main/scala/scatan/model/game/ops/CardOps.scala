@@ -4,7 +4,7 @@ import scatan.model.components.{BuildingType, DevelopmentCard, ResourceCard, Res
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
-
+import scatan.model.game.ops.AwardOps.*
 object CardOps:
 
   extension (state: ScatanState)

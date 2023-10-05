@@ -4,6 +4,7 @@ import scatan.model.components.*
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.CardOps.assignDevelopmentCard
 import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
+import scatan.model.game.ops.AwardOps.*
 
 class StateWithAwardsTest extends BasicStateTest:
 
