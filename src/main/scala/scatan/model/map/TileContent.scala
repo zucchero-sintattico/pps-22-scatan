@@ -1,8 +1,8 @@
 package scatan.model.map
 
 import scatan.model.components.Listable.`*`
-import scatan.model.components.Terrain
 import scatan.model.components.ResourceType.*
+import scatan.model.components.Terrain
 import scatan.model.components.UnproductiveTerrain.*
 
 final case class TileContent(terrain: Terrain, number: Option[Int])

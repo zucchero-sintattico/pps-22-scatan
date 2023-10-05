@@ -1,10 +1,10 @@
 package scatan.lib.game.ops
 
 import scatan.BaseTest
-import scatan.lib.game.{EmptyDomain, Game, GameStatus}
 import scatan.lib.game.EmptyDomain.{EmptyDomainRules, MyPhases, Player}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.RulesOps.{withNextPhase, withStartingStep}
+import scatan.lib.game.{EmptyDomain, Game, GameStatus}
 
 class GameTurnOpsTest extends BaseTest:
 

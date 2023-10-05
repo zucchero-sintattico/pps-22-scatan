@@ -1,20 +1,10 @@
 package scatan.model.game
 
-import cats.instances.long
-import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.*
-import scatan.model.game.ScatanState
 import scatan.model.GameMap
-import scatan.model.map.Spot
+import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.map.Hexagon
-import scatan.model.map.TileContent
-import scatan.model.map.StructureSpot
-import scatan.model.components.AssignedBuildingsAdapter.getStructureSpots
-import scatan.model.map.HexagonInMap.layer
-import scatan.model.map.RoadSpot
-import scatan.model.game.ops.ScoreOps
-import scatan.model.game.ops.EmptySpotsOps
+import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.*
 
 object ScatanState:
   def apply(players: Seq[ScatanPlayer]): ScatanState =

@@ -1,18 +1,14 @@
 package scatan.views.game
 
-import scatan.controllers.game.GameController
-import scatan.Pages
 import com.raquo.laminar.api.L.*
-import scatan.lib.mvc.{BaseScalaJSView, Model, View}
-import scatan.model.{ApplicationState, GameMap}
 import com.raquo.laminar.modifiers.RenderableNode
 import com.raquo.laminar.nodes.ChildNode.Base
-import scatan.views.game.components.LeftTabComponent
+import scatan.Pages
+import scatan.controllers.game.{GameController, InitialAssignmentController, PositioningHandler}
 import scatan.lib.mvc.application.Application
-import scatan.controllers.game.PositioningHandler
-import scatan.views.game.components.GameMapComponent
-import scatan.controllers.game.InitialAssignmentController
-import scatan.views.game.components.CardsComponent
+import scatan.lib.mvc.{BaseScalaJSView, Model, View}
+import scatan.model.{ApplicationState, GameMap}
+import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
 
 trait InitialAssignmentView extends View[ApplicationState]:
   def switchToGame(): Unit

@@ -1,6 +1,6 @@
 package scatan.lib.game.dsl
 
-import PhaseDSLOps.PhaseDSLContext
+import scatan.lib.game.dsl.PhaseDSLOps.PhaseDSLContext
 
 /** Operations for defining phases in a game.
   */

@@ -4,10 +4,10 @@ import scatan.lib.game.EmptyDomain.MyPhases
 import scatan.lib.game.EmptyDomain.MyPhases.*
 import scatan.lib.game.EmptyDomain.Steps.Initial
 import scatan.lib.game.dsl.PhaseDSLOps.{Turn, When}
-import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, TurnDSLOps}
 import scatan.lib.game.dsl.PhasesDSLOps.On
 import scatan.lib.game.dsl.PlayersDSLOps.canBe
 import scatan.lib.game.dsl.TurnDSLOps.*
+import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, TurnDSLOps}
 
 object EmptyDomain:
   type EmptyDomainRules = scatan.lib.game.Rules[State, MyPhases, Steps, Actions, Player]
@@ -29,8 +29,9 @@ object EmptyDomain:
     override type ActionType = EmptyDomain.Actions
     override type Player = EmptyDomain.Player
 
-    import scala.language.postfixOps
     import Steps.*
+
+    import scala.language.postfixOps
 
     Players {
       canBe(2 to 4)

@@ -1,16 +1,12 @@
 package scatan.model.game
 
-import scatan.model.components.ResourceCard
-import scatan.model.map.Spot
-import scatan.model.components.BuildingType
-import scatan.model.map.RoadSpot
-import scatan.model.map.StructureSpot
-import scatan.utils.UnorderedTriple
-import scatan.model.map.HexagonInMap.layer
-import scatan.model.components.ResourceType
+import scatan.model.components.{BuildingType, ResourceCard, ResourceType}
 import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.game.ops.CardOps.assignResourcesFromNumber
+import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
+import scatan.model.map.HexagonInMap.layer
+import scatan.model.map.{RoadSpot, Spot, StructureSpot}
+import scatan.utils.UnorderedTriple
 
 class StateWithResourceTest extends BasicStateTest:
 

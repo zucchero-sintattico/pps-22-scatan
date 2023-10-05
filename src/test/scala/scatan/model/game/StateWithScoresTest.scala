@@ -1,10 +1,10 @@
 package scatan.model.game
 
+import scatan.model.components.{AssignedBuildings, BuildingType, Score}
 import scatan.model.game.ScatanState
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.game.ops.ScoreOps.*
-import scatan.model.components.{AssignedBuildings, BuildingType, Score}
 
 class StateWithScoresTest extends BasicStateTest:
 

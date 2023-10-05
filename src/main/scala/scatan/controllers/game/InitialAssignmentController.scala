@@ -1,17 +1,14 @@
 package scatan.controllers.game
 
 import scatan.Pages
-import scatan.model.ApplicationState
-import scatan.views.game.GameView
-import scatan.Pages
 import scatan.lib.game.Game
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
+import scatan.model.components.BuildingType
+import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.ScatanState
 import scatan.model.map.{RoadSpot, StructureSpot}
-import scatan.model.components.BuildingType
-import scatan.views.game.InitialAssignmentView
-import scatan.model.game.ScatanModelOps.{updateGame, onError}
+import scatan.views.game.{GameView, InitialAssignmentView}
 
 trait InitialAssignmentController extends Controller[ApplicationState] with PositioningHandler
 
