@@ -6,7 +6,7 @@ import scatan.model.map.Hexagon
 
 enum ScatanActions:
   case RollDice
-  case RollSeven
+  private[game] case RollSeven
   case PlaceRobber
   case StoleCard
   case BuildRoad
@@ -30,7 +30,7 @@ object ScatanActions:
   def PlaceRobberEffect(hex: Hexagon) = new Effect[PlaceRobber.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] = Some(state)
 
-  def StoleCardEffect(player: Int) = new Effect[StoleCard.type, ScatanState]:
+  def StoleCardEffect(player: ScatanPlayer) = new Effect[StoleCard.type, ScatanState]:
     def apply(state: ScatanState): Option[ScatanState] = Some(state)
 
   def BuildRoadEffect() = new Effect[BuildRoad.type, ScatanState]:

@@ -35,7 +35,7 @@ final case class Rules[State, P, S, A, Player](
     actions: Map[GameStatus[P, S], Map[A, S]],
     allowedPlayersSizes: Set[Int],
     phaseTurnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
-    nextPhase: Map[P, P] = Map.empty,
+    nextPhase: Map[P, P] = Map.empty[P, P],
     endingSteps: Map[P, S],
     winnerFunction: State => Option[Player] = (_: State) => None
 ):
