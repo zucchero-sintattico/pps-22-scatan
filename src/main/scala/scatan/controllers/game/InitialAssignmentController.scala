@@ -25,10 +25,10 @@ private class InitialAssignmentControllerImpl(
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     this.model
-      .updateGame(_.buildRoad(spot))
+      .updateGame(_.assignRoad(spot))
       .onError(view.error("Cannot build road here"))
 
   override def onStructureSpot(spot: StructureSpot): Unit =
     this.model
-      .updateGame(_.buildSettlement(spot))
+      .updateGame(_.assignSettlement(spot))
       .onError(view.error("Cannot build settlement here"))

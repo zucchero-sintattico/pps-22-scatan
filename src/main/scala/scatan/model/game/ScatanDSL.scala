@@ -39,11 +39,11 @@ object ScatanDSL extends GameDSL:
       }
 
       When(SetupSettlement) {
-        ScatanActions.BuildSettlement -> SetupRoad
+        ScatanActions.AssignSettlement -> SetupRoad
       }
 
       When(SetupRoad) {
-        ScatanActions.BuildRoad -> Setupped
+        ScatanActions.AssignRoad -> Setupped
       }
 
     }
