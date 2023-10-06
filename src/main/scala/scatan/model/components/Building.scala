@@ -71,7 +71,3 @@ object AssignedBuildingsAdapter:
           playerMap.getOrElse(assignment._2.player, Seq.empty[BuildingType]) :+ assignment._2.buildingType
         )
       )
-    def getStructureSpots(): Map[StructureSpot, AssignmentInfo] =
-      assignedBuildings.filter(_._1.isInstanceOf[StructureSpot]).asInstanceOf[Map[StructureSpot, AssignmentInfo]]
-    def getRoadSpots(): Seq[RoadSpot] =
-      assignedBuildings.keys.toSeq.collect { case spot: RoadSpot => spot }
