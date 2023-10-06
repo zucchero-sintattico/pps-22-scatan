@@ -4,8 +4,8 @@ import scatan.lib.game.ops.Effect
 import scatan.model.components.BuildingType
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.map.{Hexagon, StructureSpot, RoadSpot}
+import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
 
@@ -25,12 +25,18 @@ object ScatanEffects:
 
   def StoleCardEffect(player: ScatanPlayer): Effect[StoleCard.type, ScatanState] = (state: ScatanState) => Some(state)
 
-  def BuildRoadEffect(): Effect[BuildRoad.type, ScatanState] = (state: ScatanState) => Some(state)
+  /*
+   * Building Ops
+   */
+
+  def BuildRoadEffect(spot: RoadSpot, player: ScatanPlayer): Effect[BuildRoad.type, ScatanState] =
+    (state: ScatanState) => Some(state.build(spot, BuildingType.Road, player))
 
   def BuildSettlementEffect(spot: StructureSpot, player: ScatanPlayer): Effect[BuildSettlement.type, ScatanState] =
-    (state: ScatanState) => Some(state.assignBuilding(spot, BuildingType.Settlement, player))
+    (state: ScatanState) => Some(state.build(spot, BuildingType.Settlement, player))
 
-  def BuildCityEffect(): Effect[BuildCity.type, ScatanState] = (state: ScatanState) => Some(state)
+  def BuildCityEffect(spot: StructureSpot, player: ScatanPlayer): Effect[BuildCity.type, ScatanState] =
+    (state: ScatanState) => Some(state.build(spot, BuildingType.City, player))
 
   def BuyDevelopmentCardEffect(): Effect[BuyDevelopmentCard.type, ScatanState] = (state: ScatanState) => Some(state)
 

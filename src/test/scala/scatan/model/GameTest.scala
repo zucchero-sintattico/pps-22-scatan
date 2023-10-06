@@ -1,22 +1,15 @@
 package scatan.model
 
 import scatan.BaseTest
-import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules}
-import scatan.model.game.ScatanEffects.{
-  AssignRoadEffect,
-  AssignSettlementEffect,
-  BuildRoadEffect,
-  BuildSettlementEffect
-}
+import scatan.model.game.ScatanEffects.{AssignRoadEffect, AssignSettlementEffect}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptySpots, emptyStructureSpot}
+import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.game.{ScatanDSL, ScatanState}
-import scatan.model.map.{RoadSpot, StructureSpot}
 
 class GameTest extends BaseTest:
 
