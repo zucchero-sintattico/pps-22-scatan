@@ -89,6 +89,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
             cls := "setup-menu-textbox-container",
             input(
               cls := "setup-menu-textbox",
+              defaultValue := s"Player $i",
               placeholder := s"Player $i"
             )
           )
