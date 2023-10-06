@@ -4,9 +4,9 @@ import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
-import scatan.lib.game.{Game, GameStatus, Rules, Turn}
-import scatan.model.game.config.ScatanActions.*
+import scatan.lib.game.{Game, GameStatus, Turn}
 import scatan.model.game.ScatanEffects.*
+import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
