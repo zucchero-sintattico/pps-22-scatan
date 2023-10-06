@@ -1,4 +1,4 @@
-package scatan.model.game
+package scatan.model.game.config
 
 import scatan.BaseTest
 import scatan.model.game.config.ScatanActions
@@ -43,4 +43,12 @@ class ScatanActionsTest extends BaseTest:
 
   it should "be trade with player" in {
     ScatanActions.TradeWithPlayer
+  }
+
+  it should "be assign settlement" in {
+    ScatanActions.AssignSettlement
+  }
+
+  it should "be assign road" in {
+    ScatanActions.AssignRoad
   }

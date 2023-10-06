@@ -1,10 +1,12 @@
 package scatan.model.game
 
+import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules, Turn}
 import scatan.model.game.config.ScatanActions.*
+import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
@@ -27,23 +29,27 @@ private trait ScatanGameStatus(
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
 
 private trait ScatanGameActions extends ScatanGameStatus:
+
+  private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
+    game.play(action).map(ScatanGame.apply)
+
   def rollDice: Option[ScatanGame] =
     val roll = Random.nextInt(6) + 1 + Random.nextInt(6) + 1
     roll match
       case 7 =>
-        game.play(RollSeven)(using RollSevenEffect()).map(ScatanGame.apply)
+        play(RollSeven)(using RollSevenEffect())
       case _ =>
-        game.play(RollDice)(using RollEffect(roll)).map(ScatanGame.apply)
+        play(RollDice)(using RollEffect(roll))
 
   def placeRobber(hex: Hexagon): Option[ScatanGame] =
-    game.play(PlaceRobber)(using PlaceRobberEffect(hex)).map(ScatanGame.apply)
+    play(PlaceRobber)(using PlaceRobberEffect(hex))
 
   def stoleCard(player: ScatanPlayer): Option[ScatanGame] =
-    game.play(StoleCard)(using StoleCardEffect(player)).map(ScatanGame.apply)
+    play(StoleCard)(using StoleCardEffect(player))
 
   def buildRoad(road: RoadSpot): Option[ScatanGame] = ???
   def buildSettlement(spot: StructureSpot): Option[ScatanGame] =
-    game.play(ScatanActions.BuildSettlement)(using BuildSettlementEffect(spot, game.turn.player)).map(ScatanGame.apply)
+    play(ScatanActions.BuildSettlement)(using BuildSettlementEffect(spot, game.turn.player))
   def buildCity: Option[ScatanGame] = ???
   def buildDevelopmentCard: Option[ScatanGame] = ???
   def playDevelopmentCard: Option[ScatanGame] = ???
