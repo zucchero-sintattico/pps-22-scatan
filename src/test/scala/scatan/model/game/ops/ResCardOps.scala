@@ -15,13 +15,17 @@ class ResCardOps extends BasicStateTest:
   extension (state: ScatanState)
     def tryEveryRollDices(): Option[ScatanState] =
       for
-        stateAfterRollOne <- state.assignResourcesFromNumber(1)
-        stateAfterRollTwo <- stateAfterRollOne.assignResourcesFromNumber(2)
-        stateAfterRollThree <- stateAfterRollTwo.assignResourcesFromNumber(3)
-        stateAfterRollFour <- stateAfterRollThree.assignResourcesFromNumber(4)
-        stateAfterRollFive <- stateAfterRollFour.assignResourcesFromNumber(5)
-        stateAfterRollSix <- stateAfterRollFive.assignResourcesFromNumber(6)
-      yield stateAfterRollSix
+        rollTwoState <- state.assignResourcesFromNumber(2)
+        rollThreeState <- rollTwoState.assignResourcesFromNumber(3)
+        rollFourState <- rollThreeState.assignResourcesFromNumber(4)
+        rollFiveState <- rollFourState.assignResourcesFromNumber(5)
+        rollSixState <- rollFiveState.assignResourcesFromNumber(6)
+        rollEightState <- rollSixState.assignResourcesFromNumber(8)
+        rollNineState <- rollEightState.assignResourcesFromNumber(9)
+        rollTenState <- rollNineState.assignResourcesFromNumber(10)
+        rollElevenState <- rollTenState.assignResourcesFromNumber(11)
+        rollTwelveState <- rollElevenState.assignResourcesFromNumber(12)
+      yield rollTwelveState
 
   "A State with resource cards Ops" should "have an empty resource card deck initially" in {
     val state = ScatanState(threePlayers)

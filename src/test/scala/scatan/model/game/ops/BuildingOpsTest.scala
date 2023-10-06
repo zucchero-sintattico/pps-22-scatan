@@ -25,17 +25,45 @@ class BuildingOpsTest extends BasicStateTest:
   it should "permit to assign a structure" in {
     val state = ScatanState(threePlayers)
     state
-      .assignBuilding(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head)
-      .get
-      .assignedBuildings should have size 1
+      .assignBuilding(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head) match
+      case Some(state) => state.assignedBuildings should have size 1
+      case None        => fail("state should be defined")
   }
 
   it should "permit to assign a road" in {
     val state = ScatanState(threePlayers)
     state
-      .assignBuilding(spotToBuildRoad(state), BuildingType.Road, threePlayers.head)
-      .get
-      .assignedBuildings should have size 1
+      .assignBuilding(spotToBuildRoad(state), BuildingType.Road, threePlayers.head) match
+      case Some(state) => state.assignedBuildings should have size 1
+      case None        => fail("state should be defined")
+  }
+
+  it should "permit to assign a settlement" in {
+    val state = ScatanState(threePlayers)
+    state
+      .assignBuilding(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head) match
+      case Some(state) => state.assignedBuildings should have size 1
+      case None        => fail("state should be defined")
+  }
+
+  it should "not permit to assign a settlement if the spot is not empty" in {
+    val state = ScatanState(threePlayers)
+    val spot = spotToBuildStructure(state)
+    val stateWithBuilding = for
+      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
+      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
+      stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
+      stateWithBuilding <- stateWithSheep.build(spot, BuildingType.Settlement, threePlayers.head)
+    yield stateWithBuilding
+    stateWithBuilding match
+      case Some(state) =>
+        state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Settlement))
+        state
+          .assignBuilding(spot, BuildingType.Settlement, threePlayers.head) match
+          case Some(_) => fail("state should not be defined")
+          case None    => succeed
+
+      case None => fail("stateWithBuilding should be defined")
   }
 
   it should "not allow to assign buildings if the player has't the necessary resources" in {
@@ -76,12 +104,8 @@ class BuildingOpsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val spot = spotToBuildStructure(state)
     val stateWithBuilding = for
-      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
-      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
-      stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
-      stateWithWheat <- stateWithSheep.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wheat))
-      stateWithBuilding <- stateWithWheat.build(spot, BuildingType.Settlement, threePlayers.head)
-      stateWithBuilding <- stateWithBuilding.build(spot, BuildingType.City, threePlayers.head)
+      stateWithBuilding <- state.assignBuilding(spot, BuildingType.Settlement, threePlayers.head)
+      stateWithBuilding <- stateWithBuilding.assignBuilding(spot, BuildingType.City, threePlayers.head)
     yield stateWithBuilding
     stateWithBuilding match
       case Some(state) =>
