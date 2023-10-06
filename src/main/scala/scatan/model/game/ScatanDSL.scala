@@ -38,13 +38,13 @@ object ScatanDSL extends GameDSL:
         NextPhase(ScatanPhases.Game)
       }
 
-      When(SetupSettlement) {
+      When(SetupSettlement)(
         ScatanActions.AssignSettlement -> SetupRoad
-      }
+      )
 
-      When(SetupRoad) {
+      When(SetupRoad)(
         ScatanActions.AssignRoad -> Setupped
-      }
+      )
 
     }
 
@@ -56,28 +56,28 @@ object ScatanDSL extends GameDSL:
         CanEndIn(Playing)
       }
 
-      When(Starting) {
-        ScatanActions.RollDice -> Playing
-        ScatanActions.RollSeven -> PlaceRobber
+      When(Starting)(
+        ScatanActions.RollDice -> Playing,
+        ScatanActions.RollSeven -> PlaceRobber,
         ScatanActions.PlayDevelopmentCard -> Starting
-      }
+      )
 
-      When(PlaceRobber) {
+      When(PlaceRobber)(
         ScatanActions.PlaceRobber -> StealCard
-      }
+      )
 
-      When(StealCard) {
+      When(StealCard)(
         ScatanActions.StoleCard -> Playing
-      }
+      )
 
-      When(Playing) {
-        ScatanActions.BuildSettlement -> Playing
-        ScatanActions.BuildRoad -> Playing
-        ScatanActions.BuildCity -> Playing
-        ScatanActions.BuyDevelopmentCard -> Playing
-        ScatanActions.PlayDevelopmentCard -> Playing
-        ScatanActions.TradeWithBank -> Playing
+      When(Playing)(
+        ScatanActions.BuildSettlement -> Playing,
+        ScatanActions.BuildRoad -> Playing,
+        ScatanActions.BuildCity -> Playing,
+        ScatanActions.BuyDevelopmentCard -> Playing,
+        ScatanActions.PlayDevelopmentCard -> Playing,
+        ScatanActions.TradeWithBank -> Playing,
         ScatanActions.TradeWithPlayer -> Playing
-      }
+      )
     }
   }

@@ -2,7 +2,8 @@ package scatan.model.game
 
 import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
-import scatan.model.game.config.{ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.lib.game.GameStatus
+import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 
 class ScatanRulesTest extends BaseTest:
 
@@ -67,4 +68,83 @@ class ScatanRulesTest extends BaseTest:
       iterator.next() shouldBe ScatanPlayer("b")
       iterator.next() shouldBe ScatanPlayer("c")
     iterator.hasNext shouldBe true
+  }
+
+  it should "only allow to assign a settlement when in Setup phase and SetupSettlement step" in {
+    val status = GameStatus(ScatanPhases.Setup, ScatanSteps.SetupSettlement)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.AssignSettlement)
+  }
+
+  it should "go in Setup Road step when Assigning a settlement in Setup phase and SetupSettlement step" in {
+    val status = GameStatus(ScatanPhases.Setup, ScatanSteps.SetupSettlement)
+    rules.nextSteps((status, ScatanActions.AssignSettlement)) shouldBe ScatanSteps.SetupRoad
+  }
+
+  it should "only allow to assign a road going in Setupped step when in Setup phase and SetupRoad step" in {
+    val status = GameStatus(ScatanPhases.Setup, ScatanSteps.SetupRoad)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.AssignRoad)
+  }
+
+  it should "go in Setupped step when Assigning a road in Setup phase and SetupRoad step" in {
+    val status = GameStatus(ScatanPhases.Setup, ScatanSteps.SetupRoad)
+    rules.nextSteps((status, ScatanActions.AssignRoad)) shouldBe ScatanSteps.Setupped
+  }
+
+  it should "allow to roll dice and play a development card when in Game phase and Starting step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.Starting)
+    rules.allowedActions(status) shouldBe Set(
+      ScatanActions.RollDice,
+      ScatanActions.RollSeven,
+      ScatanActions.PlayDevelopmentCard
+    )
+  }
+
+  it should "go again in Starting step when playing a development card in Game phase and Starting step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.Starting)
+    rules.nextSteps((status, ScatanActions.PlayDevelopmentCard)) shouldBe ScatanSteps.Starting
+  }
+
+  it should "go in Playing step when rolling dice in Game phase and Starting step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.Starting)
+    rules.nextSteps((status, ScatanActions.RollDice)) shouldBe ScatanSteps.Playing
+  }
+
+  it should "go in Place Robber step when rolling seven in Game phase and Starting step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.Starting)
+    rules.nextSteps((status, ScatanActions.RollSeven)) shouldBe ScatanSteps.PlaceRobber
+  }
+
+  it should "only allow to place robber when in Game phase and PlaceRobber step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.PlaceRobber)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.PlaceRobber)
+  }
+
+  it should "go in Steal Card step when placing robber in Game phase and PlaceRobber step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.PlaceRobber)
+    rules.nextSteps((status, ScatanActions.PlaceRobber)) shouldBe ScatanSteps.StealCard
+  }
+
+  it should "only allow to steal card when in Game phase and StealCard step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.StoleCard)
+  }
+
+  it should "go in Playing step when stealing card in Game phase and StealCard step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
+    rules.nextSteps((status, ScatanActions.StoleCard)) shouldBe ScatanSteps.Playing
+  }
+
+  it should "remain in Playing step when in Game phase and Playing step" in {
+    val status = GameStatus(ScatanPhases.Game, ScatanSteps.Playing)
+    rules.allowedActions(status) shouldBe Set(
+      ScatanActions.BuildSettlement,
+      ScatanActions.BuildCity,
+      ScatanActions.BuildRoad,
+      ScatanActions.BuyDevelopmentCard,
+      ScatanActions.PlayDevelopmentCard,
+      ScatanActions.TradeWithBank,
+      ScatanActions.TradeWithPlayer
+    )
+    for action <- rules.allowedActions(status)
+    do rules.nextSteps((status, action)) shouldBe ScatanSteps.Playing
   }
