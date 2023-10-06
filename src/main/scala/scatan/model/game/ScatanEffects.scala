@@ -5,14 +5,14 @@ import scatan.model.components.BuildingType
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.map.{Hexagon, StructureSpot}
+import scatan.model.map.{Hexagon, StructureSpot, RoadSpot}
 
 object ScatanEffects:
 
   def AssignSettlementEffect(player: ScatanPlayer, spot: StructureSpot): Effect[AssignSettlement.type, ScatanState] =
     (state: ScatanState) => Some(state.assignBuilding(spot, BuildingType.Settlement, player))
 
-  def AssignRoadEffect(player: ScatanPlayer, spot: StructureSpot): Effect[AssignRoad.type, ScatanState] =
+  def AssignRoadEffect(player: ScatanPlayer, spot: RoadSpot): Effect[AssignRoad.type, ScatanState] =
     (state: ScatanState) => Some(state.assignBuilding(spot, BuildingType.Road, player))
 
   def RollEffect(result: Int): Effect[RollDice.type, ScatanState] = (state: ScatanState) =>
