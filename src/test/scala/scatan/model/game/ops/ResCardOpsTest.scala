@@ -10,7 +10,7 @@ import scatan.utils.UnorderedTriple
 import scatan.model.game.BasicStateTest
 import scatan.model.game.ScatanState
 
-class ResCardOps extends BasicStateTest:
+class ResCardOpsTest extends BasicStateTest:
 
   extension (state: ScatanState)
     def tryEveryRollDices(): Option[ScatanState] =

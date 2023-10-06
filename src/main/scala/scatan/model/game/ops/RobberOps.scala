@@ -6,7 +6,8 @@ import scatan.model.map.HexagonInMap.layer
 
 object RobberOps:
   extension (state: ScatanState)
-    /** Returns a new ScatanState with the robber moved to the specified hexagon.
+    /** Returns a new ScatanState with the robber moved to the specified hexagon. The robber can only be moved to a
+      * hexagon with a terrain layer.
       *
       * @param hexagon
       *   the hexagon to move the robber to

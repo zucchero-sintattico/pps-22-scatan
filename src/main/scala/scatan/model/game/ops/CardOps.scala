@@ -32,17 +32,17 @@ object CardOps:
       *   Some(ScatanState) if the resources were assigned, None otherwise
       */
     def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]): Option[ScatanState] =
-      val buildingsInAssignedSpots =
+      val buildingsInHexagonsSpots =
         state.assignedBuildings.filter((s, _) =>
           s match
             case structure: StructureSpot => structure.toSet.intersect(hexagonsWithTileContent.keys.toSet).nonEmpty
             case _: RoadSpot              => false
         )
       val resourceCardsUpdated =
-        buildingsInAssignedSpots.foldLeft(state.resourceCards)((resourceOfPlayer, buildingInAssignedSpot) =>
+        buildingsInHexagonsSpots.foldLeft(state.resourceCards)((resourceOfPlayer, buildingInAssignedSpot) =>
           buildingInAssignedSpot._1 match
             case structure: StructureSpot =>
-              val resourceToAdd = structure.toSet.toList.collect(hexagonsWithTileContent)
+              val resourceToAdd = structure.toSet.collect(hexagonsWithTileContent)
               resourceToAdd.foldLeft(resourceOfPlayer)((resourceOfPlayer, resource) =>
                 resource match
                   case TileContent(terrain: ResourceType, _) =>
@@ -64,7 +64,6 @@ object CardOps:
                       case BuildingType.Road => resourceOfPlayer
                   case _ => resourceOfPlayer
               )
-
             case _ => resourceOfPlayer
         )
       Some(state.copy(resourceCards = resourceCardsUpdated))
@@ -86,7 +85,7 @@ object CardOps:
       assignResourceFromHexagons(hexagonsFilteredByNumber)
 
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
-      * added to the player's list of development cards. The assigned awards remain the same.
+      * added to the player's list of development cards. The assigned awards are updated.
       *
       * @param player
       *   The player to assign the development card to.
@@ -117,7 +116,6 @@ object CardOps:
       else
         val remainingCards =
           state.developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
-
         Some(
           state.copy(
             developmentCards = state.developmentCards.updated(player, remainingCards),

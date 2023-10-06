@@ -52,7 +52,8 @@ object BuildingOps:
       else None
 
     /** Assigns a building of a certain type on a certain spot for a certain player. If the spot is not empty, the
-      * building is not assigned. If the spot is empty, the building is assigned.
+      * building is not assigned. If the spot is empty, the building is assigned. If the building is a city, the spot
+      * must contain a settlement of the same player.
       *
       * @param spot
       * @param buildingType
@@ -65,30 +66,27 @@ object BuildingOps:
         case BuildingType.City =>
           state.assignedBuildings(spot) match
             case AssignmentInfo(`player`, BuildingType.Settlement) =>
-              val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
               Some(
                 state.copy(
-                  assignedBuildings = buildingsUpdated,
+                  assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
                   assignedAwards = state.awards
                 )
               )
             case _ => None
         case BuildingType.Settlement =>
           if state.emptyStructureSpot.contains(spot) then
-            val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
             Some(
               state.copy(
-                assignedBuildings = buildingsUpdated,
+                assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
                 assignedAwards = state.awards
               )
             )
           else None
         case BuildingType.Road =>
           if state.emptyRoadSpot.contains(spot) then
-            val buildingsUpdated = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType))
             Some(
               state.copy(
-                assignedBuildings = buildingsUpdated,
+                assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
                 assignedAwards = state.awards
               )
             )
