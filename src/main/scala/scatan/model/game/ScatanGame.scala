@@ -33,6 +33,10 @@ private trait ScatanGameActions extends ScatanGameStatus:
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
 
+  /*
+   * Assign Ops
+   */
+
   def assignSettlement(spot: StructureSpot): Option[ScatanGame] =
     play(AssignSettlement)(using AssignSettlementEffect(game.turn.player, spot))
 
@@ -53,11 +57,20 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def stoleCard(player: ScatanPlayer): Option[ScatanGame] =
     play(StoleCard)(using StoleCardEffect(player))
 
-  def buildRoad(road: RoadSpot): Option[ScatanGame] = ???
+  /*
+   * Build Ops
+   */
+
+  def buildRoad(road: RoadSpot): Option[ScatanGame] =
+    play(ScatanActions.BuildRoad)(using BuildRoadEffect(road, game.turn.player))
+
   def buildSettlement(spot: StructureSpot): Option[ScatanGame] =
     play(ScatanActions.BuildSettlement)(using BuildSettlementEffect(spot, game.turn.player))
-  def buildCity: Option[ScatanGame] = ???
-  def buildDevelopmentCard: Option[ScatanGame] = ???
+
+  def buildCity(spot: StructureSpot): Option[ScatanGame] =
+    play(ScatanActions.BuildCity)(using BuildCityEffect(spot, game.turn.player))
+
+  def buyDevelopmentCard: Option[ScatanGame] = ???
   def playDevelopmentCard: Option[ScatanGame] = ???
   def tradeWithBank: Option[ScatanGame] = ???
   def tradeWithPlayer: Option[ScatanGame] = ???
