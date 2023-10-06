@@ -16,6 +16,10 @@ class RulesTest extends BaseTest:
     Rules.empty
   }
 
+  it should "be validateble" in {
+    Rules.empty.valid shouldBe false
+  }
+
   it should "have an initial state factory" in {
     emptyGameRules.startingStateFactory shouldBe a[Seq[Player] => State]
     emptyGameRules.startingStateFactory(players) shouldBe a[State]
