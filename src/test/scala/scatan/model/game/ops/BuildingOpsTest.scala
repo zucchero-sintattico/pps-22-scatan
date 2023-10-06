@@ -17,17 +17,9 @@ class BuildingOpsTest extends BasicStateTest:
   private def spotToBuildRoad(state: ScatanState): RoadSpot =
     state.emptyRoadSpot.head
 
-  "A State with Buildings" should "have empty buildings when state start" in {
+  "A State with buildings Ops" should "have empty buildings when state start" in {
     val state = ScatanState(threePlayers)
     state.assignedBuildings.keySet should have size 0
-  }
-
-  it should "permit to assign a structure" in {
-    val state = ScatanState(threePlayers)
-    state
-      .assignBuilding(spotToBuildStructure(state), BuildingType.Settlement, threePlayers.head) match
-      case Some(state) => state.assignedBuildings should have size 1
-      case None        => fail("state should be defined")
   }
 
   it should "permit to assign a road" in {
@@ -53,13 +45,32 @@ class BuildingOpsTest extends BasicStateTest:
       stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
       stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
       stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
-      stateWithBuilding <- stateWithSheep.build(spot, BuildingType.Settlement, threePlayers.head)
-    yield stateWithBuilding
+      stateWithSettlement <- stateWithSheep.build(spot, BuildingType.Settlement, threePlayers.head)
+    yield stateWithSettlement
     stateWithBuilding match
       case Some(state) =>
         state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Settlement))
         state
           .assignBuilding(spot, BuildingType.Settlement, threePlayers.head) match
+          case Some(_) => fail("state should not be defined")
+          case None    => succeed
+
+      case None => fail("stateWithBuilding should be defined")
+  }
+
+  it should "not permit to assign a road if the spot is not empty" in {
+    val state = ScatanState(threePlayers)
+    val spot = spotToBuildRoad(state)
+    val stateWithBuilding = for
+      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
+      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
+      stateWithRoad <- stateWithBrick.build(spot, BuildingType.Road, threePlayers.head)
+    yield stateWithRoad
+    stateWithBuilding match
+      case Some(state) =>
+        state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Road))
+        state
+          .assignBuilding(spot, BuildingType.Road, threePlayers.head) match
           case Some(_) => fail("state should not be defined")
           case None    => succeed
 

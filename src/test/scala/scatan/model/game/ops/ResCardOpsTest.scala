@@ -13,6 +13,11 @@ import scatan.model.game.ScatanState
 class ResCardOpsTest extends BasicStateTest:
 
   extension (state: ScatanState)
+    /** This method assigns resources to players based on the number of the hexagons where their buildings are located.
+      * All the numbers are tried, except the 7.
+      *
+      * @return
+      */
     def tryEveryRollDices(): Option[ScatanState] =
       for
         rollTwoState <- state.assignResourcesFromNumber(2)

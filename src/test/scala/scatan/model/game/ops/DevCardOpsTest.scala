@@ -35,17 +35,18 @@ class DevCardOpsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val state2 = state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-    state2 match
+    val stateWithDevCardAssigned = state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    stateWithDevCardAssigned match
       case Some(state) =>
         state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
         state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
-        val state3 = state.consumeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
-        state3 match
+        val stateWithDevCardConsumed = state.consumeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+        stateWithDevCardConsumed match
           case Some(state) =>
             state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])
             state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
-          case None => fail("state3 should be defined")
+          case None => fail("stateWithDevCardConsumed should be defined")
+      case None => fail("stateWithDevCardAssigned should be defined")
   }
 
   it should "not allow to consume development cards if the player does not have it" in {
