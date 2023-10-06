@@ -81,7 +81,7 @@ object CardOps:
           (
               hexagon,
               tileContent
-          ) => tileContent.number.isDefined && tileContent.number.get == number && hexagon != state.robberPlacement
+          ) => tileContent.number.fold(false)(_ == number) && hexagon != state.robberPlacement
         )
       assignResourceFromHexagons(hexagonsFilteredByNumber)
 
