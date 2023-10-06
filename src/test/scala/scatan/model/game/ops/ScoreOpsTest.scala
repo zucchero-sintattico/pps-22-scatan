@@ -19,10 +19,10 @@ class ScoreOpsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val it = state.emptyStructureSpot.iterator
-    val stateWithSettlementPlaced = state.assignBuilding(it.next(), BuildingType.Settlement, player1)
-    stateWithSettlementPlaced match
-      case Some(stateWithSettlementPlaced) =>
-        stateWithSettlementPlaced.scores(player1) should be(1)
+    val stateWithSettlement = state.assignBuilding(it.next(), BuildingType.Settlement, player1)
+    stateWithSettlement match
+      case Some(state) =>
+        state.scores(player1) should be(1)
       case None => fail("Settlement was not placed")
   }
 
@@ -31,13 +31,13 @@ class ScoreOpsTest extends BasicStateTest:
     val player1 = threePlayers.head
     val it = state.emptyStructureSpot.iterator
     val spotToBuild = it.next()
-    val stateWithSettlementPlaced = state.assignBuilding(spotToBuild, BuildingType.Settlement, player1)
-    stateWithSettlementPlaced match
-      case Some(stateWithSettlementPlaced) =>
-        val stateWithCityPlaced = stateWithSettlementPlaced.assignBuilding(spotToBuild, BuildingType.City, player1)
-        stateWithCityPlaced match
-          case Some(stateWithCityPlaced) =>
-            stateWithCityPlaced.scores(player1) should be(2)
+    val stateWithSettlement = state.assignBuilding(spotToBuild, BuildingType.Settlement, player1)
+    stateWithSettlement match
+      case Some(state) =>
+        val stateWithCity = state.assignBuilding(spotToBuild, BuildingType.City, player1)
+        stateWithCity match
+          case Some(state) =>
+            state.scores(player1) should be(2)
           case None => fail("City was not placed")
       case None => fail("Settlement was not placed")
   }
@@ -46,10 +46,10 @@ class ScoreOpsTest extends BasicStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val it = state.emptyRoadSpot.iterator
-    val stateWithRoadPlaced = state.assignBuilding(it.next(), BuildingType.Road, player1)
-    stateWithRoadPlaced match
-      case Some(stateWithRoadPlaced) =>
-        stateWithRoadPlaced.scores(player1) should be(0)
+    val stateWithRoad = state.assignBuilding(it.next(), BuildingType.Road, player1)
+    stateWithRoad match
+      case Some(state) =>
+        state.scores(player1) should be(0)
       case None => fail("Road was not placed")
   }
 
@@ -60,15 +60,15 @@ class ScoreOpsTest extends BasicStateTest:
     val stateWithSettlementAndAward =
       for
         stateWithSettlement <- state.assignBuilding(state.emptyStructureSpot.head, BuildingType.Settlement, player1)
-        stateWithOneRoad <- stateWithSettlement.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        stateWithTwoRoad <- stateWithOneRoad.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        stateWithFourRoad <- stateWithThreeRoad.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        stateWithFiveRoad <- stateWithFourRoad.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-      yield stateWithFiveRoad
+        oneRoadState <- stateWithSettlement.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+        twoRoadState <- oneRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+        threeRoadState <- twoRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+        fourRoadState <- threeRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+        fiveRoadState <- fourRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+      yield fiveRoadState
     stateWithSettlementAndAward match
-      case Some(stateWithSettlementAndAward) =>
-        stateWithSettlementAndAward.scores(player1) should be(2)
+      case Some(state) =>
+        state.scores(player1) should be(2)
       case None => fail("Building was not placed")
   }
 
