@@ -9,27 +9,24 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ScatanState
 import scatan.model.components.DevelopmentType
 import scatan.model.components.DevelopmentType.*
-import com.raquo.laminar.nodes.ReactiveHtmlElement
-import org.scalajs.dom.HTMLDivElement
 
 object CardsComponent:
 
   extension (state: ScatanState)
-    def countResourceOf(player: ScatanPlayer)(resourceType: ResourceType): Int =
-      state.resourceCards(player).count(_.resourceType == resourceType)
+    def countCardtOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
+      case resourceType: ResourceType =>
+        state.resourceCards(player).count(_.resourceType == resourceType)
+      case developmentType: DevelopmentType =>
+        state.developmentCards(player).count(_.developmentType == developmentType)
 
-    def countDevelopmentOf(player: ScatanPlayer)(developmentType: DevelopmentType): Int =
-      state.developmentCards(player).count(_.developmentType == developmentType)
+  type CardType = ResourceType | DevelopmentType
 
-  private val resourcesImg: Map[ResourceType, String] = Map(
+  private val cardImages: Map[CardType, String] = Map(
     Wood -> "res/img/cards/resource/wood.jpg",
     Brick -> "res/img/cards/resource/clay.jpg",
     Sheep -> "res/img/cards/resource/sheep.jpg",
     Wheat -> "res/img/cards/resource/wheat.jpg",
-    Rock -> "res/img/cards/resource/ore.jpg"
-  )
-
-  private val developmentImg: Map[DevelopmentType, String] = Map(
+    Rock -> "res/img/cards/resource/ore.jpg",
     Knight -> "res/img/cards/development/knight.png",
     RoadBuilding -> "res/img/cards/development/road-building.png",
     YearOfPlenty -> "res/img/cards/development/year-of-plenty.png",
@@ -37,53 +34,27 @@ object CardsComponent:
     VictoryPoint -> "res/img/cards/development/victory-point.png"
   )
 
-  private val cardContainerCssClass = "game-view-card-container"
-  private val childContainerCssClass = "game-view-child-container"
-  private val cardItemCssClass = "game-view-card-item"
-  private val cardCountCssClass = "game-view-card-count"
-  private val cardCssClass = "game-view-card"
-
   def cardsComponent(using reactiveState: Signal[ApplicationState]): Element =
     div(
-      cls := cardContainerCssClass,
-      resourceCardComponent,
-      developmentCardComponent
+      cls := "game-view-card-container",
+      cardCountComponent(cardImages.collect { case (k: ResourceType, v) => (k, v) }),
+      cardCountComponent(cardImages.collect { case (k: DevelopmentType, v) => (k, v) })
     )
 
-  def resourceCardComponent(using reactiveState: Signal[ApplicationState]): Element =
+  private def cardCountComponent(using reactiveState: Signal[ApplicationState])(cards: Map[CardType, String]): Element =
     div(
-      cls := childContainerCssClass,
-      for (resourceType, path) <- resourcesImg.toList
+      cls := "game-view-child-container",
+      for (cardType, path) <- cards.toList
       yield div(
-        cls := cardItemCssClass,
-        div(
-          cls := cardCountCssClass,
-          child.text <-- reactiveState.map(state =>
-            (for
-              game <- state.game
-              currentPlayer = game.turn.player
-              resourceCount = game.state.countResourceOf(currentPlayer)(resourceType)
-            yield resourceCount).getOrElse(0)
-          )
-        ),
-        cardImageBy(path)
-      )
-    )
-
-  def developmentCardComponent(using reactiveState: Signal[ApplicationState]): Element =
-    div(
-      cls := childContainerCssClass,
-      for (developmentType, path) <- developmentImg.toList
-      yield div(
-        cls := cardItemCssClass,
+        cls := "game-view-card-item",
         onClick --> (_ => println("clicked")),
         div(
-          cls := cardCountCssClass,
+          cls := "game-view-card-count",
           child.text <-- reactiveState.map(state =>
             (for
               game <- state.game
               currentPlayer = game.turn.player
-              resourceCount = game.state.countDevelopmentOf(currentPlayer)(developmentType)
+              resourceCount = game.state.countCardtOf(currentPlayer)(cardType)
             yield resourceCount).getOrElse(0)
           )
         ),
@@ -93,6 +64,6 @@ object CardsComponent:
 
   private def cardImageBy(path: String): Element =
     img(
-      cls := cardCssClass,
+      cls := "game-view-card",
       src := path
     )
