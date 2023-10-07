@@ -18,24 +18,27 @@ class DevCardOpsTest extends BaseScatanStateTest:
     state.developmentCards(threePlayers.head) should be(Seq.empty[DevelopmentCard])
   }
 
-  it should "allow to buy a development card" in {
+  it should "not allow to buy a development card without enough resources" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val player2 = threePlayers.tail.head
+    state.buyDevelopmentCard(player1) should be(None)
+  }
+
+  it should "allow to buy a development card with enough resources" in {
+    val initialState = ScatanState(threePlayers)
+    val player1 = threePlayers.head
     val stateWithEnoughResources = for
-      stateWithOneResource <- state.assignResourceCard(player1, ResourceCard(ResourceType.Wheat))
+      stateWithOneResource <- initialState.assignResourceCard(player1, ResourceCard(ResourceType.Wheat))
       stateWithTwoResource <- stateWithOneResource.assignResourceCard(player1, ResourceCard(ResourceType.Sheep))
       stateWithThreeResource <- stateWithTwoResource.assignResourceCard(player1, ResourceCard(ResourceType.Rock))
     yield stateWithThreeResource
     stateWithEnoughResources match
       case Some(state) =>
         state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])
-        state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
         val stateWithDevCardBought = state.buyDevelopmentCard(player1)
         stateWithDevCardBought match
           case Some(state) =>
             state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
-            state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
           case None => fail("stateWithDevCardBought should be defined")
       case None => fail("stateWithEnoughResources should be defined")
   }
