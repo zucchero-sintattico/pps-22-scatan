@@ -21,7 +21,7 @@ class DevCardOpsTest extends BaseScatanStateTest:
   it should "not allow to buy a development card without enough resources" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    state.buyDevelopmentCard(player1) should be(None)
+    state.buyDevelopmentCard(player1, 1) should be(None)
   }
 
   it should "allow to buy a development card with enough resources" in {
@@ -35,7 +35,7 @@ class DevCardOpsTest extends BaseScatanStateTest:
     stateWithEnoughResources match
       case Some(state) =>
         state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])
-        val stateWithDevCardBought = state.buyDevelopmentCard(player1)
+        val stateWithDevCardBought = state.buyDevelopmentCard(player1, 1)
         stateWithDevCardBought match
           case Some(state) =>
             state.developmentCards(player1).size should be(1)

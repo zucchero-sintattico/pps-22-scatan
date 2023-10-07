@@ -102,7 +102,7 @@ object CardOps:
         )
       )
 
-    def buyDevelopmentCard(player: ScatanPlayer): Option[ScatanState] =
+    def buyDevelopmentCard(player: ScatanPlayer, turnNumber: Int): Option[ScatanState] =
       // Check that player has required resources and remove them
       val requiredResources = Seq(
         ResourceType.Wheat,
@@ -114,7 +114,8 @@ object CardOps:
       if !hasRequiredResources then None
       else
         val card = state.developmentCardsDeck.headOption
-        card match
+        val cardWithTurnNumber = card.map(_.copy(drewAt = Some(turnNumber)))
+        cardWithTurnNumber match
           case Some(developmentCard) =>
             val updatedResources = requiredResources.foldLeft(playerResources)((resources, resource) =>
               resources.filterNot(_.resourceType == resource)

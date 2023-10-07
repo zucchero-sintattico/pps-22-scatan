@@ -39,8 +39,8 @@ object ScatanEffects:
   def BuildCityEffect(spot: StructureSpot, player: ScatanPlayer): Effect[BuildCity.type, ScatanState] =
     (state: ScatanState) => state.build(spot, BuildingType.City, player)
 
-  def BuyDevelopmentCardEffect(player: ScatanPlayer): Effect[BuyDevelopmentCard.type, ScatanState] =
-    (state: ScatanState) => state.buyDevelopmentCard(player)
+  def BuyDevelopmentCardEffect(player: ScatanPlayer, turnNumber: Int): Effect[BuyDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.buyDevelopmentCard(player, turnNumber)
 
   def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = (state: ScatanState) => Some(state)
 
