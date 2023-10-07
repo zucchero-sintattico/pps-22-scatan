@@ -25,6 +25,24 @@ object CardOps:
         )
       )
 
+    /** Removes a resource card from a player.
+      *
+      * @param player
+      * @param resourceCard
+      * @return
+      *   Some(ScatanState) if the resource card was removed, None otherwise
+      */
+    def removeResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
+      if !state.resourceCards(player).contains(resourceCard) then None
+      else
+        val remainingResourceCards =
+          state.resourceCards(player).filter(_.resourceType == resourceCard.resourceType).drop(1)
+        Some(
+          state.copy(
+            resourceCards = state.resourceCards.updated(player, remainingResourceCards)
+          )
+        )
+
     /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
       * @param hexagonsWithTileContent
       *   a map of hexagons with their corresponding tile content
