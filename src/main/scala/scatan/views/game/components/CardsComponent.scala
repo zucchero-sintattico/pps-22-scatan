@@ -9,9 +9,11 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ScatanState
 import scatan.model.components.DevelopmentType
 import scatan.model.components.DevelopmentType.*
+import scatan.views.game.components.CardContextMap.cardImages
+import scatan.views.game.components.CardContextMap.countCardtOf
+import scatan.views.game.components.CardContextMap.CardType
 
-object CardsComponent:
-
+object CardContextMap:
   extension (state: ScatanState)
     def countCardtOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
       case resourceType: ResourceType =>
@@ -21,7 +23,7 @@ object CardsComponent:
 
   type CardType = ResourceType | DevelopmentType
 
-  private val cardImages: Map[CardType, String] = Map(
+  val cardImages: Map[CardType, String] = Map(
     Wood -> "res/img/cards/resource/wood.jpg",
     Brick -> "res/img/cards/resource/clay.jpg",
     Sheep -> "res/img/cards/resource/sheep.jpg",
@@ -34,6 +36,7 @@ object CardsComponent:
     VictoryPoint -> "res/img/cards/development/victory-point.png"
   )
 
+object CardsComponent:
   def cardsComponent(using reactiveState: Signal[ApplicationState]): Element =
     div(
       cls := "game-view-card-container",
