@@ -1,9 +1,14 @@
 package scatan.model.game.ops
 
 import scatan.lib.game.Game
-import scatan.model.components.{DevelopmentCard, DevelopmentType}
+import scatan.model.components.{DevelopmentCard, DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanState
-import scatan.model.game.ops.CardOps.{assignDevelopmentCard, consumeDevelopmentCard}
+import scatan.model.game.ops.CardOps.{
+  assignDevelopmentCard,
+  assignResourceCard,
+  buyDevelopmentCard,
+  consumeDevelopmentCard
+}
 import scatan.model.game.BaseScatanStateTest
 
 class DevCardOpsTest extends BaseScatanStateTest:
@@ -11,6 +16,28 @@ class DevCardOpsTest extends BaseScatanStateTest:
   "A State with development cards Ops" should "have empty development cards when game start" in {
     val state = ScatanState(threePlayers)
     state.developmentCards(threePlayers.head) should be(Seq.empty[DevelopmentCard])
+  }
+
+  it should "allow to buy a development card" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val player2 = threePlayers.tail.head
+    val stateWithEnoughResources = for
+      stateWithOneResource <- state.assignResourceCard(player1, ResourceCard(ResourceType.Wheat))
+      stateWithTwoResource <- stateWithOneResource.assignResourceCard(player1, ResourceCard(ResourceType.Sheep))
+      stateWithThreeResource <- stateWithTwoResource.assignResourceCard(player1, ResourceCard(ResourceType.Rock))
+    yield stateWithThreeResource
+    stateWithEnoughResources match
+      case Some(state) =>
+        state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])
+        state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
+        val stateWithDevCardBought = state.buyDevelopmentCard(player1)
+        stateWithDevCardBought match
+          case Some(state) =>
+            state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
+            state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
+          case None => fail("stateWithDevCardBought should be defined")
+      case None => fail("stateWithEnoughResources should be defined")
   }
 
   it should "allow to assign development cards" in {
