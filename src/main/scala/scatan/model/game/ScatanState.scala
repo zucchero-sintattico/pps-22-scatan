@@ -44,7 +44,7 @@ object ScatanState:
     *   a new ScatanState with the specified players
     */
   def apply(players: Seq[ScatanPlayer]): ScatanState =
-    ScatanState(players, DevelopmentCardsDeck.shuffled)
+    ScatanState(players, DevelopmentCardsDeck.defaultOrdered)
 
   def apply(players: Seq[ScatanPlayer], developmentCardsDeck: DevelopmentCardsDeck): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
