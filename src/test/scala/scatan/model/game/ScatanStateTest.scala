@@ -4,6 +4,8 @@ import scatan.model.GameMap
 import scatan.model.components.{AssignmentInfo, Award, DevelopmentCards, ResourceCards}
 import scatan.model.map.{Hexagon, Spot}
 
+import scala.language.postfixOps
+
 class ScatanStateTest extends BaseScatanStateTest:
 
   "A Scatan State" should "exists" in {
@@ -57,4 +59,11 @@ class ScatanStateTest extends BaseScatanStateTest:
   it should "have the robber placement" in {
     val state = ScatanState(threePlayers)
     state.robberPlacement should be(Hexagon(0, 0, 0))
+  }
+
+  it should "have a development cards deck" in {
+    val state = ScatanState(threePlayers)
+    state.developmentCardsDeck shouldBe a[DevelopmentCardsDeck]
+    val stateWithOrderedDeck = ScatanState(threePlayers, developmentCardsDeck = DevelopmentCardsDeck.defaultOrdered)
+    stateWithOrderedDeck.developmentCardsDeck shouldBe DevelopmentCardsDeck.defaultOrdered
   }
