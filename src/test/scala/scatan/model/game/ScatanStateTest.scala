@@ -1,16 +1,7 @@
 package scatan.model.game
 
 import scatan.model.GameMap
-import scatan.model.components.{
-  AssignmentInfo,
-  Award,
-  DevelopmentCard,
-  DevelopmentCards,
-  ResourceCard,
-  ResourceCards
-}
-import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.EmptySpotsOps.emptySpots
+import scatan.model.components.{AssignmentInfo, Award, DevelopmentCards, ResourceCards}
 import scatan.model.map.{Hexagon, Spot}
 
 class ScatanStateTest extends BasicScatanStateTest:
