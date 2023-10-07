@@ -27,10 +27,10 @@ final case class ScatanState(
     players: Seq[ScatanPlayer],
     gameMap: GameMap,
     assignedBuildings: AssignedBuildings,
-    robberPlacement: Hexagon,
+    assignedAwards: Awards = Award.empty(),
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
-    assignedAwards: Awards = Award.empty()
+    robberPlacement: Hexagon
 )
 
 object ScatanState:
@@ -47,8 +47,8 @@ object ScatanState:
       players,
       GameMap(),
       Map.empty,
-      Hexagon(0, 0, 0),
-      ResourceCard.empty(players),
-      DevelopmentCardsOfPlayers.empty(players),
-      Award.empty()
+      Award.empty(),
+      ResourceCards.empty(players),
+      DevelopmentCards.empty(players),
+      Hexagon(0, 0, 0)
     )

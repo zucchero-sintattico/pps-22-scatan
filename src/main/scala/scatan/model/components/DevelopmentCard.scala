@@ -12,6 +12,6 @@ enum DevelopmentType:
 final case class DevelopmentCard(developmentType: DevelopmentType)
 type DevelopmentCards = Map[ScatanPlayer, Seq[DevelopmentCard]]
 
-object DevelopmentCardsOfPlayers:
+object DevelopmentCards:
   def empty(players: Seq[ScatanPlayer]): DevelopmentCards =
     players.map(player => (player, Seq.empty[DevelopmentCard])).toMap

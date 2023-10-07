@@ -5,10 +5,10 @@ import scatan.model.game.ScatanState
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.game.ops.ScoreOps.*
-import scatan.model.game.BasicStateTest
+import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ops.EmptySpotsOps.emptyRoadSpot
 
-class ScoreOpsTest extends BasicStateTest:
+class ScoreOpsTest extends BaseScatanStateTest:
 
   "A State with Scores Ops" should "have an empty scoreboard initially" in {
     val state = ScatanState(threePlayers)
