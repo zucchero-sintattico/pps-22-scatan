@@ -4,6 +4,7 @@ import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.ops.AwardOps.*
 
 object ScoreOps:
   extension (state: ScatanState)
@@ -47,5 +48,14 @@ object ScoreOps:
       val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
       partialScores.foldLeft(Score.empty(state.players))(_ |+| _)
 
+    /** Returns true if the game is over, false otherwise. The game is over when a player has 10 or more points.
+      * @return
+      *   true if the game is over, false otherwise
+      */
     def isOver: Boolean = scores.exists(_._2 >= 10)
+
+    /** Returns the winner of the game if the game is over, None otherwise.
+      * @return
+      *   the winner of the game if the game is over, None otherwise
+      */
     def winner: Option[ScatanPlayer] = if isOver then Some(scores.maxBy(_._2)._1) else None
