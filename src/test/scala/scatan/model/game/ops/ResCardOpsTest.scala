@@ -1,6 +1,6 @@
 package scatan.model.game.ops
 
-import scatan.model.components.{BuildingType, ResourceCard, ResourceType}
+import scatan.model.components.{BuildingType, ResourceCard, ResourceCards, ResourceType}
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.CardOps.assignResourcesFromNumber
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
@@ -34,7 +34,7 @@ class ResCardOpsTest extends BasicStateTest:
 
   "A State with resource cards Ops" should "have an empty resource card deck initially" in {
     val state = ScatanState(threePlayers)
-    state.resourceCards should be(ResourceCard.empty(threePlayers))
+    state.resourceCards should be(ResourceCards.empty(threePlayers))
   }
 
   it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {

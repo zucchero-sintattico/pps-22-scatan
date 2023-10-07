@@ -13,6 +13,6 @@ final case class ResourceCard(resourceType: ResourceType)
 
 type ResourceCards = Map[ScatanPlayer, Seq[ResourceCard]]
 
-object ResourceCard:
+object ResourceCards:
   def empty(players: Seq[ScatanPlayer]): ResourceCards =
     players.map(player => (player, Seq.empty[ResourceCard])).toMap
