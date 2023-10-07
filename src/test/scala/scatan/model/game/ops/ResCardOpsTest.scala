@@ -7,10 +7,10 @@ import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 import scatan.utils.UnorderedTriple
-import scatan.model.game.BasicScatanStateTest
+import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ScatanState
 
-class ResCardOpsTest extends BasicScatanStateTest:
+class ResCardOpsTest extends BaseScatanStateTest:
 
   extension (state: ScatanState)
     /** This method assigns resources to players based on the number of the hexagons where their buildings are located.
