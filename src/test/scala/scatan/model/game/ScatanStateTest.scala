@@ -4,7 +4,7 @@ import scatan.model.GameMap
 import scatan.model.components.{AssignmentInfo, Award, DevelopmentCards, ResourceCards}
 import scatan.model.map.{Hexagon, Spot}
 
-class ScatanStateTest extends BasicScatanStateTest:
+class ScatanStateTest extends BaseScatanStateTest:
 
   "A Scatan State" should "exists" in {
     val state = ScatanState(threePlayers)
