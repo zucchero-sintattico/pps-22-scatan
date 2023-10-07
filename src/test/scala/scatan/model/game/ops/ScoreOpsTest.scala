@@ -89,4 +89,10 @@ class ScoreOpsTest extends BasicStateTest:
       tenSettlementState <- nineSettlementState.assignBuilding(it.next, BuildingType.Settlement, player1)
     yield tenSettlementState
 
+    stateWithAWinner match
+      case Some(state) =>
+        state.scores(player1) should be(10)
+        state.winner should be(Some(player1))
+        state.isOver should be(true)
+      case None => fail("Building was not placed")
   }
