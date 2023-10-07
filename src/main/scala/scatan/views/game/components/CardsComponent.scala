@@ -15,11 +15,11 @@ object CardsComponent:
       state.resourceCards(player).count(_.resourceType == resourceType)
 
   private val resourcesImg: Map[ResourceType, String] = Map(
-    Wood -> "res/img/cards/wood.jpg",
-    Brick -> "res/img/cards/clay.jpg",
-    Sheep -> "res/img/cards/sheep.jpg",
-    Wheat -> "res/img/cards/wheat.jpg",
-    Rock -> "res/img/cards/ore.jpg"
+    Wood -> "res/img/cards/resource/wood.jpg",
+    Brick -> "res/img/cards/resource/clay.jpg",
+    Sheep -> "res/img/cards/resource/sheep.jpg",
+    Wheat -> "res/img/cards/resource/wheat.jpg",
+    Rock -> "res/img/cards/resource/ore.jpg"
   )
 
   def resourceCardComponent(using reactiveState: Signal[ApplicationState]): Element =
