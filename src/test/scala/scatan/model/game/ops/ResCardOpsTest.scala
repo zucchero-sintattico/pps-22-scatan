@@ -68,6 +68,14 @@ class ResCardOpsTest extends BasicStateTest:
     )
   }
 
+  it should "not remove a resource card from a player if the player does not have it" in {
+    val state = ScatanState(threePlayers)
+    val player = state.players.head
+    val resourceCard = ResourceCard(ResourceType.Brick)
+    val stateWithoutResourceCard = state.removeResourceCard(player, resourceCard)
+    stateWithoutResourceCard should be(None)
+  }
+
   it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
