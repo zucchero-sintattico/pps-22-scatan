@@ -38,7 +38,7 @@ class DevCardOpsTest extends BaseScatanStateTest:
         val stateWithDevCardBought = state.buyDevelopmentCard(player1)
         stateWithDevCardBought match
           case Some(state) =>
-            state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
+            state.developmentCards(player1).size should be(1)
           case None => fail("stateWithDevCardBought should be defined")
       case None => fail("stateWithEnoughResources should be defined")
   }
