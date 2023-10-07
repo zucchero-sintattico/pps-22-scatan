@@ -9,6 +9,8 @@ import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 import scatan.utils.UnorderedTriple
 import scatan.model.game.BasicStateTest
 import scatan.model.game.ScatanState
+import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.CardOps.removeResourceCard
 
 class ResCardOpsTest extends BasicStateTest:
 
@@ -35,6 +37,35 @@ class ResCardOpsTest extends BasicStateTest:
   "A State with resource cards Ops" should "have an empty resource card deck initially" in {
     val state = ScatanState(threePlayers)
     state.resourceCards should be(ResourceCard.empty(threePlayers))
+  }
+
+  it should "assing a resource card to a player" in {
+    val state = ScatanState(threePlayers)
+    val player = state.players.head
+    val resourceCard = ResourceCard(ResourceType.Brick)
+    val stateWithResourceCard = state.assignResourceCard(player, resourceCard)
+    stateWithResourceCard should be(
+      Some(
+        state.copy(
+          resourceCards = state.resourceCards.updated(player, Seq(resourceCard))
+        )
+      )
+    )
+  }
+
+  it should "remove a resource card from a player" in {
+    val state = ScatanState(threePlayers)
+    val player = state.players.head
+    val resourceCard = ResourceCard(ResourceType.Brick)
+    val stateWithResourceCard = state.assignResourceCard(player, resourceCard)
+    val stateWithoutResourceCard = stateWithResourceCard.flatMap(_.removeResourceCard(player, resourceCard))
+    stateWithoutResourceCard should be(
+      Some(
+        state.copy(
+          resourceCards = state.resourceCards.updated(player, Seq.empty)
+        )
+      )
+    )
   }
 
   it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {
