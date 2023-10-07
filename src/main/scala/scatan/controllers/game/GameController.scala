@@ -6,6 +6,7 @@ import scatan.model.components.BuildingType
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
+import scatan.views.game.components.CardContextMap.CardType
 
 trait PositioningHandler:
   def onRoadSpot(spot: RoadSpot): Unit
@@ -14,6 +15,7 @@ trait PositioningHandler:
 trait GameController extends Controller[ApplicationState] with PositioningHandler:
   def nextTurn(): Unit
   def rollDice(): Unit
+  def clickCard(card: CardType): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -22,6 +24,8 @@ object GameController:
 private class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
     extends BaseController(requirements)
     with GameController:
+
+  override def clickCard(card: CardType): Unit = ???
 
   override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
 

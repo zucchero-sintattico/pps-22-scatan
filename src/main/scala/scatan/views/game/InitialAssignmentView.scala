@@ -10,8 +10,7 @@ import scatan.lib.mvc.{BaseScalaJSView, Model, View}
 import scatan.model.{ApplicationState, GameMap}
 import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
 
-trait InitialAssignmentView extends View[ApplicationState]:
-  def switchToGame(): Unit
+trait InitialAssignmentView extends View[ApplicationState]
 
 object InitialAssignmentView:
   def apply(container: String, requirements: View.Requirements[InitialAssignmentController]): InitialAssignmentView =
@@ -26,9 +25,6 @@ private class ScalaJsInitialAssignmentView(
   given Signal[ApplicationState] = this.reactiveState
   given PositioningHandler = this.controller
 
-  override def switchToGame(): Unit =
-    this.navigateTo(Pages.Game)
-
   import com.raquo.laminar.api.features.unitArrows
   override def element: Element =
     div(
@@ -37,6 +33,5 @@ private class ScalaJsInitialAssignmentView(
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.possibleMovesComponent
       ),
-      GameMapComponent.mapComponent,
-      CardsComponent.cardsComponent
+      GameMapComponent.mapComponent
     )
