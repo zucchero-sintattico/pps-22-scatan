@@ -14,11 +14,6 @@ object CardsComponent:
     Rock -> "res/img/cards/ore.jpg"
   )
 
-  val image = img(
-    src := "res/img/cards/back.jpg",
-    cls := "card"
-  )
-
   def resourceCardComponent: Element =
     div(
       cls := "game-view-card-container",

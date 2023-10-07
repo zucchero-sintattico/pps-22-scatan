@@ -46,6 +46,7 @@ object ScatanDSL extends GameDSL:
         ScatanActions.AssignRoad -> Setupped
       )
 
+      When(Setupped)()
     }
 
     On(ScatanPhases.Game) {
