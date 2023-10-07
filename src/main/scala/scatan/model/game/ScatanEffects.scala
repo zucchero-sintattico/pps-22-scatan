@@ -10,6 +10,8 @@ import scatan.model.components.ResourceCard
 import scatan.model.game.ops.CardOps.removeResourceCard
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.game.ops.CardOps.assignResourcesFromNumber
+import scatan.model.game.ops.RobberOps.moveRobber
 
 object ScatanEffects:
 
@@ -21,11 +23,12 @@ object ScatanEffects:
 
   def RollEffect(result: Int): Effect[RollDice.type, ScatanState] = (state: ScatanState) =>
     require(result != 7, "Use RollSevenEffect for rolling a 7")
-    Some(state)
+    state.assignResourcesFromNumber(result)
 
   def RollSevenEffect(): Effect[RollSeven.type, ScatanState] = (state: ScatanState) => Some(state)
 
-  def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) => Some(state)
+  def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) =>
+    state.moveRobber(hex)
 
   def StoleCardEffect(player: ScatanPlayer): Effect[StoleCard.type, ScatanState] = (state: ScatanState) => Some(state)
 

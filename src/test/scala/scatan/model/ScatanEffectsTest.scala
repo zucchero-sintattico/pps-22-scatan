@@ -8,6 +8,8 @@ import scatan.model.components.ResourceType
 import scatan.model.game.ScatanEffects.TradeWithPlayerEffect
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ScatanGame
+import scatan.model.game.ScatanEffects.RollEffect
+import scatan.model.game.ScatanEffects.PlaceRobberEffect
 
 class ScatanEffectsTest extends BaseTest:
 
@@ -52,4 +54,28 @@ class ScatanEffectsTest extends BaseTest:
         val stateAfterTrade = effect(state)
         stateAfterTrade should be(None)
       case None => fail("Could not assign resource cards")
+  }
+
+  "A RollDice Effect" should "assign resources to players" in {
+    val state = ScatanState(players)
+    val effect = RollEffect(6)
+    val stateAfterRoll = effect(state)
+    stateAfterRoll should not be None
+  }
+
+  "A MoveRobber Effect" should "move the robber in valid position" in {
+    val state = ScatanState(players)
+    val effect =
+      PlaceRobberEffect(
+        state.gameMap.tileWithTerrain.find(h => h != state.robberPlacement).getOrElse(state.gameMap.tiles.head)
+      )
+    val stateAfterRoll = effect(state)
+    stateAfterRoll should not be None
+  }
+
+  it should "not move the robber in invalid position" in {
+    val state = ScatanState(players)
+    val effect = PlaceRobberEffect(state.robberPlacement)
+    val stateAfterRoll = effect(state)
+    stateAfterRoll should be(None)
   }
