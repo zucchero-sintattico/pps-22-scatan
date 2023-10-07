@@ -4,7 +4,7 @@ import scatan.lib.game.dsl.PhaseDSLOps.*
 import scatan.lib.game.dsl.PhasesDSLOps.*
 import scatan.lib.game.dsl.PlayersDSLOps.*
 import scatan.lib.game.dsl.TurnDSLOps.*
-import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps, TypedGameDSL}
+import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps}
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.ops.ScoreOps.*
 
@@ -39,11 +39,11 @@ object ScatanDSL extends GameDSL:
       }
 
       When(SetupSettlement) {
-        ScatanActions.BuildSettlement -> SetupRoad
+        ScatanActions.AssignSettlement -> SetupRoad
       }
 
       When(SetupRoad) {
-        ScatanActions.BuildRoad -> Setupped
+        ScatanActions.AssignRoad -> Setupped
       }
 
     }

@@ -1,16 +1,15 @@
 package scatan.model
 
 import scatan.BaseTest
-import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules}
+import scatan.model.game.ScatanEffects.{AssignRoadEffect, AssignSettlementEffect}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.EmptySpotsOps.emptySpots
+import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.game.{ScatanDSL, ScatanState}
-import scatan.model.map.{RoadSpot, StructureSpot}
 
 class GameTest extends BaseTest:
 
@@ -74,19 +73,23 @@ class GameTest extends BaseTest:
     game.turn.player shouldBe threePlayers.head
   }
 
-  def nextTurn(game: ScatanGame): ScatanGame =
-    val spotToBuild = game.state.emptySpots.collect { case s: StructureSpot => s }.head
-    given Effect[BuildSettlement.type, ScatanState] =
-      BuildSettlementEffect(spotToBuild, game.turn.player)
-    val gameAfterBuildSettlement = game.play(BuildSettlement).get
-    given Effect[BuildRoad.type, ScatanState] = BuildRoadEffect()
-    val gameAfterBuildRoad = gameAfterBuildSettlement.play(BuildRoad).get
-    gameAfterBuildRoad.nextTurn.get
+  def nextTurn(game: ScatanGame): Option[ScatanGame] =
+    for
+      structureSpot <- game.state.emptyStructureSpot.headOption
+      gameAfterBuildSettlement <- game.play(AssignSettlement)(using
+        AssignSettlementEffect(game.turn.player, structureSpot)
+      )
+      roadSpot <- gameAfterBuildSettlement.state.emptyRoadSpot.headOption
+      gameAfterBuildRoad <- gameAfterBuildSettlement.play(AssignRoad)(using
+        AssignRoadEffect(gameAfterBuildSettlement.turn.player, roadSpot)
+      )
+      newGame <- gameAfterBuildRoad.nextTurn
+    yield newGame
 
   it should "allow to change turn" in {
     val game = Game(threePlayers)
-    val newGame = nextTurn(game)
-    println(newGame)
-    newGame.turn.number shouldBe 2
-    newGame.turn.player shouldBe threePlayers(1)
+    for newGame <- nextTurn(game)
+    do
+      newGame.turn.number shouldBe 2
+      newGame.turn.player shouldBe threePlayers(1)
   }

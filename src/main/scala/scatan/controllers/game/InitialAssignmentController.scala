@@ -1,14 +1,10 @@
 package scatan.controllers.game
 
-import scatan.Pages
-import scatan.lib.game.Game
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.components.BuildingType
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
-import scatan.model.game.ScatanState
 import scatan.model.map.{RoadSpot, StructureSpot}
-import scatan.views.game.{GameView, InitialAssignmentView}
+import scatan.views.game.InitialAssignmentView
 
 trait InitialAssignmentController extends Controller[ApplicationState] with PositioningHandler
 
@@ -25,10 +21,10 @@ private class InitialAssignmentControllerImpl(
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     this.model
-      .updateGame(_.buildRoad(spot))
+      .updateGame(_.assignRoad(spot))
       .onError(view.error("Cannot build road here"))
 
   override def onStructureSpot(spot: StructureSpot): Unit =
     this.model
-      .updateGame(_.buildSettlement(spot))
+      .updateGame(_.assignSettlement(spot))
       .onError(view.error("Cannot build settlement here"))
