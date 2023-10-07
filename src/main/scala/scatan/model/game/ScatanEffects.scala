@@ -7,6 +7,9 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.model.components.ResourceCard
+import scatan.model.game.ops.CardOps.removeResourceCard
+import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
 
 object ScatanEffects:
 
@@ -50,4 +53,5 @@ object ScatanEffects:
       receiver: ScatanPlayer,
       senderCards: Seq[ResourceCard],
       receiverCards: Seq[ResourceCard]
-  ): Effect[TradeWithPlayer.type, ScatanState] = (state: ScatanState) => Some(state)
+  ): Effect[TradeWithPlayer.type, ScatanState] =
+    (state: ScatanState) => state.tradeWithPlayer(sender, receiver, senderCards, receiverCards)
