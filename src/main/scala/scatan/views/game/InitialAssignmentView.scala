@@ -38,5 +38,5 @@ private class ScalaJsInitialAssignmentView(
         LeftTabComponent.possibleMovesComponent
       ),
       GameMapComponent.mapComponent,
-      CardsComponent.resourceCardComponent
+      CardsComponent.cardsComponent
     )
