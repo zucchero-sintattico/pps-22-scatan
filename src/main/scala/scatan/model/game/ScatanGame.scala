@@ -70,7 +70,9 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def buildCity(spot: StructureSpot): Option[ScatanGame] =
     play(ScatanActions.BuildCity)(using BuildCityEffect(spot, game.turn.player))
 
-  def buyDevelopmentCard: Option[ScatanGame] = ???
+  def buyDevelopmentCard: Option[ScatanGame] =
+    play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
+
   def playDevelopmentCard: Option[ScatanGame] = ???
   def tradeWithBank: Option[ScatanGame] = ???
   def tradeWithPlayer: Option[ScatanGame] = ???

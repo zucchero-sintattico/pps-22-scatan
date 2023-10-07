@@ -9,7 +9,11 @@ enum DevelopmentType:
   case Monopoly
   case VictoryPoint
 
-final case class DevelopmentCard(developmentType: DevelopmentType)
+final case class DevelopmentCard(
+    developmentType: DevelopmentType,
+    drewAt: Option[Int] = None
+)
+
 type DevelopmentCards = Map[ScatanPlayer, Seq[DevelopmentCard]]
 
 object DevelopmentCards:
