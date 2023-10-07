@@ -49,6 +49,6 @@ object ScatanState:
       Map.empty,
       Award.empty(),
       ResourceCards.empty(players),
-      DevelopmentCardsOfPlayers.empty(players),
+      DevelopmentCards.empty(players),
       Hexagon(0, 0, 0)
     )

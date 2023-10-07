@@ -1,12 +1,11 @@
 package scatan.model.game
 
-import scatan.BaseTest
 import scatan.model.GameMap
 import scatan.model.components.{
   AssignmentInfo,
   Award,
   DevelopmentCard,
-  DevelopmentCardsOfPlayers,
+  DevelopmentCards,
   ResourceCard,
   ResourceCards
 }
@@ -14,15 +13,7 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.EmptySpotsOps.emptySpots
 import scatan.model.map.{Hexagon, Spot}
 
-abstract class BasicStateTest extends BaseTest:
-
-  private def players(n: Int): Seq[ScatanPlayer] =
-    (1 to n).map(i => ScatanPlayer(s"Player $i"))
-
-  protected def emptySpot(state: ScatanState): Spot = state.emptySpots.head
-
-  val threePlayers = players(3)
-  val fourPlayers = players(4)
+class ScatanStateTest extends BasicScatanStateTest:
 
   "A Scatan State" should "exists" in {
     val state = ScatanState(threePlayers)
@@ -69,7 +60,7 @@ abstract class BasicStateTest extends BaseTest:
 
   it should "have development cards" in {
     val state = ScatanState(threePlayers)
-    state.developmentCards should be(DevelopmentCardsOfPlayers.empty(threePlayers))
+    state.developmentCards should be(DevelopmentCards.empty(threePlayers))
   }
 
   it should "have the robber placement" in {

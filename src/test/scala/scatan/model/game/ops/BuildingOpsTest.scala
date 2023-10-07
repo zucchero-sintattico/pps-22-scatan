@@ -4,12 +4,12 @@ import scatan.model.components.*
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ops.EmptySpotsOps.{emptyStructureSpot, emptyRoadSpot}
-import scatan.model.game.BasicStateTest
+import scatan.model.game.BasicScatanStateTest
 import scatan.model.game.ScatanState
 import scatan.model.map.StructureSpot
 import scatan.model.map.RoadSpot
 
-class BuildingOpsTest extends BasicStateTest:
+class BuildingOpsTest extends BasicScatanStateTest:
 
   private def spotToBuildStructure(state: ScatanState): StructureSpot =
     state.emptyStructureSpot.head

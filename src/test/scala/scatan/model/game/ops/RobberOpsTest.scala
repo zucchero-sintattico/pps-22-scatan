@@ -2,10 +2,10 @@ package scatan.model.game.ops
 
 import scatan.model.map.Hexagon
 import scatan.model.game.ops.RobberOps.moveRobber
-import scatan.model.game.BasicStateTest
+import scatan.model.game.BasicScatanStateTest
 import scatan.model.game.ScatanState
 
-class RobberOpsTest extends BasicStateTest:
+class RobberOpsTest extends BasicScatanStateTest:
 
   "A State with Robber Ops" should "have a robber in the center of the map initially" in {
     val state = ScatanState(threePlayers)
