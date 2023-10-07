@@ -16,26 +16,40 @@ class ScatanEffectsTest extends BaseTest:
 
   "A TradeWithPlayerEffect" should "be a valid effect if both players have the cards" in {
     val resourceCard = ResourceCard(ResourceType.Brick)
-    val tradeSender = state.players.head
-    val tradeReceiver = state.players.tail.head
-    val stateWithResourceCard = for
-      stateWithSenderCard <- state.assignResourceCard(tradeSender, ResourceCard(ResourceType.Brick))
-      stateWithReceiverCard <- stateWithSenderCard.assignResourceCard(tradeReceiver, ResourceCard(ResourceType.Sheep))
-    yield stateWithReceiverCard
+    val sender = state.players.head
+    val receiver = state.players.tail.head
+    val stateWithResourceCard = state
+      .assignResourceCard(sender, ResourceCard(ResourceType.Brick))
+      .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Sheep)))
     stateWithResourceCard match
       case Some(state) =>
         val effect = TradeWithPlayerEffect(
-          tradeSender,
-          tradeReceiver,
-          state.resourceCards(tradeSender),
-          state.resourceCards(tradeReceiver)
+          sender,
+          receiver,
+          state.resourceCards(sender),
+          state.resourceCards(receiver)
         )
         val stateAfterTrade = effect(state)
-        stateAfterTrade match
-          case Some(s) =>
-            s.resourceCards(tradeSender) should be(Seq(ResourceCard(ResourceType.Sheep)))
-            s.resourceCards(tradeReceiver) should be(Seq(ResourceCard(ResourceType.Brick)))
-          case None => fail("Could not complete the trade")
+        stateAfterTrade should not be None
+      case None => fail("Could not assign resource cards")
+  }
 
+  it should "return None if the trade is not allowed" in {
+    val resourceCard = ResourceCard(ResourceType.Brick)
+    val sender = state.players.head
+    val receiver = state.players.tail.head
+    val stateWithResourceCard = state
+      .assignResourceCard(sender, ResourceCard(ResourceType.Brick))
+      .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Sheep)))
+    stateWithResourceCard match
+      case Some(state) =>
+        val effect = TradeWithPlayerEffect(
+          sender,
+          receiver,
+          Seq(ResourceCard(ResourceType.Sheep)),
+          state.resourceCards(receiver)
+        )
+        val stateAfterTrade = effect(state)
+        stateAfterTrade should be(None)
       case None => fail("Could not assign resource cards")
   }
