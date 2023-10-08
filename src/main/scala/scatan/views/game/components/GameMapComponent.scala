@@ -11,7 +11,7 @@ import scatan.model.map.{Hexagon, StructureSpot, TileContent}
 import scatan.model.{ApplicationState, GameMap}
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
-import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer}
+import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
 
 object ContextMap:
 
@@ -44,6 +44,8 @@ object ContextMap:
     def viewPlayer: String = updateAndGetPlayer(info.player)
     def viewBuildingType: String = buildings(info.buildingType)
 
+  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
+
 /** A component to display the game map.
   */
 object GameMapComponent:
@@ -55,8 +57,8 @@ object GameMapComponent:
       i <- 0 to 5
       angleDeg = 60 * i + 30
       angleRad = Math.PI / 180 * angleDeg
-      x = hexSize * Math.cos(angleRad)
-      y = hexSize * Math.sin(angleRad)
+      x = hexSize * math.cos(angleRad)
+      y = hexSize * math.sin(angleRad)
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
@@ -226,8 +228,6 @@ object GameMapComponent:
         s"${withType.getOrElse("")}"
       )
     )
-
-  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
 
   private val svgImages: Element =
     svg.svg(
