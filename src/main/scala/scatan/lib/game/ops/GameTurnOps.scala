@@ -32,6 +32,7 @@ object GameTurnOps:
       yield game.copy(
         turn = nextTurn,
         state = nextState,
+        playersIterator = nextPlayersIterator,
         gameStatus = game.gameStatus.copy(
           phase = nextPhase,
           step = initialStep
