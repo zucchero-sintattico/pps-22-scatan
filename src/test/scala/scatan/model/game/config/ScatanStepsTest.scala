@@ -31,3 +31,7 @@ class ScatanStepsTest extends BaseTest:
   it should "be Playing" in {
     ScatanSteps.Playing
   }
+
+  it should "be Changing Turn" in {
+    ScatanSteps.ChangingTurn
+  }
