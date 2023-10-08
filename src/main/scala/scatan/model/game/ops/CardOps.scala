@@ -113,7 +113,6 @@ object CardOps:
       *   Some(ScatanState) if the resources were assigned, None otherwise
       */
     def assignResourcesAfterInitialPlacement: Option[ScatanState] =
-      // take only the last StructureBuilding of each player
       val buildings = state.assignedBuildings.groupBy(_._2.player).map(_._2.last)
       val hexagonsWithTileContent = state.gameMap.toContent
       assignResourceFromHexagonsAndBuildings(buildings = buildings)
