@@ -4,12 +4,14 @@ import scatan.model.map.Hexagon
 import scatan.model.game.ops.RobberOps.moveRobber
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ScatanState
+import scatan.model.components.UnproductiveTerrain.Desert
 
 class RobberOpsTest extends BaseScatanStateTest:
 
-  "A State with Robber Ops" should "have a robber in the center of the map initially" in {
+  "A State with Robber Ops" should "have a robber over the desert initially" in {
     val state = ScatanState(threePlayers)
-    state.robberPlacement should be(Hexagon(0, 0, 0))
+    val desertHexagon = state.gameMap.tiles.find(state.gameMap.toContent(_).terrain == Desert).get
+    state.robberPlacement should be(desertHexagon)
   }
 
   it should "move the robber to a new position" in {
@@ -23,7 +25,7 @@ class RobberOpsTest extends BaseScatanStateTest:
 
   it should "not move the robber to the same position" in {
     val state = ScatanState(threePlayers)
-    val stateWithRobber = state.moveRobber(Hexagon(0, 0, 0))
+    val stateWithRobber = state.moveRobber(state.robberPlacement)
     stateWithRobber should be(None)
   }
 

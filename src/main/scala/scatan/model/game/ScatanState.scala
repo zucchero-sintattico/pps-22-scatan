@@ -43,12 +43,14 @@ object ScatanState:
     */
   def apply(players: Seq[ScatanPlayer]): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
+    val gameMap = GameMap()
+    val desertHexagon = gameMap.tiles.find(gameMap.toContent(_).terrain == UnproductiveTerrain.Desert).get
     ScatanState(
       players,
-      GameMap(),
+      gameMap,
       Map.empty,
       Award.empty(),
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),
-      Hexagon(0, 0, 0)
+      desertHexagon
     )
