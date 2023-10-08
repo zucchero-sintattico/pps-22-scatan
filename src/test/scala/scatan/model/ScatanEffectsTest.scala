@@ -5,11 +5,9 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ScatanState
 import scatan.model.components.ResourceCard
 import scatan.model.components.ResourceType
-import scatan.model.game.ScatanEffects.TradeWithPlayerEffect
+import scatan.model.game.ScatanEffects.{NextTurnEffect, PlaceRobberEffect, RollEffect, TradeWithPlayerEffect}
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ScatanGame
-import scatan.model.game.ScatanEffects.RollEffect
-import scatan.model.game.ScatanEffects.PlaceRobberEffect
 
 class ScatanEffectsTest extends BaseTest:
 
@@ -78,4 +76,11 @@ class ScatanEffectsTest extends BaseTest:
     val effect = PlaceRobberEffect(state.robberPlacement)
     val stateAfterRoll = effect(state)
     stateAfterRoll should be(None)
+  }
+
+  "A Next Turn Effect" should "exists" in {
+    val state = ScatanState(players)
+    val effect = NextTurnEffect()
+    val stateAfterRoll = effect(state)
+    stateAfterRoll should not be None
   }

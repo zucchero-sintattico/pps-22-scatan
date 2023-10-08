@@ -49,7 +49,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
     if validateNames(usernames*) then
       println(usernames)
       this.controller.startGame(usernames*)
-      this.navigateTo(Pages.InitialAssignment)
+      this.navigateTo(Pages.Game)
 
   override def switchToHome(): Unit =
     this.navigateTo(Pages.Home)

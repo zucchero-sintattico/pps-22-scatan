@@ -26,13 +26,15 @@ private trait ScatanGameStatus(
   def gameStatus: GameStatus[ScatanPhases, ScatanSteps] = game.gameStatus
   def isOver: Boolean = game.isOver
   def winner: Option[ScatanPlayer] = game.winner
-  def nextTurn: Option[ScatanGame] = game.nextTurn.map(ScatanGame.apply)
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
 
 private trait ScatanGameActions extends ScatanGameStatus:
 
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
+
+  def nextTurn: Option[ScatanGame] =
+    play(ScatanActions.NextTurn)(using NextTurnEffect())
 
   /*
    * Assign Ops

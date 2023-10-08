@@ -35,12 +35,12 @@ class ScatanRulesTest extends BaseTest:
     rules.startingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.Starting)
   }
 
-  it should "allow to change turn on Setupped step when in Setup phase" in {
-    rules.endingSteps.get(ScatanPhases.Setup) shouldBe Some(ScatanSteps.Setupped)
+  it should "change turn on Changing Turn step when in Setup phase" in {
+    rules.endingSteps.get(ScatanPhases.Setup) shouldBe Some(ScatanSteps.ChangingTurn)
   }
 
-  it should "allow to change turn on Playing step when in Game phase" in {
-    rules.endingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.Playing)
+  it should "change turn on Changing Turn step when in Game phase" in {
+    rules.endingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.ChangingTurn)
   }
 
   it should "specify that the next phase after Setup is Game" in {
@@ -85,9 +85,9 @@ class ScatanRulesTest extends BaseTest:
     rules.allowedActions(status) shouldBe Set(ScatanActions.AssignRoad)
   }
 
-  it should "go in Setupped step when Assigning a road in Setup phase and SetupRoad step" in {
+  it should "go in Changing Turn step when Assigning a road in Setup phase and SetupRoad step" in {
     val status = GameStatus(ScatanPhases.Setup, ScatanSteps.SetupRoad)
-    rules.nextSteps((status, ScatanActions.AssignRoad)) shouldBe ScatanSteps.Setupped
+    rules.nextSteps((status, ScatanActions.AssignRoad)) shouldBe ScatanSteps.ChangingTurn
   }
 
   it should "allow to roll dice and play a development card when in Game phase and Starting step" in {
@@ -134,7 +134,7 @@ class ScatanRulesTest extends BaseTest:
     rules.nextSteps((status, ScatanActions.StoleCard)) shouldBe ScatanSteps.Playing
   }
 
-  it should "remain in Playing step when in Game phase and Playing step" in {
+  it should "remain in Playing step when in Game phase and Playing step except for Next Turn" in {
     val status = GameStatus(ScatanPhases.Game, ScatanSteps.Playing)
     rules.allowedActions(status) shouldBe Set(
       ScatanActions.BuildSettlement,
@@ -143,8 +143,10 @@ class ScatanRulesTest extends BaseTest:
       ScatanActions.BuyDevelopmentCard,
       ScatanActions.PlayDevelopmentCard,
       ScatanActions.TradeWithBank,
-      ScatanActions.TradeWithPlayer
+      ScatanActions.TradeWithPlayer,
+      ScatanActions.NextTurn
     )
-    for action <- rules.allowedActions(status)
+    for action <- rules.allowedActions(status).filter(_ != ScatanActions.NextTurn)
     do rules.nextSteps((status, action)) shouldBe ScatanSteps.Playing
+    rules.nextSteps((status, ScatanActions.NextTurn)) shouldBe ScatanSteps.ChangingTurn
   }
