@@ -11,6 +11,7 @@ import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ScatanState
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ops.CardOps.removeResourceCard
+import scatan.model.game.ops.CardOps.assignResourcesAfterInitialPlacement
 
 class ResCardOpsTest extends BaseScatanStateTest:
 
@@ -107,4 +108,29 @@ class ResCardOpsTest extends BaseScatanStateTest:
           .resourceCards(stateWithResources.players.head)
           .filter(_.resourceType == ResourceType.Sheep) should have size 2
       case None => fail("stateWithResources should be defined")
+  }
+
+  it should "assign only the resource card corresponding to the last building placed after initial phase" in {
+    val state = ScatanState(threePlayers)
+    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Brick).head._1
+    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
+    // simulate initial placement
+    val stateWithBuildings = state
+      .assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head))
+    stateWithBuildings match
+      case Some(state) =>
+        state.assignResourcesAfterInitialPlacement match
+          case Some(stateWithResources) =>
+            stateWithResources.resourceCards(state.players.head).size should be <= 3 // max number of resources
+            stateWithResources.resourceCards(state.players.tail.head).size should be <= 3 // max number of resources
+            stateWithResources
+              .resourceCards(state.players.tail.tail.head)
+              .size should be <= 3 // max number of resources
+          case None => fail("Resources not assigned")
+      case None => fail("Buildings not assigned")
   }

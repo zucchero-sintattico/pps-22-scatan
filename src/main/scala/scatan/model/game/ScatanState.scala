@@ -6,6 +6,7 @@ import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
+import scala.collection.mutable.ListMap
 
 /** Represents the state of a Scatan game.
   *
@@ -52,8 +53,8 @@ object ScatanState:
     val desertHexagon = gameMap.tiles.find(gameMap.toContent(_).terrain == UnproductiveTerrain.Desert).get
     ScatanState(
       players,
-      gameMap,
-      Map.empty,
+      GameMap(),
+      AssignedBuildings.empty,
       Award.empty(),
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),

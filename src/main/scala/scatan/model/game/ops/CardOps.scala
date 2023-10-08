@@ -5,6 +5,7 @@ import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 import scatan.model.game.ops.AwardOps.*
+import scatan.model.components.AssignedBuildings
 
 object CardOps:
 
@@ -49,9 +50,12 @@ object CardOps:
       * @return
       *   Some(ScatanState) if the resources were assigned, None otherwise
       */
-    def assignResourceFromHexagons(hexagonsWithTileContent: Map[Hexagon, TileContent]): Option[ScatanState] =
+    private def assignResourceFromHexagonsAndBuildings(
+        hexagonsWithTileContent: Map[Hexagon, TileContent] = state.gameMap.toContent,
+        buildings: AssignedBuildings = state.assignedBuildings
+    ): Option[ScatanState] =
       val buildingsInHexagonsSpots =
-        state.assignedBuildings.filter((s, _) =>
+        buildings.filter((s, _) =>
           s match
             case structure: StructureSpot => structure.toSet.intersect(hexagonsWithTileContent.keys.toSet).nonEmpty
             case _: RoadSpot              => false
@@ -100,7 +104,22 @@ object CardOps:
               tileContent
           ) => tileContent.number.fold(false)(_ == number) && hexagon != state.robberPlacement
         )
-      assignResourceFromHexagons(hexagonsFilteredByNumber)
+      assignResourceFromHexagonsAndBuildings(hexagonsWithTileContent = hexagonsFilteredByNumber)
+
+    /** Assigns resources to players based on the tile content of the hexagons where their buildings are located. This
+      * method is used only for the initial placement of the buildings.
+      *
+      * @return
+      *   Some(ScatanState) if the resources were assigned, None otherwise
+      */
+    def assignResourcesAfterInitialPlacement: Option[ScatanState] =
+      // take only the last Structure Building for each player
+      val structureBuildingCount =
+        state.assignedBuildings.count((_, building) => building.buildingType == BuildingType.Settlement)
+      val buildings = state.assignedBuildings
+        .filter((_, building) => building.buildingType == BuildingType.Settlement)
+        .takeRight(structureBuildingCount / 2)
+      assignResourceFromHexagonsAndBuildings(buildings = buildings)
 
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
       * added to the player's list of development cards. The assigned awards are updated.
