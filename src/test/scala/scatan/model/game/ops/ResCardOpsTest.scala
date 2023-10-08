@@ -11,6 +11,7 @@ import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ScatanState
 import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ops.CardOps.removeResourceCard
+import scatan.model.game.ops.CardOps.assignResourcesAfterInitialPlacement
 
 class ResCardOpsTest extends BaseScatanStateTest:
 
@@ -106,5 +107,25 @@ class ResCardOpsTest extends BaseScatanStateTest:
         stateWithResources
           .resourceCards(stateWithResources.players.head)
           .filter(_.resourceType == ResourceType.Sheep) should have size 2
+      case None => fail("stateWithResources should be defined")
+  }
+
+  it should "assign only the resource card corresponding to the last building placed after initial phase" in {
+    val state = ScatanState(threePlayers)
+    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
+    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
+    val stateWithResources = for
+      stateWithSettlement <- state.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
+      stateWithCity <- stateWithSettlement.assignBuilding(
+        spotWhereToBuild.next(),
+        BuildingType.Settlement,
+        state.players.head
+      )
+      stateWithResources <- stateWithCity.assignResourcesAfterInitialPlacement
+    yield stateWithResources
+    stateWithResources match
+      case Some(stateWithResources) =>
+        stateWithResources
+          .resourceCards(stateWithResources.players.head) should have size 1
       case None => fail("stateWithResources should be defined")
   }
