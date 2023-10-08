@@ -113,6 +113,7 @@ object CardOps:
       *   Some(ScatanState) if the resources were assigned, None otherwise
       */
     def assignResourcesAfterInitialPlacement: Option[ScatanState] =
+      // take only the last Structure Building for each player
       val structureBuildingCount =
         state.assignedBuildings.count((_, building) => building.buildingType == BuildingType.Settlement)
       val buildings = state.assignedBuildings
