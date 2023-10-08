@@ -93,3 +93,7 @@ class RulesTest extends BaseTest:
       (GameStatus(MyPhases.Game, Steps.Initial), Actions.NextTurn) -> Steps.ChangingTurn
     )
   }
+
+  it should "have an initial action for each phase" in {
+    emptyGameRules.initialAction shouldBe a[Map[MyPhases, State => State]]
+  }
