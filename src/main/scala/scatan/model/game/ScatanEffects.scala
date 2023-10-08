@@ -16,6 +16,8 @@ import scatan.model.game.ops.RobberOps.moveRobber
 
 object ScatanEffects:
 
+  def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = (state: ScatanState) => Some(state)
+
   def AssignSettlementEffect(player: ScatanPlayer, spot: StructureSpot): Effect[AssignSettlement.type, ScatanState] =
     (state: ScatanState) => state.assignBuilding(spot, BuildingType.Settlement, player)
 
