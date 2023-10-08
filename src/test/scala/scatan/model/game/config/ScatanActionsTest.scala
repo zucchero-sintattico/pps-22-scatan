@@ -51,7 +51,7 @@ class ScatanActionsTest extends BaseTest:
   it should "be assign road" in {
     ScatanActions.AssignRoad
   }
-  
+
   it should "be next turn" in {
     ScatanActions.NextTurn
   }
