@@ -60,6 +60,25 @@ body {
     opacity: 1;
 }
 
+.robber {
+    stroke: rgb(255, 70, 70);
+    opacity: 0.7;
+    stroke-width: 10px;
+}
+
+.hexagon-center-circle {
+    fill: white;
+}
+
+.hexagon-center-number,
+.spot-text {
+    fill: black;
+    text-anchor: middle;
+    dominant-baseline: central;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
 /* end Game */
 
 .home-view {

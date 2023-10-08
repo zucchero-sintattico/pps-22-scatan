@@ -5,6 +5,7 @@ import scatan.model.components.BuildingType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
+import scala.collection.immutable.ListMap
 
 type ResourceCost = (ResourceType, Int)
 type Cost = Map[ResourceType, Int]
@@ -53,7 +54,10 @@ object AssignmentInfo:
 
 /** A map of assigned buildings.
   */
-type AssignedBuildings = Map[Spot, AssignmentInfo]
+type AssignedBuildings = ListMap[Spot, AssignmentInfo]
+
+object AssignedBuildings:
+  def empty: AssignedBuildings = Map.empty[Spot, AssignmentInfo].to(ListMap)
 
 object AssignmentFactory:
   def apply(spot: Spot, player: ScatanPlayer, buildingType: BuildingType): (Spot, AssignmentInfo) =

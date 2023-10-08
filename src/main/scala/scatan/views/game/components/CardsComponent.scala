@@ -10,13 +10,13 @@ import scatan.model.game.ScatanState
 import scatan.model.components.DevelopmentType
 import scatan.model.components.DevelopmentType.*
 import scatan.views.game.components.CardContextMap.cardImages
-import scatan.views.game.components.CardContextMap.countCardtOf
+import scatan.views.game.components.CardContextMap.countCardOf
 import scatan.views.game.components.CardContextMap.CardType
 import scatan.controllers.game.GameController
 
 object CardContextMap:
   extension (state: ScatanState)
-    def countCardtOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
+    def countCardOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
       case resourceType: ResourceType =>
         state.resourceCards(player).count(_.resourceType == resourceType)
       case developmentType: DevelopmentType =>
@@ -60,7 +60,7 @@ object CardsComponent:
             (for
               game <- state.game
               currentPlayer = game.turn.player
-              resourceCount = game.state.countCardtOf(currentPlayer)(cardType)
+              resourceCount = game.state.countCardOf(currentPlayer)(cardType)
             yield resourceCount).getOrElse(0)
           )
         ),

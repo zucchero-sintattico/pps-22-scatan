@@ -6,6 +6,7 @@ import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
+import scala.collection.mutable.ListMap
 
 /** Represents the state of a Scatan game.
   *
@@ -48,13 +49,15 @@ object ScatanState:
 
   def apply(players: Seq[ScatanPlayer], developmentCardsDeck: DevelopmentCardsDeck): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
+    val gameMap = GameMap()
+    val desertHexagon = gameMap.tiles.find(gameMap.toContent(_).terrain == UnproductiveTerrain.Desert).get
     ScatanState(
       players,
       GameMap(),
-      Map.empty,
+      AssignedBuildings.empty,
       Award.empty(),
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),
       developmentCardsDeck,
-      Hexagon(0, 0, 0)
+      desertHexagon
     )
