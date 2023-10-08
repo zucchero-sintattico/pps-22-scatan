@@ -5,7 +5,6 @@ enum ScatanSteps:
 
   case SetupRoad
   case SetupSettlement
-  case Setupped
 
   case Starting
   case PlaceRobber

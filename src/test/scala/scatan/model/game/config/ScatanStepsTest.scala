@@ -12,10 +12,6 @@ class ScatanStepsTest extends BaseTest:
     ScatanSteps.SetupRoad
   }
 
-  it should "be Setupped" in {
-    ScatanSteps.Setupped
-  }
-
   it should "be Starting" in {
     ScatanSteps.Starting
   }
