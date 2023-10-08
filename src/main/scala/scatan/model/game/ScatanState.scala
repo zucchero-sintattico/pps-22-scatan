@@ -5,6 +5,7 @@ import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
+import scala.collection.mutable.ListMap
 
 /** Represents the state of a Scatan game.
   *
@@ -46,7 +47,7 @@ object ScatanState:
     ScatanState(
       players,
       GameMap(),
-      Map.empty,
+      AssignedBuildings.empty,
       Award.empty(),
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),
