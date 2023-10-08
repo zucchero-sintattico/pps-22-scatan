@@ -29,7 +29,7 @@ final case class ScatanState(
     players: Seq[ScatanPlayer],
     gameMap: GameMap,
     assignedBuildings: AssignedBuildings,
-    assignedAwards: Awards = Award.empty,
+    assignedAwards: Awards,
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
     developmentCardsDeck: DevelopmentCardsDeck,
