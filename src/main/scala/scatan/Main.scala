@@ -1,10 +1,7 @@
 package scatan
-import com.raquo.laminar.api.L.given
 import scatan.lib.mvc.NavigableApplicationManager
 import scatan.lib.mvc.application.NavigableApplication
 import scatan.model.ApplicationState
-
-import scala.util.Random
 
 val Application = NavigableApplication(
   initialState = ApplicationState(),

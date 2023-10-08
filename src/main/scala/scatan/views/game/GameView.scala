@@ -1,30 +1,31 @@
 package scatan.views.game
 
-import scatan.controllers.game.GameController
-import scatan.Pages
 import com.raquo.laminar.api.L.*
+import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
-import scatan.model.map.Spot
-import scatan.model.map.Hexagon
-import scatan.model.GameMap
-import scatan.views.game.components.GameMapComponent.getMapComponent
+import scatan.model.ApplicationState
+import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
 
-trait GameView extends View
+trait GameView extends View[ApplicationState]
 
 object GameView:
   def apply(container: String, requirements: View.Requirements[GameController]): GameView =
     ScalaJsGameView(container, requirements)
 
 private class ScalaJsGameView(container: String, requirements: View.Requirements[GameController])
-    extends BaseScalaJSView(container, requirements)
+    extends BaseScalaJSView[ApplicationState, GameController](container, requirements)
     with GameView:
 
-  val gameMap = GameMap()
-
+  given Signal[ApplicationState] = this.reactiveState
+  given GameController = this.controller
   override def element: Element =
     div(
-      display := "block",
-      width := "50%",
-      margin := "auto",
-      getMapComponent(gameMap)
+      div(
+        className := LeftTabComponent.leftTabCssClass,
+        LeftTabComponent.currentPlayerComponent,
+        LeftTabComponent.buttonsComponent,
+        LeftTabComponent.possibleMovesComponent
+      ),
+      GameMapComponent.mapComponent,
+      CardsComponent.cardsComponent
     )

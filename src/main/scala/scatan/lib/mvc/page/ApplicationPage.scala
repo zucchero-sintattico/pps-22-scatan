@@ -15,20 +15,20 @@ import scatan.lib.mvc.{Controller, Model, View}
   * @param pageFactory
   *   The page factory.
   */
-trait ApplicationPage[S <: Model.State, C <: Controller, V <: View](
+trait ApplicationPage[S <: Model.State, C <: Controller[?], V <: View[?]](
     override val model: Model[S],
     val pageFactory: PageFactory[C, V, S]
 ) extends View.Requirements[C]
     with Controller.Requirements[V, S]:
-  private lazy val _controller: C = pageFactory.controllerFactory(this)
-  private lazy val _view: V = pageFactory.viewFactory(this)
+  lazy val _view: V = pageFactory.viewFactory(this)
+  lazy val _controller: C = pageFactory.controllerFactory(this)
   override def controller: C = _controller
   override def view: V = _view
 
 object ApplicationPage:
-  type Factory[S <: Model.State, C <: Controller, V <: View] =
+  type Factory[S <: Model.State, C <: Controller[S], V <: View[S]] =
     Model[S] => ApplicationPage[S, C, V]
-  def apply[S <: Model.State, C <: Controller, V <: View](
+  def apply[S <: Model.State, C <: Controller[?], V <: View[?]](
       model: Model[S],
       pageFactory: PageFactory[C, V, S]
   ): ApplicationPage[S, C, V] =
