@@ -11,7 +11,7 @@ final case class Award(awardType: AwardType)
 type Awards = Map[Award, Option[(ScatanPlayer, Int)]]
 
 object Award:
-  def empty(): Awards =
+  def empty: Awards =
     Map(
       Award(AwardType.LargestArmy) -> Option.empty[(ScatanPlayer, Int)],
       Award(AwardType.LongestRoad) -> Option.empty[(ScatanPlayer, Int)]

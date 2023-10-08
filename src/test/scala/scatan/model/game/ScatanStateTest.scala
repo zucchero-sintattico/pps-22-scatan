@@ -43,7 +43,7 @@ class ScatanStateTest extends BaseScatanStateTest:
 
   it should "have assigned awards" in {
     val state = ScatanState(threePlayers)
-    state.assignedAwards should be(Award.empty())
+    state.assignedAwards should be(Award.empty)
   }
 
   it should "have resource cards" in {
