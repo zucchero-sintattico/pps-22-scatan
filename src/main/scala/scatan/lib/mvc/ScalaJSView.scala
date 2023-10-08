@@ -25,7 +25,7 @@ trait ScalaJSView[State <: Model.State](
     containerElement.children.foreach(_.remove())
     render(containerElement, div())
 
-  override def error(message: String): Unit =
+  override def displayMessage(message: String): Unit =
     dom.window.alert(message)
 
 object ScalaJSView:

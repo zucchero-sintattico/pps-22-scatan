@@ -46,8 +46,9 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def assignRoad(road: RoadSpot): Option[ScatanGame] =
     play(AssignRoad)(using AssignRoadEffect(game.turn.player, road))
 
-  def rollDice: Option[ScatanGame] =
+  def rollDice(using callback: Int => Unit = x => ()): Option[ScatanGame] =
     val roll = Random.nextInt(6) + 1 + Random.nextInt(6) + 1
+    callback(roll)
     roll match
       case 7 =>
         play(RollSeven)(using RollSevenEffect())

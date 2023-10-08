@@ -30,7 +30,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
 
   override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
 
-  override def rollDice(): Unit = this.model.updateGame(_.rollDice);
+  override def rollDice(): Unit =
+    this.model.updateGame(_.rollDice(using x => this.view.displayMessage(s"Roll dice result: $x")));
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     val phase = this.model.state.game.map(_.gameStatus.phase).get
@@ -38,11 +39,11 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       case Setup =>
         this.model
           .updateGame(_.assignRoad(spot))
-          .onError(view.error("Cannot assign road here"))
+          .onError(view.displayMessage("Cannot assign road here"))
       case Game =>
         this.model
           .updateGame(_.buildRoad(spot))
-          .onError(view.error("Cannot build road here"))
+          .onError(view.displayMessage("Cannot build road here"))
 
   override def onStructureSpot(spot: StructureSpot): Unit =
     val phase = this.model.state.game.map(_.gameStatus.phase).get
@@ -50,7 +51,7 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       case Setup =>
         this.model
           .updateGame(_.assignSettlement(spot))
-          .onError(view.error("Cannot assign settlement here"))
+          .onError(view.displayMessage("Cannot assign settlement here"))
       case Game =>
         val alreadyContainsSettlement = this.model.state.game
           .map(_.state)
@@ -60,8 +61,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
         if alreadyContainsSettlement then
           this.model
             .updateGame(_.buildCity(spot))
-            .onError(view.error("Cannot build city here"))
+            .onError(view.displayMessage("Cannot build city here"))
         else
           this.model
             .updateGame(_.buildSettlement(spot))
-            .onError(view.error("Cannot build settlement here"))
+            .onError(view.displayMessage("Cannot build settlement here"))
