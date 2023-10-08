@@ -193,9 +193,14 @@ body {
 }
 
 .game-view-player {
-    font-size: 3em;
+    font-size: 1.5em;
 }
-
+.game-view-phase {
+    font-size: 1em;
+}
+.game-view-step {
+    font-size: 1em;
+}
 .game-view-buttons {
     margin-top: 1em;
     display: flex;
@@ -204,9 +209,9 @@ body {
 }
 
 .game-view-button {
-    width: 30%;
+    width: 25%;
     height: 3em;
-    font-size: large;
+    font-size: 1em;
     font-weight: bold;
     border-radius: 1em;
 }
@@ -221,7 +226,7 @@ body {
 
 .game-view-moves {
     margin-top: 1em;
-    font-size: 2em;
+    font-size: 1em;
 }
 
 .game-view-move {

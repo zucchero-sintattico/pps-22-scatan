@@ -15,7 +15,7 @@ object LeftTabComponent:
 
   def currentPlayerComponent(using view: Signal[ApplicationState]): Element =
     div(
-      h1(
+      h2(
         className := "game-view-player",
         child.text <-- view
           .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
