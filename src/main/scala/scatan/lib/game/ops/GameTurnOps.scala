@@ -41,6 +41,6 @@ object GameTurnOps:
       *   None if the game is over or it is not allowed to advance to the next turn in the current status, or a new game
       *   with the next turn.
       */
-    def nextTurn: Option[Game[State, PhaseType, StepType, Action, Player]] =
+    private[ops] def nextTurn: Option[Game[State, PhaseType, StepType, Action, Player]] =
       if game.playersIterator.hasNext then nextTurnInSamePhase
       else nextTurnInNextPhase

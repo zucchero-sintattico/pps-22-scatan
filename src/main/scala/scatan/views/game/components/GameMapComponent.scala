@@ -11,7 +11,7 @@ import scatan.model.map.{Hexagon, StructureSpot, TileContent}
 import scatan.model.{ApplicationState, GameMap}
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
-import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer}
+import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
 
 object ContextMap:
 
@@ -44,6 +44,8 @@ object ContextMap:
     def viewPlayer: String = updateAndGetPlayer(info.player)
     def viewBuildingType: String = buildings(info.buildingType)
 
+  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
+
 /** A component to display the game map.
   */
 object GameMapComponent:
@@ -55,8 +57,8 @@ object GameMapComponent:
       i <- 0 to 5
       angleDeg = 60 * i + 30
       angleRad = Math.PI / 180 * angleDeg
-      x = hexSize * Math.cos(angleRad)
-      y = hexSize * Math.sin(angleRad)
+      x = hexSize * math.cos(angleRad)
+      y = hexSize * math.sin(angleRad)
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
@@ -81,7 +83,8 @@ object GameMapComponent:
       for
         hex <- gameMap.tiles.toList
         content = gameMap.toContent(hex)
-      yield svgHexagonWithNumber(hex, content),
+        hasRobber = state.robberPlacement == hex
+      yield svgHexagonWithNumber(hex, content, hasRobber),
       for
         road <- gameMap.edges.toList
         spot1Coordinates <- road._1.coordinates
@@ -104,7 +107,7 @@ object GameMapComponent:
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(hex: Hexagon, tileContent: TileContent): Element =
+  private def svgHexagonWithNumber(hex: Hexagon, tileContent: TileContent, hasRobber: Boolean): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
@@ -113,9 +116,9 @@ object GameMapComponent:
         svg.cls := "hexagon",
         svg.fill := s"url(#${tileContent.terrain.toImgId})"
       ),
-      tileContent.number match
-        case Some(n) => circularNumber(n)
-        case _       => ""
+      tileContent.terrain match
+        case Sea => ""
+        case _   => circularNumberWithRobber(tileContent.number, hasRobber)
     )
 
   /** A svg circular number
@@ -123,25 +126,38 @@ object GameMapComponent:
     *   the number to display
     * @return
     */
-  private def circularNumber(number: Int): Element =
+  private def circularNumberWithRobber(number: Option[Int], hasRobber: Boolean): Element =
     svg.g(
       svg.circle(
         svg.cx := "0",
         svg.cy := "0",
         svg.r := s"$radius",
-        svg.className := "hexagon-number",
-        svg.fill := "white"
+        svg.className := "hexagon-center-circle"
       ),
       svg.text(
         svg.x := "0",
         svg.y := "0",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
-        s"$number"
+        svg.className := "hexagon-center-number",
+        number.map(_.toString).getOrElse("")
+      ),
+      if hasRobber then robberCross else ""
+    )
+
+  private def robberCross: Element =
+    svg.g(
+      svg.className := "robber",
+      svg.line(
+        svg.x1 := s"-${radius}",
+        svg.y1 := s"-${radius}",
+        svg.x2 := s"$radius",
+        svg.y2 := s"$radius"
+      ),
+      svg.line(
+        svg.x1 := s"-${radius}",
+        svg.y1 := s"${radius}",
+        svg.x2 := s"$radius",
+        svg.y2 := s"-$radius"
       )
     )
 
@@ -207,17 +223,11 @@ object GameMapComponent:
       svg.text(
         svg.x := s"${x}",
         svg.y := s"${y}",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
+        svg.className := "spot-text",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
         s"${withType.getOrElse("")}"
       )
     )
-
-  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
 
   private val svgImages: Element =
     svg.svg(

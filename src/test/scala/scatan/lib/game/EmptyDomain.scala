@@ -8,6 +8,7 @@ import scatan.lib.game.dsl.PhasesDSLOps.On
 import scatan.lib.game.dsl.PlayersDSLOps.canBe
 import scatan.lib.game.dsl.TurnDSLOps.*
 import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, TurnDSLOps}
+import scatan.lib.game.ops.Effect
 
 object EmptyDomain:
   type EmptyDomainRules = scatan.lib.game.Rules[State, MyPhases, Steps, Actions, Player]
@@ -18,9 +19,13 @@ object EmptyDomain:
     case GameOver
   enum Steps:
     case Initial
+    case ChangingTurn
   enum Actions:
     case StartGame
     case NotPlayableAction
+    case NextTurn
+
+  def NextTurnEffect: Effect[Actions.NextTurn.type, State] = (state: State) => Some(state)
 
   object EmptyGameDSL extends GameDSL:
     override type State = EmptyDomain.State
@@ -47,13 +52,16 @@ object EmptyDomain:
         Turn {
           Iterate(once)
           StartIn(Initial)
-          CanEndIn(Initial)
+          CanEndIn(ChangingTurn)
           NextPhase(GameOver)
         }
 
-        When(Steps.Initial) {
-          Actions.StartGame -> Steps.Initial
-        }
+        When(Steps.Initial)(
+          Actions.StartGame -> Steps.Initial,
+          Actions.NextTurn -> Steps.ChangingTurn
+        )
+
+        When(Steps.ChangingTurn)()
 
       }
 
@@ -62,7 +70,7 @@ object EmptyDomain:
         Turn {
           Iterate(once)
           StartIn(Initial)
-          CanEndIn(Initial)
+          CanEndIn(ChangingTurn)
           NextPhase(GameOver)
         }
 

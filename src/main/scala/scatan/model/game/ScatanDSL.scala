@@ -34,7 +34,7 @@ object ScatanDSL extends GameDSL:
       Turn {
         Iterate(circularWithBack)
         StartIn(SetupSettlement)
-        CanEndIn(Setupped)
+        CanEndIn(ChangingTurn)
         NextPhase(ScatanPhases.Game)
       }
 
@@ -43,8 +43,10 @@ object ScatanDSL extends GameDSL:
       )
 
       When(SetupRoad)(
-        ScatanActions.AssignRoad -> Setupped
+        ScatanActions.AssignRoad -> ChangingTurn
       )
+
+      When(ChangingTurn)()
 
     }
 
@@ -53,7 +55,7 @@ object ScatanDSL extends GameDSL:
       Turn {
         Iterate(normal)
         StartIn(Starting)
-        CanEndIn(Playing)
+        CanEndIn(ChangingTurn)
       }
 
       When(Starting)(
@@ -77,7 +79,10 @@ object ScatanDSL extends GameDSL:
         ScatanActions.BuyDevelopmentCard -> Playing,
         ScatanActions.PlayDevelopmentCard -> Playing,
         ScatanActions.TradeWithBank -> Playing,
-        ScatanActions.TradeWithPlayer -> Playing
+        ScatanActions.TradeWithPlayer -> Playing,
+        ScatanActions.NextTurn -> ChangingTurn
       )
+
+      When(ChangingTurn)()
     }
   }
