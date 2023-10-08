@@ -43,7 +43,7 @@ object ScatanDSL extends GameDSL:
       )
 
       When(SetupRoad)(
-        ScatanActions.AssignRoad -> Setupped
+        ScatanActions.AssignRoad -> ChangingTurn
       )
 
     }
@@ -77,7 +77,8 @@ object ScatanDSL extends GameDSL:
         ScatanActions.BuyDevelopmentCard -> Playing,
         ScatanActions.PlayDevelopmentCard -> Playing,
         ScatanActions.TradeWithBank -> Playing,
-        ScatanActions.TradeWithPlayer -> Playing
+        ScatanActions.TradeWithPlayer -> Playing,
+        ScatanActions.NextTurn -> ChangingTurn
       )
     }
   }
