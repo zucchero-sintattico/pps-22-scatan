@@ -27,5 +27,5 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
         LeftTabComponent.possibleMovesComponent
       ),
       GameMapComponent.mapComponent,
-      CardsComponent.resourceCardComponent
+      CardsComponent.cardsComponent
     )
