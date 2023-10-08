@@ -1,6 +1,6 @@
 package scatan.model.game.ops
 
-import scatan.model.components.{AssignedBuildings, BuildingType, Score}
+import scatan.model.components.{AssignedBuildings, BuildingType, Scores}
 import scatan.model.game.ScatanState
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
@@ -12,7 +12,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
 
   "A State with scores Ops" should "have an empty scoreboard initially" in {
     val state = ScatanState(threePlayers)
-    state.scores should be(Score.empty(threePlayers))
+    state.scores should be(Scores.empty(threePlayers))
   }
 
   it should "increment score to one if assign a settlement" in {

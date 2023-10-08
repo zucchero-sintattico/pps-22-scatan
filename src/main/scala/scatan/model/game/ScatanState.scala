@@ -55,7 +55,7 @@ object ScatanState:
       players,
       GameMap(),
       AssignedBuildings.empty,
-      Award.empty,
+      Awards.empty,
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),
       developmentCardsDeck,

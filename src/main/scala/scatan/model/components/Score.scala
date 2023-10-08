@@ -7,7 +7,7 @@ import scatan.model.game.config.ScatanPlayer
   */
 type Scores = Map[ScatanPlayer, Int]
 
-object Score:
+object Scores:
 
   given Semigroup[Scores] with
     def combine(x: Scores, y: Scores): Scores =

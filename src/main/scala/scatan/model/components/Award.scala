@@ -10,7 +10,7 @@ final case class Award(awardType: AwardType)
 
 type Awards = Map[Award, Option[(ScatanPlayer, Int)]]
 
-object Award:
+object Awards:
   def empty: Awards =
     Map(
       Award(AwardType.LargestArmy) -> Option.empty[(ScatanPlayer, Int)],

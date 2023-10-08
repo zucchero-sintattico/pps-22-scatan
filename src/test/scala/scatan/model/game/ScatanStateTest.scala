@@ -1,7 +1,7 @@
 package scatan.model.game
 
 import scatan.model.GameMap
-import scatan.model.components.{AssignmentInfo, Award, DevelopmentCards, ResourceCards}
+import scatan.model.components.{AssignmentInfo, Awards, DevelopmentCards, ResourceCards}
 import scatan.model.map.{Hexagon, Spot}
 
 import scala.language.postfixOps
@@ -43,7 +43,7 @@ class ScatanStateTest extends BaseScatanStateTest:
 
   it should "have assigned awards" in {
     val state = ScatanState(threePlayers)
-    state.assignedAwards should be(Award.empty)
+    state.assignedAwards should be(Awards.empty)
   }
 
   it should "have resource cards" in {

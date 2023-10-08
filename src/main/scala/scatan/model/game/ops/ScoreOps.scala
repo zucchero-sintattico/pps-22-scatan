@@ -16,7 +16,7 @@ object ScoreOps:
       */
     private def partialScoresWithAwards: Scores =
       val playersWithAwards = state.awards.filter(_._2.isDefined).map(_._2.get)
-      playersWithAwards.foldLeft(Score.empty(state.players))((scores, playerWithCount) =>
+      playersWithAwards.foldLeft(Scores.empty(state.players))((scores, playerWithCount) =>
         scores.updated(playerWithCount._1, scores(playerWithCount._1) + 1)
       )
 
@@ -30,7 +30,7 @@ object ScoreOps:
         case BuildingType.Settlement => 1
         case BuildingType.City       => 2
         case BuildingType.Road       => 0
-      state.assignedBuildings.asPlayerMap.foldLeft(Score.empty(state.players))((scores, buildingsOfPlayer) =>
+      state.assignedBuildings.asPlayerMap.foldLeft(Scores.empty(state.players))((scores, buildingsOfPlayer) =>
         scores.updated(
           buildingsOfPlayer._1,
           buildingsOfPlayer._2.foldLeft(0)((score, buildingType) => score + buildingScore(buildingType))
@@ -44,9 +44,9 @@ object ScoreOps:
       */
     def scores: Scores =
       import cats.syntax.semigroup.*
-      import scatan.model.components.Score.given
+      import scatan.model.components.Scores.given
       val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
-      partialScores.foldLeft(Score.empty(state.players))(_ |+| _)
+      partialScores.foldLeft(Scores.empty(state.players))(_ |+| _)
 
     /** Returns true if the game is over, false otherwise. The game is over when a player has 10 or more points.
       * @return
