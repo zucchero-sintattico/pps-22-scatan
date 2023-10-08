@@ -2,7 +2,7 @@ package scatan.lib.game.dsl
 
 import scatan.lib.game.GameStatus
 import scatan.lib.game.dsl.TurnDSLOps.TurnDSLContext
-import scatan.lib.game.ops.RulesOps.withActions
+import scatan.lib.game.ops.RulesOps.{withActions, withOnEnter}
 
 /** Operations for defining phases and steps in a game.
   */
@@ -13,6 +13,15 @@ object PhaseDSLOps:
     def addStepToPhase(phase: PhaseType, step: StepType, actions: Map[ActionType, StepType]): Unit =
       val status = GameStatus(phase, step)
       dsl.rules = dsl.rules.withActions(status, actions)
+    def addOnEnterToPhase(phase: PhaseType, onEnter: State => State): Unit =
+      dsl.rules = dsl.rules.withOnEnter(phase, onEnter)
+
+  def OnEnter[State, PhaseType, StepType, ActionType, Player](
+      onEnter: State => State
+  )(using
+      phaseDSLContext: PhaseDSLContext[State, PhaseType, StepType, ActionType, Player]
+  ): Unit =
+    phaseDSLContext.addOnEnterToPhase(phaseDSLContext.phase, onEnter)
 
   def Turn[State, PhaseType, StepType, ActionType, Player](
       init: TurnDSLContext[State, PhaseType, StepType, ActionType, Player] ?=> Unit

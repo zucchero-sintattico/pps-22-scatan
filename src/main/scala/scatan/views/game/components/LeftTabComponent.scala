@@ -14,10 +14,22 @@ object LeftTabComponent:
   def leftTabCssClass: String = "game-view-left-tab"
 
   def currentPlayerComponent(using view: Signal[ApplicationState]): Element =
-    h1(
-      className := "game-view-player",
-      child.text <-- view
-        .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
+    div(
+      h2(
+        className := "game-view-player",
+        child.text <-- view
+          .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
+      ),
+      h2(
+        className := "game-view-phase",
+        child.text <-- view
+          .map("Phase: " + _.game.map(_.gameStatus.phase.toString).getOrElse("No phase"))
+      ),
+      h2(
+        className := "game-view-step",
+        child.text <-- view
+          .map("Step: " + _.game.map(_.gameStatus.step.toString).getOrElse("No step"))
+      )
     )
 
   def possibleMovesComponent(using view: Signal[ApplicationState]): Element =

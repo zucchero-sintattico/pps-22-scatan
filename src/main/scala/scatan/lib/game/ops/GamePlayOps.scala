@@ -54,8 +54,7 @@ object GamePlayOps:
           gameStatus = newStatus
         )
       yield
-        if newGame.rules.endingSteps(newGame.gameStatus.phase) == newGame.gameStatus.step then
-          newGame.nextTurn.getOrElse(newGame)
+        if newGame.rules.endingSteps(newGame.gameStatus.phase) == newGame.gameStatus.step then newGame.nextTurn.get
         else newGame
 
   extension (bool: Boolean)

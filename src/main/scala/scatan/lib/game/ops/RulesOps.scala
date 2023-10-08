@@ -92,3 +92,6 @@ object RulesOps:
       */
     def withWinnerFunction(winner: State => Option[Player]): Rules[State, P, S, A, Player] =
       rules.copy(winnerFunction = winner)
+
+    def withOnEnter(phase: P, onEnter: State => State): Rules[State, P, S, A, Player] =
+      rules.copy(initialAction = rules.initialAction + (phase -> onEnter))
