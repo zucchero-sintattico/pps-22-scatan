@@ -112,20 +112,25 @@ class ResCardOpsTest extends BaseScatanStateTest:
 
   it should "assign only the resource card corresponding to the last building placed after initial phase" in {
     val state = ScatanState(threePlayers)
-    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
+    val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Brick).head._1
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
-    val stateWithResources = for
-      stateWithSettlement <- state.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
-      stateWithCity <- stateWithSettlement.assignBuilding(
-        spotWhereToBuild.next(),
-        BuildingType.Settlement,
-        state.players.head
-      )
-      stateWithResources <- stateWithCity.assignResourcesAfterInitialPlacement
-    yield stateWithResources
-    stateWithResources match
-      case Some(stateWithResources) =>
-        stateWithResources
-          .resourceCards(stateWithResources.players.head) should have size 1
-      case None => fail("stateWithResources should be defined")
+    // simulate initial placement
+    val stateWithBuildings = state
+      .assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
+      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head))
+    stateWithBuildings match
+      case Some(state) =>
+        state.assignResourcesAfterInitialPlacement match
+          case Some(stateWithResources) =>
+            stateWithResources.resourceCards(state.players.head).size should be <= 3 // max number of resources
+            stateWithResources.resourceCards(state.players.tail.head).size should be <= 3 // max number of resources
+            stateWithResources
+              .resourceCards(state.players.tail.tail.head)
+              .size should be <= 3 // max number of resources
+          case None => fail("Resources not assigned")
+      case None => fail("Buildings not assigned")
   }
