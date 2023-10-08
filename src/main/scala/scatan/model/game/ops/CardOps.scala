@@ -113,8 +113,11 @@ object CardOps:
       *   Some(ScatanState) if the resources were assigned, None otherwise
       */
     def assignResourcesAfterInitialPlacement: Option[ScatanState] =
-      val buildings = state.assignedBuildings.groupBy(_._2.player).map(_._2.last)
-      val hexagonsWithTileContent = state.gameMap.toContent
+      val structureBuildingCount =
+        state.assignedBuildings.count((_, building) => building.buildingType == BuildingType.Settlement)
+      val buildings = state.assignedBuildings
+        .filter((_, building) => building.buildingType == BuildingType.Settlement)
+        .takeRight(structureBuildingCount / 2)
       assignResourceFromHexagonsAndBuildings(buildings = buildings)
 
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
