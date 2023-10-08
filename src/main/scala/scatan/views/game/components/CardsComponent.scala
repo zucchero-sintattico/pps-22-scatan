@@ -16,7 +16,7 @@ import scatan.controllers.game.GameController
 
 object CardContextMap:
   extension (state: ScatanState)
-    def countCardtOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
+    def countCardOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
       case resourceType: ResourceType =>
         state.resourceCards(player).count(_.resourceType == resourceType)
       case developmentType: DevelopmentType =>
