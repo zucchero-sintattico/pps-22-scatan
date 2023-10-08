@@ -130,18 +130,13 @@ object GameMapComponent:
         svg.cx := "0",
         svg.cy := "0",
         svg.r := s"$radius",
-        svg.className := "hexagon-number",
-        svg.fill := "white"
+        svg.className := "hexagon-center-circle"
       ),
       svg.text(
         svg.x := "0",
         svg.y := "0",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
+        svg.className := "hexagon-center-number",
         number.map(_.toString).getOrElse("")
       ),
       if hasRobber then robberCross else ""
@@ -226,12 +221,8 @@ object GameMapComponent:
       svg.text(
         svg.x := s"${x}",
         svg.y := s"${y}",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
+        svg.className := "spot-text",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
         s"${withType.getOrElse("")}"
       )
     )

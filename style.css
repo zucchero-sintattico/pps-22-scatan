@@ -66,6 +66,19 @@ body {
     stroke-width: 10px;
 }
 
+.hexagon-center-circle {
+    fill: white;
+}
+
+.hexagon-center-number,
+.spot-text {
+    fill: black;
+    text-anchor: middle;
+    dominant-baseline: central;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
 /* end Game */
 
 .home-view {
