@@ -34,7 +34,7 @@ object ScatanDSL extends GameDSL:
       Turn {
         Iterate(circularWithBack)
         StartIn(SetupSettlement)
-        CanEndIn(Setupped)
+        CanEndIn(ChangingTurn)
         NextPhase(ScatanPhases.Game)
       }
 
@@ -53,7 +53,7 @@ object ScatanDSL extends GameDSL:
       Turn {
         Iterate(normal)
         StartIn(Starting)
-        CanEndIn(Playing)
+        CanEndIn(ChangingTurn)
       }
 
       When(Starting)(

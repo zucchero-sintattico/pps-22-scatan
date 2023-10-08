@@ -35,12 +35,12 @@ class ScatanRulesTest extends BaseTest:
     rules.startingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.Starting)
   }
 
-  it should "allow to change turn on Setupped step when in Setup phase" in {
-    rules.endingSteps.get(ScatanPhases.Setup) shouldBe Some(ScatanSteps.Setupped)
+  it should "change turn on Changing Turn step when in Setup phase" in {
+    rules.endingSteps.get(ScatanPhases.Setup) shouldBe Some(ScatanSteps.ChangingTurn)
   }
 
-  it should "allow to change turn on Playing step when in Game phase" in {
-    rules.endingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.Playing)
+  it should "change turn on Changing Turn step when in Game phase" in {
+    rules.endingSteps.get(ScatanPhases.Game) shouldBe Some(ScatanSteps.ChangingTurn)
   }
 
   it should "specify that the next phase after Setup is Game" in {
