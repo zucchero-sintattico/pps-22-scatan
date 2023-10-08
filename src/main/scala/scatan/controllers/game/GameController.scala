@@ -12,6 +12,7 @@ trait PositioningHandler:
   def onStructureSpot(spot: StructureSpot): Unit
 
 trait GameController extends Controller[ApplicationState] with PositioningHandler:
+  def nextTurn(): Unit
   def rollDice(): Unit
 
 object GameController:
@@ -21,6 +22,8 @@ object GameController:
 private class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
     extends BaseController(requirements)
     with GameController:
+
+  override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
 
   override def rollDice(): Unit = this.model.updateGame(_.rollDice);
 
