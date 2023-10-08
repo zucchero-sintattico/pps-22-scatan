@@ -8,15 +8,15 @@ import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
+import scatan.model.map.Hexagon
 
-trait PositioningHandler:
+trait GameController extends Controller[ApplicationState]:
   def onRoadSpot(spot: RoadSpot): Unit
   def onStructureSpot(spot: StructureSpot): Unit
-
-trait GameController extends Controller[ApplicationState] with PositioningHandler:
   def nextTurn(): Unit
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
+  def placeRobber(hexagon: Hexagon): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -25,6 +25,11 @@ object GameController:
 private class GameControllerImpl(requirements: Controller.Requirements[GameView, ApplicationState])
     extends BaseController(requirements)
     with GameController:
+
+  override def placeRobber(hexagon: Hexagon): Unit =
+    this.model
+      .updateGame(_.placeRobber(hexagon))
+      .onError(view.displayMessage("Cannot place robber"))
 
   override def clickCard(card: CardType): Unit = ???
 
