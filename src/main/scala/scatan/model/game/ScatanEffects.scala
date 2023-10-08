@@ -5,7 +5,14 @@ import scatan.model.components.BuildingType
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
+import scatan.model.game.ops.CardOps.buyDevelopmentCard
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
+import scatan.model.components.ResourceCard
+import scatan.model.game.ops.CardOps.removeResourceCard
+import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.game.ops.CardOps.assignResourcesFromNumber
+import scatan.model.game.ops.RobberOps.moveRobber
 
 object ScatanEffects:
 
@@ -17,11 +24,12 @@ object ScatanEffects:
 
   def RollEffect(result: Int): Effect[RollDice.type, ScatanState] = (state: ScatanState) =>
     require(result != 7, "Use RollSevenEffect for rolling a 7")
-    Some(state)
+    state.assignResourcesFromNumber(result)
 
   def RollSevenEffect(): Effect[RollSeven.type, ScatanState] = (state: ScatanState) => Some(state)
 
-  def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) => Some(state)
+  def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) =>
+    state.moveRobber(hex)
 
   def StoleCardEffect(player: ScatanPlayer): Effect[StoleCard.type, ScatanState] = (state: ScatanState) => Some(state)
 
@@ -38,10 +46,17 @@ object ScatanEffects:
   def BuildCityEffect(spot: StructureSpot, player: ScatanPlayer): Effect[BuildCity.type, ScatanState] =
     (state: ScatanState) => state.build(spot, BuildingType.City, player)
 
-  def BuyDevelopmentCardEffect(): Effect[BuyDevelopmentCard.type, ScatanState] = (state: ScatanState) => Some(state)
+  def BuyDevelopmentCardEffect(player: ScatanPlayer, turnNumber: Int): Effect[BuyDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.buyDevelopmentCard(player, turnNumber)
 
   def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = (state: ScatanState) => Some(state)
 
   def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = (state: ScatanState) => Some(state)
 
-  def TradeWithPlayerEffect(): Effect[TradeWithPlayer.type, ScatanState] = (state: ScatanState) => Some(state)
+  def TradeWithPlayerEffect(
+      sender: ScatanPlayer,
+      receiver: ScatanPlayer,
+      senderCards: Seq[ResourceCard],
+      receiverCards: Seq[ResourceCard]
+  ): Effect[TradeWithPlayer.type, ScatanState] =
+    (state: ScatanState) => state.tradeWithPlayer(sender, receiver, senderCards, receiverCards)

@@ -3,6 +3,7 @@ package scatan.model.game
 import scatan.model.GameMap
 import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
 
@@ -30,6 +31,7 @@ final case class ScatanState(
     assignedAwards: Awards = Award.empty(),
     resourceCards: ResourceCards,
     developmentCards: DevelopmentCards,
+    developmentCardsDeck: DevelopmentCardsDeck,
     robberPlacement: Hexagon
 )
 
@@ -42,6 +44,9 @@ object ScatanState:
     *   a new ScatanState with the specified players
     */
   def apply(players: Seq[ScatanPlayer]): ScatanState =
+    ScatanState(players, DevelopmentCardsDeck.defaultOrdered)
+
+  def apply(players: Seq[ScatanPlayer], developmentCardsDeck: DevelopmentCardsDeck): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
     val gameMap = GameMap()
     val desertHexagon = gameMap.tiles.find(gameMap.toContent(_).terrain == UnproductiveTerrain.Desert).get
@@ -52,5 +57,6 @@ object ScatanState:
       Award.empty(),
       ResourceCards.empty(players),
       DevelopmentCards.empty(players),
+      developmentCardsDeck,
       desertHexagon
     )

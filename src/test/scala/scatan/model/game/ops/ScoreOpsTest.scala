@@ -10,7 +10,7 @@ import scatan.model.game.ops.EmptySpotsOps.emptyRoadSpot
 
 class ScoreOpsTest extends BaseScatanStateTest:
 
-  "A State with Scores Ops" should "have an empty scoreboard initially" in {
+  "A State with scores Ops" should "have an empty scoreboard initially" in {
     val state = ScatanState(threePlayers)
     state.scores should be(Score.empty(threePlayers))
   }
