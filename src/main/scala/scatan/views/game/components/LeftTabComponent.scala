@@ -1,11 +1,11 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.{GameController, InitialAssignmentController}
+import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
 import scatan.model.game.config.ScatanActions
-import scatan.views.game.{GameView, InitialAssignmentView}
+import scatan.views.game.GameView
 
 object LeftTabComponent:
 
@@ -33,17 +33,22 @@ object LeftTabComponent:
       )
     )
 
+  def isActionDisabled(using view: Signal[ApplicationState])(action: ScatanActions): Signal[Boolean] =
+    view.map(_.game.exists(!_.allowedActions.contains(action)))
+
   def buttonsComponent(using view: Signal[ApplicationState])(using controller: GameController): Element =
     div(
       className := "game-view-buttons",
       button(
         className := "game-view-button roll-dice-button",
         "Roll dice",
-        onClick --> { _ => controller.rollDice() }
+        onClick --> { _ => controller.rollDice() },
+        disabled <-- isActionDisabled(ScatanActions.RollDice)
       ),
       button(
         className := "game-view-button end-turn-button",
         "End Turn",
-        onClick --> { _ => controller.nextTurn() }
+        onClick --> { _ => controller.nextTurn() },
+        disabled <-- isActionDisabled(ScatanActions.NextTurn)
       )
     )

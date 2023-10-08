@@ -25,6 +25,24 @@ object CardOps:
         )
       )
 
+    /** Removes a resource card from a player.
+      *
+      * @param player
+      * @param resourceCard
+      * @return
+      *   Some(ScatanState) if the resource card was removed, None otherwise
+      */
+    def removeResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
+      if !state.resourceCards(player).contains(resourceCard) then None
+      else
+        val remainingResourceCards =
+          state.resourceCards(player).filter(_.resourceType == resourceCard.resourceType).drop(1)
+        Some(
+          state.copy(
+            resourceCards = state.resourceCards.updated(player, remainingResourceCards)
+          )
+        )
+
     /** Assigns resources to players based on the tile content of the hexagons where their buildings are located.
       * @param hexagonsWithTileContent
       *   a map of hexagons with their corresponding tile content
@@ -101,6 +119,34 @@ object CardOps:
           assignedAwards = state.awards
         )
       )
+
+    def buyDevelopmentCard(player: ScatanPlayer, turnNumber: Int): Option[ScatanState] =
+      // Check that player has required resources and remove them
+      val requiredResources = Seq(
+        ResourceType.Wheat,
+        ResourceType.Sheep,
+        ResourceType.Rock
+      )
+      val playerResources = state.resourceCards(player)
+      val hasRequiredResources = requiredResources.forall(playerResources.map(_.resourceType).contains)
+      if !hasRequiredResources then None
+      else
+        val card = state.developmentCardsDeck.headOption
+        val cardWithTurnNumber = card.map(_.copy(drewAt = Some(turnNumber)))
+        cardWithTurnNumber match
+          case Some(developmentCard) =>
+            val updatedResources = requiredResources.foldLeft(playerResources)((resources, resource) =>
+              resources.filterNot(_.resourceType == resource)
+            )
+            Some(
+              state.copy(
+                resourceCards = state.resourceCards.updated(player, updatedResources),
+                developmentCards =
+                  state.developmentCards.updated(player, state.developmentCards(player) :+ developmentCard),
+                developmentCardsDeck = state.developmentCardsDeck.tail
+              )
+            )
+          case None => None
 
     /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
       * and assigned awards.

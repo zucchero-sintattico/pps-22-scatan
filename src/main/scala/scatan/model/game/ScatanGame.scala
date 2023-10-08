@@ -11,6 +11,7 @@ import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, Scat
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
+import scatan.model.components.ResourceCard
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -25,13 +26,15 @@ private trait ScatanGameStatus(
   def gameStatus: GameStatus[ScatanPhases, ScatanSteps] = game.gameStatus
   def isOver: Boolean = game.isOver
   def winner: Option[ScatanPlayer] = game.winner
-  def nextTurn: Option[ScatanGame] = game.nextTurn.map(ScatanGame.apply)
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
 
 private trait ScatanGameActions extends ScatanGameStatus:
 
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
+
+  def nextTurn: Option[ScatanGame] =
+    play(ScatanActions.NextTurn)(using NextTurnEffect())
 
   /*
    * Assign Ops
@@ -70,10 +73,19 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def buildCity(spot: StructureSpot): Option[ScatanGame] =
     play(ScatanActions.BuildCity)(using BuildCityEffect(spot, game.turn.player))
 
-  def buyDevelopmentCard: Option[ScatanGame] = ???
+  def buyDevelopmentCard: Option[ScatanGame] =
+    play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
+
   def playDevelopmentCard: Option[ScatanGame] = ???
   def tradeWithBank: Option[ScatanGame] = ???
-  def tradeWithPlayer: Option[ScatanGame] = ???
+  def tradeWithPlayer(
+      receiver: ScatanPlayer,
+      senderTradeCards: Seq[ResourceCard],
+      receiverTradeCards: Seq[ResourceCard]
+  ): Option[ScatanGame] =
+    play(ScatanActions.TradeWithPlayer)(using
+      TradeWithPlayerEffect(game.turn.player, receiver, senderTradeCards, receiverTradeCards)
+    )
 
 class ScatanGame(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer])
     extends ScatanGameStatus(game)

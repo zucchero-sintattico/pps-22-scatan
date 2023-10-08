@@ -1,6 +1,7 @@
 package scatan.model.game.config
 
 enum ScatanActions:
+  case NextTurn
   // Setup
   case AssignSettlement
   case AssignRoad
