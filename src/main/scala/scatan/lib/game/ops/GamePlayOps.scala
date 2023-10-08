@@ -1,6 +1,7 @@
 package scatan.lib.game.ops
 
 import scatan.lib.game.Game
+import scatan.lib.game.ops.GameTurnOps.nextTurn
 
 /** An effect is a function that takes a state and returns a new state if the effect is applicable.
   * @tparam A
@@ -52,7 +53,10 @@ object GamePlayOps:
           state = newState,
           gameStatus = newStatus
         )
-      yield newGame
+      yield
+        if newGame.rules.endingSteps(newGame.gameStatus.phase) == newGame.gameStatus.step then
+          newGame.nextTurn.getOrElse(newGame)
+        else newGame
 
   extension (bool: Boolean)
     def option: Option[Unit] =

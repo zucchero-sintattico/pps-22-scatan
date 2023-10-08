@@ -26,7 +26,6 @@ private trait ScatanGameStatus(
   def gameStatus: GameStatus[ScatanPhases, ScatanSteps] = game.gameStatus
   def isOver: Boolean = game.isOver
   def winner: Option[ScatanPlayer] = game.winner
-  def nextTurn: Option[ScatanGame] = game.nextTurn.map(ScatanGame.apply)
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
 
 private trait ScatanGameActions extends ScatanGameStatus:

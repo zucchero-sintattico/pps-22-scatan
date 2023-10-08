@@ -39,7 +39,11 @@ class RulesTest extends BaseTest:
   it should "have a actions" in {
     emptyGameRules.actions shouldBe a[Map[GameStatus[MyPhases, Steps], Map[Actions, Steps]]]
     emptyGameRules.actions shouldBe Map(
-      GameStatus(MyPhases.Game, Steps.Initial) -> Map(Actions.StartGame -> Steps.Initial)
+      GameStatus(MyPhases.Game, Steps.Initial) -> Map(
+        Actions.StartGame -> Steps.Initial,
+        Actions.NextTurn -> Steps.ChangingTurn
+      ),
+      GameStatus(MyPhases.Game, Steps.ChangingTurn) -> Map()
     )
   }
 
@@ -63,7 +67,10 @@ class RulesTest extends BaseTest:
 
   it should "have a ending steps" in {
     emptyGameRules.endingSteps shouldBe a[Map[MyPhases, Steps]]
-    emptyGameRules.endingSteps shouldBe Map(MyPhases.Game -> Steps.Initial, MyPhases.GameOver -> Steps.Initial)
+    emptyGameRules.endingSteps shouldBe Map(
+      MyPhases.Game -> Steps.ChangingTurn,
+      MyPhases.GameOver -> Steps.ChangingTurn
+    )
   }
 
   it should "have a winner" in {
@@ -74,13 +81,15 @@ class RulesTest extends BaseTest:
   it should "have allowed actions" in {
     emptyGameRules.allowedActions shouldBe a[Map[GameStatus[MyPhases, Steps], Set[Actions]]]
     emptyGameRules.allowedActions shouldBe Map(
-      GameStatus(MyPhases.Game, Steps.Initial) -> Set(Actions.StartGame)
+      GameStatus(MyPhases.Game, Steps.Initial) -> Set(Actions.StartGame, Actions.NextTurn),
+      GameStatus(MyPhases.Game, Steps.ChangingTurn) -> Set()
     )
   }
 
   it should "have a next steps" in {
     emptyGameRules.nextSteps shouldBe a[Map[(GameStatus[MyPhases, Steps], Actions), Steps]]
     emptyGameRules.nextSteps shouldBe Map(
-      (GameStatus(MyPhases.Game, Steps.Initial), Actions.StartGame) -> Steps.Initial
+      (GameStatus(MyPhases.Game, Steps.Initial), Actions.StartGame) -> Steps.Initial,
+      (GameStatus(MyPhases.Game, Steps.Initial), Actions.NextTurn) -> Steps.ChangingTurn
     )
   }

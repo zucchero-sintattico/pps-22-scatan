@@ -46,6 +46,8 @@ object ScatanDSL extends GameDSL:
         ScatanActions.AssignRoad -> ChangingTurn
       )
 
+      When(ChangingTurn)()
+
     }
 
     On(ScatanPhases.Game) {
@@ -80,5 +82,7 @@ object ScatanDSL extends GameDSL:
         ScatanActions.TradeWithPlayer -> Playing,
         ScatanActions.NextTurn -> ChangingTurn
       )
+
+      When(ChangingTurn)()
     }
   }

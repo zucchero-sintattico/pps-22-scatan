@@ -40,10 +40,5 @@ object LeftTabComponent:
         className := "game-view-button roll-dice-button",
         "Roll dice",
         onClick --> { _ => controller.rollDice() }
-      ),
-      button(
-        className := "game-view-button end-turn-button",
-        "End Turn",
-        onClick --> { _ => controller.nextTurn() }
       )
     )
