@@ -1,14 +1,14 @@
 package scatan.views.game
+import com.raquo.laminar.api.L.*
+import org.scalajs.dom.document
 import scatan.Pages
 import scatan.controllers.game.SetUpController
-import com.raquo.laminar.api.L.*
-import scatan.Pages
-import org.scalajs.dom.document
 import scatan.lib.mvc.{BaseScalaJSView, View}
+import scatan.model.ApplicationState
 
 /** This is the view for the setup page.
   */
-trait SetUpView extends View:
+trait SetUpView extends View[ApplicationState]:
   /** This method is called when the user clicks the start button.
     */
   def switchToGame(): Unit
@@ -29,7 +29,7 @@ object SetUpView:
   *   the container for the view
   */
 private class ScalaJsSetUpView(container: String, requirements: View.Requirements[SetUpController])
-    extends BaseScalaJSView(container, requirements)
+    extends BaseScalaJSView[ApplicationState, SetUpController](container, requirements)
     with SetUpView:
 
   val numberOfUsers: Var[Int] = Var(3)
@@ -89,6 +89,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
             cls := "setup-menu-textbox-container",
             input(
               cls := "setup-menu-textbox",
+              defaultValue := s"Player $i",
               placeholder := s"Player $i"
             )
           )
@@ -96,12 +97,12 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
       ),
       button(
         cls := "setup-menu-button",
-        onClick --> (_ => this.switchToHome()),
-        "Back"
+        onClick --> (_ => this.switchToGame()),
+        "Start"
       ),
       button(
         cls := "setup-menu-button",
-        onClick --> (_ => this.switchToGame()),
-        "Start"
+        onClick --> (_ => this.switchToHome()),
+        "Back"
       )
     )

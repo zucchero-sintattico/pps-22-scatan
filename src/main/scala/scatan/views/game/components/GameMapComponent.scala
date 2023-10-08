@@ -1,15 +1,50 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.GameMap
-import scatan.model.map.Hexagon
-import scatan.model.map.Resources.*
-import scatan.model.map.Terrain
-import scatan.model.map.TileContent
-import scatan.model.map.UnproductiveTerrain.*
+import scatan.controllers.game.GameController
+import scatan.model.components.ResourceType.*
+import scatan.model.components.UnproductiveTerrain.*
+import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
+import scatan.model.game.ScatanState
+import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.{Hexagon, StructureSpot, TileContent}
+import scatan.model.{ApplicationState, GameMap}
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
-import scatan.views.game.components.GameMapComponent.BuildingType.*
+import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
+
+object ContextMap:
+
+  private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
+  private val buildings: Map[BuildingType, String] = Map(
+    BuildingType.Settlement -> "S",
+    BuildingType.City -> "C"
+  )
+
+  val resources: Map[Terrain, String] = Map(
+    Wood -> "res/img/hexagonal/wood.jpg",
+    Sheep -> "res/img/hexagonal/sheep.jpg",
+    Wheat -> "res/img/hexagonal/wheat.jpg",
+    Rock -> "res/img/hexagonal/ore.jpg",
+    Brick -> "res/img/hexagonal/clay.jpg",
+    Desert -> "res/img/hexagonal/desert.jpg",
+    Sea -> "res/img/hexagonal/water.jpg"
+  )
+
+  private def updateAndGetPlayer(player: ScatanPlayer): String =
+    viewPlayers.get(player) match
+      case Some(viewPlayer) => viewPlayer
+      case None =>
+        val viewPlayer = s"player-${viewPlayers.size + 1}"
+        viewPlayers = viewPlayers + (player -> viewPlayer)
+        viewPlayer
+
+  extension (state: ScatanState) def gameMap: GameMap = state.gameMap
+  extension (info: AssignmentInfo)
+    def viewPlayer: String = updateAndGetPlayer(info.player)
+    def viewBuildingType: String = buildings(info.buildingType)
+
+  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
 
 /** A component to display the game map.
   */
@@ -22,26 +57,25 @@ object GameMapComponent:
       i <- 0 to 5
       angleDeg = 60 * i + 30
       angleRad = Math.PI / 180 * angleDeg
-      x = hexSize * Math.cos(angleRad)
-      y = hexSize * Math.sin(angleRad)
+      x = hexSize * math.cos(angleRad)
+      y = hexSize * math.sin(angleRad)
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
-  private val players: Map[Int, String] = Map(
-    0 -> "player1",
-    1 -> "player2",
-    2 -> "player3",
-    3 -> "player4"
-  )
+  def mapComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+    div(
+      className := "game-view-game-tab",
+      child <-- reactiveState
+        .map(state =>
+          (for
+            game <- state.game
+            state = game.state
+          yield getHexagonalMap(state)).getOrElse(div("No game"))
+        )
+    )
 
-  enum BuildingType:
-    case Settlement, City
-  private val buildings: Map[BuildingType, String] = Map(
-    Settlement -> "S",
-    City -> "C"
-  )
-
-  def getMapComponent(gameMap: GameMap): Element =
+  private def getHexagonalMap(state: ScatanState)(using gameController: GameController): Element =
+    val gameMap = state.gameMap
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
       svgImages,
@@ -49,28 +83,21 @@ object GameMapComponent:
       for
         hex <- gameMap.tiles.toList
         content = gameMap.toContent(hex)
-      yield svgHexagonWithNumber(hex, content),
+        hasRobber = state.robberPlacement == hex
+      yield svgHexagonWithNumber(hex, content, hasRobber, () => gameController.placeRobber(hex)),
       for
-        spots <- gameMap.edges.toList
-        spot1Coordinates <- spots._1.coordinates
-        spot2Coordinates <- spots._2.coordinates
-        player = players.get((math.random() * 10).toInt) // TODO: correct player selection
-      yield svgRoad(spot1Coordinates, spot2Coordinates, player),
+        road <- gameMap.edges.toList
+        spot1Coordinates <- road._1.coordinates
+        spot2Coordinates <- road._2.coordinates
+        player = state.assignedBuildings.get(road).map(_.viewPlayer)
+      yield svgRoad(spot1Coordinates, spot2Coordinates, player, () => gameController.onRoadSpot(road)),
       for
         spot <- gameMap.nodes.toList
         coordinates <- spot.coordinates
-        player = players.get((math.random() * 10).toInt) // TODO: correct player selection
-        building = buildings.get(
-          buildings.keySet.zipWithIndex
-            .find(_._2 == (math.random() * 2).toInt)
-            .getOrElse((Settlement, 0))
-            ._1
-        ) // TODO: correct building selection
-      yield svgSpot(
-        coordinates,
-        player,
-        if player.isDefined then building else None
-      ) // TODO: correct building selection
+        assignmentInfo = state.assignedBuildings.get(spot)
+        player = assignmentInfo.map(_.viewPlayer)
+        buildingType = assignmentInfo.map(_.viewBuildingType)
+      yield svgSpot(coordinates, player, buildingType, () => gameController.onStructureSpot(spot))
     )
 
   /** A svg hexagon.
@@ -80,7 +107,12 @@ object GameMapComponent:
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(hex: Hexagon, tileContent: TileContent): Element =
+  private def svgHexagonWithNumber(
+      hex: Hexagon,
+      tileContent: TileContent,
+      hasRobber: Boolean,
+      onPlaceRobber: () => Unit
+  ): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
@@ -89,9 +121,9 @@ object GameMapComponent:
         svg.cls := "hexagon",
         svg.fill := s"url(#${tileContent.terrain.toImgId})"
       ),
-      tileContent.number match
-        case Some(n) => circularNumber(n)
-        case _       => ""
+      tileContent.terrain match
+        case Sea => ""
+        case _   => circularNumberWithRobber(tileContent.number, hasRobber, onPlaceRobber)
     )
 
   /** A svg circular number
@@ -99,25 +131,39 @@ object GameMapComponent:
     *   the number to display
     * @return
     */
-  private def circularNumber(number: Int): Element =
+  private def circularNumberWithRobber(number: Option[Int], hasRobber: Boolean, onPlaceRobber: () => Unit): Element =
     svg.g(
       svg.circle(
         svg.cx := "0",
         svg.cy := "0",
         svg.r := s"$radius",
-        svg.className := "hexagon-number",
-        svg.fill := "white"
+        svg.className := "hexagon-center-circle"
       ),
       svg.text(
         svg.x := "0",
         svg.y := "0",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
-        s"$number"
+        svg.className := "hexagon-center-number",
+        number.map(_.toString).getOrElse("")
+      ),
+      onClick --> (_ => onPlaceRobber()),
+      if hasRobber then robberCross else ""
+    )
+
+  private def robberCross: Element =
+    svg.g(
+      svg.className := "robber",
+      svg.line(
+        svg.x1 := s"-${radius}",
+        svg.y1 := s"-${radius}",
+        svg.x2 := s"$radius",
+        svg.y2 := s"$radius"
+      ),
+      svg.line(
+        svg.x1 := s"-${radius}",
+        svg.y1 := s"${radius}",
+        svg.x2 := s"$radius",
+        svg.y2 := s"-$radius"
       )
     )
 
@@ -129,7 +175,12 @@ object GameMapComponent:
     * @return
     *   the road graphic
     */
-  private def svgRoad(spot1: Coordinates, spot2: Coordinates, withPlayer: Option[String]): Element =
+  private def svgRoad(
+      spot1: Coordinates,
+      spot2: Coordinates,
+      withPlayer: Option[String],
+      onRoadClick: () => Unit
+  ): Element =
     val Coordinates(x1, y1) = spot1
     val Coordinates(x2, y2) = spot2
     svg.g(
@@ -148,7 +199,7 @@ object GameMapComponent:
             svg.cy := s"${y1 + (y2 - y1) / 2}",
             svg.className := "road-center",
             svg.r := s"$radius",
-            onClick --> (_ => println((spot1, spot2)))
+            onClick --> (_ => onRoadClick())
           )
     )
 
@@ -160,7 +211,12 @@ object GameMapComponent:
     * @return
     *   the spot graphic
     */
-  private def svgSpot(coordinate: Coordinates, withPlayer: Option[String], withType: Option[String]): Element =
+  private def svgSpot(
+      coordinate: Coordinates,
+      withPlayer: Option[String],
+      withType: Option[String],
+      onSpotClick: () => Unit
+  ): Element =
     val Coordinates(x, y) = coordinate
     svg.g(
       svg.circle(
@@ -168,37 +224,21 @@ object GameMapComponent:
         svg.cy := s"${y}",
         svg.r := s"$radius",
         svg.className := s"${withPlayer.getOrElse("spot")}",
-        onClick --> (_ => println((x, y)))
+        onClick --> (_ => onSpotClick())
       ),
       svg.text(
         svg.x := s"${x}",
         svg.y := s"${y}",
-        svg.textAnchor := "middle",
-        svg.dominantBaseline := "central",
-        svg.fontFamily := "sans-serif",
+        svg.className := "spot-text",
         svg.fontSize := s"$radius",
-        svg.fontWeight := "bold",
-        svg.fill := "black",
         s"${withType.getOrElse("")}"
       )
     )
 
-  private val resources: Map[Terrain, String] = Map(
-    WOOD -> "res/img/hexagonal/wood.jpg",
-    SHEEP -> "res/img/hexagonal/sheep.jpg",
-    GRAIN -> "res/img/hexagonal/wheat.jpg",
-    ROCK -> "res/img/hexagonal/ore.jpg",
-    BRICK -> "res/img/hexagonal/clay.jpg",
-    DESERT -> "res/img/hexagonal/desert.jpg",
-    SEA -> "res/img/hexagonal/water.jpg"
-  )
-
-  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
-
   private val svgImages: Element =
     svg.svg(
       svg.defs(
-        for (terrain, path) <- resources.toList
+        for (terrain, path) <- ContextMap.resources.toList
         yield svg.pattern(
           svg.idAttr := terrain.toImgId,
           svg.width := "100%",

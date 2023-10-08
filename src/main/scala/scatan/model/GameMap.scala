@@ -1,8 +1,7 @@
 package scatan.model
 
-import scatan.model.map.HexagonInMap.*
 import scatan.model.map.*
-import map.{MapWithTileContent, TileContentFactory, TileContent}
+import scatan.model.map.HexagonInMap.*
 
 /** Hexagonal tiled game map of Scatan.
   *
@@ -19,5 +18,5 @@ final case class GameMap(withTerrainLayers: Int = 2, withSeaLayers: Int = 1)
   val totalLayers = withTerrainLayers + withSeaLayers
   val tileWithTerrain = tiles.toSeq.filter(_.layer <= withTerrainLayers)
 
-  override def toContent: Map[Hexagon, TileContent] =
+  override val toContent: Map[Hexagon, TileContent] =
     TileContentFactory.fixedForLayer2(tileWithTerrain)

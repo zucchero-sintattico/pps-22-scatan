@@ -1,32 +1,9 @@
 package scatan.model.map
 
-import scala.annotation.targetName
-
-import Listable.*
-import Resources.*
-import UnproductiveTerrain.*
-
-object Listable:
-  extension (count: Int)
-    /** Small DSL to create a list of something.
-      *
-      * @param count
-      * @return
-      */
-    @targetName("listOf")
-    final def *[T](elem: T): Seq[T] = List.fill(count)(elem)
-
-/** Resources of a tile.
-  */
-enum Resources:
-  case WOOD, SHEEP, GRAIN, ROCK, BRICK
-
-/** Unproductive terrain.
-  */
-enum UnproductiveTerrain:
-  case DESERT, SEA
-
-type Terrain = Resources | UnproductiveTerrain
+import scatan.model.components.Listable.`*`
+import scatan.model.components.ResourceType.*
+import scatan.model.components.Terrain
+import scatan.model.components.UnproductiveTerrain.*
 
 final case class TileContent(terrain: Terrain, number: Option[Int])
 
@@ -44,11 +21,11 @@ object TileContentFactory:
 
   def fixedForLayer2(tiles: Seq[Hexagon]): Map[Hexagon, TileContent] =
     val terrains: List[Terrain] = List(
-      4 * WOOD,
-      4 * SHEEP,
-      4 * GRAIN,
-      3 * ROCK,
-      3 * BRICK
+      4 * Wood,
+      4 * Sheep,
+      4 * Wheat,
+      3 * Rock,
+      3 * Brick
     ).flatten
 
     val numbers =
@@ -61,5 +38,5 @@ object TileContentFactory:
       terrains.zip(numbers).map(p => TileContent(p._1, Some(p._2)))
 
     Map
-      .from(tiles.zip(TileContent(DESERT, None) :: tileContents))
-      .withDefaultValue(TileContent(SEA, None))
+      .from(tiles.zip(TileContent(Desert, None) :: tileContents))
+      .withDefaultValue(TileContent(Sea, None))

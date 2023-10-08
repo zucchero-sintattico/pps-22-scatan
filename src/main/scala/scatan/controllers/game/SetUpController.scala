@@ -1,13 +1,12 @@
 package scatan.controllers.game
 
-import scatan.views.game.SetUpView
-import scatan.Pages
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
+import scatan.views.game.SetUpView
 
 /** This is the controller for the setup page.
   */
-trait SetUpController extends Controller:
+trait SetUpController extends Controller[ApplicationState]:
   def startGame(usernames: String*): Unit
 
 object SetUpController:
@@ -24,4 +23,3 @@ private class SetUpControllerImpl(requirements: Controller.Requirements[SetUpVie
 
   override def startGame(usernames: String*): Unit =
     this.model.update(_.createGame(usernames*))
-    println(this.model.state)

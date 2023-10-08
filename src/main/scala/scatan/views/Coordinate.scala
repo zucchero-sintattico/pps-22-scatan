@@ -1,7 +1,6 @@
 package scatan.views
 
-import scatan.model.map.Hexagon
-import scatan.model.map.Spot
+import scatan.model.map.{Hexagon, StructureSpot}
 
 /** @param value
   */
@@ -82,6 +81,6 @@ object Coordinates:
 
   /** Extension methods to handle spot in cartesian plane.
     */
-  extension (spot: Spot)
+  extension (spot: StructureSpot)
     def coordinates(using hexSize: Int): Option[Coordinates] =
       (spot._1.vertices & spot._2.vertices & spot._3.vertices).headOption

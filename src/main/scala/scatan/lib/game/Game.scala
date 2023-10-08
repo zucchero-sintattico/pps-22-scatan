@@ -1,72 +1,64 @@
 package scatan.lib.game
 
-import GameRulesDSL.GameRules
+/** A game status is a pair of phase and step.
+  * @param phase
+  *   the current phase
+  * @param step
+  *   the current step
+  * @tparam P
+  *   the type of the phase
+  * @tparam S
+  *   the type of the step
+  */
+final case class GameStatus[P, S](phase: P, step: S)
 
-import scala.language.reflectiveCalls
-type BasicState = { def isOver: Boolean; def winner: Option[Player] }
-private trait StateGame[State <: BasicState]:
-  def players: Seq[Player]
-  def state: State
-  def isOver: Boolean = state.isOver
-  def winner: Option[Player] = state.winner
-
-private trait Turnable extends StateGame[?]:
-  def turn: Turn[Player]
-  def nextTurn: Turnable
-
-private trait Playable[State <: BasicState, PhaseType, ActionType <: Action[State]] extends StateGame[State]:
-  def phase: PhaseType
-  def canPlay(action: ActionType): Boolean
-  def play(action: ActionType): Playable[State, PhaseType, ActionType]
-
-trait Game[State <: BasicState, PhaseType, ActionType <: Action[State]]
-    extends StateGame[State]
-    with Turnable
-    with Playable[State, PhaseType, ActionType]:
-  override def nextTurn: Game[State, PhaseType, ActionType]
-  override def play(action: ActionType): Game[State, PhaseType, ActionType]
+/** A game
+  * @param players
+  *   the players
+  * @param state
+  *   the state
+  * @param turn
+  *   the current turn
+  * @param gameStatus
+  *   the current status
+  * @param playersIterator
+  *   the iterator of players
+  * @param rules
+  *   the rules
+  * @tparam State
+  *   the type of the state
+  * @tparam PhaseType
+  *   the type of the phase
+  * @tparam StepType
+  *   the type of the step
+  * @tparam ActionType
+  *   the type of the action
+  * @tparam Player
+  *   the type of the player
+  */
+final case class Game[State, PhaseType, StepType, ActionType, Player](
+    players: Seq[Player],
+    state: State,
+    turn: Turn[Player],
+    gameStatus: GameStatus[PhaseType, StepType],
+    playersIterator: Iterator[Player],
+    rules: Rules[State, PhaseType, StepType, ActionType, Player]
+):
+  require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
 
 object Game:
-  def apply[State <: BasicState, PhaseType, ActionType <: Action[State]](
+  def apply[State, PhaseType, StepType, ActionType, Player](
       players: Seq[Player]
   )(using
-      gameRulesDSL: GameRulesDSL[State, PhaseType, ActionType]
-  ): Game[State, PhaseType, ActionType] =
-    given gameRules: GameRules[State, PhaseType, ActionType] = gameRulesDSL.configuration
-    Game[State, PhaseType, ActionType](players)(gameRules)
-
-  def apply[State <: BasicState, PhaseType, ActionType <: Action[State]](
-      players: Seq[Player]
-  )(gameRules: GameRules[State, PhaseType, ActionType]): Game[State, PhaseType, ActionType] =
-    require(gameRules.playersSizes contains players.size, "Invalid number of players")
-    given GameRules[State, PhaseType, ActionType] = gameRules
-    GameImpl(
-      players,
-      Turn(1, players.head),
-      gameRules.initialPhase.get,
-      gameRules.initialState.get(players)
-    )
-
-private final case class GameImpl[State <: BasicState, PhaseType, ActionType <: Action[State]](
-    players: Seq[Player],
-    turn: Turn[Player],
-    phase: PhaseType,
-    state: State
-)(using
-    gameRules: GameRules[State, PhaseType, ActionType]
-) extends Game[State, PhaseType, ActionType]:
-
-  override def play(action: ActionType) =
-    require(canPlay(action), "Invalid action: " + action)
-    val newState = action(state)
-    this.copy(state = newState, phase = gameRules.phasesMap(phase)(action))
-
-  override def canPlay(action: ActionType): Boolean =
-    gameRules.phasesMap(phase).isDefinedAt(action)
-
-  override def nextTurn: Game[State, PhaseType, ActionType] =
-    val nextPlayer = players((players.indexOf(turn.player) + 1) % players.size)
-    this.copy(
-      turn = turn.next(nextPlayer),
-      phase = gameRules.initialPhase.get
+      rules: Rules[State, PhaseType, StepType, ActionType, Player]
+  ): Game[State, PhaseType, StepType, ActionType, Player] =
+    require(rules.allowedPlayersSizes.contains(players.size), s"Invalid number of players: ${players.size}")
+    val iterator = rules.phaseTurnIteratorFactories.get(rules.startingPhase).map(_(players)).getOrElse(players.iterator)
+    Game(
+      players = players,
+      state = rules.startingStateFactory(players),
+      gameStatus = GameStatus(rules.startingPhase, rules.startingSteps(rules.startingPhase)),
+      turn = Turn[Player](1, iterator.next()),
+      playersIterator = iterator,
+      rules = rules
     )
