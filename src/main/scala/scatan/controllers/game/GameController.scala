@@ -8,15 +8,15 @@ import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
+import scatan.model.map.Hexagon
 
-trait PositioningHandler:
+trait GameController extends Controller[ApplicationState]:
   def onRoadSpot(spot: RoadSpot): Unit
   def onStructureSpot(spot: StructureSpot): Unit
-
-trait GameController extends Controller[ApplicationState] with PositioningHandler:
   def nextTurn(): Unit
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
+  def placeRobber(hexagon: Hexagon): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -26,11 +26,17 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     extends BaseController(requirements)
     with GameController:
 
+  override def placeRobber(hexagon: Hexagon): Unit =
+    this.model
+      .updateGame(_.placeRobber(hexagon))
+      .onError(view.displayMessage("Cannot place robber"))
+
   override def clickCard(card: CardType): Unit = ???
 
   override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
 
-  override def rollDice(): Unit = this.model.updateGame(_.rollDice);
+  override def rollDice(): Unit =
+    this.model.updateGame(_.rollDice(diceResult => this.view.displayMessage(s"Roll dice result: $diceResult")));
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     val phase = this.model.state.game.map(_.gameStatus.phase).get
@@ -38,11 +44,11 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       case Setup =>
         this.model
           .updateGame(_.assignRoad(spot))
-          .onError(view.error("Cannot assign road here"))
+          .onError(view.displayMessage("Cannot assign road here"))
       case Game =>
         this.model
           .updateGame(_.buildRoad(spot))
-          .onError(view.error("Cannot build road here"))
+          .onError(view.displayMessage("Cannot build road here"))
 
   override def onStructureSpot(spot: StructureSpot): Unit =
     val phase = this.model.state.game.map(_.gameStatus.phase).get
@@ -50,7 +56,7 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       case Setup =>
         this.model
           .updateGame(_.assignSettlement(spot))
-          .onError(view.error("Cannot assign settlement here"))
+          .onError(view.displayMessage("Cannot assign settlement here"))
       case Game =>
         val alreadyContainsSettlement = this.model.state.game
           .map(_.state)
@@ -60,8 +66,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
         if alreadyContainsSettlement then
           this.model
             .updateGame(_.buildCity(spot))
-            .onError(view.error("Cannot build city here"))
+            .onError(view.displayMessage("Cannot build city here"))
         else
           this.model
             .updateGame(_.buildSettlement(spot))
-            .onError(view.error("Cannot build settlement here"))
+            .onError(view.displayMessage("Cannot build settlement here"))

@@ -1,7 +1,7 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.{GameController, PositioningHandler}
+import scatan.controllers.game.GameController
 import scatan.model.components.ResourceType.*
 import scatan.model.components.UnproductiveTerrain.*
 import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
@@ -62,7 +62,7 @@ object GameMapComponent:
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
-  def mapComponent(using reactiveState: Signal[ApplicationState])(using handler: PositioningHandler): Element =
+  def mapComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
     div(
       className := "game-view-game-tab",
       child <-- reactiveState
@@ -74,7 +74,7 @@ object GameMapComponent:
         )
     )
 
-  private def getHexagonalMap(state: ScatanState)(using handler: PositioningHandler): Element =
+  private def getHexagonalMap(state: ScatanState)(using gameController: GameController): Element =
     val gameMap = state.gameMap
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
@@ -84,20 +84,20 @@ object GameMapComponent:
         hex <- gameMap.tiles.toList
         content = gameMap.toContent(hex)
         hasRobber = state.robberPlacement == hex
-      yield svgHexagonWithNumber(hex, content, hasRobber),
+      yield svgHexagonWithNumber(hex, content, hasRobber, () => gameController.placeRobber(hex)),
       for
         road <- gameMap.edges.toList
         spot1Coordinates <- road._1.coordinates
         spot2Coordinates <- road._2.coordinates
         player = state.assignedBuildings.get(road).map(_.viewPlayer)
-      yield svgRoad(spot1Coordinates, spot2Coordinates, player, () => handler.onRoadSpot(road)),
+      yield svgRoad(spot1Coordinates, spot2Coordinates, player, () => gameController.onRoadSpot(road)),
       for
         spot <- gameMap.nodes.toList
         coordinates <- spot.coordinates
         assignmentInfo = state.assignedBuildings.get(spot)
         player = assignmentInfo.map(_.viewPlayer)
         buildingType = assignmentInfo.map(_.viewBuildingType)
-      yield svgSpot(coordinates, player, buildingType, () => handler.onStructureSpot(spot))
+      yield svgSpot(coordinates, player, buildingType, () => gameController.onStructureSpot(spot))
     )
 
   /** A svg hexagon.
@@ -107,7 +107,12 @@ object GameMapComponent:
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(hex: Hexagon, tileContent: TileContent, hasRobber: Boolean): Element =
+  private def svgHexagonWithNumber(
+      hex: Hexagon,
+      tileContent: TileContent,
+      hasRobber: Boolean,
+      onPlaceRobber: () => Unit
+  ): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
@@ -118,7 +123,7 @@ object GameMapComponent:
       ),
       tileContent.terrain match
         case Sea => ""
-        case _   => circularNumberWithRobber(tileContent.number, hasRobber)
+        case _   => circularNumberWithRobber(tileContent.number, hasRobber, onPlaceRobber)
     )
 
   /** A svg circular number
@@ -126,7 +131,7 @@ object GameMapComponent:
     *   the number to display
     * @return
     */
-  private def circularNumberWithRobber(number: Option[Int], hasRobber: Boolean): Element =
+  private def circularNumberWithRobber(number: Option[Int], hasRobber: Boolean, onPlaceRobber: () => Unit): Element =
     svg.g(
       svg.circle(
         svg.cx := "0",
@@ -141,6 +146,7 @@ object GameMapComponent:
         svg.className := "hexagon-center-number",
         number.map(_.toString).getOrElse("")
       ),
+      onClick --> (_ => onPlaceRobber()),
       if hasRobber then robberCross else ""
     )
 
