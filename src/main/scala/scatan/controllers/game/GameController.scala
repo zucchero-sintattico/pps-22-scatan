@@ -36,7 +36,7 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
   override def nextTurn(): Unit = this.model.updateGame(_.nextTurn)
 
   override def rollDice(): Unit =
-    this.model.updateGame(_.rollDice(using x => this.view.displayMessage(s"Roll dice result: $x")));
+    this.model.updateGame(_.rollDice(diceResult => this.view.displayMessage(s"Roll dice result: $diceResult")));
 
   override def onRoadSpot(spot: RoadSpot): Unit =
     val phase = this.model.state.game.map(_.gameStatus.phase).get
