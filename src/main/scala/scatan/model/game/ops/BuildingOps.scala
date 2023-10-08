@@ -68,7 +68,6 @@ object BuildingOps:
             case AssignmentInfo(`player`, BuildingType.Settlement) =>
               Some(
                 state.copy(
-                  // add buildings to assigned buildings
                   assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
                   assignedAwards = state.awards
                 )
