@@ -16,7 +16,9 @@ import scatan.model.game.ops.RobberOps.moveRobber
 
 object ScatanEffects:
 
-  def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = (state: ScatanState) => Some(state)
+  private def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
+
+  def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = EmptyEffect
 
   def AssignSettlementEffect(player: ScatanPlayer, spot: StructureSpot): Effect[AssignSettlement.type, ScatanState] =
     (state: ScatanState) => state.assignBuilding(spot, BuildingType.Settlement, player)
@@ -28,7 +30,7 @@ object ScatanEffects:
     require(result != 7, "Use RollSevenEffect for rolling a 7")
     state.assignResourcesFromNumber(result)
 
-  def RollSevenEffect(): Effect[RollSeven.type, ScatanState] = (state: ScatanState) => Some(state)
+  def RollSevenEffect(): Effect[RollSeven.type, ScatanState] = EmptyEffect
 
   def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) =>
     state.moveRobber(hex)
@@ -51,9 +53,9 @@ object ScatanEffects:
   def BuyDevelopmentCardEffect(player: ScatanPlayer, turnNumber: Int): Effect[BuyDevelopmentCard.type, ScatanState] =
     (state: ScatanState) => state.buyDevelopmentCard(player, turnNumber)
 
-  def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = (state: ScatanState) => Some(state)
+  def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = EmptyEffect
 
-  def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = (state: ScatanState) => Some(state)
+  def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = EmptyEffect
 
   def TradeWithPlayerEffect(
       sender: ScatanPlayer,

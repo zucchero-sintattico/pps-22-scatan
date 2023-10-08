@@ -33,6 +33,9 @@ private trait ScatanGameActions extends ScatanGameStatus:
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
 
+  def nextTurn: Option[ScatanGame] =
+    play(ScatanActions.NextTurn)(using NextTurnEffect())
+
   /*
    * Assign Ops
    */
