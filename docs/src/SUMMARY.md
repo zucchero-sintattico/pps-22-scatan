@@ -20,6 +20,7 @@
   - [Sprint 1](./09-backlog/sprints/01-sprint.md)
   - [Sprint 2](./09-backlog/sprints/02-sprint.md)
   - [Sprint 3](./09-backlog/sprints/03-sprint.md)
+  - [Sprint 4](./09-backlog/sprints/04-sprint.md)
 
 ---
 
