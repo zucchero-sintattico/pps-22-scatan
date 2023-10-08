@@ -6,7 +6,7 @@ import scatan.lib.game.dsl.PlayersDSLOps.*
 import scatan.lib.game.dsl.TurnDSLOps.*
 import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps}
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.CardOps.assignResourceFromHexagons
+import scatan.model.game.ops.CardOps.assignResourcesAfterInitialPlacement
 import scatan.model.game.ops.ScoreOps.*
 
 import scala.language.postfixOps
@@ -53,7 +53,7 @@ object ScatanDSL extends GameDSL:
 
     On(ScatanPhases.Game) {
 
-      OnEnter((state: ScatanState) => state)
+      OnEnter((state: ScatanState) => state.assignResourcesAfterInitialPlacement.get)
 
       Turn {
         Iterate(normal)

@@ -28,8 +28,10 @@ object GameTurnOps:
         nextPlayersIterator <- game.rules.phaseTurnIteratorFactories.get(nextPhase).map(_.apply(game.players))
         nextPlayer <- nextPlayersIterator.nextOption()
         nextTurn = game.turn.next(nextPlayer)
+        nextState = game.rules.initialAction.get(nextPhase).map(_.apply(game.state)).getOrElse(game.state)
       yield game.copy(
         turn = nextTurn,
+        state = nextState,
         gameStatus = game.gameStatus.copy(
           phase = nextPhase,
           step = initialStep
