@@ -112,7 +112,41 @@ class TradeOpsTest extends BaseScatanStateTest:
     stateWithResourceAssigned match
       case Some(state) =>
         val stateWithTrade =
-          state.tradeWithBank(player, Seq(ResourceCard(ResourceType.Wood)), ResourceCard(ResourceType.Brick))
+          state.tradeWithBank(
+            player,
+            Seq(
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Wood)
+            ),
+            ResourceCard(ResourceType.Brick)
+          )
+        stateWithTrade should be(None)
+      case None => fail("Resources not assigned")
+  }
+
+  it should "not allow to trade with bank if the offer not contains four identical cards" in {
+    val state = ScatanState(threePlayers)
+    val player = threePlayers.head
+    val stateWithResourceAssigned = state
+      .assignResourceCard(player, ResourceCard(ResourceType.Wood))
+      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
+      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
+      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Brick)))
+    stateWithResourceAssigned match
+      case Some(state) =>
+        val stateWithTrade =
+          state.tradeWithBank(
+            player,
+            Seq(
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Wood),
+              ResourceCard(ResourceType.Brick)
+            ),
+            ResourceCard(ResourceType.Brick)
+          )
         stateWithTrade should be(None)
       case None => fail("Resources not assigned")
   }
