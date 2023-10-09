@@ -13,6 +13,8 @@ import scatan.views.game.components.CardContextMap.cardImages
 import scatan.views.game.components.CardContextMap.countCardOf
 import scatan.views.game.components.CardContextMap.CardType
 import scatan.controllers.game.GameController
+import scatan.views.utils.TypeUtils.{DisplayableSource, Displayable}
+import scatan.views.utils.TypeUtils.{reactiveState, gameController, state}
 
 object CardContextMap:
   extension (state: ScatanState)
@@ -38,16 +40,14 @@ object CardContextMap:
   )
 
 object CardsComponent:
-  def cardsComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+  def cardsComponent: DisplayableSource[Element] =
     div(
       cls := "game-view-card-container",
       cardCountComponent(cardImages.collect { case (k: ResourceType, v) => (k, v) }),
       cardCountComponent(cardImages.collect { case (k: DevelopmentType, v) => (k, v) })
     )
 
-  private def cardCountComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController)(
-      cards: Map[CardType, String]
-  ): Element =
+  private def cardCountComponent(cards: Map[CardType, String]): DisplayableSource[Element] =
     div(
       cls := "game-view-child-container",
       for (cardType, path) <- cards.toList

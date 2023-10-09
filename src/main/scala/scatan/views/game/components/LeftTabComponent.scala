@@ -10,6 +10,8 @@ import scatan.model.game.ScatanState
 import scatan.model.components.Award
 import scatan.model.components.AwardType
 import scatan.model.game.ops.AwardOps.awards
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
+import scatan.views.utils.TypeUtils.{reactiveState, gameController}
 
 object LeftTabComponent:
 
@@ -17,31 +19,31 @@ object LeftTabComponent:
 
   def leftTabCssClass: String = "game-view-left-tab"
 
-  def currentPlayerComponent(using view: Signal[ApplicationState]): Element =
+  def currentPlayerComponent: Displayable[Element] =
     div(
       h2(
         className := "game-view-player",
-        child.text <-- view
+        child.text <-- reactiveState
           .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
       ),
       h2(
         className := "game-view-phase",
-        child.text <-- view
+        child.text <-- reactiveState
           .map("Phase: " + _.game.map(_.gameStatus.phase.toString).getOrElse("No phase"))
       ),
       h2(
         className := "game-view-step",
-        child.text <-- view
+        child.text <-- reactiveState
           .map("Step: " + _.game.map(_.gameStatus.step.toString).getOrElse("No step"))
       )
     )
 
-  def possibleMovesComponent(using view: Signal[ApplicationState]): Element =
+  def possibleMovesComponent: Displayable[Element] =
     div(
       className := "game-view-moves",
       "Possible moves:",
       ul(
-        children <-- view
+        children <-- reactiveState
           .map(state =>
             for move <- state.game.map(_.allowedActions.toSeq).getOrElse(Seq.empty)
             yield li(cls := "game-view-move", move.toViewAction)
@@ -49,22 +51,22 @@ object LeftTabComponent:
       )
     )
 
-  def isActionDisabled(using view: Signal[ApplicationState])(action: ScatanActions): Signal[Boolean] =
-    view.map(_.game.exists(!_.allowedActions.contains(action)))
+  def isActionDisabled(action: ScatanActions): Displayable[Signal[Boolean]] =
+    reactiveState.map(_.game.exists(!_.allowedActions.contains(action)))
 
-  def buttonsComponent(using view: Signal[ApplicationState])(using controller: GameController): Element =
+  def buttonsComponent: DisplayableSource[Element] =
     div(
       className := "game-view-buttons",
       button(
         className := "game-view-button roll-dice-button",
         "Roll dice",
-        onClick --> { _ => controller.rollDice() },
+        onClick --> { _ => gameController.rollDice() },
         disabled <-- isActionDisabled(ScatanActions.RollDice)
       ),
       button(
         className := "game-view-button end-turn-button",
         "End Turn",
-        onClick --> { _ => controller.nextTurn() },
+        onClick --> { _ => gameController.nextTurn() },
         disabled <-- isActionDisabled(ScatanActions.NextTurn)
       )
     )

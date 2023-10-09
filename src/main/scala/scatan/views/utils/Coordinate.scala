@@ -1,4 +1,4 @@
-package scatan.views
+package scatan.views.utils
 
 import scatan.model.map.{Hexagon, StructureSpot}
 
