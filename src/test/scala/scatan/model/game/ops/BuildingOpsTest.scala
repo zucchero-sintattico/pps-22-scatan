@@ -8,6 +8,7 @@ import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ScatanState
 import scatan.model.map.StructureSpot
 import scatan.model.map.RoadSpot
+import scatan.model.game.config.ScatanPlayer
 
 class BuildingOpsTest extends BaseScatanStateTest:
 
@@ -17,6 +18,13 @@ class BuildingOpsTest extends BaseScatanStateTest:
   private def spotToBuildRoad(state: ScatanState): RoadSpot =
     state.emptyRoadSpot.head
 
+  private def roadNearSpot(state: ScatanState, spot: StructureSpot): RoadSpot =
+    state.emptyRoadSpot.filter(_.contains(spot)).head
+
+  private def noConstrainToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = _ => (_, _) => true
+  private def spotShouldBeEmptyToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = s =>
+    (r, _) => s.emptyRoadSpot.contains(r)
+
   "A State with buildings Ops" should "have empty buildings when state start" in {
     val state = ScatanState(threePlayers)
     state.assignedBuildings.keySet should have size 0
@@ -24,8 +32,9 @@ class BuildingOpsTest extends BaseScatanStateTest:
 
   it should "permit to assign a road" in {
     val state = ScatanState(threePlayers)
+    given ScatanState = state
     state
-      .assignBuilding(spotToBuildRoad(state), BuildingType.Road, threePlayers.head) match
+      .assignBuilding(spotToBuildRoad(state), BuildingType.Road, threePlayers.head, noConstrainToBuildRoad) match
       case Some(state) => state.assignedBuildings should have size 1
       case None        => fail("state should be defined")
   }
@@ -61,16 +70,19 @@ class BuildingOpsTest extends BaseScatanStateTest:
   it should "not permit to assign a road if the spot is not empty" in {
     val state = ScatanState(threePlayers)
     val spot = spotToBuildRoad(state)
-    val stateWithBuilding = for
-      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
-      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
-      stateWithRoad <- stateWithBrick.build(spot, BuildingType.Road, threePlayers.head)
-    yield stateWithRoad
+    val stateWithBuilding =
+      for stateWithRoad <- state.assignBuilding(
+          spot,
+          BuildingType.Road,
+          threePlayers.head,
+          spotShouldBeEmptyToBuildRoad
+        )
+      yield stateWithRoad
     stateWithBuilding match
       case Some(state) =>
         state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Road))
         state
-          .assignBuilding(spot, BuildingType.Road, threePlayers.head) match
+          .assignBuilding(spot, BuildingType.Road, threePlayers.head, spotShouldBeEmptyToBuildRoad) match
           case Some(_) => fail("state should not be defined")
           case None    => succeed
 
@@ -145,4 +157,35 @@ class BuildingOpsTest extends BaseScatanStateTest:
     state
       .assignBuilding(spot, BuildingType.Settlement, player1)
       .flatMap(_.assignBuilding(spot, BuildingType.City, player2)) should be(None)
+  }
+
+  it should "not allow to assign a road without nothing near" in {
+    val state = ScatanState(threePlayers)
+    val roadSpot = spotToBuildRoad(state)
+    val stateWithRoad =
+      state
+        .assignBuilding(roadSpot, BuildingType.Road, threePlayers.head)
+    stateWithRoad should be(None)
+  }
+
+  it should "allow to assign a road if it is near a building" in {
+    val state = ScatanState(threePlayers)
+    val spot = spotToBuildStructure(state)
+    val roadSpot = roadNearSpot(state, spot)
+    val stateAssigned =
+      state
+        .assignBuilding(spot, BuildingType.Settlement, threePlayers.head)
+        .flatMap(_.assignBuilding(roadSpot, BuildingType.Road, threePlayers.head))
+    stateAssigned should not be (None)
+  }
+
+  it should "allow to assign a road if it has road near" in {
+    val state = ScatanState(threePlayers)
+    val roadSpot = spotToBuildRoad(state)
+    val roadSpot2 = state.gameMap.edgesOfNodesConnectedBy(roadSpot).head
+    val stateAssigned =
+      state
+        .assignBuilding(roadSpot, BuildingType.Road, threePlayers.head, noConstrainToBuildRoad)
+        .flatMap(_.assignBuilding(roadSpot2, BuildingType.Road, threePlayers.head))
+    stateAssigned should not be (None)
   }

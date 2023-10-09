@@ -61,10 +61,15 @@ object BuildingOps:
       * @return
       *   Some(ScatanState) if the building is assigned, None otherwise
       */
-    def assignBuilding(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
-      buildingType match
-        case BuildingType.City =>
-          state.assignedBuildings(spot) match
+    def assignBuilding(
+        spot: Spot,
+        buildingType: BuildingType,
+        player: ScatanPlayer,
+        roadBuildingRules: ScatanState => (RoadSpot, ScatanPlayer) => Boolean = defaultCheckBuildRoadCondition
+    ): Option[ScatanState] =
+      spot match
+        case citySpot: StructureSpot if buildingType == BuildingType.City =>
+          state.assignedBuildings(citySpot) match
             case AssignmentInfo(`player`, BuildingType.Settlement) =>
               Some(
                 state.copy(
@@ -73,8 +78,10 @@ object BuildingOps:
                 )
               )
             case _ => None
-        case BuildingType.Settlement =>
-          if state.emptyStructureSpot.contains(spot) then
+        case settlementSpot: StructureSpot if buildingType == BuildingType.Settlement =>
+          if state.emptyStructureSpot.contains(spot)
+            // && state.gameMap.edgesOf(settlementSpot).flatMap(state.assignedBuildings.get).exists()
+          then
             Some(
               state.copy(
                 assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
@@ -82,12 +89,29 @@ object BuildingOps:
               )
             )
           else None
-        case BuildingType.Road =>
-          if state.emptyRoadSpot.contains(spot) then
+        case roadSpot: RoadSpot =>
+          if roadBuildingRules(state)(roadSpot, player)
+          then
             Some(
               state.copy(
-                assignedBuildings = state.assignedBuildings.updated(spot, AssignmentInfo(player, buildingType)),
+                assignedBuildings = state.assignedBuildings.updated(roadSpot, AssignmentInfo(player, buildingType)),
                 assignedAwards = state.awards
               )
             )
           else None
+        case _ => None
+
+    private def defaultCheckBuildRoadCondition(spot: RoadSpot, player: ScatanPlayer): Boolean =
+      val structureSpot1 = spot._1
+      val structureSpot2 = spot._2
+      state.emptyRoadSpot.contains(spot)
+      && (
+        state.assignedBuildings
+          .filter(s => s._1 == structureSpot1 || s._1 == structureSpot2)
+          .map(_._2)
+          .exists(p => p.player == player)
+          || state.gameMap
+            .edgesOfNodesConnectedBy(spot)
+            .flatMap(state.assignedBuildings.get)
+            .exists(_.player == player)
+      )
