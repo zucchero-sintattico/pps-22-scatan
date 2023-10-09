@@ -185,17 +185,6 @@ body {
     padding: 2em;
 }
 
-.game-view-right-tab {
-    display: inline-flex;
-    flex-direction: column;
-    width: 20%;
-    margin-top: 5em;
-    background-color: white;
-    border-radius: 2em;
-    vertical-align: top;
-    padding: 1%;
-}
-
 .game-view-game-tab {
     text-align: center;
     display: inline-block;
@@ -284,6 +273,19 @@ body {
     padding-top: 0.5em;
 }
 
+/* Trade */
+
+.game-view-right-tab {
+    display: inline-flex;
+    flex-direction: column;
+    width: 20%;
+    margin-top: 5em;
+    background-color: white;
+    border-radius: 2em;
+    vertical-align: top;
+    padding: 1%;
+}
+
 
 .trade-player-button {
     width: 25%;
@@ -292,8 +294,9 @@ body {
 }
 
 .trade-bank-button {
-    width: 25%;
+    width: 100%;
     border-radius: 1em;
+    margin-top: 1em;
 }
 
 .game-view-resource-type-choice{
@@ -305,4 +308,6 @@ body {
 .game-view-resource-amount{
     display: inline;
     width: 20%;
+    border-radius: 0.5em;
+    margin-top: 0.5em; 
 }
