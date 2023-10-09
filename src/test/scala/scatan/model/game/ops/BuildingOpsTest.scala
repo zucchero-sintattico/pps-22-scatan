@@ -21,10 +21,6 @@ class BuildingOpsTest extends BaseScatanStateTest:
   private def roadNearSpot(state: ScatanState, spot: StructureSpot): RoadSpot =
     state.emptyRoadSpot.filter(_.contains(spot)).head
 
-  private def noConstrainToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = _ => (_, _) => true
-  private def spotShouldBeEmptyToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = s =>
-    (r, _) => s.emptyRoadSpot.contains(r)
-
   "A State with buildings Ops" should "have empty buildings when state start" in {
     val state = ScatanState(threePlayers)
     state.assignedBuildings.keySet should have size 0
@@ -34,7 +30,7 @@ class BuildingOpsTest extends BaseScatanStateTest:
     val state = ScatanState(threePlayers)
     given ScatanState = state
     state
-      .assignBuilding(spotToBuildRoad(state), BuildingType.Road, threePlayers.head, noConstrainToBuildRoad) match
+      .assignRoadWithoutRule(spotToBuildRoad(state), threePlayers.head) match
       case Some(state) => state.assignedBuildings should have size 1
       case None        => fail("state should be defined")
   }

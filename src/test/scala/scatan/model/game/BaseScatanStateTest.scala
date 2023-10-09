@@ -4,11 +4,24 @@ import scatan.BaseTest
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.EmptySpotsOps.emptySpots
 import scatan.model.map.Spot
+import scatan.model.map.RoadSpot
+import scatan.model.game.ops.EmptySpotsOps.emptyRoadSpot
+import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.components.BuildingType
 
 abstract class BaseScatanStateTest extends BaseTest:
 
   protected def players(n: Int): Seq[ScatanPlayer] =
     (1 to n).map(i => ScatanPlayer(s"Player $i"))
+
+  protected def noConstrainToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = _ => (_, _) => true
+  protected def spotShouldBeEmptyToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = s =>
+    (r, _) => s.emptyRoadSpot.contains(r)
+
+  // Avoid heavy check on spot type
+  extension (state: ScatanState)
+    def assignRoadWithoutRule(spot: RoadSpot, player: ScatanPlayer): Option[ScatanState] =
+      state.assignBuilding(spot, BuildingType.Road, player, noConstrainToBuildRoad)
 
   protected def emptySpot(state: ScatanState): Spot = state.emptySpots.head
 

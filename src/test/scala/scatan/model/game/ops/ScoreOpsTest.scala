@@ -46,7 +46,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val it = state.emptyRoadSpot.iterator
-    val stateWithRoad = state.assignBuilding(it.next(), BuildingType.Road, player1)
+    val stateWithRoad = state.assignRoadWithoutRule(it.next(), player1)
     stateWithRoad match
       case Some(state) =>
         state.scores(player1) should be(0)
@@ -60,11 +60,11 @@ class ScoreOpsTest extends BaseScatanStateTest:
     val stateWithSettlementAndAward =
       for
         stateWithSettlement <- state.assignBuilding(state.emptyStructureSpot.head, BuildingType.Settlement, player1)
-        oneRoadState <- stateWithSettlement.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        twoRoadState <- oneRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        threeRoadState <- twoRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        fourRoadState <- threeRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
-        fiveRoadState <- fourRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
+        oneRoadState <- stateWithSettlement.assignRoadWithoutRule(roadSpotIterator.next, player1)
+        twoRoadState <- oneRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
+        threeRoadState <- twoRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
+        fourRoadState <- threeRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
+        fiveRoadState <- fourRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
       yield fiveRoadState
     stateWithSettlementAndAward match
       case Some(state) =>
