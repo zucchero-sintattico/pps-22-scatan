@@ -21,3 +21,6 @@ trait UndirectedGraphOps[Node, Edge <: UnorderedPair[Node]] extends UndirectedGr
   def edgesOf(node: Node): Set[Edge] = edges.filter(_.contains(node))
 
   def neighboursOf(node: Node): Set[Node] = edgesOf(node).flatMap(_.toSet).filterNot(_ == node)
+
+  def edgesOfNodesConnectedBy(edge: Edge): Set[Edge] =
+    (edgesOf(edge._1) | edgesOf(edge._2)).filterNot(_ == edge)
