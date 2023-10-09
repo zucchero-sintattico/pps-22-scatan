@@ -6,6 +6,10 @@ import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
 import scatan.model.game.config.ScatanActions
 import scatan.views.game.GameView
+import scatan.model.game.ScatanState
+import scatan.model.components.Award
+import scatan.model.components.AwardType
+import scatan.model.game.ops.AwardOps.awards
 
 object LeftTabComponent:
 
@@ -62,5 +66,38 @@ object LeftTabComponent:
         "End Turn",
         onClick --> { _ => controller.nextTurn() },
         disabled <-- isActionDisabled(ScatanActions.NextTurn)
+      )
+    )
+
+  def awardsComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+    div(
+      className := "awards",
+      h2("Current awards"),
+      child <-- reactiveState
+        .map(state =>
+          (for
+            game <- state.game
+            gameState = game.state
+          yield getCurrentAwards(gameState))
+            .getOrElse(div("No game"))
+        )
+    )
+  private def getCurrentAwards(state: ScatanState): Element =
+    div(
+      ul(
+        li(
+          "Longest road: ",
+          state
+            .awards(Award(AwardType.LongestRoad))
+            .map(award => s"${award._1.name} (${award._2} roads)")
+            .getOrElse("Nobody yet")
+        ),
+        li(
+          "Largest army: ",
+          state
+            .awards(Award(AwardType.LargestArmy))
+            .map(award => s"${award._1.name} (${award._2} cards)")
+            .getOrElse("Nobody yet")
+        )
       )
     )
