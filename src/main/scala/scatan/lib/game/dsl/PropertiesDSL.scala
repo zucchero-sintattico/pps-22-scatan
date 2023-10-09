@@ -10,13 +10,14 @@ object PropertiesDSL:
   sealed trait Property[P]:
     def apply(newValue: P): Unit
 
-  final class OptionalProperty[P] extends Property[P]:
-    var value: Option[P] = None
+  final case class OptionalProperty[P](var value: Option[P] = None) extends Property[P]:
     override def apply(newValue: P): Unit = value = Some(newValue)
+    def foreach(f: P => Unit): Unit = value.foreach(f)
 
-  final class SequenceProperty[P] extends Property[P]:
-    var value: Seq[P] = Seq.empty
+
+  final case class SequenceProperty[P](var value: Seq[P] = Seq.empty[P]) extends Property[P]:
     override def apply(newValue: P): Unit = value = value :+ newValue
+    def foreach(f: P => Unit): Unit = value.foreach(f)
 
   // Setter
 

@@ -6,32 +6,35 @@ private object GameDSLDomain:
 
   given [State, P, S, A, Player]: Factory[GameCtx[State, P, S, A, Player]] with
     override def apply(): GameCtx[State, P, S, A, Player] = new GameCtx[State, P, S, A, Player]
-  class GameCtx[State, P, S, A, Player]:
-    val phases: SequenceProperty[PhaseCtx[State, P, S, A, Player]] = SequenceProperty()
-    val players: OptionalProperty[PlayersCtx] = OptionalProperty()
-    val winner: OptionalProperty[State => Option[Player]] = OptionalProperty()
-    val initialPhase: OptionalProperty[P] = OptionalProperty()
-    val stateFactory: OptionalProperty[Seq[Player] => State] = OptionalProperty()
+  case class GameCtx[State, P, S, A, Player](
+      phases: SequenceProperty[PhaseCtx[State, P, S, A, Player]] = SequenceProperty[PhaseCtx[State, P, S, A, Player]](),
+      players: OptionalProperty[PlayersCtx] = OptionalProperty[PlayersCtx](),
+      winner: OptionalProperty[State => Option[Player]] = OptionalProperty[State => Option[Player]](),
+      initialPhase: OptionalProperty[P] = OptionalProperty[P](),
+      stateFactory: OptionalProperty[Seq[Player] => State] = OptionalProperty[Seq[Player] => State]()
+  )
 
   given Factory[PlayersCtx] with
     override def apply(): PlayersCtx = new PlayersCtx
-  class PlayersCtx:
-    var allowedSizes: OptionalProperty[Seq[Int]] = OptionalProperty()
+  case class PlayersCtx(allowedSizes: OptionalProperty[Seq[Int]] = OptionalProperty[Seq[Int]]())
 
   given [State, Phase, Step, Action, Player]: Factory[PhaseCtx[State, Phase, Step, Action, Player]] with
-    override def apply(): PhaseCtx[State, Phase, Step, Action, Player] = new PhaseCtx[State, Phase, Step, Action, Player]
-  class PhaseCtx[State, Phase, Step, Action, Player]:
-    var phase: OptionalProperty[Phase] = OptionalProperty()
-    var initialStep: OptionalProperty[Step] = OptionalProperty()
-    var endingStep: OptionalProperty[Step] = OptionalProperty()
-    var nextPhase: OptionalProperty[Phase] = OptionalProperty()
-    var onEnter: OptionalProperty[State => State] = OptionalProperty()
-    var step: SequenceProperty[StepCtx[Phase, Step, Action]] = SequenceProperty()
-    var playerIteratorFactory: OptionalProperty[Seq[Player] => Iterator[Player]] = OptionalProperty()
+    override def apply(): PhaseCtx[State, Phase, Step, Action, Player] = PhaseCtx()
 
+  case class PhaseCtx[State, Phase, Step, Action, Player](
+      phase: OptionalProperty[Phase] = OptionalProperty[Phase](),
+      initialStep: OptionalProperty[Step] = OptionalProperty[Step](),
+      endingStep: OptionalProperty[Step] = OptionalProperty[Step](),
+      nextPhase: OptionalProperty[Phase] = OptionalProperty[Phase](),
+      onEnter: OptionalProperty[State => State] = OptionalProperty[State => State](),
+      steps: SequenceProperty[StepCtx[Phase, Step, Action]] = SequenceProperty[StepCtx[Phase, Step, Action]](),
+      playerIteratorFactory: OptionalProperty[Seq[Player] => Iterator[Player]] =
+        OptionalProperty[Seq[Player] => Iterator[Player]]()
+  )
 
   given [P, S, A]: Factory[StepCtx[P, S, A]] with
     override def apply(): StepCtx[P, S, A] = new StepCtx[P, S, A]
-  class StepCtx[P, S, A]:
-    var step: OptionalProperty[S] = OptionalProperty()
-    var when: SequenceProperty[(A, S)] = SequenceProperty()
+  case class StepCtx[P, S, A](
+      step: OptionalProperty[S] = OptionalProperty[S](),
+      when: SequenceProperty[(A, S)] = SequenceProperty[(A, S)]()
+  )
