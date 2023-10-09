@@ -34,12 +34,8 @@ object TradeOps:
         playerCards: Seq[ResourceCard],
         bankCards: ResourceCard
     ): Option[ScatanState] =
-      // check if playerCards are 4 and all are of the same type
       if playerCards.sizeIs == 4 && playerCards.forall(_.resourceType == playerCards.head.resourceType) then
-        // check if player has the cards
-        val stateWithPlayerCardsRemoved = playerCards.foldLeft(Option(state)) { (state, card) =>
-          state.flatMap(_.removeResourceCard(player, card))
-        }
-        // then assign the bankCard to player
-        stateWithPlayerCardsRemoved.flatMap(_.assignResourceCard(player, bankCards))
+        playerCards
+          .foldLeft(Option(state))((state, card) => state.flatMap(_.removeResourceCard(player, card)))
+          .flatMap(_.assignResourceCard(player, bankCards))
       else None
