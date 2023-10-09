@@ -71,7 +71,7 @@ object LeftTabComponent:
       )
     )
 
-  def awardsComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+  def awardsComponent: DisplayableSource[Element] =
     div(
       className := "awards",
       h2("Current awards"),

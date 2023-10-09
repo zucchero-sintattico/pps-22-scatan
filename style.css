@@ -227,12 +227,6 @@ body {
     border-radius: 1em;
 }
 
-.trade-button {
-    width: 25%;
-    margin-left: 1em;
-    border-radius: 1em;
-}
-
 .roll-dice-button {
     background-color: #b5ffa0;
 }
@@ -288,4 +282,27 @@ body {
     font-weight: bold;
     text-align: center;
     padding-top: 0.5em;
+}
+
+
+.trade-player-button {
+    width: 25%;
+    margin-left: 1em;
+    border-radius: 1em;
+}
+
+.trade-bank-button {
+    width: 25%;
+    border-radius: 1em;
+}
+
+.game-view-resource-type-choice{
+    display: inline;
+    justify-content: space-between;
+    margin-top: 1em;
+}
+
+.game-view-resource-amount{
+    display: inline;
+    width: 20%;
 }
