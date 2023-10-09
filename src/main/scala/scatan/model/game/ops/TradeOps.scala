@@ -5,6 +5,7 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.components.ResourceCard
 import scatan.model.game.ops.CardOps.removeResourceCard
 import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.views.game.components.ContextMap.resources
 
 object TradeOps:
   extension (state: ScatanState)
@@ -27,3 +28,18 @@ object TradeOps:
         state.flatMap(_.assignResourceCard(receiver, card))
       }
       stateWithReceiverCardsAdded
+
+    def tradeWithBank(
+        player: ScatanPlayer,
+        playerCards: Seq[ResourceCard],
+        bankCards: ResourceCard
+    ): Option[ScatanState] =
+      // check if playerCards are 4 and all are of the same type
+      if playerCards.sizeIs == 4 && playerCards.forall(_.resourceType == playerCards.head.resourceType) then
+        // check if player has the cards
+        val stateWithPlayerCardsRemoved = playerCards.foldLeft(Option(state)) { (state, card) =>
+          state.flatMap(_.removeResourceCard(player, card))
+        }
+        // then assign the bankCard to player
+        stateWithPlayerCardsRemoved.flatMap(_.assignResourceCard(player, bankCards))
+      else None
