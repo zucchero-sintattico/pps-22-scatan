@@ -8,6 +8,7 @@ import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.views.game.components.ContextMap.resources
 
 object TradeOps:
+  val tradeWithBankRequiredCards = 4
   extension (state: ScatanState)
     def tradeWithPlayer(
         sender: ScatanPlayer,
@@ -29,12 +30,26 @@ object TradeOps:
       }
       stateWithReceiverCardsAdded
 
+    /** Trade with the bank The player must have 4 cards of the same type The bank will give 1 card of the same type
+      *
+      * @param player,
+      *   the player that will trade with the bank
+      * @param playerCards,
+      *   the cards that the player will give to the bank
+      * @param bankCards,
+      *   the card that the bank will give to the player
+      * @return
+      *   Some(state) if the trade is allowed, None otherwise
+      */
     def tradeWithBank(
         player: ScatanPlayer,
         playerCards: Seq[ResourceCard],
         bankCards: ResourceCard
     ): Option[ScatanState] =
-      if playerCards.sizeIs == 4 && playerCards.forall(_.resourceType == playerCards.head.resourceType) then
+      if playerCards.sizeIs == tradeWithBankRequiredCards && playerCards.forall(
+          _.resourceType == playerCards.head.resourceType
+        )
+      then
         playerCards
           .foldLeft(Option(state))((state, card) => state.flatMap(_.removeResourceCard(player, card)))
           .flatMap(_.assignResourceCard(player, bankCards))
