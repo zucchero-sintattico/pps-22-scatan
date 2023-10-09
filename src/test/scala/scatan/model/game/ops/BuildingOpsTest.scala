@@ -136,3 +136,13 @@ class BuildingOpsTest extends BaseScatanStateTest:
     yield stateWithBuilding
     stateWithBuilding should be(None)
   }
+
+  it should "not allow to place a City if there is a Settlement of another player in the spot" in {
+    val state = ScatanState(threePlayers)
+    val spot = spotToBuildStructure(state)
+    val player1 = threePlayers.head
+    val player2 = threePlayers.tail.head
+    state
+      .assignBuilding(spot, BuildingType.Settlement, player1)
+      .flatMap(_.assignBuilding(spot, BuildingType.City, player2)) should be(None)
+  }
