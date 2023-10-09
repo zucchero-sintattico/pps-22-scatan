@@ -5,6 +5,7 @@ import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
 import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
+import scatan.views.game.components.AwardsComponent
 
 trait GameView extends View[ApplicationState]
 
@@ -22,6 +23,7 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
     div(
       div(
         className := LeftTabComponent.leftTabCssClass,
+        AwardsComponent.awardsComponent,
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.buttonsComponent,
         LeftTabComponent.possibleMovesComponent
