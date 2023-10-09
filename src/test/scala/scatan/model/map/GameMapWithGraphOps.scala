@@ -26,6 +26,11 @@ class GameMapWithGraphOpsTest extends BaseTest with ScalaCheckPropertyChecks:
         UnorderedTriple(Hexagon(0, 0, 0), Hexagon(-1, 0, 1), Hexagon(0, -1, 1))
       )
     )
+    val neighboursOfTestedSpot = Set(
+      UnorderedTriple(Hexagon(0, 0, 0), Hexagon(-1, 0, 1), Hexagon(0, -1, 1)),
+      UnorderedTriple(Hexagon(0, 0, 0), Hexagon(0, 1, -1), Hexagon(-1, 1, 0)),
+      UnorderedTriple(Hexagon(-1, 1, 0), Hexagon(-1, 0, 1), Hexagon(-2, 1, 1))
+    )
 
   import BoilerplateForTest.*
 
@@ -33,6 +38,20 @@ class GameMapWithGraphOpsTest extends BaseTest with ScalaCheckPropertyChecks:
     standardGameMap.edgesOf(spotToTest).size shouldBe 3
   }
 
+  it should "have 3 neighbours" in {
+    standardGameMap.neighboursOf(spotToTest).size shouldBe 3
+  }
+
   "The edges of the tested Spot" should "are as expected" in {
     standardGameMap.edgesOf(spotToTest) shouldBe edgesOfTestedSpot
+  }
+
+  "The neighbours of the tested Spot" should "are as expected" in {
+    standardGameMap.neighboursOf(spotToTest) shouldBe neighboursOfTestedSpot
+  }
+
+  they should "are neighbours of the tested Spot" in {
+    standardGameMap.neighboursOf(spotToTest).foreach { neighbourOfTestedSpot =>
+      standardGameMap.neighboursOf(neighbourOfTestedSpot) should contain(spotToTest)
+    }
   }

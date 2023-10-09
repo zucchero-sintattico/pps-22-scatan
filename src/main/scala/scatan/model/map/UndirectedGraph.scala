@@ -19,3 +19,5 @@ trait UndirectedGraph[Node, Edge <: UnorderedPair[Node]]:
 trait UndirectedGraphOps[Node, Edge <: UnorderedPair[Node]] extends UndirectedGraph[Node, Edge]:
 
   def edgesOf(node: Node): Set[Edge] = edges.filter(_.contains(node))
+
+  def neighboursOf(node: Node): Set[Node] = edgesOf(node).flatMap(_.toSet).filterNot(_ == node)
