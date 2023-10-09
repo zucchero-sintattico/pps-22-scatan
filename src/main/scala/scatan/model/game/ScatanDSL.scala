@@ -1,91 +1,81 @@
 package scatan.model.game
 
-import scatan.lib.game.dsl.old.{GameDSL, PhaseDSLOps, PhasesDSLOps}
-import scatan.lib.game.dsl.old.PhaseDSLOps.*
-import scatan.lib.game.dsl.old.PhasesDSLOps.*
-import scatan.lib.game.dsl.old.PlayersDSLOps.*
-import scatan.lib.game.dsl.old.TurnDSLOps.*
+import scatan.lib.game.Rules
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.ops.CardOps.assignResourcesAfterInitialPlacement
-import scatan.model.game.ops.ScoreOps.*
+import scatan.model.game.ops.ScoreOps.winner
 
 import scala.language.postfixOps
 
-object ScatanDSL extends GameDSL:
-  override type Player = ScatanPlayer
-  override type State = ScatanState
-  override type PhaseType = ScatanPhases
-  override type StepType = ScatanSteps
-  override type ActionType = ScatanActions
+object ScatanDSL:
 
-  import scatan.model.game.config.ScatanSteps.*
+  import scatan.lib.game.dsl.GameDSL.*
+  def Circular[X]: Seq[X] => Iterator[X] = Iterator.continually(_).flatten
+  def OnceAndBack[X]: Seq[X] => Iterator[X] = seq =>
+    (seq ++ seq.reverse).iterator
 
-  Players {
-    canBe(3 to 4)
-  }
+  private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
 
-  StartWithStateFactory(ScatanState(_))
-  StartWithPhase(ScatanPhases.Setup)
-
-  Winner(_.winner)
-
-  Phases {
-    On(ScatanPhases.Setup) {
-
-      Turn {
-        Iterate(circularWithBack)
-        StartIn(SetupSettlement)
-        CanEndIn(ChangingTurn)
-        NextPhase(ScatanPhases.Game)
-      }
-
-      When(SetupSettlement)(
-        ScatanActions.AssignSettlement -> SetupRoad
-      )
-
-      When(SetupRoad)(
-        ScatanActions.AssignRoad -> ChangingTurn
-      )
-
-      When(ChangingTurn)()
-
+    Players {
+      CanBe := (3 to 4)
     }
 
-    On(ScatanPhases.Game) {
+    WinnerFunction := winner
+    InitialPhase := ScatanPhases.Setup
+    StateFactory := ScatanState.apply
 
-      OnEnter((state: ScatanState) => state.assignResourcesAfterInitialPlacement.get)
+    Phase {
+      PhaseType := ScatanPhases.Setup
+      InitialStep := ScatanSteps.SetupSettlement
+      EndingStep := ScatanSteps.ChangingTurn
+      NextPhase := ScatanPhases.Game
+      Iterate := OnceAndBack
 
-      Turn {
-        Iterate(normal)
-        StartIn(Starting)
-        CanEndIn(ChangingTurn)
+      Step {
+        StepType := ScatanSteps.SetupSettlement
+        when := ScatanActions.AssignSettlement -> ScatanSteps.SetupRoad
+      }
+      Step {
+        StepType := ScatanSteps.SetupRoad
+        when := ScatanActions.AssignRoad -> ScatanSteps.ChangingTurn
       }
 
-      When(Starting)(
-        ScatanActions.RollDice -> Playing,
-        ScatanActions.RollSeven -> PlaceRobber,
-        ScatanActions.PlayDevelopmentCard -> Starting
-      )
-
-      When(PlaceRobber)(
-        ScatanActions.PlaceRobber -> StealCard
-      )
-
-      When(StealCard)(
-        ScatanActions.StoleCard -> Playing
-      )
-
-      When(Playing)(
-        ScatanActions.BuildSettlement -> Playing,
-        ScatanActions.BuildRoad -> Playing,
-        ScatanActions.BuildCity -> Playing,
-        ScatanActions.BuyDevelopmentCard -> Playing,
-        ScatanActions.PlayDevelopmentCard -> Playing,
-        ScatanActions.TradeWithBank -> Playing,
-        ScatanActions.TradeWithPlayer -> Playing,
-        ScatanActions.NextTurn -> ChangingTurn
-      )
-
-      When(ChangingTurn)()
     }
+    Phase {
+      PhaseType := ScatanPhases.Game
+      InitialStep := ScatanSteps.Starting
+      EndingStep := ScatanSteps.ChangingTurn
+      OnEnter := { (state: ScatanState) => state.assignResourcesAfterInitialPlacement.get }
+      Iterate := Circular
+
+      Step {
+        StepType := ScatanSteps.Starting
+        when := ScatanActions.RollDice -> ScatanSteps.Playing
+        when := ScatanActions.RollSeven -> ScatanSteps.PlaceRobber
+        when := ScatanActions.PlayDevelopmentCard -> ScatanSteps.Starting
+      }
+      Step {
+        StepType := ScatanSteps.PlaceRobber
+        when := ScatanActions.PlaceRobber -> ScatanSteps.StealCard
+      }
+      Step {
+        StepType := ScatanSteps.StealCard
+        when := ScatanActions.StoleCard -> ScatanSteps.Playing
+      }
+      Step {
+        StepType := ScatanSteps.Playing
+        when := ScatanActions.BuildSettlement -> ScatanSteps.Playing
+        when := ScatanActions.BuildRoad -> ScatanSteps.Playing
+        when := ScatanActions.BuildCity -> ScatanSteps.Playing
+        when := ScatanActions.BuyDevelopmentCard -> ScatanSteps.Playing
+        when := ScatanActions.PlayDevelopmentCard -> ScatanSteps.Playing
+        when := ScatanActions.TradeWithBank -> ScatanSteps.Playing
+        when := ScatanActions.TradeWithPlayer -> ScatanSteps.Playing
+        when := ScatanActions.NextTurn -> ScatanSteps.ChangingTurn
+      }
+    }
+
   }
+
+  val rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] =
+    game.rules

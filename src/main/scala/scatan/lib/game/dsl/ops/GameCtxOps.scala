@@ -5,11 +5,18 @@ import scatan.lib.game.dsl.GameDSLDomain.*
 
 object GameCtxOps:
 
-  def winner[S]: Contexted[GameCtx[S, ?, ?, ?, ?], PropertySetter[S => Boolean]] =
+  def WinnerFunction[State, Player]: Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[State => Option[Player]]] =
     ctx ?=> ctx.winner
 
-  def phases[P, S, A]: Contexted[GameCtx[?, P, S, A, ?], PropertyUpdater[PhasesCtx[P, S, A]]] =
+  def Phase[State, Phase, Step, Action, Player]: Contexted[GameCtx[State, Phase, Step, Action, Player], PropertyUpdater[PhaseCtx[State, Phase, Step, Action, Player]]] =
     ctx ?=> ctx.phases
 
-  def players: Contexted[GameCtx[?, ?, ?, ?, ?], PropertyUpdater[PlayersCtx]] =
+  def Players: Contexted[GameCtx[?, ?, ?, ?, ?], PropertyUpdater[PlayersCtx]] =
     ctx ?=> ctx.players
+
+  def InitialPhase[Phase]: Contexted[GameCtx[?, Phase, ?, ?, ?], PropertySetter[Phase]] =
+    ctx ?=> ctx.initialPhase
+
+  def StateFactory[State, Player]: Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[Seq[Player] => State]] =
+    ctx ?=> ctx.stateFactory
+

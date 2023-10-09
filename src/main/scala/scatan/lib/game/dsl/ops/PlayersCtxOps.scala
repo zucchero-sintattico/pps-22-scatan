@@ -4,5 +4,5 @@ import scatan.lib.game.dsl.PropertiesDSL.*
 import scatan.lib.game.dsl.GameDSLDomain.*
 
 object PlayersCtxOps:
-  def canBe: Contexted[PlayersCtx, PropertySetter[Seq[Int]]] =
+  def CanBe: Contexted[PlayersCtx, PropertySetter[Seq[Int]]] =
     ctx ?=> ctx.allowedSizes

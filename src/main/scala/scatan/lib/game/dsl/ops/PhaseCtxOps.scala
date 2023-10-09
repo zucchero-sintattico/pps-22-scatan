@@ -4,8 +4,23 @@ import scatan.lib.game.dsl.PropertiesDSL.*
 import scatan.lib.game.dsl.GameDSLDomain.*
 
 object PhaseCtxOps:
-  def Phase[P, S, A]: Contexted[PhaseCtx[P, S, A], PropertySetter[P]] =
+  def PhaseType[Phase]: Contexted[PhaseCtx[?, Phase, ?, ?, ?], PropertySetter[Phase]] =
     ctx ?=> ctx.phase
 
-  def when[P, S, A]: Contexted[PhaseCtx[P, S, A], PropertySetter[(A, S)]] =
-    ctx ?=> ctx.when
+  def InitialStep[Step]: Contexted[PhaseCtx[?, ?, Step, ?, ?], PropertySetter[Step]] =
+    ctx ?=> ctx.initialStep
+
+  def EndingStep[Step]: Contexted[PhaseCtx[?, ?, Step, ?, ?], PropertySetter[Step]] =
+    ctx ?=> ctx.endingStep
+
+  def NextPhase[Phase]: Contexted[PhaseCtx[?, Phase, ?, ?, ?], PropertySetter[Phase]] =
+    ctx ?=> ctx.nextPhase
+
+  def OnEnter[State]: Contexted[PhaseCtx[State, ?, ?, ?, ?], PropertySetter[State => State]] =
+    ctx ?=> ctx.onEnter
+
+  def Step[Phase, StepType, Action]: Contexted[PhaseCtx[?, Phase, StepType, Action, ?], PropertyUpdater[StepCtx[Phase, StepType, Action]]] =
+    ctx ?=> ctx.step
+
+  def Iterate[Player]: Contexted[PhaseCtx[?, ?, ?, ?, Player], PropertySetter[Seq[Player] => Iterator[Player]]] =
+    ctx ?=> ctx.playerIteratorFactory
