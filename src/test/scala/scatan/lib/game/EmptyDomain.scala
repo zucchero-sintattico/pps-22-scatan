@@ -3,11 +3,11 @@ package scatan.lib.game
 import scatan.lib.game.EmptyDomain.MyPhases
 import scatan.lib.game.EmptyDomain.MyPhases.*
 import scatan.lib.game.EmptyDomain.Steps.Initial
-import scatan.lib.game.dsl.PhaseDSLOps.{Turn, When}
-import scatan.lib.game.dsl.PhasesDSLOps.On
-import scatan.lib.game.dsl.PlayersDSLOps.canBe
-import scatan.lib.game.dsl.TurnDSLOps.*
-import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, TurnDSLOps}
+import scatan.lib.game.dsl.old.{GameDSL, PhaseDSLOps, TurnDSLOps}
+import scatan.lib.game.dsl.old.PhaseDSLOps.{Turn, When}
+import scatan.lib.game.dsl.old.PhasesDSLOps.On
+import scatan.lib.game.dsl.old.PlayersDSLOps.canBe
+import scatan.lib.game.dsl.old.TurnDSLOps.*
 import scatan.lib.game.ops.Effect
 
 object EmptyDomain:

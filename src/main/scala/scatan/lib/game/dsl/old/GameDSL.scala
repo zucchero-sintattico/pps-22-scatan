@@ -1,6 +1,7 @@
-package scatan.lib.game.dsl
+package scatan.lib.game.dsl.old
 
 /** A type-safe DSL for defining games.
+  *
   * @tparam Player
   *   The type of player in the game.
   * @tparam State

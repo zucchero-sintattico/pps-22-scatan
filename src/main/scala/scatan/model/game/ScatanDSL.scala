@@ -1,10 +1,10 @@
 package scatan.model.game
 
-import scatan.lib.game.dsl.PhaseDSLOps.*
-import scatan.lib.game.dsl.PhasesDSLOps.*
-import scatan.lib.game.dsl.PlayersDSLOps.*
-import scatan.lib.game.dsl.TurnDSLOps.*
-import scatan.lib.game.dsl.{GameDSL, PhaseDSLOps, PhasesDSLOps}
+import scatan.lib.game.dsl.old.{GameDSL, PhaseDSLOps, PhasesDSLOps}
+import scatan.lib.game.dsl.old.PhaseDSLOps.*
+import scatan.lib.game.dsl.old.PhasesDSLOps.*
+import scatan.lib.game.dsl.old.PlayersDSLOps.*
+import scatan.lib.game.dsl.old.TurnDSLOps.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.ops.CardOps.assignResourcesAfterInitialPlacement
 import scatan.model.game.ops.ScoreOps.*

@@ -1,11 +1,12 @@
-package scatan.lib.game.dsl
+package scatan.lib.game.dsl.old
 
 import scatan.lib.game.Rules
-import scatan.lib.game.dsl.PhasesDSLOps.PhasesDSLContext
-import scatan.lib.game.dsl.PlayersDSLOps.PlayersDSLContext
+import scatan.lib.game.dsl.old.PhasesDSLOps.PhasesDSLContext
+import scatan.lib.game.dsl.old.PlayersDSLOps.PlayersDSLContext
 import scatan.lib.game.ops.RulesOps.*
 
 /** A DSL for defining a game.
+  *
   * @tparam State
   *   The type of the game state.
   * @tparam PhaseType

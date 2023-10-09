@@ -1,6 +1,6 @@
-package scatan.lib.game.dsl
+package scatan.lib.game.dsl.old
 
-import scatan.lib.game.ops.RulesOps.withAllowedPlayersSizes
+import scatan.lib.game.ops.RulesOps.*
 
 /** Operations for the players DSL.
   */

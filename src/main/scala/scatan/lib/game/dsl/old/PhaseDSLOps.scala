@@ -1,8 +1,8 @@
-package scatan.lib.game.dsl
+package scatan.lib.game.dsl.old
 
 import scatan.lib.game.GameStatus
-import scatan.lib.game.dsl.TurnDSLOps.TurnDSLContext
-import scatan.lib.game.ops.RulesOps.{withActions, withOnEnter}
+import scatan.lib.game.dsl.old.TurnDSLOps.TurnDSLContext
+import scatan.lib.game.ops.RulesOps.*
 
 /** Operations for defining phases and steps in a game.
   */

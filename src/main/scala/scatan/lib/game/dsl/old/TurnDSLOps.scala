@@ -1,4 +1,4 @@
-package scatan.lib.game.dsl
+package scatan.lib.game.dsl.old
 
 import scatan.lib.game.ops.RulesOps.*
 
