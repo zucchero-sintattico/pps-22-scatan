@@ -133,6 +133,7 @@ class TradeOpsTest extends BaseScatanStateTest:
       .assignResourceCard(player, ResourceCard(ResourceType.Wood))
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
+      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Brick)))
     stateWithResourceAssigned match
       case Some(state) =>
