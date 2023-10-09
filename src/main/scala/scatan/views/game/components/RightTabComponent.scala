@@ -5,16 +5,17 @@ import scatan.model.ApplicationState
 import scatan.controllers.game.GameController
 import scatan.model.game.ScatanState
 import scatan.model.game.ScatanGame
+import scatan.model.game.config.ScatanPhases
 
 object RightTabComponent:
 
   def rightTabCssClass: String = "game-view-right-tab"
 
-  def playerListComponent(using reactiveState: Signal[ApplicationState])(using
+  def tradeComponent(using reactiveState: Signal[ApplicationState])(using
       gameController: GameController
   ): Element =
     div(
-      className := "game-view-player-list",
+      className := rightTabCssClass,
       h2("Trade:"),
       h3("Players:"),
       div(
@@ -24,8 +25,12 @@ object RightTabComponent:
             (for game <- state.game
             yield getPlayersList(game)).getOrElse(div("No game"))
           )
-      )
+      ),
+      visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
     )
+
+  private def areTradeEnabled(using appState: Signal[ApplicationState]): Signal[Boolean] =
+    appState.map(_.game.exists(_.gameStatus.phase == ScatanPhases.Game))
 
   private def getPlayersList(game: ScatanGame)(using gameController: GameController): Element =
     ul(
@@ -36,7 +41,7 @@ object RightTabComponent:
         button(
           className := "trade-button",
           "Trade"
-          //   onClick.mapTo(player) --> ??? // gameController.tradeWithPlayer
+          // disable button if not in game phase
         )
       )
     )

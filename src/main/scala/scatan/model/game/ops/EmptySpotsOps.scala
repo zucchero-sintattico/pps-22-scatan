@@ -35,5 +35,5 @@ object EmptySpotsOps:
     def emptyRoadSpot: Seq[RoadSpot] =
       state.gameMap.edges
         .filter(!state.assignedBuildings.isDefinedAt(_))
-        .filter(_.toSet.exists(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers)))
+        .filter(_.toSet.forall(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers)))
         .toSeq
