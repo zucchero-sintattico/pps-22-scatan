@@ -20,8 +20,8 @@ object RightTabComponent:
     div(
       className := rightTabCssClass,
       h2("Trade:"),
-      tradePlayerComponent
-      // tradeBankComponent
+      tradePlayerComponent,
+      tradeBankComponent
       // visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
     )
 
@@ -43,6 +43,18 @@ object RightTabComponent:
             (for game <- state.game
             yield getPlayersList(game)).getOrElse(div("No game"))
           )
+      )
+    )
+
+  private def tradeBankComponent: DisplayableSource[Element] =
+    div(
+      h3("Bank:"),
+      div(
+        "Trade four of ",
+        resourceTypeChoiceComponent,
+        " for one of ",
+        resourceTypeChoiceComponent,
+        button(className := "trade-bank-button", "Trade")
       )
     )
 
