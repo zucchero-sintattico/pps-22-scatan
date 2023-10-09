@@ -15,3 +15,7 @@ trait UndirectedGraph[Node, Edge <: UnorderedPair[Node]]:
     *   the set of edges
     */
   def edges: Set[Edge]
+
+trait UndirectedGraphOps[Node, Edge <: UnorderedPair[Node]] extends UndirectedGraph[Node, Edge]:
+
+  def edgesOf(node: Node): Set[Edge] = edges.filter(_.contains(node))
