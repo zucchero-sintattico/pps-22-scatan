@@ -177,12 +177,23 @@ body {
 .game-view-left-tab {
     display: inline-flex;
     flex-direction: column;
-    width: 25%;
+    width: 20%;
     margin-top: 5em;
     background-color: white;
     border-radius: 2em;
     vertical-align: top;
     padding: 2em;
+}
+
+.game-view-right-tab {
+    display: inline-flex;
+    flex-direction: column;
+    width: 20%;
+    margin-top: 5em;
+    background-color: white;
+    border-radius: 2em;
+    vertical-align: top;
+    padding: 1%;
 }
 
 .game-view-game-tab {
@@ -213,6 +224,12 @@ body {
     height: 3em;
     font-size: 1em;
     font-weight: bold;
+    border-radius: 1em;
+}
+
+.trade-button {
+    width: 25%;
+    margin-left: 1em;
     border-radius: 1em;
 }
 
