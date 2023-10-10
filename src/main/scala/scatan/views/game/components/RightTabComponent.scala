@@ -14,6 +14,9 @@ import scatan.views.utils.TypeUtils.InputSource
 
 object RightTabComponent:
 
+  val tradeOffer: Var[ResourceType] = Var(ResourceType.values.head)
+  val tradeRequest: Var[ResourceType] = Var(ResourceType.values.head)
+
   def rightTabCssClass: String = "game-view-right-tab"
 
   def tradeComponent: DisplayableSource[Element] =
@@ -50,10 +53,20 @@ object RightTabComponent:
       h3("Bank:"),
       div(
         "Trade four of ",
-        resourceTypeChoiceComponent,
+        resourceTypeChoiceComponent(tradeOffer),
         " for one of ",
-        resourceTypeChoiceComponent,
-        button(className := "trade-bank-button", "Trade")
+        resourceTypeChoiceComponent(tradeRequest),
+        button(
+          className := "trade-bank-button",
+          onClick --> (_ =>
+            println("" + tradeOffer.now() + tradeRequest.now())
+            gameController.onTradeWithBank(
+              tradeOffer.now(),
+              tradeRequest.now()
+            )
+          ),
+          "Trade"
+        )
       )
     )
 
@@ -87,10 +100,11 @@ object RightTabComponent:
       )
     )
 
-  private def resourceTypeChoiceComponent: InputSource[Element] =
+  private def resourceTypeChoiceComponent(changing: Var[ResourceType]): InputSource[Element] =
     div(
       className := "game-view-resource-type-choice",
       select(
+        onChange.mapToValue.map(ResourceType.withName(_)) --> changing,
         className := "game-view-resource-type-choice-select",
         // for each type of resource add an option
         for resource <- ResourceType.values

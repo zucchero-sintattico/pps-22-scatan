@@ -12,6 +12,7 @@ import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
 import scatan.model.components.ResourceCard
+import scatan.model.components.ResourceType
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -78,7 +79,10 @@ private trait ScatanGameActions extends ScatanGameStatus:
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
   def playDevelopmentCard: Option[ScatanGame] = ???
-  def tradeWithBank: Option[ScatanGame] = ???
+
+  def tradeWithBank(offer: ResourceType, request: ResourceType): Option[ScatanGame] =
+    play(ScatanActions.TradeWithBank)(using TradeWithBankEffect(game.turn.player, offer, request))
+
   def tradeWithPlayer(
       receiver: ScatanPlayer,
       senderTradeCards: Seq[ResourceCard],

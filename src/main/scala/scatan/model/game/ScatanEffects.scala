@@ -13,6 +13,9 @@ import scatan.model.game.ops.CardOps.assignResourceCard
 import scatan.model.game.ops.TradeOps.tradeWithPlayer
 import scatan.model.game.ops.CardOps.assignResourcesFromNumber
 import scatan.model.game.ops.RobberOps.moveRobber
+import scatan.model.components.ResourceType
+import scatan.model.game.ops.TradeOps.tradeWithBank
+import scatan.model.components.*
 
 object ScatanEffects:
 
@@ -55,7 +58,16 @@ object ScatanEffects:
 
   def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = EmptyEffect
 
-  def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = EmptyEffect
+  def TradeWithBankEffect(
+      player: ScatanPlayer,
+      offer: ResourceType,
+      request: ResourceType
+  ): Effect[TradeWithBank.type, ScatanState] = (state: ScatanState) =>
+    state.tradeWithBank(
+      player,
+      offer,
+      request
+    )
 
   def TradeWithPlayerEffect(
       sender: ScatanPlayer,

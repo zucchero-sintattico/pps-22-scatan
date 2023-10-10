@@ -9,10 +9,12 @@ import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
 import scatan.model.map.Hexagon
+import scatan.model.components.ResourceType
 
 trait GameController extends Controller[ApplicationState]:
   def onRoadSpot(spot: RoadSpot): Unit
   def onStructureSpot(spot: StructureSpot): Unit
+  def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit
   def nextTurn(): Unit
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
@@ -71,3 +73,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
           this.model
             .updateGame(_.buildSettlement(spot))
             .onError(view.displayMessage("Cannot build settlement here"))
+
+  override def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit =
+    this.model
+      .updateGame(_.tradeWithBank(offer, request))
+      .onError(view.displayMessage("Cannot trade this cards with bank" + offer.toString() + request.toString()))

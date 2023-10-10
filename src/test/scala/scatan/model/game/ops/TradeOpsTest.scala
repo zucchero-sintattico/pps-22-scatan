@@ -87,22 +87,18 @@ class TradeOpsTest extends BaseScatanStateTest:
         val stateWithTrade =
           state.tradeWithBank(
             player,
-            Seq(
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood)
-            ),
-            ResourceCard(ResourceType.Brick)
+            ResourceType.Wood,
+            ResourceType.Brick
           )
         stateWithTrade match
           case Some(state) =>
             state.resourceCards(player) should contain(ResourceCard(ResourceType.Brick))
+            state.resourceCards(player) should have size 1
           case None => fail("Trade not allowed")
       case None => fail("Resources not assigned")
   }
 
-  it should "not allow to trade with bank if the player hasn't the cards" in {
+  it should "not allow to trade with bank if player doesn't have four identical cards" in {
     val state = ScatanState(threePlayers)
     val player = threePlayers.head
     val stateWithResourceAssigned = state
@@ -114,39 +110,8 @@ class TradeOpsTest extends BaseScatanStateTest:
         val stateWithTrade =
           state.tradeWithBank(
             player,
-            Seq(
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood)
-            ),
-            ResourceCard(ResourceType.Brick)
-          )
-        stateWithTrade should be(None)
-      case None => fail("Resources not assigned")
-  }
-
-  it should "not allow to trade with bank if the offer not contains four identical cards" in {
-    val state = ScatanState(threePlayers)
-    val player = threePlayers.head
-    val stateWithResourceAssigned = state
-      .assignResourceCard(player, ResourceCard(ResourceType.Wood))
-      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Brick)))
-    stateWithResourceAssigned match
-      case Some(state) =>
-        val stateWithTrade =
-          state.tradeWithBank(
-            player,
-            Seq(
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Wood),
-              ResourceCard(ResourceType.Brick)
-            ),
-            ResourceCard(ResourceType.Brick)
+            ResourceType.Wood,
+            ResourceType.Brick
           )
         stateWithTrade should be(None)
       case None => fail("Resources not assigned")
