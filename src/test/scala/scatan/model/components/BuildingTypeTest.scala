@@ -29,9 +29,9 @@ class BuildingTypeCostTest extends BaseTest:
   "A Settlement" should "cost 1 wood, 1 brick, 1 sheep" in {
     Settlement.cost should be(
       Cost(
-        Wood *** 1,
-        Brick *** 1,
-        Sheep *** 1
+        Wood * 1,
+        Brick * 1,
+        Sheep * 1
       )
     )
   }
@@ -39,8 +39,8 @@ class BuildingTypeCostTest extends BaseTest:
   "A City" should "cost 2 wheat, 3 rock" in {
     City.cost should be(
       Cost(
-        Wheat *** 2,
-        Rock *** 3
+        Wheat * 2,
+        Rock * 3
       )
     )
   }
@@ -48,8 +48,8 @@ class BuildingTypeCostTest extends BaseTest:
   "A Road" should "cost 1 wood, 1 brick" in {
     Road.cost should be(
       Cost(
-        Wood *** 1,
-        Brick *** 1
+        Wood * 1,
+        Brick * 1
       )
     )
   }

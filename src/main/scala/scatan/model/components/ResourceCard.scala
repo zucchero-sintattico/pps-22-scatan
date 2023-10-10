@@ -20,7 +20,7 @@ object ResourceType:
 
 final case class ResourceCard(resourceType: ResourceType)
 
-extension (card: ResourceCard) def *(amount: Int): Seq[ResourceCard] = Seq.fill(amount)(card)
+extension (card: ResourceCard) def **(amount: Int): Seq[ResourceCard] = Seq.fill(amount)(card)
 
 type ResourceCards = Map[ScatanPlayer, Seq[ResourceCard]]
 
