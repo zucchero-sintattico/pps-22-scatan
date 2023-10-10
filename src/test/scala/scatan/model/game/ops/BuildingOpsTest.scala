@@ -185,3 +185,15 @@ class BuildingOpsTest extends BaseScatanStateTest:
         .flatMap(_.assignBuilding(roadSpot2, BuildingType.Road, threePlayers.head))
     stateAssigned should not be (None)
   }
+
+  it should "not allow to assign a building if another is near" in {
+    val state = ScatanState(threePlayers)
+    val spot = spotToBuildStructure(state)
+    val anotherSpot = (state.gameMap.neighboursOf(spot) & state.emptyStructureSpot.toSet).head
+    val stateAssigned =
+      state
+        .assignBuilding(anotherSpot, BuildingType.Settlement, threePlayers.head)
+        .flatMap(_.assignBuilding(spot, BuildingType.Settlement, threePlayers.head))
+    println(stateAssigned.map(_.assignedBuildings))
+    stateAssigned should be(None)
+  }
