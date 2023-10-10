@@ -7,6 +7,7 @@ import scatan.model.components.ResourceCard
 import scatan.model.components.ResourceType
 import scatan.model.game.ops.TradeOps.tradeWithPlayer
 import scatan.model.game.ops.TradeOps.tradeWithBank
+import scatan.model.components.*
 
 class TradeOpsTest extends BaseScatanStateTest:
 
@@ -19,9 +20,14 @@ class TradeOpsTest extends BaseScatanStateTest:
       .flatMap(_.assignResourceCard(sender, ResourceCard(ResourceType.Wood)))
       .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Brick)))
     stateWithResourceAssigned match
-      case Some(state) =>
+      case Some(stateWithResourceAssigned) =>
         val stateWithTrade =
-          state.tradeWithPlayer(sender, receiver, state.resourceCards(sender), state.resourceCards(receiver))
+          stateWithResourceAssigned.tradeWithPlayer(
+            sender,
+            receiver,
+            Seq(ResourceCard(ResourceType.Wood), ResourceCard(ResourceType.Wood)),
+            Seq(ResourceCard(ResourceType.Brick))
+          )
         stateWithTrade match
           case Some(state) =>
             state.resourceCards(sender) should be(Seq(ResourceCard(ResourceType.Brick)))
@@ -57,21 +63,30 @@ class TradeOpsTest extends BaseScatanStateTest:
     val receiver = threePlayers.tail.head
     val stateWithResourceAssigned = state
       .assignResourceCard(sender, ResourceCard(ResourceType.Wood))
-      .flatMap(_.assignResourceCard(sender, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(sender, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Brick)))
+      .flatMap(_.assignResourceCard(sender, ResourceCard(ResourceType.Brick)))
+      .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Wheat)))
+      .flatMap(_.assignResourceCard(receiver, ResourceCard(ResourceType.Rock)))
     stateWithResourceAssigned match
       case Some(state) =>
         val stateWithTrade =
-          state.tradeWithPlayer(sender, receiver, Seq(ResourceCard(ResourceType.Wood)), state.resourceCards(receiver))
+          state.tradeWithPlayer(
+            sender,
+            receiver,
+            Seq(ResourceCard(ResourceType.Wood)),
+            Seq(ResourceCard(ResourceType.Rock))
+          )
         stateWithTrade match
           case Some(state) =>
-            state.resourceCards(sender) should be(
-              Seq(ResourceCard(ResourceType.Wood), ResourceCard(ResourceType.Wood), ResourceCard(ResourceType.Brick))
-            )
-            state.resourceCards(receiver) should be(Seq(ResourceCard(ResourceType.Wood)))
+            state.resourceCards(sender) should contain(ResourceCard(ResourceType.Brick))
+            state.resourceCards(sender) should contain(ResourceCard(ResourceType.Rock))
+            state.resourceCards(sender) should have size 2
+            state.resourceCards(receiver) should contain(ResourceCard(ResourceType.Wheat))
+            state.resourceCards(receiver) should contain(ResourceCard(ResourceType.Wood))
+            state.resourceCards(receiver) should have size 2
+
           case None => fail("Trade not allowed")
       case None => fail("Resources not assigned")
+
   }
 
   it should "allow to trade a card with bank for four identical cards" in {
@@ -107,7 +122,7 @@ class TradeOpsTest extends BaseScatanStateTest:
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
       .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Wood)))
-      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Brick)))
+      .flatMap(_.assignResourceCard(player, ResourceCard(ResourceType.Rock)))
     stateWithResourceAssigned match
       case Some(state) =>
         val stateWithTrade =
@@ -119,8 +134,9 @@ class TradeOpsTest extends BaseScatanStateTest:
         stateWithTrade match
           case Some(state) =>
             state.resourceCards(player) should contain(ResourceCard(ResourceType.Brick))
+            state.resourceCards(player) should contain(ResourceCard(ResourceType.Rock))
             state.resourceCards(player) should contain(ResourceCard(ResourceType.Wood))
-            state.resourceCards(player) should have size 2
+            state.resourceCards(player) should have size 3
           case None => fail("Trade not allowed")
       case None => fail("Resources not assigned")
   }

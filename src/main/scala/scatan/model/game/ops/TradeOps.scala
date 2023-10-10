@@ -17,19 +17,17 @@ object TradeOps:
         senderCards: Seq[ResourceCard],
         receiverCards: Seq[ResourceCard]
     ): Option[ScatanState] =
-      val stateWithSenderCardsRemoved = senderCards.foldLeft(Option(state)) { (state, card) =>
-        state.flatMap(_.removeResourceCard(sender, card))
-      }
-      val stateWithReceiverCardsRemoved = receiverCards.foldLeft(stateWithSenderCardsRemoved) { (state, card) =>
-        state.flatMap(_.removeResourceCard(receiver, card))
-      }
-      val stateWithSenderCardsAdded = receiverCards.foldLeft(stateWithReceiverCardsRemoved) { (state, card) =>
-        state.flatMap(_.assignResourceCard(sender, card))
-      }
-      val stateWithReceiverCardsAdded = senderCards.foldLeft(stateWithSenderCardsAdded) { (state, card) =>
-        state.flatMap(_.assignResourceCard(receiver, card))
-      }
-      stateWithReceiverCardsAdded
+      val stateWithSenderCardsProcessed = senderCards.foldLeft(Option(state))((state, card) =>
+        state
+          .flatMap(s => s.removeResourceCard(sender, card))
+          .flatMap(s => s.assignResourceCard(receiver, card))
+      )
+      val stateWithReceiverCardsProcessed = receiverCards.foldLeft(stateWithSenderCardsProcessed)((state, card) =>
+        state
+          .flatMap(s => s.removeResourceCard(receiver, card))
+          .flatMap(s => s.assignResourceCard(sender, card))
+      )
+      stateWithReceiverCardsProcessed
 
     /** Trade with the bank The player must have 4 cards of the same type The bank will give 1 card of the same type
       *
