@@ -3,7 +3,12 @@ package scatan.model.game.ops
 import scatan.model.components.{BuildingType, ResourceCard, ResourceCards, ResourceType}
 import scatan.model.game.{BaseScatanStateTest, ScatanState}
 import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.CardOps.{assignResourceCard, assignResourcesAfterInitialPlacement, assignResourcesFromNumber, removeResourceCard}
+import scatan.model.game.ops.CardOps.{
+  assignResourceCard,
+  assignResourcesAfterInitialPlacement,
+  assignResourcesFromNumber,
+  removeResourceCard
+}
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
