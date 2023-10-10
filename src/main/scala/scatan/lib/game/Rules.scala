@@ -29,16 +29,16 @@ package scatan.lib.game
   *   player of the game
   */
 final case class Rules[State, P, S, A, Player](
+    allowedPlayersSizes: Set[Int],
     startingStateFactory: Seq[Player] => State,
     startingPhase: P,
     startingSteps: Map[P, S],
-    actions: Map[GameStatus[P, S], Map[A, S]],
-    allowedPlayersSizes: Set[Int],
-    phaseTurnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
-    nextPhase: Map[P, P] = Map.empty[P, P],
     endingSteps: Map[P, S],
     winnerFunction: State => Option[Player],
-    initialAction: Map[P, State => State]
+    initialAction: Map[P, State => State],
+    phaseTurnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
+    nextPhase: Map[P, P] = Map.empty[P, P],
+    actions: Map[GameStatus[P, S], Map[A, S]],
 ):
   def valid: Boolean =
     startingStateFactory != null &&

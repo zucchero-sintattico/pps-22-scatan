@@ -10,15 +10,6 @@ import scala.language.postfixOps
 
 object ScatanDSL:
 
-  @main def main(): Unit =
-    for
-      phase <- game.phases
-      _ <- { println(phase); Some(())}
-      step <- phase.steps
-        _ <- { println(step); Some(())}
-    do ()
-
-
   import scatan.lib.game.dsl.GameDSL.*
   def Circular[X]: Seq[X] => Iterator[X] = Iterator.continually(_).flatten
   def OnceAndBack[X]: Seq[X] => Iterator[X] = seq =>
@@ -87,7 +78,10 @@ object ScatanDSL:
 
   }
 
-
-
   def rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] =
     game.rules
+
+
+object Test:
+  @main def test(): Unit =
+    ScatanDSL.rules
