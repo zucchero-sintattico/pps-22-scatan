@@ -2,12 +2,13 @@ package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
-import scatan.model.ApplicationState
-import scatan.model.components.DevelopmentType.*
-import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
-import scatan.model.components.ResourceType.*
-import scatan.model.game.ScatanState
-import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.*
+import scatan.model.game.config.*
+import scatan.model.components.*
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
+import scatan.views.utils.TypeUtils.{gameController, reactiveState, state}
+import ResourceType.*
+import DevelopmentType.*
 import scatan.views.game.components.CardContextMap.{CardType, cardImages, countCardOf}
 
 object CardContextMap:
@@ -34,16 +35,14 @@ object CardContextMap:
   )
 
 object CardsComponent:
-  def cardsComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+  def cardsComponent: DisplayableSource[Element] =
     div(
       cls := "game-view-card-container",
       cardCountComponent(cardImages.collect { case (k: ResourceType, v) => (k, v) }),
       cardCountComponent(cardImages.collect { case (k: DevelopmentType, v) => (k, v) })
     )
 
-  private def cardCountComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController)(
-      cards: Map[CardType, String]
-  ): Element =
+  private def cardCountComponent(cards: Map[CardType, String]): DisplayableSource[Element] =
     div(
       cls := "game-view-child-container",
       for (cardType, path) <- cards.toList
