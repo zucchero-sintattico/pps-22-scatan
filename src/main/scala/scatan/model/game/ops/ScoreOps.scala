@@ -38,6 +38,12 @@ object ScoreOps:
         )
       )
 
+    /** Computes the partial scores of each player, taking into account the development cards they have assigned. A
+      * victory point card is worth 1 point.
+      *
+      * @return
+      *   a Scores object containing the partial scores of each player.
+      */
     private def partialScoresWithVictoryPointCards: Scores =
       val playersWithVictoryPointCards =
         state.developmentCards.filter(_._2.exists(_.developmentType == DevelopmentType.VictoryPoint)).map(_._1)
