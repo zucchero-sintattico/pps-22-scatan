@@ -65,7 +65,9 @@ object BuildingOps:
         spot: Spot,
         buildingType: BuildingType,
         player: ScatanPlayer,
-        roadBuildingRules: ScatanState => (RoadSpot, ScatanPlayer) => Boolean = defaultCheckBuildRoadCondition
+        roadBuildingRules: ScatanState => (RoadSpot, ScatanPlayer) => Boolean = defaultRulesForRoadBuilding,
+        settlementBuildingRules: ScatanState => (StructureSpot, ScatanPlayer) => Boolean =
+          defaultRulesForSettlementBuilding,
     ): Option[ScatanState] =
       spot match
         case citySpot: StructureSpot if buildingType == BuildingType.City =>
@@ -79,8 +81,7 @@ object BuildingOps:
               )
             case _ => None
         case settlementSpot: StructureSpot if buildingType == BuildingType.Settlement =>
-          if state.emptyStructureSpot.contains(spot)
-            // && state.gameMap.edgesOf(settlementSpot).flatMap(state.assignedBuildings.get).exists()
+          if settlementBuildingRules(state)(settlementSpot, player)
           then
             Some(
               state.copy(
@@ -101,7 +102,11 @@ object BuildingOps:
           else None
         case _ => None
 
-    private def defaultCheckBuildRoadCondition(spot: RoadSpot, player: ScatanPlayer): Boolean =
+    private def defaultRulesForSettlementBuilding(spot: StructureSpot, player: ScatanPlayer): Boolean =
+      state.emptyStructureSpot.contains(spot)
+        && state.gameMap.neighboursOf(spot).flatMap(state.assignedBuildings.get).isEmpty
+
+    private def defaultRulesForRoadBuilding(spot: RoadSpot, player: ScatanPlayer): Boolean =
       val structureSpot1 = spot._1
       val structureSpot2 = spot._2
       state.emptyRoadSpot.contains(spot)
