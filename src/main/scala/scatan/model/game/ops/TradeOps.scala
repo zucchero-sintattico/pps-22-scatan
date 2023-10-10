@@ -47,12 +47,10 @@ object TradeOps:
         playerCardsType: ResourceType,
         bankCardType: ResourceType
     ): Option[ScatanState] =
-      println("" + state.resourceCards(player).count(_.resourceType == playerCardsType))
       if state.resourceCards(player).count(_.resourceType == playerCardsType) >= tradeWithBankRequiredCards
       then
-        state
-          .resourceCards(player)
-          // FIX ME: This is a hack to remove 4 cards of the same type
-          .foldLeft(Option(state))((state, card) => state.flatMap(_.removeResourceCard(player, card)))
-          .flatMap(_.assignResourceCard(player, ResourceCard(bankCardType)))
+        val stateWithPlayerCardsRemoved = (1 to tradeWithBankRequiredCards).foldLeft(Option(state))((state, _) =>
+          state.flatMap(_.removeResourceCard(player, ResourceCard(playerCardsType)))
+        )
+        stateWithPlayerCardsRemoved.flatMap(_.assignResourceCard(player, ResourceCard(bankCardType)))
       else None

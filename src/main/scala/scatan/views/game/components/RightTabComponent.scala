@@ -11,6 +11,7 @@ import scatan.views.utils.TypeUtils.DisplayableSource
 import scatan.views.utils.TypeUtils.{reactiveState, gameController}
 import scatan.views.utils.TypeUtils.Displayable
 import scatan.views.utils.TypeUtils.InputSource
+import scatan.model.game.config.ScatanActions
 
 object RightTabComponent:
 
@@ -59,7 +60,6 @@ object RightTabComponent:
         button(
           className := "trade-bank-button",
           onClick --> (_ =>
-            println("" + tradeOffer.now() + tradeRequest.now())
             gameController.onTradeWithBank(
               tradeOffer.now(),
               tradeRequest.now()
@@ -71,7 +71,7 @@ object RightTabComponent:
     )
 
   private def areTradeEnabled: Displayable[Signal[Boolean]] =
-    reactiveState.map(_.game.exists(_.gameStatus.phase == ScatanPhases.Game))
+    reactiveState.map(_.game.map(_.allowedActions.contains(ScatanActions.TradeWithBank)).getOrElse(false))
 
   private def getPlayersList(game: ScatanGame): InputSource[Element] =
     ul(

@@ -77,4 +77,6 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
   override def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit =
     this.model
       .updateGame(_.tradeWithBank(offer, request))
-      .onError(view.displayMessage("Cannot trade this cards with bank" + offer.toString() + request.toString()))
+      .onError(
+        view.displayMessage("Cannot trade this cards with bank")
+      )
