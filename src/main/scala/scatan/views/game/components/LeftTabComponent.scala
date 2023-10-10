@@ -4,15 +4,13 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
+import scatan.model.components.{Award, AwardType}
+import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanActions
+import scatan.model.game.ops.AwardOps.awards
 import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
-import scatan.model.game.ScatanState
-import scatan.model.components.Award
-import scatan.model.components.AwardType
-import scatan.model.game.ops.AwardOps.awards
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, gameController, reactiveState}
 
 object LeftTabComponent:
 

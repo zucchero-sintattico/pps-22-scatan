@@ -6,11 +6,10 @@ import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
 import scatan.model.game.config.ScatanPhases
+import scatan.views.game.components.*
 import scatan.views.game.components.RightTabComponent.areTradeEnabled
-import scatan.views.game.components.{CardsComponent, EndgameComponent, GameMapComponent, LeftTabComponent}
 import scatan.views.utils.TypeUtils
 import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.game.components.RightTabComponent
 
 trait GameView extends View[ApplicationState]
 

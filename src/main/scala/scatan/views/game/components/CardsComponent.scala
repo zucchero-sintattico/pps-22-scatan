@@ -1,20 +1,15 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.components.ResourceType
-import scatan.model.components.ResourceType.*
-import scatan.model.ApplicationState
-import scatan.model.components.ResourceCard
-import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ScatanState
-import scatan.model.components.DevelopmentType
-import scatan.model.components.DevelopmentType.*
-import scatan.views.game.components.CardContextMap.cardImages
-import scatan.views.game.components.CardContextMap.countCardOf
-import scatan.views.game.components.CardContextMap.CardType
 import scatan.controllers.game.GameController
-import scatan.views.utils.TypeUtils.{DisplayableSource, Displayable}
-import scatan.views.utils.TypeUtils.{reactiveState, gameController, state}
+import scatan.model.ApplicationState
+import scatan.model.components.DevelopmentType.*
+import scatan.model.components.ResourceType.*
+import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
+import scatan.model.game.ScatanState
+import scatan.model.game.config.ScatanPlayer
+import scatan.views.game.components.CardContextMap.{CardType, cardImages, countCardOf}
+import scatan.views.utils.TypeUtils.*
 
 object CardContextMap:
   extension (state: ScatanState)

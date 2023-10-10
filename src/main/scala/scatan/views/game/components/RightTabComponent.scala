@@ -1,17 +1,12 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
+import scatan.controllers.game.GameController
 import scatan.model.ApplicationState
 import scatan.model.components.ResourceType
-import scatan.controllers.game.GameController
-import scatan.model.game.ScatanState
-import scatan.model.game.ScatanGame
-import scatan.model.game.config.ScatanPhases
-import scatan.views.utils.TypeUtils.DisplayableSource
-import scatan.views.utils.TypeUtils.{reactiveState, gameController}
-import scatan.views.utils.TypeUtils.Displayable
-import scatan.views.utils.TypeUtils.InputSource
-import scatan.model.game.config.ScatanActions
+import scatan.model.game.config.{ScatanActions, ScatanPhases}
+import scatan.model.game.{ScatanGame, ScatanState}
+import scatan.views.utils.TypeUtils.*
 
 object RightTabComponent:
 

@@ -4,18 +4,15 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.model.components.ResourceType.*
 import scatan.model.components.UnproductiveTerrain.*
-import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
+import scatan.model.components.{AssignedBuildings, AssignmentInfo, BuildingType, Terrain}
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{Hexagon, StructureSpot, TileContent}
+import scatan.model.map.*
 import scatan.model.{ApplicationState, GameMap}
-import scatan.model.components.AssignedBuildings
+import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewPlayer}
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
-import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
-import scatan.model.map.{RoadSpot, Spot}
-import scatan.views.utils.TypeUtils.{DisplayableSource, InputSourceWithState, InputSource, StateKnoledge}
-import scatan.views.utils.TypeUtils.{gameController, state, reactiveState}
+import scatan.views.utils.TypeUtils.*
 
 object ContextMap:
 

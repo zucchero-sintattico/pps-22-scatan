@@ -1,13 +1,9 @@
 package scatan.model.game.ops
 
-import scatan.model.game.BaseScatanStateTest
-import scatan.model.game.ScatanState
-import scatan.model.game.ops.CardOps.assignResourceCard
-import scatan.model.components.ResourceCard
-import scatan.model.components.ResourceType
-import scatan.model.game.ops.TradeOps.tradeWithPlayer
-import scatan.model.game.ops.TradeOps.tradeWithBank
 import scatan.model.components.*
+import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
+import scatan.model.game.{BaseScatanStateTest, ScatanState}
 
 class TradeOpsTest extends BaseScatanStateTest:
 

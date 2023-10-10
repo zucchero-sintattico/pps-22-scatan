@@ -1,11 +1,10 @@
 package scatan.model.game.ops
 
-import scatan.model.components.{BuildingType, DevelopmentCard, ResourceCard, ResourceType}
+import scatan.model.components.*
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 import scatan.model.game.ops.AwardOps.*
-import scatan.model.components.AssignedBuildings
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 object CardOps:
 

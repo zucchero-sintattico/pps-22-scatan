@@ -1,12 +1,10 @@
 package scatan.model.game.ops
 
+import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.ResourceCard
-import scatan.model.game.ops.CardOps.removeResourceCard
-import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.CardOps.{assignResourceCard, removeResourceCard}
 import scatan.views.game.components.ContextMap.resources
-import scatan.model.components.ResourceType
 
 object TradeOps:
   val tradeWithBankRequiredCards = 4
