@@ -19,7 +19,8 @@ object PhaseCtxOps:
   def OnEnter[State]: Contexted[PhaseCtx[State, ?, ?, ?, ?], PropertySetter[State => State]] =
     ctx ?=> ctx.onEnter
 
-  def Step[Phase, StepType, Action]: Contexted[PhaseCtx[?, Phase, StepType, Action, ?], PropertyUpdater[StepCtx[Phase, StepType, Action]]] =
+  def Step[Phase, StepType, Action]
+      : Contexted[PhaseCtx[?, Phase, StepType, Action, ?], PropertyUpdater[StepCtx[Phase, StepType, Action]]] =
     ctx ?=> ctx.steps
 
   def Iterate[Player]: Contexted[PhaseCtx[?, ?, ?, ?, Player], PropertySetter[Seq[Player] => Iterator[Player]]] =

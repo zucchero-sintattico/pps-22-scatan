@@ -7,13 +7,11 @@ import scatan.model.game.ops.ScoreOps.winner
 
 import scala.language.postfixOps
 
-
 object ScatanDSL:
 
   import scatan.lib.game.dsl.GameDSL.*
   def Circular[X]: Seq[X] => Iterator[X] = Iterator.continually(_).flatten
-  def OnceAndBack[X]: Seq[X] => Iterator[X] = seq =>
-    (seq ++ seq.reverse).iterator
+  def OnceAndBack[X]: Seq[X] => Iterator[X] = seq => (seq ++ seq.reverse).iterator
 
   private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
 
@@ -80,7 +78,6 @@ object ScatanDSL:
 
   def rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] =
     game.rules
-
 
 object Test:
   @main def test(): Unit =

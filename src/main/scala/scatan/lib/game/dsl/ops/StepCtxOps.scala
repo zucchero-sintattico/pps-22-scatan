@@ -10,4 +10,3 @@ object StepCtxOps:
 
   def when[Step, Action]: Contexted[StepCtx[?, Step, Action], PropertySetter[(Action, Step)]] =
     ctx ?=> ctx.when
-    

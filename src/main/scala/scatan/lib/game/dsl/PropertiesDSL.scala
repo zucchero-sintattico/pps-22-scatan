@@ -29,7 +29,6 @@ object PropertiesDSL:
     def apply(sequenceProperty: SequenceProperty[P]): MonadProperty[Seq[P], P] =
       new MonadProperty(sequenceProperty.value)
 
-
   // Setter
 
   class PropertySetter[P](property: Property[P]):

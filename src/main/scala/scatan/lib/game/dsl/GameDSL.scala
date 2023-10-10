@@ -54,12 +54,9 @@ object GameDSL:
           phase <- phaseCtx.phase
           stepCtx <- phaseCtx.steps
           step <- stepCtx.step
-        yield
-          GameStatus(phase, step) ->
-            (for
-              when <- stepCtx.when
-            yield when).toMap
-          ).toMap
+        yield GameStatus(phase, step) ->
+          (for when <- stepCtx.when
+          yield when).toMap).toMap
         Rules(
           allowedPlayersSizes = allowedSizes.toSet,
           startingStateFactory = startingStateFactory,
@@ -74,5 +71,3 @@ object GameDSL:
         )
       require(ruless.sizeIs == 1, "Invalid rules")
       ruless.headOption.get
-
-

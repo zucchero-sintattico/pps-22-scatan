@@ -38,7 +38,7 @@ final case class Rules[State, P, S, A, Player](
     initialAction: Map[P, State => State],
     phaseTurnIteratorFactories: Map[P, Seq[Player] => Iterator[Player]],
     nextPhase: Map[P, P] = Map.empty[P, P],
-    actions: Map[GameStatus[P, S], Map[A, S]],
+    actions: Map[GameStatus[P, S], Map[A, S]]
 ):
   def valid: Boolean =
     startingStateFactory != null &&
