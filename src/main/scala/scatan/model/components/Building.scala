@@ -17,28 +17,28 @@ enum BuildingType(val cost: Cost):
   case Settlement
       extends BuildingType(
         Cost(
-          Wood * 1,
-          Brick * 1,
-          Sheep * 1
+          Wood *** 1,
+          Brick *** 1,
+          Sheep *** 1
         )
       )
   case City
       extends BuildingType(
         Cost(
-          Wheat * 2,
-          Rock * 3
+          Wheat *** 2,
+          Rock *** 3
         )
       )
   case Road
       extends BuildingType(
         Cost(
-          Wood * 1,
-          Brick * 1
+          Wood *** 1,
+          Brick *** 1
         )
       )
 
 object BuildingType:
-  extension (resourceType: ResourceType) def *(amount: Int): ResourceCost = (resourceType, amount)
+  extension (resourceType: ResourceType) def ***(amount: Int): ResourceCost = (resourceType, amount)
 
 /** A building is a structure that can be placed on the map.
   */
