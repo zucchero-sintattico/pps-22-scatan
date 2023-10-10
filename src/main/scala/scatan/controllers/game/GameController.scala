@@ -92,8 +92,6 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
   ): Unit =
     val offerCards = offer.flatMap((resourceType, amount) => ResourceCard(resourceType) * amount).toSeq
     val requestCards = request.flatMap((resourceType, amount) => ResourceCard(resourceType) * amount).toSeq
-    println("offerCards: " + offerCards)
-    println("requestCards: " + requestCards)
     this.model
       .updateGame(_.tradeWithPlayer(receiver, offerCards, requestCards))
       .onError(

@@ -17,7 +17,6 @@ object RightTabComponent:
 
   val bankTradeOffer: Var[ResourceType] = Var(ResourceType.values.head)
   val bankTradeRequest: Var[ResourceType] = Var(ResourceType.values.head)
-
   val playerTradeOffer: Var[Map[ResourceType, Int]] = Var(Map.empty)
   val playerTradeRequest: Var[Map[ResourceType, Int]] = Var(Map.empty)
 
@@ -28,8 +27,8 @@ object RightTabComponent:
       className := rightTabCssClass,
       h2("Trade:"),
       tradePlayerComponent,
-      tradeBankComponent
-      //  visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
+      tradeBankComponent,
+      visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
     )
 
   private def areTradeEnabled: Displayable[Signal[Boolean]] =
@@ -113,9 +112,7 @@ object RightTabComponent:
         className := "game-view-resource-type-choice",
         tradeAmountComponent(playerTradeOffer, resType = resourceType),
         " of ",
-        label(
-          resourceType.toString
-        ),
+        label(resourceType.toString),
         br()
       ),
       "for",
@@ -126,9 +123,7 @@ object RightTabComponent:
           className := "game-view-resource-type-choice",
           tradeAmountComponent(playerTradeRequest, resType = resourceType),
           " of ",
-          label(
-            resourceType.toString
-          ),
+          label(resourceType.toString),
           br()
         )
       )
