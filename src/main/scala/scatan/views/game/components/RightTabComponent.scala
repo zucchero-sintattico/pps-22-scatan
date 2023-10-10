@@ -15,8 +15,8 @@ import scatan.model.game.config.ScatanActions
 
 object RightTabComponent:
 
-  val tradeOffer: Var[ResourceType] = Var(ResourceType.values.head)
-  val tradeRequest: Var[ResourceType] = Var(ResourceType.values.head)
+  val bankTradeOffer: Var[ResourceType] = Var(ResourceType.values.head)
+  val bankTradeRequest: Var[ResourceType] = Var(ResourceType.values.head)
 
   def rightTabCssClass: String = "game-view-right-tab"
 
@@ -25,8 +25,8 @@ object RightTabComponent:
       className := rightTabCssClass,
       h2("Trade:"),
       tradePlayerComponent,
-      tradeBankComponent
-      // visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
+      tradeBankComponent,
+      visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
     )
 
   private def tradePlayerComponent: DisplayableSource[Element] =
@@ -54,15 +54,15 @@ object RightTabComponent:
       h3("Bank:"),
       div(
         "Trade four of ",
-        resourceTypeChoiceComponent(tradeOffer),
+        resourceTypeChoiceComponent(bankTradeOffer),
         " for one of ",
-        resourceTypeChoiceComponent(tradeRequest),
+        resourceTypeChoiceComponent(bankTradeRequest),
         button(
           className := "trade-bank-button",
           onClick --> (_ =>
             gameController.onTradeWithBank(
-              tradeOffer.now(),
-              tradeRequest.now()
+              bankTradeOffer.now(),
+              bankTradeRequest.now()
             )
           ),
           "Trade"
