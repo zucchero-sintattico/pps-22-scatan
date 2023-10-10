@@ -98,7 +98,7 @@ class TradeOpsTest extends BaseScatanStateTest:
       case None => fail("Resources not assigned")
   }
 
-  it should "remove only traded cards from player" in {
+  it should "remove only traded cards from player after trade with bank" in {
     val state = ScatanState(threePlayers)
     val player = threePlayers.head
     val stateWithResourceAssigned = state
