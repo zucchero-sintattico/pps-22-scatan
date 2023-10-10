@@ -1,13 +1,7 @@
 package scatan.lib.game
 
-import scatan.lib.game.EmptyDomain.MyPhases
-import scatan.lib.game.EmptyDomain.MyPhases.*
-import scatan.lib.game.EmptyDomain.Steps.Initial
-import scatan.lib.game.dsl.old.{GameDSL, PhaseDSLOps, TurnDSLOps}
-import scatan.lib.game.dsl.old.PhaseDSLOps.{Turn, When}
-import scatan.lib.game.dsl.old.PhasesDSLOps.On
-import scatan.lib.game.dsl.old.PlayersDSLOps.canBe
-import scatan.lib.game.dsl.old.TurnDSLOps.*
+import scatan.lib.game.dsl.GameDSL
+import scatan.lib.game.dsl.GameDSL.rules
 import scatan.lib.game.ops.Effect
 
 object EmptyDomain:
@@ -27,54 +21,41 @@ object EmptyDomain:
 
   def NextTurnEffect: Effect[Actions.NextTurn.type, State] = (state: State) => Some(state)
 
-  object EmptyGameDSL extends GameDSL:
-    override type State = EmptyDomain.State
-    override type PhaseType = EmptyDomain.MyPhases
-    override type StepType = EmptyDomain.Steps
-    override type ActionType = EmptyDomain.Actions
-    override type Player = EmptyDomain.Player
+  def rules = game.rules
 
-    import Steps.*
-
-    import scala.language.postfixOps
-
+  import GameDSL.*
+  private val game = Game[State, MyPhases, Steps, Actions, Player] {
     Players {
-      canBe(2 to 4)
+      CanBe := 2 to 4
     }
+    StateFactory := (_ => State())
+    InitialPhase := MyPhases.Game
+    WinnerFunction := (_ => None)
 
-    StartWithStateFactory((_) => State())
-    StartWithPhase(Game)
-    Winner(_ => None)
+    Phase {
+      PhaseType := MyPhases.Game
+      InitialStep := Steps.Initial
+      EndingStep := Steps.ChangingTurn
+      NextPhase := MyPhases.GameOver
+      Iterate := Iterations.Once
 
-    Phases {
-      On(Game) {
-
-        Turn {
-          Iterate(once)
-          StartIn(Initial)
-          CanEndIn(ChangingTurn)
-          NextPhase(GameOver)
-        }
-
-        When(Steps.Initial)(
-          Actions.StartGame -> Steps.Initial,
-          Actions.NextTurn -> Steps.ChangingTurn
-        )
-
-        When(Steps.ChangingTurn)()
-
+      Step {
+        StepType := Steps.Initial
+        when := Actions.StartGame -> Steps.Initial
+        when := Actions.NextTurn -> Steps.ChangingTurn
       }
 
-      On(GameOver) {
-
-        Turn {
-          Iterate(once)
-          StartIn(Initial)
-          CanEndIn(ChangingTurn)
-          NextPhase(GameOver)
-        }
-
+      Step {
+        StepType := Steps.ChangingTurn
       }
+
     }
 
-  def rules = EmptyGameDSL.rules
+    Phase {
+      PhaseType := MyPhases.GameOver
+      InitialStep := Steps.Initial
+      EndingStep := Steps.ChangingTurn
+      NextPhase := MyPhases.GameOver
+      Iterate := Iterations.Once
+    }
+  }

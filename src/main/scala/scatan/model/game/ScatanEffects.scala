@@ -1,18 +1,14 @@
 package scatan.model.game
 
 import scatan.lib.game.ops.Effect
-import scatan.model.components.BuildingType
+import scatan.model.components.{BuildingType, ResourceCard}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.ops.CardOps.buyDevelopmentCard
-import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
-import scatan.model.components.ResourceCard
-import scatan.model.game.ops.CardOps.removeResourceCard
-import scatan.model.game.ops.CardOps.assignResourceCard
-import scatan.model.game.ops.TradeOps.tradeWithPlayer
-import scatan.model.game.ops.CardOps.assignResourcesFromNumber
+import scatan.model.game.ops.CardOps.{assignResourceCard, assignResourcesFromNumber, buyDevelopmentCard, removeResourceCard}
 import scatan.model.game.ops.RobberOps.moveRobber
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
 

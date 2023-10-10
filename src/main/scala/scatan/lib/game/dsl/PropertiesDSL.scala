@@ -1,7 +1,6 @@
 package scatan.lib.game.dsl
 
 import scala.annotation.targetName
-import scala.reflect.ClassTag
 
 object PropertiesDSL:
 

@@ -11,7 +11,7 @@ import scatan.model.map.{Hexagon, StructureSpot, TileContent}
 import scatan.model.{ApplicationState, GameMap}
 import scatan.views.Coordinates
 import scatan.views.Coordinates.*
-import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
+import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewPlayer}
 
 object ContextMap:
 

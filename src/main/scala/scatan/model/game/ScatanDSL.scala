@@ -10,8 +10,6 @@ import scala.language.postfixOps
 object ScatanDSL:
 
   import scatan.lib.game.dsl.GameDSL.*
-  def Circular[X]: Seq[X] => Iterator[X] = Iterator.continually(_).flatten
-  def OnceAndBack[X]: Seq[X] => Iterator[X] = seq => (seq ++ seq.reverse).iterator
 
   private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
 
@@ -28,7 +26,7 @@ object ScatanDSL:
       InitialStep := ScatanSteps.SetupSettlement
       EndingStep := ScatanSteps.ChangingTurn
       NextPhase := ScatanPhases.Game
-      Iterate := OnceAndBack
+      Iterate := Iterations.OnceAndBack
 
       Step {
         StepType := ScatanSteps.SetupSettlement
@@ -45,7 +43,7 @@ object ScatanDSL:
       InitialStep := ScatanSteps.Starting
       EndingStep := ScatanSteps.ChangingTurn
       OnEnter := { (state: ScatanState) => state.assignResourcesAfterInitialPlacement.get }
-      Iterate := Circular
+      Iterate := Iterations.Circular
 
       Step {
         StepType := ScatanSteps.Starting
@@ -78,7 +76,3 @@ object ScatanDSL:
 
   def rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] =
     game.rules
-
-object Test:
-  @main def test(): Unit =
-    ScatanDSL.rules
