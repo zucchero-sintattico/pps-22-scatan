@@ -60,6 +60,12 @@ object LeftTabComponent:
         disabled <-- isActionDisabled(ScatanActions.RollDice)
       ),
       button(
+        className := "game-view-button buy-development-card-button",
+        "Buy Dev. Card",
+        onClick --> { _ => gameController.buyDevelopmentCard() },
+        disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
+      ),
+      button(
         className := "game-view-button end-turn-button",
         "End Turn",
         onClick --> { _ => gameController.nextTurn() },

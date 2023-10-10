@@ -17,6 +17,7 @@ trait GameController extends Controller[ApplicationState]:
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
   def placeRobber(hexagon: Hexagon): Unit
+  def buyDevelopmentCard(): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -71,3 +72,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
           this.model
             .updateGame(_.buildSettlement(spot))
             .onError(view.displayMessage("Cannot build settlement here"))
+
+  override def buyDevelopmentCard(): Unit =
+    this.model
+      .updateGame(_.buyDevelopmentCard)
+      .onError(view.displayMessage("Cannot buy development card"))
