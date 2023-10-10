@@ -195,6 +195,11 @@ body {
 .game-view-player {
     font-size: 1.5em;
 }
+
+.game-view-player-score {
+    font-size: 1em;
+}
+
 .game-view-phase {
     font-size: 1em;
 }

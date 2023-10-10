@@ -5,9 +5,10 @@ import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
 import scatan.model.game.config.ScatanActions
+import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
 import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{reactiveState, gameController}
+import scatan.views.utils.TypeUtils.{gameController, reactiveState}
 
 object LeftTabComponent:
 
@@ -21,6 +22,11 @@ object LeftTabComponent:
         className := "game-view-player",
         child.text <-- reactiveState
           .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
+      ),
+      h2(
+        className := "game-view-player-score",
+        child.text <-- reactiveState
+          .map("Score: " + _.game.map(game => game.state.scores(game.turn.player)).getOrElse("No score"))
       ),
       h2(
         className := "game-view-phase",
