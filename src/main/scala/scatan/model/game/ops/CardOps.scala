@@ -11,6 +11,33 @@ object CardOps:
 
   extension (state: ScatanState)
 
+    /** Stole a card from a victim.
+      * @param currentPlayer
+      *   the player who stole the card
+      * @param victim
+      *   the player who lost the card
+      * @return
+      *   Some(ScatanState) if the card was stolen, None otherwise
+      */
+    def stoleResourceCard(currentPlayer: ScatanPlayer, victim: ScatanPlayer): Option[ScatanState] =
+      val victimResourceCards = state.resourceCards(victim)
+      if victimResourceCards.sizeIs == 0 then None
+      else
+        val randomCardIndex = scala.util.Random.nextInt(victimResourceCards.size)
+        val stolenCard = victimResourceCards(randomCardIndex)
+        val updatedVictimResourceCards = victimResourceCards.filterNot(_ == stolenCard)
+        val updatedCurrentPlayerResourceCards = state.resourceCards(currentPlayer) :+ stolenCard
+        Some(
+          state.copy(
+            resourceCards = state.resourceCards
+              .updated(victim, updatedVictimResourceCards)
+              .updated(
+                currentPlayer,
+                updatedCurrentPlayerResourceCards
+              )
+          )
+        )
+
     /** Assigns a resource card to a player.
       * @param player
       *   the player to assign the resource card to

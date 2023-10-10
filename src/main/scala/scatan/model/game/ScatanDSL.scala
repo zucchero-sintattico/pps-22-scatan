@@ -72,7 +72,7 @@ object ScatanDSL extends GameDSL:
       )
 
       When(StealCard)(
-        ScatanActions.StoleCard -> Playing
+        ScatanActions.StealCard -> Playing
       )
 
       When(Playing)(

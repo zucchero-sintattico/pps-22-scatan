@@ -58,8 +58,8 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def placeRobber(hex: Hexagon): Option[ScatanGame] =
     play(PlaceRobber)(using PlaceRobberEffect(hex))
 
-  def stoleCard(player: ScatanPlayer): Option[ScatanGame] =
-    play(StoleCard)(using StoleCardEffect(player))
+  def stealCard(player: ScatanPlayer): Option[ScatanGame] =
+    play(StealCard)(using StealCardEffect(this.game.turn.player, player))
 
   /*
    * Build Ops

@@ -229,6 +229,10 @@ body {
     background-color: #fb9b9b;
 }
 
+.steal-card-button {
+    background-color: #c1c977;
+}
+
 .game-view-moves {
     margin-top: 1em;
     font-size: 1em;
