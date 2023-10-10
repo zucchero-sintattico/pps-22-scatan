@@ -7,6 +7,9 @@ import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
 import scatan.model.game.ops.ScoreOps.*
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.ops.EmptySpotsOps.emptyRoadSpot
+import scatan.model.game.ops.CardOps.assignDevelopmentCard
+import scatan.model.components.DevelopmentType
+import scatan.model.components.DevelopmentCard
 
 class ScoreOpsTest extends BaseScatanStateTest:
 
@@ -53,13 +56,28 @@ class ScoreOpsTest extends BaseScatanStateTest:
       case None => fail("Road was not placed")
   }
 
-  it should "increment score either if assign an award or a building" in {
+  it should "increment score if player has a victory point" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val stateWithVictoryPoint = state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.VictoryPoint))
+    stateWithVictoryPoint match
+      case Some(state) =>
+        state.scores(player1) should be(1)
+      case None => fail("Victory point was not placed")
+  }
+
+  it should "increment score if assign an award a building and a victory point" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val roadSpotIterator = state.emptyRoadSpot.iterator
     val stateWithSettlementAndAward =
       for
-        stateWithSettlement <- state.assignBuilding(state.emptyStructureSpot.head, BuildingType.Settlement, player1)
+        stateWithVictoryPoint <- state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.VictoryPoint))
+        stateWithSettlement <- stateWithVictoryPoint.assignBuilding(
+          state.emptyStructureSpot.head,
+          BuildingType.Settlement,
+          player1
+        )
         oneRoadState <- stateWithSettlement.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
         twoRoadState <- oneRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
         threeRoadState <- twoRoadState.assignBuilding(roadSpotIterator.next, BuildingType.Road, player1)
@@ -68,7 +86,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
       yield fiveRoadState
     stateWithSettlementAndAward match
       case Some(state) =>
-        state.scores(player1) should be(2)
+        state.scores(player1) should be(3)
       case None => fail("Building was not placed")
   }
 
