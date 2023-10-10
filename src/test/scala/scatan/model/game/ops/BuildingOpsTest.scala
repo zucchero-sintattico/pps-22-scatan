@@ -46,12 +46,7 @@ class BuildingOpsTest extends BaseScatanStateTest:
   it should "not permit to assign a settlement if the spot is not empty" in {
     val state = ScatanState(threePlayers)
     val spot = spotToBuildStructure(state)
-    val stateWithBuilding = for
-      stateWithWood <- state.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Wood))
-      stateWithBrick <- stateWithWood.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Brick))
-      stateWithSheep <- stateWithBrick.assignResourceCard(threePlayers.head, ResourceCard(ResourceType.Sheep))
-      stateWithSettlement <- stateWithSheep.build(spot, BuildingType.Settlement, threePlayers.head)
-    yield stateWithSettlement
+    val stateWithBuilding = state.assignSettlmentWithoutRule(spot, threePlayers.head)
     stateWithBuilding match
       case Some(state) =>
         state.assignedBuildings(spot) should be(AssignmentInfo(threePlayers.head, BuildingType.Settlement))
@@ -194,6 +189,5 @@ class BuildingOpsTest extends BaseScatanStateTest:
       state
         .assignBuilding(anotherSpot, BuildingType.Settlement, threePlayers.head)
         .flatMap(_.assignBuilding(spot, BuildingType.Settlement, threePlayers.head))
-    println(stateAssigned.map(_.assignedBuildings))
     stateAssigned should be(None)
   }

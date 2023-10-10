@@ -116,12 +116,12 @@ class ResCardOpsTest extends BaseScatanStateTest:
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
     // simulate initial placement
     val stateWithBuildings = state
-      .assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head))
+      .assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.head)
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.head))
     stateWithBuildings match
       case Some(state) =>
         state.assignResourcesAfterInitialPlacement match
