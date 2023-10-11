@@ -1,10 +1,13 @@
 package scatan.views.game
 
 import com.raquo.laminar.api.L.*
+import org.scalajs.dom
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
-import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
+import scatan.views.game.components.{CardsComponent, EndgameComponent, GameMapComponent, LeftTabComponent}
+import scatan.views.utils.TypeUtils
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
 
 trait GameView extends View[ApplicationState]
 
@@ -18,8 +21,10 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
 
   given Signal[ApplicationState] = this.reactiveState
   given GameController = this.controller
+
   override def element: Element =
     div(
+      EndgameComponent.endgamePopup,
       div(
         className := LeftTabComponent.leftTabCssClass,
         LeftTabComponent.currentPlayerComponent,

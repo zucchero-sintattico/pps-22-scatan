@@ -1,10 +1,9 @@
 package scatan.model.game.ops
 
+import scatan.model.components.ResourceCard
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.ResourceCard
-import scatan.model.game.ops.CardOps.removeResourceCard
-import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.CardOps.{assignResourceCard, removeResourceCard}
 
 object TradeOps:
   extension (state: ScatanState)

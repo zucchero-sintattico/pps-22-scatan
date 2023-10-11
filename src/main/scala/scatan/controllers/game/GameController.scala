@@ -19,6 +19,7 @@ trait GameController extends Controller[ApplicationState]:
   def clickCard(card: CardType): Unit
   def placeRobber(hexagon: Hexagon): Unit
   def stealCard(player: ScatanPlayer): Unit
+  def buyDevelopmentCard(): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -78,3 +79,8 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     this.model
       .updateGame(_.stealCard(player))
       .onError(view.displayMessage("Cannot steal card"))
+
+  override def buyDevelopmentCard(): Unit =
+    this.model
+      .updateGame(_.buyDevelopmentCard)
+      .onError(view.displayMessage("Cannot buy development card"))

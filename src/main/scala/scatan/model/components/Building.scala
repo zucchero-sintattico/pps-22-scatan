@@ -5,6 +5,7 @@ import scatan.model.components.BuildingType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
+
 import scala.collection.immutable.ListMap
 
 type ResourceCost = (ResourceType, Int)
