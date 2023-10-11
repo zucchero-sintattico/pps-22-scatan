@@ -11,7 +11,8 @@ enum DevelopmentType:
 
 final case class DevelopmentCard(
     developmentType: DevelopmentType,
-    drewAt: Option[Int] = None
+    drewAt: Option[Int] = None,
+    played: Boolean = false
 )
 
 type DevelopmentCards = Map[ScatanPlayer, Seq[DevelopmentCard]]

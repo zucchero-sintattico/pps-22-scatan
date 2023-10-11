@@ -64,29 +64,33 @@ object ScatanEffects:
 
   def PlayKnightDevelopmentCardEffect(
       player: ScatanPlayer,
+      turnNumber: Int,
       robberPosition: Hexagon
   ): Effect[PlayDevelopmentCard.type, ScatanState] =
-    (state: ScatanState) => state.playKnightDevelopment(player, robberPosition)
+    (state: ScatanState) => state.playKnightDevelopment(player, robberPosition, turnNumber)
 
   def PlayMonopolyDevelopmentCardEffect(
       player: ScatanPlayer,
+      turnNumber: Int,
       resourceType: ResourceType
   ): Effect[PlayDevelopmentCard.type, ScatanState] =
-    (state: ScatanState) => state.playMonopolyDevelopment(player, resourceType)
+    (state: ScatanState) => state.playMonopolyDevelopment(player, resourceType, turnNumber)
 
   def PlayYearOfPlentyDevelopmentCardEffect(
       player: ScatanPlayer,
+      turnNumber: Int,
       firstResourceType: ResourceType,
       secondResourceType: ResourceType
   ): Effect[PlayDevelopmentCard.type, ScatanState] =
-    (state: ScatanState) => state.playYearOfPlentyDevelopment(player, firstResourceType, secondResourceType)
+    (state: ScatanState) => state.playYearOfPlentyDevelopment(player, firstResourceType, secondResourceType, turnNumber)
 
   def PlayRoadBuildingDevelopmentCardEffect(
       player: ScatanPlayer,
+      turnNumber: Int,
       spot1: RoadSpot,
       spot2: RoadSpot
   ): Effect[PlayDevelopmentCard.type, ScatanState] =
-    (state: ScatanState) => state.playRoadBuildingDevelopment(player, spot1, spot2)
+    (state: ScatanState) => state.playRoadBuildingDevelopment(player, spot1, spot2, turnNumber)
 
   def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = EmptyEffect
 

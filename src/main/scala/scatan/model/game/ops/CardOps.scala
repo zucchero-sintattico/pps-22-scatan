@@ -1,9 +1,12 @@
 package scatan.model.game.ops
 
 import scatan.model.components.*
+import scatan.model.components.BuildingType.Road
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
+import scatan.model.game.ops.BuildingOps.build
+import scatan.model.game.ops.RobberOps.moveRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 object CardOps:
@@ -187,12 +190,79 @@ object CardOps:
           )
         )
 
-    def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon): Option[ScatanState] = ???
+    def removeDevelopmentCardFromPlayer(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
+      if !state.developmentCards(player).contains(developmentCard) then None
+      else
+        val remainingCards =
+          state.developmentCards(player).filterNot(_ == developmentCard)
+        Some(
+          state.copy(
+            developmentCards = state.developmentCards.updated(player, remainingCards),
+            assignedAwards = state.awards
+          )
+        )
 
-    def playRoadBuildingDevelopment(player: ScatanPlayer, firstRoad: RoadSpot, secondRoad: RoadSpot): Option[ScatanState] =
-      ???
+    private def consumePlayableDevelopmentCard(
+        player: ScatanPlayer,
+        developmentType: DevelopmentType,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      state
+        .developmentCards(player)
+        .find(card =>
+          card.developmentType == developmentType && !card.played && card.drewAt.isDefined && card.drewAt.get < turnNumber
+        )
+        .flatMap { card =>
+          state
+            .removeDevelopmentCardFromPlayer(player, card)
+            .flatMap(_.assignDevelopmentCard(player, card.copy(played = true)))
+        }
 
-    def playMonopolyDevelopment(player: ScatanPlayer, resourceType: ResourceType): Option[ScatanState] = ???
+    def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon, turnNumber: Int): Option[ScatanState] =
+      consumePlayableDevelopmentCard(player, DevelopmentType.Knight, turnNumber).flatMap { newState =>
+        newState
+          .moveRobber(robberPosition)
+      }
 
-    def playYearOfPlentyDevelopment(player: ScatanPlayer, firstResource: ResourceType, secondResource: ResourceType): Option[ScatanState] =
-      ???
+    def playRoadBuildingDevelopment(
+        player: ScatanPlayer,
+        firstRoad: RoadSpot,
+        secondRoad: RoadSpot,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      consumePlayableDevelopmentCard(player, DevelopmentType.RoadBuilding, turnNumber).flatMap { newState =>
+        newState.build(firstRoad, Road, player).flatMap(_.build(secondRoad, Road, player))
+      }
+
+    def playMonopolyDevelopment(
+        player: ScatanPlayer,
+        resourceType: ResourceType,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      consumePlayableDevelopmentCard(player, DevelopmentType.Monopoly, turnNumber).map { newState =>
+        val otherPlayers = newState.players.filterNot(_ == player)
+        otherPlayers.foldLeft(newState)((state, otherPlayer) =>
+          state
+            .resourceCards(otherPlayer)
+            .foldLeft(state)((state, resourceCard) =>
+              if resourceCard.resourceType == resourceType then
+                state
+                  .removeResourceCard(otherPlayer, resourceCard)
+                  .flatMap(_.assignResourceCard(player, resourceCard))
+                  .getOrElse(state)
+              else state
+            )
+        )
+      }
+
+    def playYearOfPlentyDevelopment(
+        player: ScatanPlayer,
+        firstResource: ResourceType,
+        secondResource: ResourceType,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      consumePlayableDevelopmentCard(player, DevelopmentType.YearOfPlenty, turnNumber).flatMap { newState =>
+        newState
+          .assignResourceCard(player, ResourceCard(firstResource))
+          .flatMap(_.assignResourceCard(player, ResourceCard(secondResource)))
+      }

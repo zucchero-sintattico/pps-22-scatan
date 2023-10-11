@@ -78,22 +78,26 @@ private trait ScatanGameActions extends ScatanGameStatus:
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
   def playKnightDevelopment(robberPosition: Hexagon): Option[ScatanGame] =
-    play(ScatanActions.PlayDevelopmentCard)(using PlayKnightDevelopmentCardEffect(game.turn.player, robberPosition))
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayKnightDevelopmentCardEffect(game.turn.player, game.turn.number, robberPosition)
+    )
 
   def playMonopolyDevelopment(resourceType: ResourceType): Option[ScatanGame] =
-    play(ScatanActions.PlayDevelopmentCard)(using PlayMonopolyDevelopmentCardEffect(game.turn.player, resourceType))
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayMonopolyDevelopmentCardEffect(game.turn.player, game.turn.number, resourceType)
+    )
 
   def playYearOfPlentyDevelopment(
       firstResourceType: ResourceType,
       secondResourceType: ResourceType
   ): Option[ScatanGame] =
     play(ScatanActions.PlayDevelopmentCard)(using
-      PlayYearOfPlentyDevelopmentCardEffect(game.turn.player, firstResourceType, secondResourceType)
+      PlayYearOfPlentyDevelopmentCardEffect(game.turn.player, game.turn.number, firstResourceType, secondResourceType)
     )
 
   def playRoadBuildingDevelopment(firstRoad: RoadSpot, secondRoad: RoadSpot): Option[ScatanGame] =
     play(ScatanActions.PlayDevelopmentCard)(using
-      PlayRoadBuildingDevelopmentCardEffect(game.turn.player, firstRoad, secondRoad)
+      PlayRoadBuildingDevelopmentCardEffect(game.turn.player, game.turn.number, firstRoad, secondRoad)
     )
 
   def tradeWithBank: Option[ScatanGame] = ???
