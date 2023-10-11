@@ -75,5 +75,5 @@ object LeftTabComponent:
         "End Turn",
         onClick --> { _ => clickHandler.onEndTurnClick() },
         disabled <-- isActionDisabled(ScatanActions.NextTurn)
-      )
+      ),
     )

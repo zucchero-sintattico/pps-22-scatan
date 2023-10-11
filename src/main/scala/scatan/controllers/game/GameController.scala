@@ -2,6 +2,7 @@ package scatan.controllers.game
 
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
+import scatan.model.components.ResourceType
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.config.ScatanPhases
 import scatan.model.map.{RoadSpot, StructureSpot}
@@ -21,6 +22,11 @@ trait GameController extends Controller[ApplicationState]:
   def nextTurn(): Unit
   def rollDice(): Unit
   def buyDevelopmentCard(): Unit
+
+  def playKnightDevelopment(robberPosition: Hexagon): Unit
+  def playYearOfPlentyDevelopment(resource1: ResourceType, resource2: ResourceType): Unit
+  def playMonopolyDevelopment(resource: ResourceType): Unit
+  def playRoadBuildingDevelopment(spot1: RoadSpot, spot2: RoadSpot): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -74,3 +80,23 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     this.model
       .updateGame(_.buyDevelopmentCard)
       .onError(view.displayMessage("Cannot buy development card"))
+
+  override def playKnightDevelopment(robberPosition: Hexagon): Unit =
+    this.model
+      .updateGame(_.playKnightDevelopment(robberPosition))
+      .onError(view.displayMessage("Cannot play knight development card"))
+
+  override def playYearOfPlentyDevelopment(resource1: ResourceType, resource2: ResourceType): Unit =
+    this.model
+      .updateGame(_.playYearOfPlentyDevelopment(resource1, resource2))
+      .onError(view.displayMessage("Cannot play year of plenty development card"))
+
+  override def playMonopolyDevelopment(resource: ResourceType): Unit =
+    this.model
+      .updateGame(_.playMonopolyDevelopment(resource))
+      .onError(view.displayMessage("Cannot play monopoly development card"))
+
+  override def playRoadBuildingDevelopment(spot1: RoadSpot, spot2: RoadSpot): Unit =
+    this.model
+      .updateGame(_.playRoadBuildingDevelopment(spot1, spot2))
+      .onError(view.displayMessage("Cannot play road building development card"))

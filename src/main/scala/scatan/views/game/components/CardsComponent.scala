@@ -47,7 +47,7 @@ object CardsComponent:
       for (cardType, path) <- cards.toList
       yield div(
         cls := "game-view-card-item",
-        onClick --> (_ => clickHandler.onCardClick(cardType)),
+        onClick --> { _ => clickHandler.onCardClick(cardType) },
         div(
           cls := "game-view-card-count",
           child.text <-- reactiveState.map(state =>
