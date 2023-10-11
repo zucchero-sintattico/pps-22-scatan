@@ -1,13 +1,9 @@
 package scatan.model.game.ops
 
+import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.components.*
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.Awards
-import scatan.model.components.Award
-import scatan.model.components.AwardType
-import scatan.model.components.DevelopmentType
-import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.components.BuildingType
 
 object AwardOps:
 

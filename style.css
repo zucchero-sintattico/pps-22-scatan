@@ -195,6 +195,11 @@ body {
 .game-view-player {
     font-size: 1.5em;
 }
+
+.game-view-player-score {
+    font-size: 1em;
+}
+
 .game-view-phase {
     font-size: 1em;
 }
@@ -209,7 +214,7 @@ body {
 }
 
 .game-view-button {
-    width: 25%;
+    width: 33%;
     height: 3em;
     font-size: 1em;
     font-weight: bold;
@@ -218,6 +223,10 @@ body {
 
 .roll-dice-button {
     background-color: #b5ffa0;
+}
+
+.buy-development-card-button {
+    background-color: #b5b5ff;
 }
 
 .end-turn-button {
