@@ -2,7 +2,7 @@ package scatan.controllers.game
 
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.components.BuildingType
+import scatan.model.components.{BuildingType, DevelopmentType}
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.map.{RoadSpot, StructureSpot}

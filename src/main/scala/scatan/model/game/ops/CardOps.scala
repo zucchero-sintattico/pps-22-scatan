@@ -186,3 +186,13 @@ object CardOps:
             assignedAwards = state.awards
           )
         )
+
+    def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon): Option[ScatanState] = ???
+
+    def playRoadBuildingDevelopment(player: ScatanPlayer, firstRoad: RoadSpot, secondRoad: RoadSpot): Option[ScatanState] =
+      ???
+
+    def playMonopolyDevelopment(player: ScatanPlayer, resourceType: ResourceType): Option[ScatanState] = ???
+
+    def playYearOfPlentyDevelopment(player: ScatanPlayer, firstResource: ResourceType, secondResource: ResourceType): Option[ScatanState] =
+      ???

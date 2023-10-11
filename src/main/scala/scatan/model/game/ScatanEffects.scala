@@ -1,7 +1,7 @@
 package scatan.model.game
 
 import scatan.lib.game.ops.Effect
-import scatan.model.components.{BuildingType, ResourceCard}
+import scatan.model.components.{BuildingType, DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
@@ -9,6 +9,10 @@ import scatan.model.game.ops.CardOps.{
   assignResourceCard,
   assignResourcesFromNumber,
   buyDevelopmentCard,
+  playKnightDevelopment,
+  playMonopolyDevelopment,
+  playRoadBuildingDevelopment,
+  playYearOfPlentyDevelopment,
   removeResourceCard
 }
 import scatan.model.game.ops.RobberOps.moveRobber
@@ -54,7 +58,35 @@ object ScatanEffects:
   def BuyDevelopmentCardEffect(player: ScatanPlayer, turnNumber: Int): Effect[BuyDevelopmentCard.type, ScatanState] =
     (state: ScatanState) => state.buyDevelopmentCard(player, turnNumber)
 
-  def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = EmptyEffect
+  /*
+   * Development Card Ops
+   */
+
+  def PlayKnightDevelopmentCardEffect(
+      player: ScatanPlayer,
+      robberPosition: Hexagon
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playKnightDevelopment(player, robberPosition)
+
+  def PlayMonopolyDevelopmentCardEffect(
+      player: ScatanPlayer,
+      resourceType: ResourceType
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playMonopolyDevelopment(player, resourceType)
+
+  def PlayYearOfPlentyDevelopmentCardEffect(
+      player: ScatanPlayer,
+      firstResourceType: ResourceType,
+      secondResourceType: ResourceType
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playYearOfPlentyDevelopment(player, firstResourceType, secondResourceType)
+
+  def PlayRoadBuildingDevelopmentCardEffect(
+      player: ScatanPlayer,
+      spot1: RoadSpot,
+      spot2: RoadSpot
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playRoadBuildingDevelopment(player, spot1, spot2)
 
   def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = EmptyEffect
 
