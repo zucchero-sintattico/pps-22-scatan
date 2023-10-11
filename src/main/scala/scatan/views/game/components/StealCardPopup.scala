@@ -14,7 +14,7 @@ object StealCardPopup:
   def userSelectionPopup(): DisplayableSource[Element] =
     val options: Signal[Seq[ScatanPlayer]] = reactiveState.map(_.game match
       case Some(game) =>
-        game.players
+        game.playersOnRobber
           .filter(_ != game.turn.player)
       case None => Nil
     )

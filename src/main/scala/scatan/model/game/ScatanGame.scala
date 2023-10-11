@@ -12,6 +12,7 @@ import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
 import scatan.model.components.ResourceCard
+import scatan.model.game.ops.RobberOps.playersOnRobber
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -27,6 +28,7 @@ private trait ScatanGameStatus(
   def isOver: Boolean = game.isOver
   def winner: Option[ScatanPlayer] = game.winner
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
+  def playersOnRobber: Seq[ScatanPlayer] = game.state.playersOnRobber
 
 private trait ScatanGameActions extends ScatanGameStatus:
 
