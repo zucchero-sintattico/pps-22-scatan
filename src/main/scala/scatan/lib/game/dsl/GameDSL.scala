@@ -3,7 +3,7 @@ package scatan.lib.game.dsl
 import scatan.lib.game.{GameStatus, Rules}
 
 object GameDSL:
-  import GameDSLDomain.*
+  import GameDSLDomain.{*, given}
   import PropertiesDSL.{*, given}
 
   export ops.GameCtxOps.*
@@ -11,9 +11,24 @@ object GameDSL:
   export ops.PhaseCtxOps.*
   export ops.StepCtxOps.*
 
-  def Game[State, P, S, A, Player]: PropertyBuilder[GameCtx[State, P, S, A, Player]] = PropertyBuilder()
+  /** DSL for defining a game
+    * @tparam State
+    *   The type of the game state
+    * @tparam Phase
+    *   The type of the phases
+    * @tparam Step
+    *   The type of the steps
+    * @tparam Actions
+    *   The type of the actions
+    * @tparam Player
+    *   The type of the players
+    */
+  def Game[State, Phase, Step, Actions, Player]: ObjectBuilder[GameCtx[State, Phase, Step, Actions, Player]] =
+    ObjectBuilder()
 
   extension [State, P, S, A, Player](game: GameCtx[State, P, S, A, Player])
+    /** Create the rules for the game
+      */
     def rules: Rules[State, P, S, A, Player] =
       val ruless: Seq[Rules[State, P, S, A, Player]] = (for
         startingStateFactory <- game.stateFactory
@@ -66,6 +81,7 @@ object GameDSL:
           phaseTurnIteratorFactories = phaseTurnPlayerIteratorFactories,
           nextPhase = nextPhases,
           actions = actions
-        )).toSeq
+        )
+      ).toSeq
       require(ruless.sizeIs == 1, "Invalid rules")
       ruless.headOption.get
