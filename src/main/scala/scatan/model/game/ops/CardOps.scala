@@ -6,6 +6,8 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
+import scala.util.Random
+
 object CardOps:
 
   extension (state: ScatanState)
@@ -22,9 +24,9 @@ object CardOps:
       val victimResourceCards = state.resourceCards(victim)
       if victimResourceCards.sizeIs == 0 then None
       else
-        val randomCardIndex = scala.util.Random.nextInt(victimResourceCards.size)
+        val randomCardIndex = Random.nextInt(victimResourceCards.size)
         val stolenCard = victimResourceCards(randomCardIndex)
-        val updatedVictimResourceCards = victimResourceCards.filterNot(_ == stolenCard)
+        val updatedVictimResourceCards = victimResourceCards.zipWithIndex.filterNot(_._2 == randomCardIndex).map(_._1)
         val updatedCurrentPlayerResourceCards = state.resourceCards(currentPlayer) :+ stolenCard
         Some(
           state.copy(
