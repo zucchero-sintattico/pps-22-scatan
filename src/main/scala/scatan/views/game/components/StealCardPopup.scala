@@ -20,15 +20,7 @@ object StealCardPopup:
     )
     div(
       display <-- toBeShown.signal.map(if _ then "block" else "none"),
-      position.fixed,
-      top("50%"),
-      left("50%"),
-      transform := "translate(-50%, -50%)",
-      padding := "20px",
-      backgroundColor := "white",
-      boxShadow := "0 2px 10px rgba(0, 0, 0, 0.1)",
-      borderRadius := "5px",
-      zIndex := 1000,
+      cls := "popup",
       children <-- options.split(_.name) { case (_, player: ScatanPlayer, _) =>
         button(
           player.name,
