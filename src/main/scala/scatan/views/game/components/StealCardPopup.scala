@@ -11,7 +11,7 @@ object StealCardPopup:
 
   def show(): Unit = toBeShown.writer.onNext(true)
 
-  def userSelectionPopup(): DisplayableSource[ReactiveHtmlElement.Base] =
+  def userSelectionPopup(): DisplayableSource[Element] =
     val options: Signal[Seq[ScatanPlayer]] = reactiveState.map(_.game match
       case Some(game) =>
         game.players
