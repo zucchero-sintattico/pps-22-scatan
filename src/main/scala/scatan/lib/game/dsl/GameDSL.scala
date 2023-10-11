@@ -15,7 +15,7 @@ object GameDSL:
 
   extension [State, P, S, A, Player](game: GameCtx[State, P, S, A, Player])
     def rules: Rules[State, P, S, A, Player] =
-      val ruless: Seq[Rules[State, P, S, A, Player]] = for
+      val ruless: Seq[Rules[State, P, S, A, Player]] = (for
         startingStateFactory <- game.stateFactory
         startingPhase <- game.initialPhase
         winner <- game.winner
@@ -66,6 +66,6 @@ object GameDSL:
           phaseTurnIteratorFactories = phaseTurnPlayerIteratorFactories,
           nextPhase = nextPhases,
           actions = actions
-        )
+        )).toSeq
       require(ruless.sizeIs == 1, "Invalid rules")
       ruless.headOption.get

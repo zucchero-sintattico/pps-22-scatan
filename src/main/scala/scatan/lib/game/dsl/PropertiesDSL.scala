@@ -1,5 +1,7 @@
 package scatan.lib.game.dsl
 
+import cats.Monad
+
 import scala.annotation.targetName
 
 object PropertiesDSL:
@@ -15,18 +17,13 @@ object PropertiesDSL:
   final case class SequenceProperty[P](var value: Seq[P] = Seq.empty[P]) extends Property[P]:
     override def apply(newValue: P): Unit = value = value :+ newValue
 
-  class MonadProperty[P <: IterableOnce[T], T](elem: P):
-    def foreach(f: T => Unit): Unit = elem.iterator.foreach(f)
-    def map[R](f: T => R): Seq[R] = elem.iterator.map(f).toSeq
-    def flatMap[R](f: T => Seq[R]): Seq[R] = elem.iterator.flatMap(f).toSeq
+  given [P]: Conversion[OptionalProperty[P], Iterable[P]] with
+    def apply(optionalProperty: OptionalProperty[P]): Iterable[P] =
+      optionalProperty.value.toList
 
-  given [P]: Conversion[OptionalProperty[P], MonadProperty[Option[P], P]] with
-    def apply(optionalProperty: OptionalProperty[P]): MonadProperty[Option[P], P] =
-      new MonadProperty(optionalProperty.value)
-
-  given [P]: Conversion[SequenceProperty[P], MonadProperty[Seq[P], P]] with
-    def apply(sequenceProperty: SequenceProperty[P]): MonadProperty[Seq[P], P] =
-      new MonadProperty(sequenceProperty.value)
+  given [P]: Conversion[SequenceProperty[P], Iterable[P]] with
+    def apply(sequenceProperty: SequenceProperty[P]): Iterable[P] =
+      sequenceProperty.value
 
   // Setter
 
