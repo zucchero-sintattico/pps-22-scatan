@@ -21,7 +21,7 @@ import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
 
-  private def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
+  def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
 
   def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = EmptyEffect
 

@@ -59,7 +59,15 @@ private trait ScatanGameActions extends ScatanGameStatus:
         play(RollDice)(using RollEffect(roll))
 
   def placeRobber(hex: Hexagon): Option[ScatanGame] =
-    play(PlaceRobber)(using PlaceRobberEffect(hex))
+    def isPossibleToStealCard(game: ScatanGame): Boolean =
+      game.playersOnRobber.filter(_ != game.turn.player).exists(game.state.resourceCards(_).sizeIs > 0)
+    play(PlaceRobber)(using PlaceRobberEffect(hex)) match
+      case Some(game) if !isPossibleToStealCard(game) =>
+        game.skipStealCard
+      case game => game
+
+  private[ScatanGameActions] def skipStealCard: Option[ScatanGame] =
+    play(ScatanActions.StealCard)(using EmptyEffect)
 
   def stealCard(player: ScatanPlayer): Option[ScatanGame] =
     play(StealCard)(using StealCardEffect(this.game.turn.player, player))
