@@ -2,6 +2,7 @@ package scatan.model.game.ops
 
 import scatan.model.components.*
 import scatan.model.components.BuildingType.Road
+import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
@@ -207,16 +208,17 @@ object CardOps:
         developmentType: DevelopmentType,
         turnNumber: Int
     ): Option[ScatanState] =
-      state
-        .developmentCards(player)
-        .find(card =>
+      for
+        developmentCards <- state.developmentCards.get(player)
+        card <- developmentCards.find(card =>
           card.developmentType == developmentType && !card.played && card.drewAt.isDefined && card.drewAt.get < turnNumber
         )
-        .flatMap { card =>
-          state
-            .removeDevelopmentCardFromPlayer(player, card)
-            .flatMap(_.assignDevelopmentCard(player, card.copy(played = true)))
-        }
+        stateWithCardConsumed <- state.removeDevelopmentCardFromPlayer(player, card)
+        newState <-
+          if card.developmentType == Knight then
+            stateWithCardConsumed.assignDevelopmentCard(player, card.copy(played = true))
+          else Some(stateWithCardConsumed)
+      yield newState
 
     def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon, turnNumber: Int): Option[ScatanState] =
       consumePlayableDevelopmentCard(player, DevelopmentType.Knight, turnNumber).flatMap { newState =>
