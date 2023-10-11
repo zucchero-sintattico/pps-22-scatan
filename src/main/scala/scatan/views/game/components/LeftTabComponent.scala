@@ -7,8 +7,7 @@ import scatan.model.ApplicationState
 import scatan.model.game.config.ScatanActions
 import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, clickHandler, reactiveState}
 
 object LeftTabComponent:
 
@@ -62,19 +61,19 @@ object LeftTabComponent:
       button(
         className := "game-view-button roll-dice-button",
         "Roll dice",
-        onClick --> { _ => gameController.rollDice() },
+        onClick --> { _ => clickHandler.onRollDiceClick() },
         disabled <-- isActionDisabled(ScatanActions.RollDice)
       ),
       button(
         className := "game-view-button buy-development-card-button",
         "Buy Dev. Card",
-        onClick --> { _ => gameController.buyDevelopmentCard() },
+        onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
         disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
       ),
       button(
         className := "game-view-button end-turn-button",
         "End Turn",
-        onClick --> { _ => gameController.nextTurn() },
+        onClick --> { _ => clickHandler.onEndTurnClick() },
         disabled <-- isActionDisabled(ScatanActions.NextTurn)
       )
     )

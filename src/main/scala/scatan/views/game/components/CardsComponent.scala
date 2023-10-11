@@ -5,8 +5,7 @@ import scatan.controllers.game.GameController
 import scatan.model.game.*
 import scatan.model.game.config.*
 import scatan.model.components.*
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{gameController, reactiveState, state}
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, clickHandler, reactiveState, state}
 import ResourceType.*
 import DevelopmentType.*
 import scatan.views.game.components.CardContextMap.{CardType, cardImages, countCardOf}
@@ -48,7 +47,7 @@ object CardsComponent:
       for (cardType, path) <- cards.toList
       yield div(
         cls := "game-view-card-item",
-        onClick --> (_ => gameController.clickCard(cardType)),
+        onClick --> (_ => clickHandler.onCardClick(cardType)),
         div(
           cls := "game-view-card-count",
           child.text <-- reactiveState.map(state =>
