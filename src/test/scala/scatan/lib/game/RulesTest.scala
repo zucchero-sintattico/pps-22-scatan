@@ -23,7 +23,7 @@ class RulesTest extends BaseTest:
   }
 
   it should "have an initial state factory" in {
-    emptyGameRules.startingStateFactory shouldBe a[Seq[Player] => State]
+    emptyGameRules.startingStateFactory shouldBe a[(GameMap, Seq[Player]) => State]
     emptyGameRules.startingStateFactory(gameMap, players) shouldBe a[State]
     emptyGameRules.startingStateFactory(gameMap, players) shouldBe State()
   }
