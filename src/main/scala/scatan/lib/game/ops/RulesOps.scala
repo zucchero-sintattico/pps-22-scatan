@@ -1,6 +1,7 @@
 package scatan.lib.game.ops
 
 import scatan.lib.game.{GameStatus, Rules}
+import scatan.model.GameMap
 
 /** Operations on [[Rules]] related to their construction.
   */
@@ -16,7 +17,7 @@ object RulesOps:
     def withAllowedPlayersSizes(sizes: Set[Int]): Rules[State, P, S, A, Player] =
       rules.copy(allowedPlayersSizes = sizes)
 
-    def withStartingStateFactory(stateFactory: Seq[Player] => State): Rules[State, P, S, A, Player] =
+    def withStartingStateFactory(stateFactory: (GameMap, Seq[Player]) => State): Rules[State, P, S, A, Player] =
       rules.copy(startingStateFactory = stateFactory)
 
     /** Set the starting phase for this game.

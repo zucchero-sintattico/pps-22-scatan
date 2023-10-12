@@ -1,5 +1,7 @@
 package scatan.lib.game.dsl
 
+import scatan.model.GameMap
+
 private object GameDSLDomain:
 
   import PropertiesDSL.*
@@ -12,7 +14,8 @@ private object GameDSLDomain:
       players: OptionalProperty[PlayersCtx] = OptionalProperty[PlayersCtx](),
       winner: OptionalProperty[State => Option[Player]] = OptionalProperty[State => Option[Player]](),
       initialPhase: OptionalProperty[P] = OptionalProperty[P](),
-      stateFactory: OptionalProperty[Seq[Player] => State] = OptionalProperty[Seq[Player] => State]()
+      stateFactory: OptionalProperty[(GameMap, Seq[Player]) => State] =
+        OptionalProperty[(GameMap, Seq[Player]) => State]()
   )
 
   /** The players context is used to define the players info of the game.
