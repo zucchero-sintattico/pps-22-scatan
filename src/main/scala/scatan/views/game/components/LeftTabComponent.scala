@@ -4,11 +4,13 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
+import scatan.model.components.{Award, AwardType}
+import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanActions
+import scatan.model.game.ops.AwardOps.awards
 import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, gameController, reactiveState}
 
 object LeftTabComponent:
 
@@ -87,6 +89,39 @@ object LeftTabComponent:
           "Steal Card",
           onClick --> { _ => StealCardPopup.show() },
           disabled <-- isActionDisabled(ScatanActions.StealCard)
+        )
+      )
+    )
+
+  def awardsComponent: DisplayableSource[Element] =
+    div(
+      className := "awards",
+      h2("Current awards"),
+      child <-- reactiveState
+        .map(state =>
+          (for
+            game <- state.game
+            gameState = game.state
+          yield getCurrentAwards(gameState))
+            .getOrElse(div("No game"))
+        )
+    )
+  private def getCurrentAwards(state: ScatanState): Element =
+    div(
+      ul(
+        li(
+          "Longest road: ",
+          state
+            .awards(Award(AwardType.LongestRoad))
+            .map(award => s"${award._1.name} (${award._2} roads)")
+            .getOrElse("Nobody yet")
+        ),
+        li(
+          "Largest army: ",
+          state
+            .awards(Award(AwardType.LargestArmy))
+            .map(award => s"${award._1.name} (${award._2} cards)")
+            .getOrElse("Nobody yet")
         )
       )
     )

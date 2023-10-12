@@ -5,7 +5,7 @@ import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
-import scatan.model.components.ResourceCard
+import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
@@ -89,7 +89,10 @@ private trait ScatanGameActions extends ScatanGameStatus:
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
   def playDevelopmentCard: Option[ScatanGame] = ???
-  def tradeWithBank: Option[ScatanGame] = ???
+
+  def tradeWithBank(offer: ResourceType, request: ResourceType): Option[ScatanGame] =
+    play(ScatanActions.TradeWithBank)(using TradeWithBankEffect(game.turn.player, offer, request))
+
   def tradeWithPlayer(
       receiver: ScatanPlayer,
       senderTradeCards: Seq[ResourceCard],
