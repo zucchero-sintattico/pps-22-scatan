@@ -4,6 +4,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
 import scatan.lib.game.GameStatus
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.GameMap
 
 class ScatanRulesTest extends BaseTest:
 
@@ -19,7 +20,8 @@ class ScatanRulesTest extends BaseTest:
 
   it should "start with a Scatan State" in {
     val players = Seq(ScatanPlayer("a"), ScatanPlayer("b"), ScatanPlayer("c"))
-    val initialState = rules.startingStateFactory(players)
+
+    val initialState = rules.startingStateFactory(GameMap(), players)
     initialState should be(ScatanState(players))
   }
 

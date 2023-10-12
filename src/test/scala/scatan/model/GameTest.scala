@@ -29,46 +29,46 @@ class GameTest extends BaseTest:
   }
 
   it should "have players" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "expose if the game is over" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.isOver shouldBe false
   }
 
   it should "have a winner when the game is over" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.winner shouldBe None
   }
 
   it should "take players" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.players should be(threePlayers)
   }
 
   it should "not allow fewer than 3 players" in {
     for n <- 0 to 2
     yield assertThrows[IllegalArgumentException] {
-      Game(players(n))
+      Game(GameMap(), players(n))
     }
   }
 
   it should "not allow more than 4 players" in {
     for n <- 5 to 10
     yield assertThrows[IllegalArgumentException] {
-      Game(players(n))
+      Game(GameMap(), players(n))
     }
   }
 
   it should "have a status" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.gameStatus shouldBe GameStatus(ScatanPhases.Setup, ScatanSteps.SetupSettlement)
   }
 
   it should "have a turn" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     game.turn.number shouldBe 1
     game.turn.player shouldBe threePlayers.head
   }
@@ -87,7 +87,7 @@ class GameTest extends BaseTest:
     yield newGame
 
   it should "allow to change turn" in {
-    val game = Game(threePlayers)
+    val game = Game(GameMap(), threePlayers)
     for newGame <- nextTurn(game)
     do
       newGame.turn.number shouldBe 2
