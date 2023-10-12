@@ -323,6 +323,8 @@ body {
     width: 20%;
     border-radius: 0.5em;
     margin-top: 0.5em; 
+}
+
 .popup {
     position: fixed;
     left: 50%;

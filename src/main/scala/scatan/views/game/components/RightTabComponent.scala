@@ -10,6 +10,14 @@ import scatan.views.utils.TypeUtils.*
 
 object RightTabComponent:
 
+  private def resourceTypefromName(name: String): ResourceType =
+    name match
+      case "Wood"  => ResourceType.Wood
+      case "Brick" => ResourceType.Brick
+      case "Sheep" => ResourceType.Sheep
+      case "Wheat" => ResourceType.Wheat
+      case "Rock"  => ResourceType.Rock
+
   val bankTradeOffer: Var[ResourceType] = Var(ResourceType.values.head)
   val bankTradeRequest: Var[ResourceType] = Var(ResourceType.values.head)
   val playerTradeOffer: Var[Map[ResourceType, Int]] = Var(Map.empty)
@@ -72,7 +80,7 @@ object RightTabComponent:
     div(
       className := "game-view-resource-type-choice",
       select(
-        onChange.mapToValue.map(ResourceType.withName(_)) --> changing,
+        onChange.mapToValue.map(resourceTypefromName(_)) --> changing,
         className := "game-view-resource-type-choice-select",
         // for each type of resource add an option
         for resource <- ResourceType.values
