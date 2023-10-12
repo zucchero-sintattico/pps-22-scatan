@@ -68,11 +68,13 @@ object CardOps:
     def removeResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
       if !state.resourceCards(player).contains(resourceCard) then None
       else
-        val remainingResourceCards =
-          state.resourceCards(player).filter(_.resourceType == resourceCard.resourceType).drop(1)
+        val updatedResourceCard = state.resourceCards(player).foldLeft((Seq.empty[ResourceCard], false)) {
+          case ((cards, false), card) if card == resourceCard => (cards, true)
+          case ((cards, removed), card)                       => (cards :+ card, removed)
+        }._1
         Some(
           state.copy(
-            resourceCards = state.resourceCards.updated(player, remainingResourceCards)
+            resourceCards = state.resourceCards.updated(player, updatedResourceCard)
           )
         )
 
@@ -186,17 +188,12 @@ object CardOps:
         val cardWithTurnNumber = card.map(_.copy(drewAt = Some(turnNumber)))
         cardWithTurnNumber match
           case Some(developmentCard) =>
-            val updatedResources = requiredResources.foldLeft(playerResources)((resources, resource) =>
-              resources.filterNot(_.resourceType == resource)
+            val stateWithResourceRemoved = requiredResources.foldLeft(Option(state))((optState, resourceType) =>
+              optState.flatMap(_.removeResourceCard(player, ResourceCard(resourceType)))
             )
-            Some(
-              state.copy(
-                resourceCards = state.resourceCards.updated(player, updatedResources),
-                developmentCards =
-                  state.developmentCards.updated(player, state.developmentCards(player) :+ developmentCard),
-                developmentCardsDeck = state.developmentCardsDeck.tail
-              )
-            )
+            stateWithResourceRemoved
+              .map(_.copy(developmentCardsDeck = state.developmentCardsDeck.tail))
+              .flatMap(_.assignDevelopmentCard(player, developmentCard))
           case None => None
 
     /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
@@ -208,23 +205,13 @@ object CardOps:
       * @return
       *   Some(ScatanState) if the player has the development card, None otherwise
       */
-    def consumeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
+    def removeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
       if !state.developmentCards(player).contains(developmentCard) then None
       else
-        val remainingCards =
-          state.developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
-        Some(
-          state.copy(
-            developmentCards = state.developmentCards.updated(player, remainingCards),
-            assignedAwards = state.awards
-          )
-        )
-
-    def removeDevelopmentCardFromPlayer(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
-      if !state.developmentCards(player).contains(developmentCard) then None
-      else
-        val remainingCards =
-          state.developmentCards(player).filterNot(_ == developmentCard)
+        val remainingCards = state.developmentCards(player).foldLeft((Seq.empty[DevelopmentCard], false)) {
+          case ((cards, false), card) if card == developmentCard => (cards, true)
+          case ((cards, removed), card)                          => (cards :+ card, removed)
+        }._1
         Some(
           state.copy(
             developmentCards = state.developmentCards.updated(player, remainingCards),
@@ -242,7 +229,7 @@ object CardOps:
         card <- developmentCards.find(card =>
           card.developmentType == developmentType && !card.played && card.drewAt.isDefined && card.drewAt.get < turnNumber
         )
-        stateWithCardConsumed <- state.removeDevelopmentCardFromPlayer(player, card)
+        stateWithCardConsumed <- state.removeDevelopmentCard(player, card)
         newState <-
           if card.developmentType == Knight then
             stateWithCardConsumed.assignDevelopmentCard(player, card.copy(played = true))
