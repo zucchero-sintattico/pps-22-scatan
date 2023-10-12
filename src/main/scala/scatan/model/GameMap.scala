@@ -24,6 +24,14 @@ final case class GameMap(
 
   override val toContent: Map[Hexagon, TileContent] = tileContentsStrategy(tileWithTerrain)
 
+  override def equals(x: Any): Boolean =
+    x match
+      case that: GameMap =>
+        this.withTerrainLayers == that.withTerrainLayers &&
+        this.withSeaLayers == that.withSeaLayers &&
+        (this.toContent.toSet & that.toContent.toSet).sizeIs == this.toContent.size
+      case _ => false
+
 object GameMapFactory:
 
   def defaultMap: GameMap =
