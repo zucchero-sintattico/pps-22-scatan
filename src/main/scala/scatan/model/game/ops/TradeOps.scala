@@ -3,7 +3,7 @@ package scatan.model.game.ops
 import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.CardOps.{assignResourceCard, removeResourceCard}
+import scatan.model.game.ops.ResCardOps.{assignResourceCard, removeResourceCard}
 import scatan.views.game.components.ContextMap.resources
 
 object TradeOps:

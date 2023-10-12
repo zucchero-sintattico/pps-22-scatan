@@ -1,7 +1,7 @@
 package scatan.model.game.ops
 
 import scatan.model.components.*
-import scatan.model.game.ops.CardOps.assignResourceCard
+import scatan.model.game.ops.ResCardOps.assignResourceCard
 import scatan.model.game.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
 import scatan.model.game.{BaseScatanStateTest, ScatanState}
 

@@ -4,7 +4,7 @@ import scatan.model.game.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
-object EmptySpotsOps:
+object EmptySpotOps:
 
   extension (state: ScatanState)
 

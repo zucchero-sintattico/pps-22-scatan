@@ -4,7 +4,7 @@ import scatan.model.components.{AssignedBuildings, AssignmentInfo, BuildingType,
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
-import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
+import EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 object BuildingOps:

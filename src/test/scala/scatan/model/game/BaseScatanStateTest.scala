@@ -2,10 +2,10 @@ package scatan.model.game
 
 import scatan.BaseTest
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.EmptySpotsOps.emptySpots
+import scatan.model.game.ops.EmptySpotOps.emptySpots
 import scatan.model.map.Spot
 import scatan.model.map.RoadSpot
-import scatan.model.game.ops.EmptySpotsOps.emptyRoadSpot
+import scatan.model.game.ops.EmptySpotOps.emptyRoadSpot
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.components.BuildingType
 import scatan.model.map.StructureSpot
