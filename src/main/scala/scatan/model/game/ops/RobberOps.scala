@@ -3,8 +3,8 @@ package scatan.model.game.ops
 import scatan.model.components.AssignmentInfo
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.model.map.HexagonInMap.layer
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object RobberOps:
   extension (state: ScatanState)

@@ -1,10 +1,9 @@
 package scatan.model.game.ops
 
+import scatan.model.components.{DevelopmentCard, ResourceType}
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.DevelopmentCard
 import scatan.model.game.ops.AwardOps.awards
-import scatan.model.components.ResourceType
 
 object DevCardOps:
 

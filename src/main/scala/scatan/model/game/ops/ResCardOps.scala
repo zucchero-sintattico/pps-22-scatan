@@ -1,16 +1,11 @@
 package scatan.model.game.ops
 
+import scatan.model.components.{AssignedBuildings, BuildingType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.components.ResourceCard
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
+
 import scala.util.Random
-import scatan.model.map.Hexagon
-import scatan.model.map.TileContent
-import scatan.model.components.AssignedBuildings
-import scatan.model.map.StructureSpot
-import scatan.model.map.RoadSpot
-import scatan.model.components.ResourceType
-import scatan.model.components.BuildingType
 
 object ResCardOps:
 
