@@ -38,6 +38,27 @@ private class ScalaJSAboutView(container: String, requirements: View.Requirement
       li("Laminar"),
       li("ScalaTest")
     ),
+    h2("Authors"),
+    ul(
+      // add links to github profiles
+      li(
+        a(
+          cls := "about-link",
+          "Luigi Borriello",
+          href := "https://github.com/luigi-borriello00"
+        )
+      ),
+      li(
+        a(
+          cls := "about-link",
+          "Manuel Andruccioli",
+          href := "https://github.com/manuandru"
+        )
+      ),
+      li(
+        a(cls := "about-link", "Alessandro Mazzoli", href := "https://github.com/alemazzo")
+      )
+    ),
     button(
       cls := "home-menu-button",
       "Back",

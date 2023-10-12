@@ -344,3 +344,8 @@ body {
     border-radius: 1em;
     padding: 1em;
 }
+
+.about-link{
+    color: white;
+    text-decoration: none;
+}
