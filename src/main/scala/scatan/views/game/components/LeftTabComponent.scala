@@ -68,7 +68,7 @@ object LeftTabComponent:
         className := "game-view-button buy-development-card-button",
         "Buy Dev. Card",
         onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
-        disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
+        disabled <-- reactiveState.map(!_.game.exists(_.canBuyDevelopment))
       ),
       button(
         className := "game-view-button end-turn-button",

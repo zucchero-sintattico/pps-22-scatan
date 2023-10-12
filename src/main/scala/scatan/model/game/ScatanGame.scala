@@ -5,6 +5,7 @@ import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
+import scatan.model.components.ResourceType.{Rock, Sheep, Wheat}
 import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
@@ -32,6 +33,17 @@ private trait ScatanGameActions extends ScatanGameStatus:
 
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
+
+  def canBuyDevelopment: Boolean =
+    val required = Seq(Rock, Wheat, Sheep)
+    game.allowedActions.contains(BuyDevelopmentCard) && required.forall(resource =>
+      game.state.resourceCards(game.turn.player).exists(_.resourceType == resource)
+    )
+
+  def canPlayDevelopment(developmentType: DevelopmentType): Boolean =
+    game.allowedActions.contains(PlayDevelopmentCard) && game.state
+      .developmentCards(game.turn.player)
+      .exists(card => card.developmentType == developmentType && !card.played && card.drewAt.get < game.turn.number)
 
   def nextTurn: Option[ScatanGame] =
     play(ScatanActions.NextTurn)(using NextTurnEffect())

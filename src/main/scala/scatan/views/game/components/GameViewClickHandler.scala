@@ -78,22 +78,23 @@ object GameViewClickHandler:
       override def onCardClick(cardType: CardType): Unit =
         cardType match
           case development: DevelopmentType =>
-            development match
-              case Knight =>
-                playingKnight = true
-                view.displayMessage("Select a hexagon to place the robber")
-              case YearOfPlenty =>
-                DevelopmentCardPopups.FirstYearOfPlentyCardPopup.show { first =>
-                  DevelopmentCardPopups.SecondYearOfPlentyCardPopup.show { second =>
-                    gameController.playYearOfPlentyDevelopment(first, second)
+            if state.game.exists(_.canPlayDevelopment(development)) then
+              development match
+                case Knight =>
+                  playingKnight = true
+                  view.displayMessage("Select a hexagon to place the robber")
+                case YearOfPlenty =>
+                  DevelopmentCardPopups.FirstYearOfPlentyCardPopup.show { first =>
+                    DevelopmentCardPopups.SecondYearOfPlentyCardPopup.show { second =>
+                      gameController.playYearOfPlentyDevelopment(first, second)
+                    }
                   }
-                }
-              case Monopoly =>
-                DevelopmentCardPopups.MonopolyCardPopup.show { resource =>
-                  gameController.playMonopolyDevelopment(resource)
-                }
-              case RoadBuilding =>
-                view.displayMessage("Select two roads to build")
-                playingRoadBuilding = true
-              case _ => ()
+                case Monopoly =>
+                  DevelopmentCardPopups.MonopolyCardPopup.show { resource =>
+                    gameController.playMonopolyDevelopment(resource)
+                  }
+                case RoadBuilding =>
+                  view.displayMessage("Select two roads to build")
+                  playingRoadBuilding = true
+                case _ => ()
           case _ => ()
