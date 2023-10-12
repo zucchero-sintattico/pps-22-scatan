@@ -1,7 +1,9 @@
 package scatan.model.game.ops
 
+import scatan.model.components.AssignmentInfo
 import scatan.model.game.ScatanState
-import scatan.model.map.Hexagon
+import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.model.map.HexagonInMap.layer
 
 object RobberOps:
@@ -17,3 +19,14 @@ object RobberOps:
     def moveRobber(hexagon: Hexagon): Option[ScatanState] =
       if state.robberPlacement == hexagon || hexagon.layer > state.gameMap.withTerrainLayers then None
       else Some(state.copy(robberPlacement = hexagon))
+
+    /** Get the players that have buildings on the robber's current hexagon.
+      * @return
+      *   the players
+      */
+    def playersOnRobber: Seq[ScatanPlayer] =
+      def isStructureSpotOverRobber(spot: StructureSpot): Boolean =
+        spot.toSet.intersect(Set(state.robberPlacement)).nonEmpty
+      state.assignedBuildings.collect {
+        case (spot: StructureSpot, AssignmentInfo(player: ScatanPlayer, _)) if isStructureSpotOverRobber(spot) => player
+      }.toSeq

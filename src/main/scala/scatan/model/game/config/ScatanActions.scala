@@ -9,7 +9,7 @@ enum ScatanActions:
   case RollDice
   case RollSeven
   case PlaceRobber
-  case StoleCard
+  case StealCard
   case BuildRoad
   case BuildSettlement
   case BuildCity

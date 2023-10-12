@@ -6,9 +6,38 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
+import scala.util.Random
+
 object CardOps:
 
   extension (state: ScatanState)
+
+    /** Stole a card from a victim.
+      * @param currentPlayer
+      *   the player who stole the card
+      * @param victim
+      *   the player who lost the card
+      * @return
+      *   Some(ScatanState) if the card was stolen, None otherwise
+      */
+    def stoleResourceCard(currentPlayer: ScatanPlayer, victim: ScatanPlayer): Option[ScatanState] =
+      val victimResourceCards = state.resourceCards(victim)
+      if victimResourceCards.sizeIs == 0 then None
+      else
+        val randomCardIndex = Random.nextInt(victimResourceCards.size)
+        val stolenCard = victimResourceCards(randomCardIndex)
+        val updatedVictimResourceCards = victimResourceCards.zipWithIndex.filterNot(_._2 == randomCardIndex).map(_._1)
+        val updatedCurrentPlayerResourceCards = state.resourceCards(currentPlayer) :+ stolenCard
+        Some(
+          state.copy(
+            resourceCards = state.resourceCards
+              .updated(victim, updatedVictimResourceCards)
+              .updated(
+                currentPlayer,
+                updatedCurrentPlayerResourceCards
+              )
+          )
+        )
 
     /** Assigns a resource card to a player.
       * @param player

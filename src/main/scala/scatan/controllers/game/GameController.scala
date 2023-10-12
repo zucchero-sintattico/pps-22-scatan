@@ -5,6 +5,7 @@ import scatan.model.ApplicationState
 import scatan.model.components.BuildingType
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
@@ -17,6 +18,7 @@ trait GameController extends Controller[ApplicationState]:
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
   def placeRobber(hexagon: Hexagon): Unit
+  def stealCard(player: ScatanPlayer): Unit
   def buyDevelopmentCard(): Unit
 
 object GameController:
@@ -72,6 +74,11 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
           this.model
             .updateGame(_.buildSettlement(spot))
             .onError(view.displayMessage("Cannot build settlement here"))
+
+  override def stealCard(player: ScatanPlayer): Unit =
+    this.model
+      .updateGame(_.stealCard(player))
+      .onError(view.displayMessage("Cannot steal card"))
 
   override def buyDevelopmentCard(): Unit =
     this.model

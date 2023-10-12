@@ -58,23 +58,35 @@ object LeftTabComponent:
 
   def buttonsComponent: DisplayableSource[Element] =
     div(
-      className := "game-view-buttons",
-      button(
-        className := "game-view-button roll-dice-button",
-        "Roll dice",
-        onClick --> { _ => gameController.rollDice() },
-        disabled <-- isActionDisabled(ScatanActions.RollDice)
+      div(
+        className := "game-view-buttons",
+        button(
+          className := "game-view-button roll-dice-button",
+          "Roll dice",
+          onClick --> { _ => gameController.rollDice() },
+          disabled <-- isActionDisabled(ScatanActions.RollDice)
+        ),
+        button(
+          className := "game-view-button buy-development-card-button",
+          "Buy Dev. Card",
+          onClick --> { _ => gameController.buyDevelopmentCard() },
+          disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
+        ),
+        button(
+          className := "game-view-button end-turn-button",
+          "End Turn",
+          onClick --> { _ => gameController.nextTurn() },
+          disabled <-- isActionDisabled(ScatanActions.NextTurn)
+        )
       ),
-      button(
-        className := "game-view-button buy-development-card-button",
-        "Buy Dev. Card",
-        onClick --> { _ => gameController.buyDevelopmentCard() },
-        disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
-      ),
-      button(
-        className := "game-view-button end-turn-button",
-        "End Turn",
-        onClick --> { _ => gameController.nextTurn() },
-        disabled <-- isActionDisabled(ScatanActions.NextTurn)
+      div(
+        StealCardPopup.userSelectionPopup(),
+        className := "game-view-buttons",
+        button(
+          className := "game-view-button steal-card-button",
+          "Steal Card",
+          onClick --> { _ => StealCardPopup.show() },
+          disabled <-- isActionDisabled(ScatanActions.StealCard)
+        )
       )
     )
