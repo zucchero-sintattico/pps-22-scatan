@@ -209,10 +209,13 @@ object CardOps:
     def removeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
       if !state.developmentCards(player).contains(developmentCard) then None
       else
-        val remainingCards = state.developmentCards(player).foldLeft((Seq.empty[DevelopmentCard], false)) {
-          case ((cards, false), card) if card == developmentCard => (cards, true)
-          case ((cards, removed), card)                          => (cards :+ card, removed)
-        }._1
+        val remainingCards = state
+          .developmentCards(player)
+          .foldLeft((Seq.empty[DevelopmentCard], false)) {
+            case ((cards, false), card) if card == developmentCard => (cards, true)
+            case ((cards, removed), card)                          => (cards :+ card, removed)
+          }
+          ._1
         Some(
           state.copy(
             developmentCards = state.developmentCards.updated(player, remainingCards),

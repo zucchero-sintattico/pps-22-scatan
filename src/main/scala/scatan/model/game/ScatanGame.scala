@@ -98,7 +98,6 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def buyDevelopmentCard: Option[ScatanGame] =
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
-
   def playKnightDevelopment(robberPosition: Hexagon): Option[ScatanGame] =
     play(ScatanActions.PlayDevelopmentCard)(using
       PlayKnightDevelopmentCardEffect(game.turn.player, game.turn.number, robberPosition)
