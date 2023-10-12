@@ -336,3 +336,11 @@ body {
     border-radius: 5px;
     z-index: 1000;
 }
+
+.about-view-container{
+    color: white;
+    font-size: x-large;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 1em;
+    padding: 1em;
+}
