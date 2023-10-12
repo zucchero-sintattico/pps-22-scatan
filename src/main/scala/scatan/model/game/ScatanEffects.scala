@@ -1,7 +1,7 @@
 package scatan.model.game
 
 import scatan.lib.game.ops.Effect
-import scatan.model.components.*
+import scatan.model.components.{BuildingType, ResourceCard}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
@@ -9,15 +9,21 @@ import scatan.model.game.ops.CardOps.{
   assignResourceCard,
   assignResourcesFromNumber,
   buyDevelopmentCard,
-  removeResourceCard
+  removeResourceCard,
+  stoleResourceCard
 }
-import scatan.model.game.ops.RobberOps.moveRobber
-import scatan.model.game.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
+import scatan.model.components.ResourceCard
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.game.ops.RobberOps.moveRobber
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
+import scatan.model.components.ResourceType
+import scatan.model.game.ops.TradeOps.tradeWithBank
 
 object ScatanEffects:
 
-  private def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
+  def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
 
   def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = EmptyEffect
 
@@ -36,7 +42,8 @@ object ScatanEffects:
   def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) =>
     state.moveRobber(hex)
 
-  def StoleCardEffect(player: ScatanPlayer): Effect[StoleCard.type, ScatanState] = (state: ScatanState) => Some(state)
+  def StealCardEffect(currentPlayer: ScatanPlayer, victim: ScatanPlayer): Effect[StealCard.type, ScatanState] =
+    (state: ScatanState) => state.stoleResourceCard(currentPlayer, victim)
 
   /*
    * Building Ops

@@ -19,6 +19,7 @@ trait GameController extends Controller[ApplicationState]:
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
   def placeRobber(hexagon: Hexagon): Unit
+  def stealCard(player: ScatanPlayer): Unit
   def buyDevelopmentCard(): Unit
 
 object GameController:
@@ -94,6 +95,11 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       .onError(
         view.displayMessage("Cannot trade this cards with player")
       )
+  override def stealCard(player: ScatanPlayer): Unit =
+    this.model
+      .updateGame(_.stealCard(player))
+      .onError(view.displayMessage("Cannot steal card"))
+
   override def buyDevelopmentCard(): Unit =
     this.model
       .updateGame(_.buyDevelopmentCard)

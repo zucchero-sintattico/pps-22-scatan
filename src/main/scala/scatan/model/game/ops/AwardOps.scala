@@ -1,7 +1,7 @@
 package scatan.model.game.ops
 
-import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
+import scatan.model.components.*
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 

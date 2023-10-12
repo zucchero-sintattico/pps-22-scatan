@@ -1,6 +1,7 @@
 package scatan.model.game.ops
 
 import scatan.model.components.{BuildingType, ResourceCard, ResourceCards, ResourceType}
+import scatan.model.game.{BaseScatanStateTest, ScatanState}
 import scatan.model.game.ops.BuildingOps.assignBuilding
 import scatan.model.game.ops.CardOps.{
   assignResourceCard,
@@ -117,12 +118,12 @@ class ResCardOpsTest extends BaseScatanStateTest:
     val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
     // simulate initial placement
     val stateWithBuildings = state
-      .assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head)
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.tail.head))
-      .flatMap(_.assignBuilding(spotWhereToBuild.next(), BuildingType.Settlement, state.players.head))
+      .assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.head)
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.tail.head))
+      .flatMap(_.assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.head))
     stateWithBuildings match
       case Some(state) =>
         state.assignResourcesAfterInitialPlacement match
