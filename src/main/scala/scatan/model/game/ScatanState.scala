@@ -50,7 +50,7 @@ object ScatanState:
     ScatanState(GameMap(), players, DevelopmentCardsDeck.defaultOrdered)
 
   def apply(
-      gameMap: GameMap,
+      gameMap: GameMap = GameMap(),
       players: Seq[ScatanPlayer],
       developmentCardsDeck: DevelopmentCardsDeck = DevelopmentCardsDeck.defaultOrdered
   ): ScatanState =
