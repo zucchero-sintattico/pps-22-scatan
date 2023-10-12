@@ -21,7 +21,7 @@ trait TileContentConfig:
 
 /** A factory to create terrains.
   */
-object TileContentFactory:
+object TileContentStrategyFactory:
 
   object ConfigForLayer2 extends TileContentConfig:
     val terrains: List[Terrain] = List(
@@ -29,7 +29,8 @@ object TileContentFactory:
       4 * Sheep,
       4 * Wheat,
       3 * Rock,
-      3 * Brick
+      3 * Brick,
+      1 * Desert
     ).flatten
     val numbers =
       2 :: 12 :: (for
@@ -38,9 +39,14 @@ object TileContentFactory:
       yield List(i, i)).flatten
 
   private def fromConfig(using config: TileContentConfig)(tiles: Seq[Hexagon]): Map[Hexagon, TileContent] =
-    val tileContents = config.terrains.zip(config.numbers).map(p => TileContent(p._1, Some(p._2)))
+    val iterator = config.numbers.iterator
+    val tileContents = config.terrains.map { t =>
+      t match
+        case Desert => TileContent(t, None)
+        case _      => TileContent(t, iterator.nextOption())
+    }
     Map
-      .from(tiles.zip(TileContent(Desert, None) +: tileContents))
+      .from(tiles.zip(tileContents))
       .withDefaultValue(TileContent(Sea, None))
 
   def fixedForLayer2(tiles: Seq[Hexagon]): Map[Hexagon, TileContent] =
