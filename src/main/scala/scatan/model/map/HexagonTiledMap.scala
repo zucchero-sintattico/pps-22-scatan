@@ -17,7 +17,9 @@ type Spot = StructureSpot | RoadSpot
 
 /** A map made of hexagonal tiles.
   */
-class HexagonalTiledMap(layers: Int) extends UndirectedGraph[StructureSpot, RoadSpot]:
+class HexagonalTiledMap(layers: Int)
+    extends UndirectedGraph[StructureSpot, RoadSpot]
+    with UndirectedGraphOps[StructureSpot, RoadSpot]:
 
   val tiles: Set[Hexagon] =
     (for

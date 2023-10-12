@@ -13,15 +13,19 @@ import scatan.model.game.ops.CardOps.{
   playMonopolyDevelopment,
   playRoadBuildingDevelopment,
   playYearOfPlentyDevelopment,
-  removeResourceCard
+  removeResourceCard,
+  stoleResourceCard
 }
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
+import scatan.model.components.ResourceCard
+import scatan.model.game.ops.TradeOps.tradeWithPlayer
 import scatan.model.game.ops.RobberOps.moveRobber
 import scatan.model.game.ops.TradeOps.tradeWithPlayer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
 
-  private def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
+  def EmptyEffect[A]: Effect[A, ScatanState] = (state: ScatanState) => Some(state)
 
   def NextTurnEffect(): Effect[NextTurn.type, ScatanState] = EmptyEffect
 
@@ -40,7 +44,8 @@ object ScatanEffects:
   def PlaceRobberEffect(hex: Hexagon): Effect[PlaceRobber.type, ScatanState] = (state: ScatanState) =>
     state.moveRobber(hex)
 
-  def StoleCardEffect(player: ScatanPlayer): Effect[StoleCard.type, ScatanState] = (state: ScatanState) => Some(state)
+  def StealCardEffect(currentPlayer: ScatanPlayer, victim: ScatanPlayer): Effect[StealCard.type, ScatanState] =
+    (state: ScatanState) => state.stoleResourceCard(currentPlayer, victim)
 
   /*
    * Building Ops

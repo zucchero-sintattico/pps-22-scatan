@@ -76,4 +76,14 @@ object LeftTabComponent:
         onClick --> { _ => clickHandler.onEndTurnClick() },
         disabled <-- isActionDisabled(ScatanActions.NextTurn)
       ),
+      div(
+        StealCardPopup.userSelectionPopup(),
+        className := "game-view-buttons",
+        button(
+          className := "game-view-button steal-card-button",
+          "Steal Card",
+          onClick --> { _ => StealCardPopup.show() },
+          disabled <-- isActionDisabled(ScatanActions.StealCard)
+        )
+      )
     )

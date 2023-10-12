@@ -5,6 +5,8 @@ import scatan.model.ApplicationState
 import scatan.model.components.ResourceType
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.config.ScatanPhases
+import scatan.model.game.config.ScatanPhases.{Game, Setup}
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.model.map.Hexagon
@@ -21,6 +23,7 @@ trait GameController extends Controller[ApplicationState]:
 
   def nextTurn(): Unit
   def rollDice(): Unit
+  def stealCard(player: ScatanPlayer): Unit
   def buyDevelopmentCard(): Unit
 
   def playKnightDevelopment(robberPosition: Hexagon): Unit
@@ -75,6 +78,11 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     this.model
       .updateGame(_.rollDice(diceResult => this.view.displayMessage(s"Roll dice result: $diceResult")))
       .onError(view.displayMessage("Cannot roll dice"))
+
+  override def stealCard(player: ScatanPlayer): Unit =
+    this.model
+      .updateGame(_.stealCard(player))
+      .onError(view.displayMessage("Cannot steal card"))
 
   override def buyDevelopmentCard(): Unit =
     this.model

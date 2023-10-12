@@ -20,11 +20,11 @@ class AwardOpsTest extends BaseScatanStateTest:
     val player1 = threePlayers.head
     val it = state.emptyRoadSpot.iterator
     val stateWithAward = for
-      stateWithOneRoad <- state.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithTwoRoad <- stateWithOneRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next, BuildingType.Road, player1)
+      stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
+      stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithThreeRoad <- stateWithTwoRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFourRoad <- stateWithThreeRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFiveRoad <- stateWithFourRoad.assignRoadWithoutRule(it.next, player1)
     yield stateWithFiveRoad
     stateWithAward match
       case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
@@ -51,18 +51,18 @@ class AwardOpsTest extends BaseScatanStateTest:
     val player2 = threePlayers.tail.head
     val it = state.emptyRoadSpot.iterator
     val firstStateWithAward = for
-      stateWithOneRoad <- state.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithTwoRoad <- stateWithOneRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next, BuildingType.Road, player1)
+      stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
+      stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithThreeRoad <- stateWithTwoRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFourRoad <- stateWithThreeRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFiveRoad <- stateWithFourRoad.assignRoadWithoutRule(it.next, player1)
     yield stateWithFiveRoad
     val secondStateWithAward = for
-      stateWithOneRoad <- firstStateWithAward.get.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithTwoRoad <- stateWithOneRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next, BuildingType.Road, player2)
+      stateWithOneRoad <- firstStateWithAward.get.assignRoadWithoutRule(it.next, player2)
+      stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithThreeRoad <- stateWithTwoRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithFourRoad <- stateWithThreeRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithFiveRoad <- stateWithFourRoad.assignRoadWithoutRule(it.next, player2)
     yield stateWithFiveRoad
     firstStateWithAward match
       case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
@@ -79,19 +79,19 @@ class AwardOpsTest extends BaseScatanStateTest:
     val player2 = threePlayers.tail.head
     val it = state.emptyRoadSpot.iterator
     val firstStateWithAward = for
-      stateWithOneRoad <- state.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithTwoRoad <- stateWithOneRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next, BuildingType.Road, player1)
-      stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next, BuildingType.Road, player1)
+      stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
+      stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithThreeRoad <- stateWithTwoRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFourRoad <- stateWithThreeRoad.assignRoadWithoutRule(it.next, player1)
+      stateWithFiveRoad <- stateWithFourRoad.assignRoadWithoutRule(it.next, player1)
     yield stateWithFiveRoad
     val secondStateWithAward = for
-      stateWithOneRoad <- firstStateWithAward.get.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithTwoRoad <- stateWithOneRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithThreeRoad <- stateWithTwoRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithFourRoad <- stateWithThreeRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithFiveRoad <- stateWithFourRoad.assignBuilding(it.next, BuildingType.Road, player2)
-      stateWithSixRoad <- stateWithFiveRoad.assignBuilding(it.next, BuildingType.Road, player2)
+      stateWithOneRoad <- firstStateWithAward.get.assignRoadWithoutRule(it.next, player2)
+      stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithThreeRoad <- stateWithTwoRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithFourRoad <- stateWithThreeRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithFiveRoad <- stateWithFourRoad.assignRoadWithoutRule(it.next, player2)
+      stateWithSixRoad <- stateWithFiveRoad.assignRoadWithoutRule(it.next, player2)
     yield stateWithSixRoad
     firstStateWithAward match
       case Some(state) => state.awards(Award(AwardType.LongestRoad)) should be(Some((player1, 5)))
