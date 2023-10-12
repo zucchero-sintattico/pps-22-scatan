@@ -19,5 +19,6 @@ object DevelopmentCardsDeck:
       2 * YearOfPlenty ++
       2 * Monopoly
 
-  def shuffled: DevelopmentCardsDeck =
-    Random.shuffle(defaultOrdered)
+  def shuffled(seed: Int = 1): DevelopmentCardsDeck =
+    val random = Random(seed)
+    defaultOrdered.sortBy(_ => random.nextDouble())
