@@ -15,7 +15,7 @@ import scatan.model.components.Terrain
 final case class GameMap(
     withTerrainLayers: Int = 2,
     withSeaLayers: Int = 1,
-    tileContentsStrategy: Seq[Hexagon] => Map[Hexagon, TileContent] = TileContentStrategyFactory.fixedForLayer2
+    tileContentsStrategy: TileContentStrategy = TileContentStrategyFactory.fixedForLayer2
 ) extends HexagonalTiledMap(withTerrainLayers + withSeaLayers)
     with MapWithTileContent:
 
@@ -31,3 +31,7 @@ object GameMapFactory:
 
   def randomMap: GameMap =
     GameMap(tileContentsStrategy = TileContentStrategyFactory.randomForLayer2)
+
+  val strategies: Iterator[TileContentStrategy] = TileContentStrategyFactory.permutationForLayer2.toIterator
+  def nextPermutation: GameMap =
+    GameMap(tileContentsStrategy = strategies.next())
