@@ -5,7 +5,14 @@ import org.scalajs.dom
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
-import scatan.views.game.components.{CardsComponent, DevelopmentCardPopups, EndgameComponent, GameMapComponent, GameViewClickHandler, LeftTabComponent}
+import scatan.views.game.components.{
+  CardsComponent,
+  DevelopmentCardPopups,
+  EndgameComponent,
+  GameMapComponent,
+  GameViewClickHandler,
+  LeftTabComponent
+}
 import scatan.views.utils.TypeUtils
 import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
 
@@ -35,4 +42,3 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
       GameMapComponent.mapComponent,
       CardsComponent.cardsComponent
     )
-

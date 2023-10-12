@@ -14,7 +14,15 @@ import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
 import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewPlayer}
 import scatan.model.map.{RoadSpot, Spot}
-import scatan.views.utils.TypeUtils.{DisplayableSource, InputSource, InputSourceWithState, StateKnoledge, clickHandler, reactiveState, state}
+import scatan.views.utils.TypeUtils.{
+  DisplayableSource,
+  InputSource,
+  InputSourceWithState,
+  StateKnoledge,
+  clickHandler,
+  reactiveState,
+  state
+}
 
 object ContextMap:
 

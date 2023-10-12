@@ -3,7 +3,7 @@ package scatan.views.game.components
 import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import scatan.model.game.config.ScatanPlayer
-import scatan.views.utils.TypeUtils.{DisplayableSource, gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{DisplayableSource, clickHandler, reactiveState}
 
 object StealCardPopup:
 
@@ -26,7 +26,7 @@ object StealCardPopup:
           player.name,
           onClick --> { _ =>
             // Close the popup, you can implement your own logic here
-            gameController.stealCard(player)
+            clickHandler.onStealCardClick(player)
             toBeShown.writer.onNext(false)
           }
         )

@@ -7,6 +7,7 @@ import scatan.model.components.DevelopmentType.{Knight, Monopoly, RoadBuilding, 
 import scatan.model.components.{BuildingType, DevelopmentType}
 import scatan.model.game.{ScatanGame, ScatanState}
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
+import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
@@ -19,6 +20,7 @@ trait GameViewClickHandler:
   def onRollDiceClick(): Unit
   def onBuyDevelopmentCardClick(): Unit
   def onEndTurnClick(): Unit
+  def onStealCardClick(player: ScatanPlayer): Unit
 
   def onCardClick(cardType: CardType): Unit
 
@@ -74,6 +76,9 @@ object GameViewClickHandler:
 
       override def onEndTurnClick(): Unit =
         gameController.nextTurn()
+
+      override def onStealCardClick(player: ScatanPlayer): Unit =
+        gameController.stealCard(player)
 
       override def onCardClick(cardType: CardType): Unit =
         cardType match

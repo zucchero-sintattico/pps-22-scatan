@@ -249,7 +249,7 @@ object CardOps:
           else Some(stateWithCardConsumed)
       yield newState
       stateWithCardConsumed.flatMap(effect) match
-        case None => Some(state)
+        case None  => Some(state)
         case other => other
 
     def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon, turnNumber: Int): Option[ScatanState] =
@@ -283,8 +283,6 @@ object CardOps:
                   .flatMap(_.assignResourceCard(player, resourceCard))
               )
             )
-
-
           )
         )
       }
