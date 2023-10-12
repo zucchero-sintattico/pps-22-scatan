@@ -68,13 +68,14 @@ object CardOps:
     def removeResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
       if !state.resourceCards(player).contains(resourceCard) then None
       else
-        val updatedResourceCard = state.resourceCards(player).foldLeft((Seq.empty[ResourceCard], false)) {
-          case ((cards, false), card) if card == resourceCard => (cards, true)
-          case ((cards, removed), card)                       => (cards :+ card, removed)
-        }._1
+        val remainingCardsOfSameType =
+          state.resourceCards(player).filter(_.resourceType == resourceCard.resourceType).drop(1)
+        val remainingCardsOfDifferentType =
+          state.resourceCards(player).filter(_.resourceType != resourceCard.resourceType)
         Some(
           state.copy(
-            resourceCards = state.resourceCards.updated(player, updatedResourceCard)
+            resourceCards =
+              state.resourceCards.updated(player, remainingCardsOfDifferentType ++ remainingCardsOfSameType)
           )
         )
 

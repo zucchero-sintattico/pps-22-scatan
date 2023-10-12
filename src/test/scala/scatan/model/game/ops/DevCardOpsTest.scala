@@ -2,13 +2,8 @@ package scatan.model.game.ops
 
 import scatan.lib.game.Game
 import scatan.model.components.{DevelopmentCard, DevelopmentType, ResourceCard, ResourceType}
+import scatan.model.game.ops.CardOps.{assignDevelopmentCard, assignResourceCard, buyDevelopmentCard, removeDevelopmentCard}
 import scatan.model.game.{BaseScatanStateTest, ScatanState}
-import scatan.model.game.ops.CardOps.{
-  assignDevelopmentCard,
-  assignResourceCard,
-  buyDevelopmentCard,
-  removeDevelopmentCard
-}
 
 class DevCardOpsTest extends BaseScatanStateTest:
 

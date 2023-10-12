@@ -1,10 +1,11 @@
 package scatan.model.game.ops
 
-import scatan.model.components.{AssignedBuildings, BuildingType, Scores}
-import scatan.model.game.{BaseScatanStateTest, ScatanState}
+import scatan.model.components.*
 import scatan.model.game.ops.BuildingOps.assignBuilding
+import scatan.model.game.ops.CardOps.assignDevelopmentCard
 import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.game.ops.ScoreOps.*
+import scatan.model.game.{BaseScatanStateTest, ScatanState}
 
 class ScoreOpsTest extends BaseScatanStateTest:
 
@@ -51,7 +52,17 @@ class ScoreOpsTest extends BaseScatanStateTest:
       case None => fail("Road was not placed")
   }
 
-  it should "increment score either if assign an award or a building" in {
+  it should "increment score if player has a victory point" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val stateWithVictoryPoint = state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.VictoryPoint))
+    stateWithVictoryPoint match
+      case Some(state) =>
+        state.scores(player1) should be(1)
+      case None => fail("Victory point was not placed")
+  }
+
+  it should "increment score if assign an award a building and a victory point" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val roadSpotIterator = state.emptyRoadSpot.iterator
@@ -63,10 +74,14 @@ class ScoreOpsTest extends BaseScatanStateTest:
         threeRoadState <- twoRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
         fourRoadState <- threeRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
         fiveRoadState <- fourRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
-      yield fiveRoadState
+        stateWithVictoryPoint <- fiveRoadState.assignDevelopmentCard(
+          player1,
+          DevelopmentCard(DevelopmentType.VictoryPoint)
+        )
+      yield stateWithVictoryPoint
     stateWithSettlementAndAward match
       case Some(state) =>
-        state.scores(player1) should be(2)
+        state.scores(player1) should be(3)
       case None => fail("Building was not placed")
   }
 

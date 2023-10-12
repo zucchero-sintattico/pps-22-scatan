@@ -2,7 +2,6 @@ package scatan.model.game
 
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
-import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
 import scatan.model.components.ResourceType.{Rock, Sheep, Wheat}
@@ -10,11 +9,10 @@ import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.game.ops.RobberOps.playersOnRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
-import scatan.model.components.ResourceCard
-import scatan.model.game.ops.RobberOps.playersOnRobber
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -100,6 +98,7 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def buyDevelopmentCard: Option[ScatanGame] =
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
+
   def playKnightDevelopment(robberPosition: Hexagon): Option[ScatanGame] =
     play(ScatanActions.PlayDevelopmentCard)(using
       PlayKnightDevelopmentCardEffect(game.turn.player, game.turn.number, robberPosition)
@@ -123,7 +122,9 @@ private trait ScatanGameActions extends ScatanGameStatus:
       PlayRoadBuildingDevelopmentCardEffect(game.turn.player, game.turn.number, firstRoad, secondRoad)
     )
 
-  def tradeWithBank: Option[ScatanGame] = ???
+  def tradeWithBank(offer: ResourceType, request: ResourceType): Option[ScatanGame] =
+    play(ScatanActions.TradeWithBank)(using TradeWithBankEffect(game.turn.player, offer, request))
+
   def tradeWithPlayer(
       receiver: ScatanPlayer,
       senderTradeCards: Seq[ResourceCard],

@@ -1,9 +1,8 @@
 package scatan.views.utils
 
-import scatan.model.ApplicationState
-import scatan.controllers.game.GameController
-import scatan.model.game.ScatanState
 import com.raquo.airstream.core.Signal
+import scatan.model.ApplicationState
+import scatan.model.game.ScatanState
 import scatan.views.game.components.GameViewClickHandler
 
 object TypeUtils:

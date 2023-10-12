@@ -37,6 +37,19 @@ object ScoreOps:
         )
       )
 
+    /** Computes the partial scores of each player, taking into account the development cards they have assigned. A
+      * victory point card is worth 1 point.
+      *
+      * @return
+      *   a Scores object containing the partial scores of each player.
+      */
+    private def partialScoresWithVictoryPointCards: Scores =
+      val playersWithVictoryPointCards =
+        state.developmentCards.filter(_._2.exists(_.developmentType == DevelopmentType.VictoryPoint)).map(_._1)
+      playersWithVictoryPointCards.foldLeft(Scores.empty(state.players))((scores, player) =>
+        scores.updated(player, scores(player) + 1)
+      )
+
     /** This method calculates the total scores of all players in the game by combining the partial scores with awards
       * and buildings. It uses the `|+|` operator from the `cats.syntax.semigroup` package to combine the scores.
       * @return
@@ -45,7 +58,7 @@ object ScoreOps:
     def scores: Scores =
       import cats.syntax.semigroup.*
       import scatan.model.components.Scores.given
-      val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings)
+      val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings, partialScoresWithVictoryPointCards)
       partialScores.foldLeft(Scores.empty(state.players))(_ |+| _)
 
     /** Returns true if the game is over, false otherwise. The game is over when a player has 10 or more points.

@@ -4,10 +4,10 @@ import com.raquo.airstream.core.Signal
 import scatan.controllers.game.GameController
 import scatan.model.ApplicationState
 import scatan.model.components.DevelopmentType.{Knight, Monopoly, RoadBuilding, YearOfPlenty}
-import scatan.model.components.{BuildingType, DevelopmentType}
-import scatan.model.game.{ScatanGame, ScatanState}
+import scatan.model.components.*
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.{ScatanGame, ScatanState}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
@@ -23,6 +23,12 @@ trait GameViewClickHandler:
   def onStealCardClick(player: ScatanPlayer): Unit
 
   def onCardClick(cardType: CardType): Unit
+  def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit
+  def onTradeWithPlayer(
+      receiver: ScatanPlayer,
+      offer: Map[ResourceType, Int],
+      request: Map[ResourceType, Int]
+  ): Unit
 
 object GameViewClickHandler:
   def apply(view: GameView, gameController: GameController): GameViewClickHandler =
@@ -103,3 +109,15 @@ object GameViewClickHandler:
                   playingRoadBuilding = true
                 case _ => ()
           case _ => ()
+
+      override def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit =
+        gameController.tradeWithBank(offer, request)
+
+      override def onTradeWithPlayer(
+          receiver: ScatanPlayer,
+          offer: Map[ResourceType, Int],
+          request: Map[ResourceType, Int]
+      ): Unit =
+        val offerCards = offer.flatMap((resourceType, amount) => ResourceCard(resourceType) ** amount).toSeq
+        val requestCards = request.flatMap((resourceType, amount) => ResourceCard(resourceType) ** amount).toSeq
+        gameController.tradeWithPlayer(receiver, offerCards, requestCards)

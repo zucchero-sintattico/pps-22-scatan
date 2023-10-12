@@ -2,14 +2,11 @@ package scatan.controllers.game
 
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.components.ResourceType
+import scatan.model.components.*
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
-import scatan.model.game.config.ScatanPhases
-import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{RoadSpot, StructureSpot}
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
-import scatan.model.map.Hexagon
 
 trait GameController extends Controller[ApplicationState]:
   def state: ApplicationState
@@ -20,16 +17,16 @@ trait GameController extends Controller[ApplicationState]:
   def buildSettlement(spot: StructureSpot): Unit
   def buildCity(spot: StructureSpot): Unit
   def placeRobber(hexagon: Hexagon): Unit
-
   def nextTurn(): Unit
   def rollDice(): Unit
   def stealCard(player: ScatanPlayer): Unit
   def buyDevelopmentCard(): Unit
-
   def playKnightDevelopment(robberPosition: Hexagon): Unit
   def playYearOfPlentyDevelopment(resource1: ResourceType, resource2: ResourceType): Unit
   def playMonopolyDevelopment(resource: ResourceType): Unit
   def playRoadBuildingDevelopment(spot1: RoadSpot, spot2: RoadSpot): Unit
+  def tradeWithBank(offer: ResourceType, request: ResourceType): Unit
+  def tradeWithPlayer(receiver: ScatanPlayer, offer: Seq[ResourceCard], request: Seq[ResourceCard]): Unit
 
 object GameController:
   def apply(requirements: Controller.Requirements[GameView, ApplicationState]): GameController =
@@ -72,7 +69,9 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
       .onError(view.displayMessage("Cannot place robber"))
 
   override def nextTurn(): Unit =
-    this.model.updateGame(_.nextTurn)
+    this.model
+      .updateGame(_.nextTurn)
+      .onError(view.displayMessage("Cannot go to next turn"))
 
   override def rollDice(): Unit =
     this.model
@@ -108,3 +107,13 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
     this.model
       .updateGame(_.playRoadBuildingDevelopment(spot1, spot2))
       .onError(view.displayMessage("Cannot play road building development card"))
+
+  override def tradeWithBank(offer: ResourceType, request: ResourceType): Unit =
+    this.model
+      .updateGame(_.tradeWithBank(offer, request))
+      .onError(view.displayMessage("Cannot trade with bank"))
+
+  override def tradeWithPlayer(receiver: ScatanPlayer, offer: Seq[ResourceCard], request: Seq[ResourceCard]): Unit =
+    this.model
+      .updateGame(_.tradeWithPlayer(receiver, offer, request))
+      .onError(view.displayMessage("Cannot trade with player"))

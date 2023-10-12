@@ -5,22 +5,9 @@ import scatan.model.components.{BuildingType, DevelopmentType, ResourceCard, Res
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.ops.CardOps.{
-  assignResourceCard,
-  assignResourcesFromNumber,
-  buyDevelopmentCard,
-  playKnightDevelopment,
-  playMonopolyDevelopment,
-  playRoadBuildingDevelopment,
-  playYearOfPlentyDevelopment,
-  removeResourceCard,
-  stoleResourceCard
-}
-import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
-import scatan.model.components.ResourceCard
-import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.game.ops.CardOps.*
 import scatan.model.game.ops.RobberOps.moveRobber
-import scatan.model.game.ops.TradeOps.tradeWithPlayer
+import scatan.model.game.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
@@ -97,7 +84,16 @@ object ScatanEffects:
   ): Effect[PlayDevelopmentCard.type, ScatanState] =
     (state: ScatanState) => state.playRoadBuildingDevelopment(player, spot1, spot2, turnNumber)
 
-  def TradeWithBankEffect(): Effect[TradeWithBank.type, ScatanState] = EmptyEffect
+  def TradeWithBankEffect(
+      player: ScatanPlayer,
+      offer: ResourceType,
+      request: ResourceType
+  ): Effect[TradeWithBank.type, ScatanState] = (state: ScatanState) =>
+    state.tradeWithBank(
+      player,
+      offer,
+      request
+    )
 
   def TradeWithPlayerEffect(
       sender: ScatanPlayer,
