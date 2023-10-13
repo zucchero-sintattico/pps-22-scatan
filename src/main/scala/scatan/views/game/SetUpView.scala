@@ -4,7 +4,13 @@ import org.scalajs.dom.document
 import scatan.Pages
 import scatan.controllers.game.SetUpController
 import scatan.lib.mvc.{BaseScalaJSView, View}
-import scatan.model.ApplicationState
+import scatan.model.{ApplicationState, GameMap, GameMapFactory}
+import scatan.views.game.MapSelectionMode.*
+import scatan.views.game.components.LeftTabComponent.buttonsComponent
+import scatan.views.game.components.map.MapComponent
+
+enum MapSelectionMode:
+  case Default, Random, WithIterator
 
 /** This is the view for the setup page.
   */
@@ -28,6 +34,18 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
   private val numberOfUsers: Var[Int] = Var(3)
   private val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
 
+  val mapSelectionMode: Var[MapSelectionMode] = Var(MapSelectionMode.Default)
+  val reactiveGameMap: Var[GameMap] = Var(GameMapFactory.defaultMap)
+
+  def changeMap: Unit =
+    mapSelectionMode.now() match
+      case Default =>
+        reactiveGameMap.set(GameMapFactory.defaultMap)
+      case Random =>
+        reactiveGameMap.set(GameMapFactory.randomMap)
+      case WithIterator =>
+        reactiveGameMap.set(GameMapFactory.nextPermutation)
+
   private def validateNames(usernames: String*) =
     usernames.forall(_.matches(".*\\S.*"))
 
@@ -41,7 +59,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         .value
     if validateNames(usernames*) then
       println(usernames)
-      this.controller.startGame(usernames*)
+      this.controller.startGame(reactiveGameMap.now(), usernames*)
       this.navigateTo(Pages.Game)
 
   private def switchToHome(): Unit =
@@ -97,5 +115,29 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         cls := "setup-menu-button",
         onClick --> (_ => this.switchToHome()),
         "Back"
+      ),
+      div(
+        cls := "setup-menu-map-picker",
+        div(
+          cls := "setup-menu-map-picker-left-tab",
+          select(
+            cls := "setup-menu-map-picker-combobox",
+            onChange.mapToValue.map(v => MapSelectionMode.fromOrdinal(v.toInt)) --> mapSelectionMode,
+            for (mode <- MapSelectionMode.values)
+              yield option(
+                value := s"${mode.ordinal}",
+                mode.toString
+              )
+          ),
+          button(
+            cls := "setup-menu-map-picker-button",
+            "Change Map",
+            onClick --> (_ => changeMap)
+          )
+        ),
+        div(
+          cls := "setup-menu-map",
+          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map(using gameMap))
+        )
       )
     )

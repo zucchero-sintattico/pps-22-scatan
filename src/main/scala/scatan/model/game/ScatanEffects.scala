@@ -6,7 +6,8 @@ import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.game.state.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.state.ops.CardOps.*
+import scatan.model.game.state.ops.DevelopmentCardOps.*
+import scatan.model.game.state.ops.ResourceCardOps.*
 import scatan.model.game.state.ops.RobberOps.moveRobber
 import scatan.model.game.state.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}

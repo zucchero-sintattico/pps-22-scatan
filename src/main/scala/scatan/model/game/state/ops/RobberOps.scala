@@ -6,6 +6,8 @@ import scatan.model.game.state.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
+/** Operations on the robber.
+  */
 object RobberOps:
   extension (state: ScatanState)
     /** Returns a new ScatanState with the robber moved to the specified hexagon. The robber can only be moved to a

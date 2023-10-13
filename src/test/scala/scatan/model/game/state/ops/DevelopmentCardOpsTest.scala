@@ -4,14 +4,10 @@ import scatan.lib.game.Game
 import scatan.model.components.{DevelopmentCard, DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.CardOps.{
-  assignDevelopmentCard,
-  assignResourceCard,
-  buyDevelopmentCard,
-  removeDevelopmentCard
-}
+import scatan.model.game.state.ops.DevelopmentCardOps.*
+import scatan.model.game.state.ops.ResourceCardOps.*
 
-class DevCardOpsTest extends BaseScatanStateTest:
+class DevelopmentCardOpsTest extends BaseScatanStateTest:
 
   "A State with development cards Ops" should "have empty development cards when game start" in {
     val state = ScatanState(threePlayers)

@@ -3,11 +3,12 @@ package scatan.model.game.state.ops
 import scatan.model.components.{AssignedBuildings, AssignmentInfo, BuildingType, Cost}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardOps.*
-import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
+import scatan.model.game.state.ops.AwardsOps.*
+import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpots, emptyStructureSpots}
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 object BuildingOps:
+
   extension (state: ScatanState)
 
     /** Verifies if a player has enough resources to pay a certain cost.
@@ -20,8 +21,8 @@ object BuildingOps:
       *   true if the player has enough resources to pay the cost, false otherwise
       */
     private def verifyResourceCost(player: ScatanPlayer, cost: Cost): Boolean =
-      cost.foldLeft(true)((result, resourceCost) =>
-        result && state.resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
+      cost.forall(resourceCost =>
+        state.resourceCards(player).count(_.resourceType == resourceCost._1) >= resourceCost._2
       )
 
     /** Builds a building of a certain type on a certain spot for a certain player. If the player has not enough
@@ -29,8 +30,11 @@ object BuildingOps:
       * the cost of the building, the building is built and the resources are consumed.
       *
       * @param position
+      *   the position of the building
       * @param buildingType
+      *   the type of the building
       * @param player
+      *   the player that builds the building
       * @return
       *   Some(ScatanState) if the building is built, None otherwise
       */
@@ -56,8 +60,11 @@ object BuildingOps:
       * must contain a settlement of the same player.
       *
       * @param spot
+      *   the spot to assign the building to
       * @param buildingType
+      *   the type of the building
       * @param player
+      *   the player that assigns the building
       * @return
       *   Some(ScatanState) if the building is assigned, None otherwise
       */
@@ -103,17 +110,17 @@ object BuildingOps:
         case _ => None
 
     private def defaultRulesForSettlementBuilding(spot: StructureSpot, player: ScatanPlayer): Boolean =
-      state.emptyStructureSpot.contains(spot)
+      state.emptyStructureSpots.contains(spot)
         && state.gameMap.neighboursOf(spot).flatMap(state.assignedBuildings.get).isEmpty
 
     private def defaultRulesForRoadBuilding(spot: RoadSpot, player: ScatanPlayer): Boolean =
       val structureSpot1 = spot._1
       val structureSpot2 = spot._2
-      state.emptyRoadSpot.contains(spot)
+      state.emptyRoadSpots.contains(spot)
       && (
         state.assignedBuildings
           .filter(s => s._1 == structureSpot1 || s._1 == structureSpot2)
-          .map(_._2)
+          .values
           .exists(p => p.player == player)
           || state.gameMap
             .edgesOfNodesConnectedBy(spot)

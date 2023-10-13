@@ -4,8 +4,10 @@ import scatan.lib.game.Rules
 import scatan.lib.game.dsl.GameDSL.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.CardOps.assignResourcesAfterInitialPlacement
+import scatan.model.game.state.ops.ResourceCardOps.assignResourcesAfterInitialPlacement
 import scatan.model.game.state.ops.ScoreOps.winner
+
+import scala.language.postfixOps
 
 /** Scatan game rules
   */
@@ -19,7 +21,7 @@ object ScatanDSL:
 
     WinnerFunction := winner
     InitialPhase := ScatanPhases.Setup
-    StateFactory := { ScatanState.apply(_, DevelopmentCardsDeck.shuffled()) }
+    StateFactory := { (m, p) => ScatanState(m, p) }
 
     Phase {
       PhaseType := ScatanPhases.Setup

@@ -15,28 +15,78 @@ trait MapWithTileContent:
     */
   def toContent: Map[Hexagon, TileContent]
 
+trait TileContentConfig:
+  def numbers: Seq[Int]
+  def terrains: Seq[Terrain]
+
+type TileContentStrategy = Seq[Hexagon] => Map[Hexagon, TileContent]
+
 /** A factory to create terrains.
   */
-object TileContentFactory:
+object TileContentStrategyFactory:
 
-  def fixedForLayer2(tiles: Seq[Hexagon]): Map[Hexagon, TileContent] =
+  object ConfigForLayer2 extends TileContentConfig:
     val terrains: List[Terrain] = List(
+      1 * Desert,
       4 * Wood,
       4 * Sheep,
       4 * Wheat,
       3 * Rock,
       3 * Brick
     ).flatten
-
     val numbers =
       2 :: 12 :: (for
         i <- (3 to 11).toList
         if i != 7
       yield List(i, i)).flatten
 
-    val tileContents =
-      terrains.zip(numbers).map(p => TileContent(p._1, Some(p._2)))
+  private def fromConfig(using config: TileContentConfig): TileContentStrategy =
+    val iterator = config.numbers.iterator
+    val tileContents = config.terrains.map { t =>
+      t match
+        case Desert => TileContent(t, None)
+        case _      => TileContent(t, iterator.nextOption())
+    }
+    tiles =>
+      Map
+        .from(tiles.zip(tileContents))
+        .withDefaultValue(TileContent(Sea, None))
 
-    Map
-      .from(tiles.zip(TileContent(Desert, None) :: tileContents))
-      .withDefaultValue(TileContent(Sea, None))
+  def fixedForLayer2: TileContentStrategy =
+    import ConfigForLayer2.*
+    given TileContentConfig = ConfigForLayer2
+    fromConfig
+
+  def randomForLayer2: TileContentStrategy =
+    import ConfigForLayer2.*
+
+    import scala.util.Random.shuffle
+    given TileContentConfig with
+      val terrains = shuffle(ConfigForLayer2.terrains)
+      val numbers = shuffle(ConfigForLayer2.numbers)
+    fromConfig
+
+  private def removeAtPos[A](list: List[A], n: Int): List[A] =
+    val splitted = list.splitAt(n)
+    splitted._1 ::: splitted._2.tail
+
+  private def permutations[A](list: List[A]): LazyList[List[A]] = list match
+    case Nil => LazyList(Nil)
+    case _ =>
+      for
+        i <- list.indices.to(LazyList)
+        e = list(i)
+        r = removeAtPos(list, i)
+        pr <- permutations(r)
+      yield e :: pr
+
+  def permutationForLayer2: LazyList[TileContentStrategy] =
+    import ConfigForLayer2.*
+    for
+      t <- permutations(terrains)
+      n <- permutations(numbers.toList)
+    yield
+      given TileContentConfig with
+        val terrains = t
+        val numbers = n
+      fromConfig

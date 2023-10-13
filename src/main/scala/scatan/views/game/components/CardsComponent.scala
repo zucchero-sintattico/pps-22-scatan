@@ -1,10 +1,12 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
+import scatan.controllers.game.GameController
 import scatan.model.components.*
 import scatan.model.components.DevelopmentType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.*
+import scatan.model.game.config.*
 import scatan.views.game.components.CardContextMap.{CardType, cardImages}
 import scatan.views.utils.TypeUtils.*
 import scatan.views.viewmodel.ops.ViewModelPlayersOps.cardCountOfCurrentPlayer

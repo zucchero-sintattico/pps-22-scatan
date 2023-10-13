@@ -3,12 +3,12 @@ package scatan.model.game.state.ops
 import scatan.model.components.*
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardOps.*
+import scatan.model.game.state.ops.AwardsOps.*
 import scatan.model.game.state.ops.BuildingOps.assignBuilding
-import scatan.model.game.state.ops.CardOps.assignDevelopmentCard
-import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
+import scatan.model.game.state.ops.DevelopmentCardOps.assignDevelopmentCard
+import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpots, emptyStructureSpots}
 
-class AwardOpsTest extends BaseScatanStateTest:
+class AwardsOpsTest extends BaseScatanStateTest:
 
   "A State with Awards Ops" should "have awards initially not assigned" in {
     val state = ScatanState(threePlayers)
@@ -19,7 +19,7 @@ class AwardOpsTest extends BaseScatanStateTest:
   it should "assign a LongestRoad award if there are conditions" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptyRoadSpot.iterator
+    val it = state.emptyRoadSpots.iterator
     val stateWithAward = for
       stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
       stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)
@@ -50,7 +50,7 @@ class AwardOpsTest extends BaseScatanStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptyRoadSpot.iterator
+    val it = state.emptyRoadSpots.iterator
     val firstStateWithAward = for
       stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
       stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)
@@ -78,7 +78,7 @@ class AwardOpsTest extends BaseScatanStateTest:
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
     val player2 = threePlayers.tail.head
-    val it = state.emptyRoadSpot.iterator
+    val it = state.emptyRoadSpots.iterator
     val firstStateWithAward = for
       stateWithOneRoad <- state.assignRoadWithoutRule(it.next, player1)
       stateWithTwoRoad <- stateWithOneRoad.assignRoadWithoutRule(it.next, player1)

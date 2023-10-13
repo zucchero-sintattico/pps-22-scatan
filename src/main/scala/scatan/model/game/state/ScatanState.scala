@@ -45,23 +45,18 @@ object ScatanState:
     *   a new ScatanState with the specified players
     */
   def apply(players: Seq[ScatanPlayer]): ScatanState =
-    ScatanState(players, DevelopmentCardsDeck.defaultOrdered)
+    ScatanState(GameMap(), players, DevelopmentCardsDeck.defaultOrdered)
 
-  /** Creates a new ScatanState with the specified players and development cards deck.
-    * @param players
-    *   The players in the game.
-    * @param developmentCardsDeck
-    *   The development cards deck.
-    * @return
-    *   a new ScatanState with the specified players and development cards deck.
-    */
-  def apply(players: Seq[ScatanPlayer], developmentCardsDeck: DevelopmentCardsDeck): ScatanState =
+  def apply(
+      gameMap: GameMap = GameMap(),
+      players: Seq[ScatanPlayer],
+      developmentCardsDeck: DevelopmentCardsDeck = DevelopmentCardsDeck.defaultOrdered
+  ): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
-    val gameMap = GameMap()
     val desertHexagon = gameMap.tiles.find(gameMap.toContent(_).terrain == Desert).get
     ScatanState(
       players,
-      GameMap(),
+      gameMap,
       AssignedBuildings.empty,
       Awards.empty,
       ResourceCards.empty(players),

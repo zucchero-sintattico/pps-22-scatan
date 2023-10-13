@@ -4,6 +4,7 @@ import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
+import scatan.model.GameMap
 import scatan.model.components.ResourceType.{Rock, Sheep, Wheat}
 import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
@@ -257,5 +258,5 @@ class ScatanGame(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanAction
 object ScatanGame:
   def apply(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]): ScatanGame =
     new ScatanGame(game)
-  def apply(players: Seq[ScatanPlayer]): ScatanGame =
-    new ScatanGame(Game(players)(using ScatanDSL.rules))
+  def apply(gameMap: GameMap, players: Seq[ScatanPlayer]): ScatanGame =
+    new ScatanGame(Game(gameMap, players)(using ScatanDSL.rules))

@@ -6,7 +6,7 @@ import scatan.model.game.ScatanEffects.{NextTurnEffect, PlaceRobberEffect, RollE
 import scatan.model.game.ScatanGame
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.CardOps.assignResourceCard
+import scatan.model.game.state.ops.ResourceCardOps.assignResourceCard
 
 class ScatanEffectsTest extends BaseTest:
 

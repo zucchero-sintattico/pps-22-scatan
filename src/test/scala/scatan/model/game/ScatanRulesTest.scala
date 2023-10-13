@@ -3,12 +3,13 @@ package scatan.model.game
 import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
 import scatan.lib.game.GameStatus
+import scatan.model.GameMap
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.state.ScatanState
 
 class ScatanRulesTest extends BaseTest:
 
-  val rules = ScatanDSL.rules
+  private val rules = ScatanDSL.rules
 
   "The rules" should "be valid" in {
     rules.valid should be(true)
@@ -20,8 +21,8 @@ class ScatanRulesTest extends BaseTest:
 
   it should "start with a Scatan State" in {
     val players = Seq(ScatanPlayer("a"), ScatanPlayer("b"), ScatanPlayer("c"))
-    val initialState = rules.startingStateFactory(players)
-    initialState should be(ScatanState(players, DevelopmentCardsDeck.shuffled()))
+    val initialState = rules.startingStateFactory(GameMap(), players)
+    initialState should be(ScatanState(players))
   }
 
   it should "start with Setup phase" in {

@@ -5,7 +5,9 @@ import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 
-object AwardOps:
+/** Contains operations related to the awards in the game.
+  */
+object AwardsOps:
 
   extension (state: ScatanState)
     /** Returns a map of the current awards and their respective players. The awards are Longest Road and Largest Army.
