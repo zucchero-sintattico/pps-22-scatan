@@ -1,15 +1,20 @@
 ThisBuild / scalaVersion := "3.3.1"
 
 wartremoverWarnings ++= Warts.all
-wartremoverWarnings -= Wart.Equals
-wartremoverWarnings -= Wart.Overloading
-wartremoverWarnings -= Wart.ImplicitParameter
-wartremoverWarnings -= Wart.IterableOps
-wartremoverWarnings -= Wart.DefaultArguments
-wartremoverWarnings -= Wart.AsInstanceOf
-wartremoverWarnings -= Wart.OptionPartial
-wartremoverWarnings -= Wart.IsInstanceOf
-wartremoverWarnings -= Wart.Var
+
+wartremoverWarnings --= Seq(
+  Wart.Equals,
+  Wart.Overloading,
+  Wart.ImplicitParameter,
+  Wart.IterableOps,
+  Wart.DefaultArguments,
+  Wart.AsInstanceOf,
+  Wart.OptionPartial,
+  Wart.IsInstanceOf,
+  Wart.Var,
+  Wart.SeqApply,
+  Wart.Recursion
+)
 
 lazy val scatan = (project in file("."))
   .enablePlugins(ScalaJSPlugin)
