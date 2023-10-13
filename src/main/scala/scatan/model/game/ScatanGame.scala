@@ -9,6 +9,7 @@ import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.game.ops.RobberOps.playersOnRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random

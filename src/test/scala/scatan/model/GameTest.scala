@@ -8,7 +8,7 @@ import scatan.lib.game.{Game, GameStatus, Rules}
 import scatan.model.game.ScatanEffects.{AssignRoadEffect, AssignSettlementEffect, NextTurnEffect}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.EmptySpotsOps.{emptyRoadSpot, emptyStructureSpot}
+import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.game.{ScatanDSL, ScatanState}
 
 class GameTest extends BaseTest:
