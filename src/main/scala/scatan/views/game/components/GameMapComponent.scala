@@ -62,19 +62,14 @@ object GameMapComponent:
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
+  /** Display the game map.
+    * @return
+    *   the component.
+    */
   def mapComponent: DisplayableSource[Element] =
     div(
       className := "game-view-game-tab",
-      child <-- reactiveState
-        .map(state =>
-          (for
-            game <- state.game
-            state = game.state
-          yield
-            given ScatanState = state
-            getHexagonalMap
-          ).getOrElse(div("No game"))
-        )
+      child <-- gameViewModel.gameState.map(state => getHexagonalMap(using summon[GameController])(using state))
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap

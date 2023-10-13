@@ -6,6 +6,7 @@ import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
 import scatan.views.game.components.*
 import scatan.views.utils.TypeUtils
+import scatan.views.viewmodel.ScatanViewModel
 
 trait GameView extends View[ApplicationState]
 
@@ -17,7 +18,7 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
     extends BaseScalaJSView[ApplicationState, GameController](container, requirements)
     with GameView:
 
-  given Signal[ApplicationState] = this.reactiveState
+  given ScatanViewModel = ScatanViewModel(this.reactiveState)
   given GameController = this.controller
 
   override def element: Element =

@@ -10,7 +10,7 @@ import scatan.views.utils.TypeUtils.*
 
 object RightTabComponent:
 
-  private def resourceTypefromName(name: String): ResourceType =
+  private def resourceTypeFromName(name: String): ResourceType =
     name match
       case "Wood"  => ResourceType.Wood
       case "Brick" => ResourceType.Brick
@@ -33,9 +33,6 @@ object RightTabComponent:
       tradeBankComponent,
       visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
     )
-
-  private def areTradeEnabled: Displayable[Signal[Boolean]] =
-    reactiveState.map(_.game.map(_.allowedActions.contains(ScatanActions.TradeWithBank)).getOrElse(false))
 
   private def tradePlayerComponent: DisplayableSource[Element] =
     div(
@@ -80,7 +77,7 @@ object RightTabComponent:
     div(
       className := "game-view-resource-type-choice",
       select(
-        onChange.mapToValue.map(resourceTypefromName(_)) --> changing,
+        onChange.mapToValue.map(resourceTypeFromName) --> changing,
         className := "game-view-resource-type-choice-select",
         // for each type of resource add an option
         for resource <- ResourceType.values
