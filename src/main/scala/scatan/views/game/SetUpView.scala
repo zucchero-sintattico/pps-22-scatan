@@ -137,7 +137,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         ),
         div(
           cls := "setup-menu-map",
-          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map(using gameMap))
+          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map()(using gameMap))
         )
       )
     )

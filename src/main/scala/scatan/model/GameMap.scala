@@ -15,14 +15,14 @@ import scatan.model.map.HexagonInMap.*
 final case class GameMap(
     withTerrainLayers: Int = 2,
     withSeaLayers: Int = 1,
-    tileContentsStrategy: TileContentStrategy = TileContentStrategyFactory.fixedForLayer2
+    tileContentStrategy: TileContentStrategy = TileContentStrategyFactory.fixedForLayer2
 ) extends HexagonalTiledMap(withTerrainLayers + withSeaLayers)
     with MapWithTileContent:
 
   val totalLayers = withTerrainLayers + withSeaLayers
   val tileWithTerrain = tiles.toSeq.filter(_.layer <= withTerrainLayers)
 
-  override val toContent: Map[Hexagon, TileContent] = tileContentsStrategy(tileWithTerrain)
+  override val toContent: Map[Hexagon, TileContent] = tileContentStrategy(tileWithTerrain)
 
   override def equals(x: Any): Boolean =
     x match
@@ -35,11 +35,11 @@ final case class GameMap(
 object GameMapFactory:
 
   def defaultMap: GameMap =
-    GameMap(tileContentsStrategy = TileContentStrategyFactory.fixedForLayer2)
+    GameMap(tileContentStrategy = TileContentStrategyFactory.fixedForLayer2)
 
   def randomMap: GameMap =
-    GameMap(tileContentsStrategy = TileContentStrategyFactory.randomForLayer2)
+    GameMap(tileContentStrategy = TileContentStrategyFactory.randomForLayer2)
 
   val strategies: Iterator[TileContentStrategy] = TileContentStrategyFactory.permutationForLayer2.toIterator
   def nextPermutation: GameMap =
-    GameMap(tileContentsStrategy = strategies.next())
+    GameMap(tileContentStrategy = strategies.next())

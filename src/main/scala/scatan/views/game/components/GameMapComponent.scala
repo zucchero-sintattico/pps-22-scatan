@@ -12,6 +12,8 @@ import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewP
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
 import scatan.views.utils.TypeUtils.*
+import scatan.views.game.components.map.MapComponent
+import scatan.views.game.components.map.MapComponent.svgImages
 
 object ContextMap:
 
@@ -68,7 +70,7 @@ object GameMapComponent:
   def mapComponent: DisplayableSource[Element] =
     div(
       className := "game-view-game-tab",
-      child <-- gameViewModel.state.map(_.state).map(getHexagonalMap(using clickHandler)(using _))
+      child <-- gameViewModel.state.map(_.state).map(gameHexagonalMap(using clickHandler)(using _))
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
@@ -77,13 +79,9 @@ object GameMapComponent:
   private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
     summon[ScatanState].assignedBuildings.get(spot)
 
-  private def getHexagonalMap: InputSourceWithState[Element] =
-    val canvasSize = layersToCanvasSize(gameMap.totalLayers)
-    svg.svg(
-      svgImages,
-      svg.viewBox := s"-$canvasSize -$canvasSize ${2 * canvasSize} ${2 * canvasSize}",
-      for hex <- gameMap.tiles.toList
-      yield svgHexagonWithNumber(hex),
+  private def gameHexagonalMap: InputSourceWithState[Element] =
+    given GameMap = gameMap
+    MapComponent.map(
       for road <- gameMap.edges.toList
       yield svgRoad(road),
       for spot <- gameMap.nodes.toList
@@ -98,18 +96,7 @@ object GameMapComponent:
     *   the svg hexagon.
     */
   private def svgHexagonWithNumber(hex: Hexagon): InputSourceWithState[Element] =
-    val Coordinates(x, y) = hex.center
-    svg.g(
-      svg.transform := s"translate($x, $y)",
-      svg.polygon(
-        svg.points := svgCornersPoints,
-        svg.cls := "hexagon",
-        svg.fill := s"url(#${contentOf(hex).terrain.toImgId})"
-      ),
-      contentOf(hex).terrain match
-        case Sea => ""
-        case _   => circularNumberWithRobber(hex)
-    )
+    MapComponent.svgHexagon(hex, contentOf(hex), circularNumberWithRobber(hex))
 
   /** A svg circular number
     * @param hex
@@ -118,20 +105,9 @@ object GameMapComponent:
     *   the component
     */
   private def circularNumberWithRobber(hex: Hexagon): InputSourceWithState[Element] =
-    svg.g(
-      svg.circle(
-        svg.cx := "0",
-        svg.cy := "0",
-        svg.r := s"$radius",
-        svg.className := "hexagon-center-circle"
-      ),
-      svg.text(
-        svg.x := "0",
-        svg.y := "0",
-        svg.fontSize := s"$radius",
-        svg.className := "hexagon-center-number",
-        contentOf(hex).number.map(_.toString).getOrElse("")
-      ),
+    MapComponent.circularNumber(
+      hex,
+      contentOf(hex),
       onClick --> (_ => clickHandler.onHexagonClick(hex)),
       if robberPlacement == hex
       then robberCross
@@ -209,24 +185,5 @@ object GameMapComponent:
         svg.className := "spot-text",
         svg.fontSize := s"$radius",
         s"${structureType.getOrElse("")}"
-      )
-    )
-
-  private val svgImages: Element =
-    svg.svg(
-      svg.defs(
-        for (terrain, path) <- ContextMap.resources.toList
-        yield svg.pattern(
-          svg.idAttr := terrain.toImgId,
-          svg.width := "100%",
-          svg.height := "100%",
-          svg.patternContentUnits := "objectBoundingBox",
-          svg.image(
-            svg.href := path,
-            svg.width := "1",
-            svg.height := "1",
-            svg.preserveAspectRatio := "none"
-          )
-        )
       )
     )

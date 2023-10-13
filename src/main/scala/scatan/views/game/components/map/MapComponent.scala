@@ -8,6 +8,9 @@ import scatan.views.game.components.ContextMap
 import scatan.views.game.components.ContextMap.toImgId
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.center
+import com.raquo.laminar.nodes.ReactiveSvgElement
+import org.scalajs.dom.SVGGElement
+import org.scalajs.dom
 
 object MapComponent:
 
@@ -23,7 +26,11 @@ object MapComponent:
     yield s"$x,$y").mkString(" ")
   private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
 
-  def map: GameMap ?=> Element =
+  type LaminarElement = Modifier[ReactiveSvgElement[dom.svg.Element]]
+
+  def map(
+      elements: LaminarElement*
+  ): GameMap ?=> Element =
     val gameMap = summon[GameMap]
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
@@ -32,10 +39,11 @@ object MapComponent:
       for
         hex <- gameMap.tiles.toList
         content = gameMap.toContent(hex)
-      yield svgHexagon(hex, content)
+      yield svgHexagonWithNumber(hex, content),
+      elements
     )
 
-  private def svgHexagon(hex: Hexagon, content: TileContent): Element =
+  def svgHexagon(hex: Hexagon, content: TileContent, elements: LaminarElement): Element =
     val Coordinates(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
@@ -44,12 +52,23 @@ object MapComponent:
         svg.cls := "hexagon",
         svg.fill := s"url(#${content.terrain.toImgId})"
       ),
+      elements
+    )
+
+  def svgHexagonWithNumber(hex: Hexagon, content: TileContent): Element =
+    svgHexagon(
+      hex,
+      content,
       content.terrain match
         case UnproductiveTerrain.Sea => ""
         case _                       => circularNumber(hex, content)
     )
 
-  def circularNumber(hex: Hexagon, content: TileContent): Element =
+  def circularNumber(
+      hex: Hexagon,
+      content: TileContent,
+      elements: LaminarElement*
+  ): Element =
     svg.g(
       svg.circle(
         svg.cx := "0",
@@ -63,10 +82,11 @@ object MapComponent:
         svg.fontSize := s"$radius",
         svg.className := "hexagon-center-number",
         content.number.map(_.toString).getOrElse("")
-      )
+      ),
+      elements
     )
 
-  private val svgImages: Element =
+  val svgImages: Element =
     svg.svg(
       svg.defs(
         for (terrain, path) <- ContextMap.resources.toList
