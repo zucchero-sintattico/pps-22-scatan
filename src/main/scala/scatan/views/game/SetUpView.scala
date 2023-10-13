@@ -8,14 +8,7 @@ import scatan.model.ApplicationState
 
 /** This is the view for the setup page.
   */
-trait SetUpView extends View[ApplicationState]:
-  /** This method is called when the user clicks the start button.
-    */
-  def switchToGame(): Unit
-
-  /** This method is called when the user clicks the back button.
-    */
-  def switchToHome(): Unit
+trait SetUpView extends View[ApplicationState]
 
 object SetUpView:
   def apply(container: String, requirements: View.Requirements[SetUpController]): SetUpView =
@@ -32,13 +25,13 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
     extends BaseScalaJSView[ApplicationState, SetUpController](container, requirements)
     with SetUpView:
 
-  val numberOfUsers: Var[Int] = Var(3)
-  val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
+  private val numberOfUsers: Var[Int] = Var(3)
+  private val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
 
   private def validateNames(usernames: String*) =
     usernames.forall(_.matches(".*\\S.*"))
 
-  override def switchToGame(): Unit =
+  private def switchToGame(): Unit =
     val usernames =
       for i <- 1 to numberOfUsers.now()
       yield document
@@ -51,7 +44,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
       this.controller.startGame(usernames*)
       this.navigateTo(Pages.Game)
 
-  override def switchToHome(): Unit =
+  private def switchToHome(): Unit =
     this.navigateTo(Pages.Home)
 
   override def element: Element =

@@ -1,15 +1,11 @@
 package scatan.views.game
 
 import com.raquo.laminar.api.L.*
-import org.scalajs.dom
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
-import scatan.model.game.config.ScatanPhases
 import scatan.views.game.components.*
-import scatan.views.game.components.RightTabComponent.areTradeEnabled
 import scatan.views.utils.TypeUtils
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
 
 trait GameView extends View[ApplicationState]
 

@@ -1,10 +1,9 @@
 package scatan.model.map
 
-import scatan.BaseTest
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import scatan.BaseTest
 import scatan.model.GameMap
-import scatan.utils.UnorderedTriple
-import scatan.utils.UnorderedPair
+import scatan.utils.{UnorderedPair, UnorderedTriple}
 
 class GameMapWithGraphOpsTest extends BaseTest with ScalaCheckPropertyChecks:
 

@@ -77,8 +77,8 @@ object GameMapComponent:
         )
     )
 
-  private def gameMap(using ScatanState): GameMap = state.gameMap
-  private def contentOf(hex: Hexagon)(using ScatanState): TileContent = state.gameMap.toContent(hex)
+  private def gameMap(using ScatanState): GameMap = scatanState.gameMap
+  private def contentOf(hex: Hexagon)(using ScatanState): TileContent = scatanState.gameMap.toContent(hex)
   private def robberPlacement(using ScatanState): Hexagon = summon[ScatanState].robberPlacement
   private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
     summon[ScatanState].assignedBuildings.get(spot)
