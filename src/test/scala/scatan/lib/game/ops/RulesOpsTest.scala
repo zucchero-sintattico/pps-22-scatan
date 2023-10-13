@@ -3,6 +3,7 @@ package scatan.lib.game.ops
 import scatan.BaseTest
 import scatan.lib.game.ops.RulesOps.*
 import scatan.lib.game.{EmptyDomain, GameStatus}
+import scatan.model.GameMap
 
 class RulesOpsTest extends BaseTest:
 
@@ -14,9 +15,9 @@ class RulesOpsTest extends BaseTest:
   }
 
   it should "allow to specify the starting state factory" in {
-    val newRules = rules.withStartingStateFactory((_) => State())
+    val newRules = rules.withStartingStateFactory((_, _) => State())
     val players = Seq(Player("a"), Player("b"))
-    newRules.startingStateFactory(players) should be(EmptyDomain.State())
+    newRules.startingStateFactory(GameMap(), players) should be(EmptyDomain.State())
   }
 
   it should "allow to specify the starting phase" in {

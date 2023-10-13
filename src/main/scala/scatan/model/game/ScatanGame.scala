@@ -12,6 +12,7 @@ import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, Scat
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
+import scatan.model.GameMap
 import scatan.model.components.ResourceCard
 import scatan.model.game.ops.RobberOps.playersOnRobber
 
@@ -109,5 +110,5 @@ class ScatanGame(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanAction
 object ScatanGame:
   def apply(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]): ScatanGame =
     new ScatanGame(game)
-  def apply(players: Seq[ScatanPlayer]): ScatanGame =
-    new ScatanGame(Game(players)(using ScatanDSL.rules))
+  def apply(gameMap: GameMap, players: Seq[ScatanPlayer]): ScatanGame =
+    new ScatanGame(Game(gameMap, players)(using ScatanDSL.rules))

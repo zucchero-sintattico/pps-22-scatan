@@ -2,6 +2,7 @@ package scatan.lib.game.dsl.ops
 
 import scatan.lib.game.dsl.GameDSLDomain.*
 import scatan.lib.game.dsl.PropertiesDSL.*
+import scatan.model.GameMap
 
 object GameCtxOps:
 
@@ -31,5 +32,6 @@ object GameCtxOps:
 
   /** Define the initial state factory of the game.
     */
-  def StateFactory[State, Player]: Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[Seq[Player] => State]] =
+  def StateFactory[State, Player]
+      : Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[(GameMap, Seq[Player]) => State]] =
     ctx ?=> ctx.stateFactory

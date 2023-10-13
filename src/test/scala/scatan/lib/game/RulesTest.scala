@@ -1,11 +1,13 @@
 package scatan.lib.game
 
 import scatan.BaseTest
+import scatan.model.GameMap
 
 class RulesTest extends BaseTest:
 
   import EmptyDomain.*
   val players = Seq(Player("Alice"), Player("Bob"), Player("Carol"))
+  val gameMap = GameMap()
   val emptyGameRules = EmptyDomain.rules
 
   "The Rules" should "exists" in {
@@ -21,9 +23,9 @@ class RulesTest extends BaseTest:
   }
 
   it should "have an initial state factory" in {
-    emptyGameRules.startingStateFactory shouldBe a[Seq[Player] => State]
-    emptyGameRules.startingStateFactory(players) shouldBe a[State]
-    emptyGameRules.startingStateFactory(players) shouldBe State()
+    emptyGameRules.startingStateFactory shouldBe a[(GameMap, Seq[Player]) => State]
+    emptyGameRules.startingStateFactory(gameMap, players) shouldBe a[State]
+    emptyGameRules.startingStateFactory(gameMap, players) shouldBe State()
   }
 
   it should "have a initial phase" in {

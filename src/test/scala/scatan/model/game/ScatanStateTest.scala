@@ -64,6 +64,7 @@ class ScatanStateTest extends BaseScatanStateTest:
   it should "have a development cards deck" in {
     val state = ScatanState(threePlayers)
     state.developmentCardsDeck shouldBe a[DevelopmentCardsDeck]
-    val stateWithOrderedDeck = ScatanState(threePlayers, developmentCardsDeck = DevelopmentCardsDeck.defaultOrdered)
+    val stateWithOrderedDeck =
+      ScatanState(GameMap(), threePlayers, developmentCardsDeck = DevelopmentCardsDeck.defaultOrdered)
     stateWithOrderedDeck.developmentCardsDeck shouldBe DevelopmentCardsDeck.defaultOrdered
   }
