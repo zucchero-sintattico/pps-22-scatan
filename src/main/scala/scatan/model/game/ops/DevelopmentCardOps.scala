@@ -5,7 +5,7 @@ import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.awards
 
-object DevCardOps:
+object DevelopmentCardOps:
 
   extension (state: ScatanState)
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is

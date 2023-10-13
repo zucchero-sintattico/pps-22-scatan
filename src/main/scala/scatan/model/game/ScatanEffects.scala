@@ -5,8 +5,8 @@ import scatan.model.components.{BuildingType, ResourceCard, ResourceType}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.ops.DevCardOps.buyDevelopmentCard
-import scatan.model.game.ops.ResCardOps.{assignResourcesFromNumber, stoleResourceCard}
+import scatan.model.game.ops.DevelopmentCardOps.buyDevelopmentCard
+import scatan.model.game.ops.ResourceCardOps.{assignResourcesFromNumber, stoleResourceCard}
 import scatan.model.game.ops.RobberOps.moveRobber
 import scatan.model.game.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}

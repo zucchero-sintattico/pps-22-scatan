@@ -2,7 +2,7 @@ package scatan.model.game
 
 import scatan.lib.game.Rules
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.ResCardOps.assignResourcesAfterInitialPlacement
+import scatan.model.game.ops.ResourceCardOps.assignResourcesAfterInitialPlacement
 import scatan.model.game.ops.ScoreOps.winner
 
 import scala.language.postfixOps

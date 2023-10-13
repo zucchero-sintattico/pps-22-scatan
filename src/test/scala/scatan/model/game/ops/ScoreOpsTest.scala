@@ -2,7 +2,7 @@ package scatan.model.game.ops
 
 import scatan.model.components.*
 import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.DevCardOps.assignDevelopmentCard
+import scatan.model.game.ops.DevelopmentCardOps.assignDevelopmentCard
 import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
 import scatan.model.game.ops.ScoreOps.*
 import scatan.model.game.{BaseScatanStateTest, ScatanState}

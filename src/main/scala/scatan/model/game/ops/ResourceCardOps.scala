@@ -7,7 +7,7 @@ import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 import scala.util.Random
 
-object ResCardOps:
+object ResourceCardOps:
 
   extension (state: ScatanState)
     /** Stole a card from a victim.
