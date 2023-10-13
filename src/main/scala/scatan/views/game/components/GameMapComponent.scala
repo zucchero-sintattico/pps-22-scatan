@@ -69,7 +69,9 @@ object GameMapComponent:
   def mapComponent: DisplayableSource[Element] =
     div(
       className := "game-view-game-tab",
-      child <-- gameViewModel.gameState.map(state => getHexagonalMap(using summon[GameController])(using state))
+      child <-- gameViewModel.state.map(_.state).map(state => {
+        getHexagonalMap(using clickHandler)(using state)
+      })
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
@@ -132,7 +134,7 @@ object GameMapComponent:
         svg.className := "hexagon-center-number",
         contentOf(hex).number.map(_.toString).getOrElse("")
       ),
-      onClick --> (_ => gameController.placeRobber(hex)),
+      onClick --> (_ => clickHandler.onHexagonClick(hex)),
       if robberPlacement == hex
       then robberCross
       else ""
@@ -183,7 +185,7 @@ object GameMapComponent:
             svg.cy := s"${y1 + (y2 - y1) / 2}",
             svg.className := "road-center",
             svg.r := s"$radius",
-            onClick --> (_ => gameController.onRoadSpot(road))
+            onClick --> (_ => clickHandler.onRoadClick(road))
           )
     )
 
@@ -205,7 +207,7 @@ object GameMapComponent:
         svg.cy := s"${y}",
         svg.r := s"$radius",
         svg.className := s"${player.getOrElse("spot")}",
-        onClick --> (_ => gameController.onStructureSpot(structure))
+        onClick --> (_ => clickHandler.onStructureClick(structure))
       ),
       svg.text(
         svg.x := s"${x}",

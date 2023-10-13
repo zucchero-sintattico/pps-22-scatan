@@ -2,10 +2,10 @@ package scatan.model.game
 
 import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
-import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
-import scatan.model.components.{ResourceCard, ResourceType}
+import scatan.model.components.ResourceType.{Rock, Sheep, Wheat}
+import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
@@ -34,6 +34,17 @@ private trait ScatanGameActions extends ScatanGameStatus:
 
   private def play(action: ScatanActions)(using effect: Effect[action.type, ScatanState]): Option[ScatanGame] =
     game.play(action).map(ScatanGame.apply)
+
+  def canBuyDevelopment: Boolean =
+    val required = Seq(Rock, Wheat, Sheep)
+    game.allowedActions.contains(BuyDevelopmentCard) && required.forall(resource =>
+      game.state.resourceCards(game.turn.player).exists(_.resourceType == resource)
+    )
+
+  def canPlayDevelopment(developmentType: DevelopmentType): Boolean =
+    game.allowedActions.contains(PlayDevelopmentCard) && game.state
+      .developmentCards(game.turn.player)
+      .exists(card => card.developmentType == developmentType && !card.played && card.drewAt.get < game.turn.number)
 
   def nextTurn: Option[ScatanGame] =
     play(ScatanActions.NextTurn)(using NextTurnEffect())
@@ -87,7 +98,28 @@ private trait ScatanGameActions extends ScatanGameStatus:
   def buyDevelopmentCard: Option[ScatanGame] =
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
-  def playDevelopmentCard: Option[ScatanGame] = ???
+  def playKnightDevelopment(robberPosition: Hexagon): Option[ScatanGame] =
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayKnightDevelopmentCardEffect(game.turn.player, game.turn.number, robberPosition)
+    )
+
+  def playMonopolyDevelopment(resourceType: ResourceType): Option[ScatanGame] =
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayMonopolyDevelopmentCardEffect(game.turn.player, game.turn.number, resourceType)
+    )
+
+  def playYearOfPlentyDevelopment(
+      firstResourceType: ResourceType,
+      secondResourceType: ResourceType
+  ): Option[ScatanGame] =
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayYearOfPlentyDevelopmentCardEffect(game.turn.player, game.turn.number, firstResourceType, secondResourceType)
+    )
+
+  def playRoadBuildingDevelopment(firstRoad: RoadSpot, secondRoad: RoadSpot): Option[ScatanGame] =
+    play(ScatanActions.PlayDevelopmentCard)(using
+      PlayRoadBuildingDevelopmentCardEffect(game.turn.player, game.turn.number, firstRoad, secondRoad)
+    )
 
   def tradeWithBank(offer: ResourceType, request: ResourceType): Option[ScatanGame] =
     play(ScatanActions.TradeWithBank)(using TradeWithBankEffect(game.turn.player, offer, request))

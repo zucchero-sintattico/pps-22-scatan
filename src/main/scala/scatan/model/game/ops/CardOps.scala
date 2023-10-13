@@ -1,9 +1,13 @@
 package scatan.model.game.ops
 
 import scatan.model.components.*
+import scatan.model.components.BuildingType.Road
+import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.AwardOps.*
+import scatan.model.game.ops.BuildingOps.build
+import scatan.model.game.ops.RobberOps.moveRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 import scala.util.Random
@@ -185,17 +189,12 @@ object CardOps:
         val cardWithTurnNumber = card.map(_.copy(drewAt = Some(turnNumber)))
         cardWithTurnNumber match
           case Some(developmentCard) =>
-            val updatedResources = requiredResources.foldLeft(playerResources)((resources, resource) =>
-              resources.filterNot(_.resourceType == resource)
+            val stateWithResourceRemoved = requiredResources.foldLeft(Option(state))((optState, resourceType) =>
+              optState.flatMap(_.removeResourceCard(player, ResourceCard(resourceType)))
             )
-            Some(
-              state.copy(
-                resourceCards = state.resourceCards.updated(player, updatedResources),
-                developmentCards =
-                  state.developmentCards.updated(player, state.developmentCards(player) :+ developmentCard),
-                developmentCardsDeck = state.developmentCardsDeck.tail
-              )
-            )
+            stateWithResourceRemoved
+              .map(_.copy(developmentCardsDeck = state.developmentCardsDeck.tail))
+              .flatMap(_.assignDevelopmentCard(player, developmentCard))
           case None => None
 
     /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
@@ -207,14 +206,85 @@ object CardOps:
       * @return
       *   Some(ScatanState) if the player has the development card, None otherwise
       */
-    def consumeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
+    def removeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
       if !state.developmentCards(player).contains(developmentCard) then None
       else
-        val remainingCards =
-          state.developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
+        val remainingCards = state
+          .developmentCards(player)
+          .foldLeft((Seq.empty[DevelopmentCard], false)) {
+            case ((cards, false), card) if card == developmentCard => (cards, true)
+            case ((cards, removed), card)                          => (cards :+ card, removed)
+          }
+          ._1
         Some(
           state.copy(
             developmentCards = state.developmentCards.updated(player, remainingCards),
             assignedAwards = state.awards
           )
         )
+
+    private def playDevelopment(
+        player: ScatanPlayer,
+        developmentType: DevelopmentType,
+        turnNumber: Int
+    )(effect: ScatanState => Option[ScatanState]): Option[ScatanState] =
+      val stateWithCardConsumed = for
+        developmentCards <- state.developmentCards.get(player)
+        card <- developmentCards.find(card =>
+          card.developmentType == developmentType && !card.played && card.drewAt.isDefined && card.drewAt.get < turnNumber
+        )
+        stateWithCardConsumed <- state.removeDevelopmentCard(player, card)
+        newState <-
+          if card.developmentType == Knight then
+            stateWithCardConsumed.assignDevelopmentCard(player, card.copy(played = true))
+          else Some(stateWithCardConsumed)
+      yield newState
+      stateWithCardConsumed.flatMap(effect) match
+        case None  => Some(state)
+        case other => other
+
+    def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon, turnNumber: Int): Option[ScatanState] =
+      playDevelopment(player, DevelopmentType.Knight, turnNumber)(_.moveRobber(robberPosition))
+
+    def playRoadBuildingDevelopment(
+        player: ScatanPlayer,
+        firstRoad: RoadSpot,
+        secondRoad: RoadSpot,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      playDevelopment(player, DevelopmentType.RoadBuilding, turnNumber) {
+        _.build(firstRoad, Road, player).flatMap(_.build(secondRoad, Road, player))
+      }
+
+    def playMonopolyDevelopment(
+        player: ScatanPlayer,
+        resourceType: ResourceType,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      playDevelopment(player, DevelopmentType.Monopoly, turnNumber) { newState =>
+        val otherPlayers = newState.players.filterNot(_ == player)
+        otherPlayers.foldLeft(Option(newState))((optState, otherPlayer) =>
+          optState.flatMap(state =>
+            val resourceCards = state.resourceCards(otherPlayer)
+            val resourceCardsToSteal = resourceCards.filter(_.resourceType == resourceType)
+            resourceCardsToSteal.foldLeft(Option(state))((optState, resourceCard) =>
+              optState.flatMap(state =>
+                state
+                  .removeResourceCard(otherPlayer, resourceCard)
+                  .flatMap(_.assignResourceCard(player, resourceCard))
+              )
+            )
+          )
+        )
+      }
+
+    def playYearOfPlentyDevelopment(
+        player: ScatanPlayer,
+        firstResource: ResourceType,
+        secondResource: ResourceType,
+        turnNumber: Int
+    ): Option[ScatanState] =
+      playDevelopment(player, DevelopmentType.YearOfPlenty, turnNumber) {
+        _.assignResourceCard(player, ResourceCard(firstResource))
+          .flatMap(_.assignResourceCard(player, ResourceCard(secondResource)))
+      }

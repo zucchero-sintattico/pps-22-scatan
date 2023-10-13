@@ -2,6 +2,7 @@ package scatan.model.game
 
 import scatan.lib.game.ops.Effect
 import scatan.model.components.{BuildingType, ResourceCard, ResourceType}
+import scatan.model.components.{BuildingType, DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
@@ -50,7 +51,39 @@ object ScatanEffects:
   def BuyDevelopmentCardEffect(player: ScatanPlayer, turnNumber: Int): Effect[BuyDevelopmentCard.type, ScatanState] =
     (state: ScatanState) => state.buyDevelopmentCard(player, turnNumber)
 
-  def PlayDevelopmentCardEffect(): Effect[PlayDevelopmentCard.type, ScatanState] = EmptyEffect
+  /*
+   * Development Card Ops
+   */
+
+  def PlayKnightDevelopmentCardEffect(
+      player: ScatanPlayer,
+      turnNumber: Int,
+      robberPosition: Hexagon
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playKnightDevelopment(player, robberPosition, turnNumber)
+
+  def PlayMonopolyDevelopmentCardEffect(
+      player: ScatanPlayer,
+      turnNumber: Int,
+      resourceType: ResourceType
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playMonopolyDevelopment(player, resourceType, turnNumber)
+
+  def PlayYearOfPlentyDevelopmentCardEffect(
+      player: ScatanPlayer,
+      turnNumber: Int,
+      firstResourceType: ResourceType,
+      secondResourceType: ResourceType
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playYearOfPlentyDevelopment(player, firstResourceType, secondResourceType, turnNumber)
+
+  def PlayRoadBuildingDevelopmentCardEffect(
+      player: ScatanPlayer,
+      turnNumber: Int,
+      spot1: RoadSpot,
+      spot2: RoadSpot
+  ): Effect[PlayDevelopmentCard.type, ScatanState] =
+    (state: ScatanState) => state.playRoadBuildingDevelopment(player, spot1, spot2, turnNumber)
 
   def TradeWithBankEffect(
       player: ScatanPlayer,

@@ -1,7 +1,6 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
 import scatan.model.components.{Award, AwardType, Awards}
@@ -11,6 +10,9 @@ import scatan.model.game.ops.AwardOps.awards
 import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
 import scatan.views.utils.TypeUtils.*
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, clickHandler, reactiveState}
+import scatan.views.viewmodel.ops.ViewModelActionsOps.{allowedActions, canBuyDevelopment, isActionDisabled}
+import scatan.views.viewmodel.ops.ViewModelPlayersOps.{currentPlayer, currentPlayerScore}
 
 object LeftTabComponent:
 
@@ -66,25 +68,25 @@ object LeftTabComponent:
         button(
           className := "game-view-button roll-dice-button",
           "Roll dice",
-          onClick --> { _ => gameController.rollDice() },
-          disabled <-- gameViewModel.isActionDisabled(ScatanActions.RollDice)
+          disabled <-- gameViewModel.isActionDisabled(ScatanActions.RollDice),
+          onClick --> { _ => clickHandler.onRollDiceClick() },
         ),
         button(
           className := "game-view-button buy-development-card-button",
           "Buy Dev. Card",
-          onClick --> { _ => gameController.buyDevelopmentCard() },
-          disabled <-- gameViewModel.isActionDisabled(ScatanActions.BuyDevelopmentCard)
+          onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
+          disabled <-- gameViewModel.canBuyDevelopment
         ),
         button(
           className := "game-view-button end-turn-button",
           "End Turn",
-          onClick --> { _ => gameController.nextTurn() },
-          disabled <-- gameViewModel.isActionDisabled(ScatanActions.NextTurn)
+          disabled <-- gameViewModel.isActionDisabled(ScatanActions.NextTurn),
+          onClick --> { _ => clickHandler.onEndTurnClick() },
         )
       ),
       div(
-        StealCardPopup.userSelectionPopup(),
         className := "game-view-buttons",
+        StealCardPopup.userSelectionPopup(),
         button(
           className := "game-view-button steal-card-button",
           "Steal Card",

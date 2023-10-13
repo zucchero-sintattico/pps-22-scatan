@@ -6,7 +6,7 @@ import scatan.model.game.ops.CardOps.{
   assignDevelopmentCard,
   assignResourceCard,
   buyDevelopmentCard,
-  consumeDevelopmentCard
+  removeDevelopmentCard
 }
 import scatan.model.game.{BaseScatanStateTest, ScatanState}
 
@@ -69,7 +69,7 @@ class DevCardOpsTest extends BaseScatanStateTest:
       case Some(state) =>
         state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
         state.developmentCards(player2) should be(Seq.empty[DevelopmentCard])
-        val stateWithDevCardConsumed = state.consumeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+        val stateWithDevCardConsumed = state.removeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
         stateWithDevCardConsumed match
           case Some(state) =>
             state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])
@@ -86,7 +86,7 @@ class DevCardOpsTest extends BaseScatanStateTest:
     stateWithDevCardAssigned match
       case Some(state) =>
         state.developmentCards(player1) should be(Seq(DevelopmentCard(DevelopmentType.Knight)))
-        val stateWithDevCardConsumed = state.consumeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+        val stateWithDevCardConsumed = state.removeDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
         stateWithDevCardConsumed match
           case Some(state) =>
             state.developmentCards(player1) should be(Seq.empty[DevelopmentCard])

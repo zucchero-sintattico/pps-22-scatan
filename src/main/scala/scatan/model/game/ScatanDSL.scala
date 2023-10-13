@@ -19,7 +19,7 @@ object ScatanDSL:
 
     WinnerFunction := winner
     InitialPhase := ScatanPhases.Setup
-    StateFactory := ScatanState.apply
+    StateFactory := { ScatanState.apply(_, DevelopmentCardsDeck.shuffled()) }
 
     Phase {
       PhaseType := ScatanPhases.Setup

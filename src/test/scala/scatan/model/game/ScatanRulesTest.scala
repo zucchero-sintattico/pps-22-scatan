@@ -20,7 +20,7 @@ class ScatanRulesTest extends BaseTest:
   it should "start with a Scatan State" in {
     val players = Seq(ScatanPlayer("a"), ScatanPlayer("b"), ScatanPlayer("c"))
     val initialState = rules.startingStateFactory(players)
-    initialState should be(ScatanState(players))
+    initialState should be(ScatanState(players, DevelopmentCardsDeck.shuffled()))
   }
 
   it should "start with Setup phase" in {
