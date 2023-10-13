@@ -4,11 +4,13 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.ScalaJSView
 import scatan.model.ApplicationState
+import scatan.model.components.{Award, AwardType}
+import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanActions
+import scatan.model.game.ops.AwardOps.awards
 import scatan.model.game.ops.ScoreOps.scores
 import scatan.views.game.GameView
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
-import scatan.views.utils.TypeUtils.{gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, gameController, reactiveState}
 
 object LeftTabComponent:
 
@@ -58,23 +60,68 @@ object LeftTabComponent:
 
   def buttonsComponent: DisplayableSource[Element] =
     div(
-      className := "game-view-buttons",
-      button(
-        className := "game-view-button roll-dice-button",
-        "Roll dice",
-        onClick --> { _ => gameController.rollDice() },
-        disabled <-- isActionDisabled(ScatanActions.RollDice)
+      div(
+        className := "game-view-buttons",
+        button(
+          className := "game-view-button roll-dice-button",
+          "Roll dice",
+          onClick --> { _ => gameController.rollDice() },
+          disabled <-- isActionDisabled(ScatanActions.RollDice)
+        ),
+        button(
+          className := "game-view-button buy-development-card-button",
+          "Buy Dev. Card",
+          onClick --> { _ => gameController.buyDevelopmentCard() },
+          disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
+        ),
+        button(
+          className := "game-view-button end-turn-button",
+          "End Turn",
+          onClick --> { _ => gameController.nextTurn() },
+          disabled <-- isActionDisabled(ScatanActions.NextTurn)
+        )
       ),
-      button(
-        className := "game-view-button buy-development-card-button",
-        "Buy Dev. Card",
-        onClick --> { _ => gameController.buyDevelopmentCard() },
-        disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
-      ),
-      button(
-        className := "game-view-button end-turn-button",
-        "End Turn",
-        onClick --> { _ => gameController.nextTurn() },
-        disabled <-- isActionDisabled(ScatanActions.NextTurn)
+      div(
+        StealCardPopup.userSelectionPopup(),
+        className := "game-view-buttons",
+        button(
+          className := "game-view-button steal-card-button",
+          "Steal Card",
+          onClick --> { _ => StealCardPopup.show() },
+          disabled <-- isActionDisabled(ScatanActions.StealCard)
+        )
+      )
+    )
+
+  def awardsComponent: DisplayableSource[Element] =
+    div(
+      className := "awards",
+      h2("Current awards"),
+      child <-- reactiveState
+        .map(state =>
+          (for
+            game <- state.game
+            gameState = game.state
+          yield getCurrentAwards(gameState))
+            .getOrElse(div("No game"))
+        )
+    )
+  private def getCurrentAwards(state: ScatanState): Element =
+    div(
+      ul(
+        li(
+          "Longest road: ",
+          state
+            .awards(Award(AwardType.LongestRoad))
+            .map(award => s"${award._1.name} (${award._2} roads)")
+            .getOrElse("Nobody yet")
+        ),
+        li(
+          "Largest army: ",
+          state
+            .awards(Award(AwardType.LargestArmy))
+            .map(award => s"${award._1.name} (${award._2} cards)")
+            .getOrElse("Nobody yet")
+        )
       )
     )

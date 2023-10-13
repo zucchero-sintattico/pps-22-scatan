@@ -10,6 +10,7 @@ import scatan.model.game.ops.CardOps.{
   removeResourceCard
 }
 import scatan.model.game.ops.EmptySpotsOps.emptyStructureSpot
+import scatan.model.game.{BaseScatanStateTest, ScatanState}
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 import scatan.utils.UnorderedTriple

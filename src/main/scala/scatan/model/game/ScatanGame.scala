@@ -5,7 +5,7 @@ import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
-import scatan.model.components.ResourceCard
+import scatan.model.components.{ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
@@ -13,6 +13,9 @@ import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 import scala.util.Random
 import scatan.model.GameMap
+import scatan.model.components.ResourceCard
+import scatan.model.game.ops.RobberOps.playersOnRobber
+
 
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
@@ -28,6 +31,7 @@ private trait ScatanGameStatus(
   def isOver: Boolean = game.isOver
   def winner: Option[ScatanPlayer] = game.winner
   def allowedActions: Set[ScatanActions] = game.allowedActions.filter(_ != RollSeven)
+  def playersOnRobber: Seq[ScatanPlayer] = game.state.playersOnRobber
 
 private trait ScatanGameActions extends ScatanGameStatus:
 
@@ -57,10 +61,18 @@ private trait ScatanGameActions extends ScatanGameStatus:
         play(RollDice)(using RollEffect(roll))
 
   def placeRobber(hex: Hexagon): Option[ScatanGame] =
-    play(PlaceRobber)(using PlaceRobberEffect(hex))
+    def isPossibleToStealCard(game: ScatanGame): Boolean =
+      game.playersOnRobber.filter(_ != game.turn.player).exists(game.state.resourceCards(_).sizeIs > 0)
+    play(PlaceRobber)(using PlaceRobberEffect(hex)) match
+      case Some(game) if !isPossibleToStealCard(game) =>
+        game.skipStealCard
+      case game => game
 
-  def stoleCard(player: ScatanPlayer): Option[ScatanGame] =
-    play(StoleCard)(using StoleCardEffect(player))
+  private[ScatanGameActions] def skipStealCard: Option[ScatanGame] =
+    play(ScatanActions.StealCard)(using EmptyEffect)
+
+  def stealCard(player: ScatanPlayer): Option[ScatanGame] =
+    play(StealCard)(using StealCardEffect(this.game.turn.player, player))
 
   /*
    * Build Ops
@@ -79,7 +91,10 @@ private trait ScatanGameActions extends ScatanGameStatus:
     play(ScatanActions.BuyDevelopmentCard)(using BuyDevelopmentCardEffect(game.turn.player, game.turn.number))
 
   def playDevelopmentCard: Option[ScatanGame] = ???
-  def tradeWithBank: Option[ScatanGame] = ???
+
+  def tradeWithBank(offer: ResourceType, request: ResourceType): Option[ScatanGame] =
+    play(ScatanActions.TradeWithBank)(using TradeWithBankEffect(game.turn.player, offer, request))
+
   def tradeWithPlayer(
       receiver: ScatanPlayer,
       senderTradeCards: Seq[ResourceCard],

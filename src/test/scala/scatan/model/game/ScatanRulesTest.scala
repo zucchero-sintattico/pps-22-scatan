@@ -128,12 +128,12 @@ class ScatanRulesTest extends BaseTest:
 
   it should "only allow to steal card when in Game phase and StealCard step" in {
     val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
-    rules.allowedActions(status) shouldBe Set(ScatanActions.StoleCard)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.StealCard)
   }
 
   it should "go in Playing step when stealing card in Game phase and StealCard step" in {
     val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
-    rules.nextSteps((status, ScatanActions.StoleCard)) shouldBe ScatanSteps.Playing
+    rules.nextSteps((status, ScatanActions.StealCard)) shouldBe ScatanSteps.Playing
   }
 
   it should "remain in Playing step when in Game phase and Playing step except for Next Turn" in {

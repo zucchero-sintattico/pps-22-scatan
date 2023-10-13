@@ -2,21 +2,24 @@ package scatan.controllers.game
 
 import scatan.lib.mvc.{BaseController, Controller}
 import scatan.model.ApplicationState
-import scatan.model.components.BuildingType
+import scatan.model.components.*
 import scatan.model.game.ScatanModelOps.{onError, updateGame}
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
-import scatan.model.map.{RoadSpot, StructureSpot}
+import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
-import scatan.model.map.Hexagon
 
 trait GameController extends Controller[ApplicationState]:
   def onRoadSpot(spot: RoadSpot): Unit
   def onStructureSpot(spot: StructureSpot): Unit
+  def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit
+  def onTradeWithPlayer(receiver: ScatanPlayer, offer: Map[ResourceType, Int], request: Map[ResourceType, Int]): Unit
   def nextTurn(): Unit
   def rollDice(): Unit
   def clickCard(card: CardType): Unit
   def placeRobber(hexagon: Hexagon): Unit
+  def stealCard(player: ScatanPlayer): Unit
   def buyDevelopmentCard(): Unit
 
 object GameController:
@@ -72,6 +75,30 @@ private class GameControllerImpl(requirements: Controller.Requirements[GameView,
           this.model
             .updateGame(_.buildSettlement(spot))
             .onError(view.displayMessage("Cannot build settlement here"))
+
+  override def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit =
+    this.model
+      .updateGame(_.tradeWithBank(offer, request))
+      .onError(
+        view.displayMessage("Cannot trade this cards with bank")
+      )
+
+  override def onTradeWithPlayer(
+      receiver: ScatanPlayer,
+      offer: Map[ResourceType, Int],
+      request: Map[ResourceType, Int]
+  ): Unit =
+    val offerCards = offer.flatMap((resourceType, amount) => ResourceCard(resourceType) ** amount).toSeq
+    val requestCards = request.flatMap((resourceType, amount) => ResourceCard(resourceType) ** amount).toSeq
+    this.model
+      .updateGame(_.tradeWithPlayer(receiver, offerCards, requestCards))
+      .onError(
+        view.displayMessage("Cannot trade this cards with player")
+      )
+  override def stealCard(player: ScatanPlayer): Unit =
+    this.model
+      .updateGame(_.stealCard(player))
+      .onError(view.displayMessage("Cannot steal card"))
 
   override def buyDevelopmentCard(): Unit =
     this.model

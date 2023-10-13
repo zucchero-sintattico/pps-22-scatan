@@ -36,7 +36,6 @@ object ScatanDSL:
         StepType := ScatanSteps.SetupRoad
         when := ScatanActions.AssignRoad -> ScatanSteps.ChangingTurn
       }
-
     }
     Phase {
       PhaseType := ScatanPhases.Game
@@ -57,7 +56,7 @@ object ScatanDSL:
       }
       Step {
         StepType := ScatanSteps.StealCard
-        when := ScatanActions.StoleCard -> ScatanSteps.Playing
+        when := ScatanActions.StealCard -> ScatanSteps.Playing
       }
       Step {
         StepType := ScatanSteps.Playing

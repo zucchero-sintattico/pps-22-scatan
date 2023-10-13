@@ -5,7 +5,9 @@ import org.scalajs.dom
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
-import scatan.views.game.components.{CardsComponent, EndgameComponent, GameMapComponent, LeftTabComponent}
+import scatan.model.game.config.ScatanPhases
+import scatan.views.game.components.*
+import scatan.views.game.components.RightTabComponent.areTradeEnabled
 import scatan.views.utils.TypeUtils
 import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource}
 
@@ -27,10 +29,12 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
       EndgameComponent.endgamePopup,
       div(
         className := LeftTabComponent.leftTabCssClass,
+        LeftTabComponent.awardsComponent,
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.buttonsComponent,
         LeftTabComponent.possibleMovesComponent
       ),
       GameMapComponent.mapComponent,
+      RightTabComponent.tradeComponent,
       CardsComponent.cardsComponent
     )

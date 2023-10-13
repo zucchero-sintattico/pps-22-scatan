@@ -13,7 +13,7 @@ class ScatanActionsTest extends BaseTest:
   }
 
   it should "be stole card" in {
-    ScatanActions.StoleCard
+    ScatanActions.StealCard
   }
 
   it should "be build road" in {
