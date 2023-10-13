@@ -16,7 +16,6 @@ import scatan.model.GameMap
 import scatan.model.components.ResourceCard
 import scatan.model.game.ops.RobberOps.playersOnRobber
 
-
 /** The status of a game of Scatan. It contains all the data without any possible action.
   * @param game
   *   The internal game
