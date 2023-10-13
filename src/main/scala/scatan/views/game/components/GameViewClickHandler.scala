@@ -3,11 +3,12 @@ package scatan.views.game.components
 import com.raquo.airstream.core.Signal
 import scatan.controllers.game.GameController
 import scatan.model.ApplicationState
-import scatan.model.components.DevelopmentType.{Knight, Monopoly, RoadBuilding, YearOfPlenty}
 import scatan.model.components.*
+import scatan.model.components.DevelopmentType.{Knight, Monopoly, RoadBuilding, YearOfPlenty}
+import scatan.model.game.ScatanGame
 import scatan.model.game.config.ScatanPhases.{Game, Setup}
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.{ScatanGame, ScatanState}
+import scatan.model.game.state.ScatanState
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType

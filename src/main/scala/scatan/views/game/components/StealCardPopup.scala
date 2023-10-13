@@ -3,7 +3,7 @@ package scatan.views.game.components
 import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import scatan.model.game.config.ScatanPlayer
-import scatan.views.utils.TypeUtils.{DisplayableSource, clickHandler, gameViewModel, reactiveState}
+import scatan.views.utils.TypeUtils.{DisplayableSource, clickHandler, gameViewModel}
 import scatan.views.viewmodel.ops.ViewModelPlayersOps.playersOnRobberExceptCurrent
 
 object StealCardPopup:

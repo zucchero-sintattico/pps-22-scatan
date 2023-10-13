@@ -4,6 +4,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
 import scatan.lib.game.GameStatus
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.game.state.ScatanState
 
 class ScatanRulesTest extends BaseTest:
 

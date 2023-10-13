@@ -18,5 +18,4 @@ object ViewModelActionsOps:
       allowedActions.map(!_.contains(action))
 
     def canBuyDevelopment: Signal[Boolean] =
-      allowedActions.map(_.contains(ScatanActions.BuyDevelopmentCard))
-
+      gameViewModel.state.map(_.canBuyDevelopment)

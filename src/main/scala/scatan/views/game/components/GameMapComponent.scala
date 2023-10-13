@@ -1,14 +1,13 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
+import scatan.model.GameMap
 import scatan.model.components.ResourceType.*
 import scatan.model.components.UnproductiveTerrain.*
-import scatan.model.components.{AssignedBuildings, AssignmentInfo, BuildingType, Terrain}
-import scatan.model.game.ScatanState
+import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.state.ScatanState
 import scatan.model.map.*
-import scatan.model.{ApplicationState, GameMap}
 import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewPlayer}
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
@@ -69,9 +68,7 @@ object GameMapComponent:
   def mapComponent: DisplayableSource[Element] =
     div(
       className := "game-view-game-tab",
-      child <-- gameViewModel.state.map(_.state).map(state => {
-        getHexagonalMap(using clickHandler)(using state)
-      })
+      child <-- gameViewModel.state.map(_.state).map(getHexagonalMap(using clickHandler)(using _))
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
@@ -84,7 +81,7 @@ object GameMapComponent:
     val canvasSize = layersToCanvasSize(gameMap.totalLayers)
     svg.svg(
       svgImages,
-      svg.viewBox := s"-${canvasSize} -${canvasSize} ${2 * canvasSize} ${2 * canvasSize}",
+      svg.viewBox := s"-$canvasSize -$canvasSize ${2 * canvasSize} ${2 * canvasSize}",
       for hex <- gameMap.tiles.toList
       yield svgHexagonWithNumber(hex),
       for road <- gameMap.edges.toList
@@ -115,9 +112,10 @@ object GameMapComponent:
     )
 
   /** A svg circular number
-    * @param number,
-    *   the number to display
+    * @param hex
+    *   the hexagon
     * @return
+    *   the component
     */
   private def circularNumberWithRobber(hex: Hexagon): InputSourceWithState[Element] =
     svg.g(
@@ -144,24 +142,22 @@ object GameMapComponent:
     svg.g(
       svg.className := "robber",
       svg.line(
-        svg.x1 := s"-${radius}",
-        svg.y1 := s"-${radius}",
+        svg.x1 := s"-$radius",
+        svg.y1 := s"-$radius",
         svg.x2 := s"$radius",
         svg.y2 := s"$radius"
       ),
       svg.line(
-        svg.x1 := s"-${radius}",
-        svg.y1 := s"${radius}",
+        svg.x1 := s"-$radius",
+        svg.y1 := s"$radius",
         svg.x2 := s"$radius",
         svg.y2 := s"-$radius"
       )
     )
 
   /** Generate the road graphic
-    * @param spot1,
-    *   the first spot
-    * @param spot2,
-    *   the second spot
+    * @param road
+    *   the road
     * @return
     *   the road graphic
     */
@@ -171,10 +167,10 @@ object GameMapComponent:
     val player = assignmentInfoOf(road).map(_.viewPlayer)
     svg.g(
       svg.line(
-        svg.x1 := s"${x1}",
-        svg.y1 := s"${y1}",
-        svg.x2 := s"${x2}",
-        svg.y2 := s"${y2}",
+        svg.x1 := s"$x1",
+        svg.y1 := s"$y1",
+        svg.x2 := s"$x2",
+        svg.y2 := s"$y2",
         svg.className := s"road ${player.getOrElse("")}"
       ),
       player match
@@ -190,10 +186,8 @@ object GameMapComponent:
     )
 
   /** Generate the spot graphic
-    * @param x,
-    *   the x coordinate of the spot
-    * @param y,
-    *   the y coordinate of the spot
+    * @param structure
+    *   the spot
     * @return
     *   the spot graphic
     */
@@ -203,15 +197,15 @@ object GameMapComponent:
     val structureType = assignmentInfoOf(structure).map(_.viewBuildingType)
     svg.g(
       svg.circle(
-        svg.cx := s"${x}",
-        svg.cy := s"${y}",
+        svg.cx := s"$x",
+        svg.cy := s"$y",
         svg.r := s"$radius",
         svg.className := s"${player.getOrElse("spot")}",
         onClick --> (_ => clickHandler.onStructureClick(structure))
       ),
       svg.text(
-        svg.x := s"${x}",
-        svg.y := s"${y}",
+        svg.x := s"$x",
+        svg.y := s"$y",
         svg.className := "spot-text",
         svg.fontSize := s"$radius",
         s"${structureType.getOrElse("")}"

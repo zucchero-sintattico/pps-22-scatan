@@ -1,8 +1,9 @@
-package scatan.model.game
+package scatan.model.game.state
 
 import scatan.model.GameMap
 import scatan.model.components.*
 import scatan.model.components.UnproductiveTerrain.Desert
+import scatan.model.game.DevelopmentCardsDeck
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
 
@@ -39,12 +40,21 @@ object ScatanState:
   /** Creates a new ScatanState with the specified players.
     *
     * @param players
+    *   The players in the game.
     * @return
     *   a new ScatanState with the specified players
     */
   def apply(players: Seq[ScatanPlayer]): ScatanState =
     ScatanState(players, DevelopmentCardsDeck.defaultOrdered)
 
+  /** Creates a new ScatanState with the specified players and development cards deck.
+    * @param players
+    *   The players in the game.
+    * @param developmentCardsDeck
+    *   The development cards deck.
+    * @return
+    *   a new ScatanState with the specified players and development cards deck.
+    */
   def apply(players: Seq[ScatanPlayer], developmentCardsDeck: DevelopmentCardsDeck): ScatanState =
     require(players.sizeIs >= 3 && players.sizeIs <= 4, "The number of players must be between 3 and 4")
     val gameMap = GameMap()

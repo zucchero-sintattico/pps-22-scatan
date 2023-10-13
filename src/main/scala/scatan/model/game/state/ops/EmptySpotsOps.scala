@@ -1,6 +1,6 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
-import scatan.model.game.ScatanState
+import scatan.model.game.state.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 

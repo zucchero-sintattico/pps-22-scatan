@@ -1,12 +1,10 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
-import scatan.model.ApplicationState
 import scatan.model.components.ResourceType
+import scatan.model.game.ScatanGame
+import scatan.model.game.config.ScatanActions
 import scatan.model.game.config.ScatanActions.TradeWithBank
-import scatan.model.game.config.{ScatanActions, ScatanPhases}
-import scatan.model.game.{ScatanGame, ScatanState}
 import scatan.views.utils.TypeUtils.*
 import scatan.views.viewmodel.ops.ViewModelActionsOps.isActionEnabled
 

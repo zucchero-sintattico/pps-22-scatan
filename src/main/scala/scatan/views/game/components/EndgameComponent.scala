@@ -7,10 +7,10 @@ import scatan.views.viewmodel.ops.ViewModelWinOps.{isEnded, winner, winnerName}
 
 object EndgameComponent:
 
-  /**
-   * A popup that appears when the game is over
-   * @return the component
-   */
+  /** A popup that appears when the game is over
+    * @return
+    *   the component
+    */
   def endgamePopup: DisplayableSource[Element] =
     div(
       display <-- gameViewModel.isEnded

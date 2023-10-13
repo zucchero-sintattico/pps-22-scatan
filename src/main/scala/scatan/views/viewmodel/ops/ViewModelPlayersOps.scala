@@ -2,9 +2,9 @@ package scatan.views.viewmodel.ops
 
 import com.raquo.airstream.core.Signal
 import scatan.model.components.{DevelopmentType, ResourceType}
-import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.ScoreOps.scores
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.ScoreOps.scores
 import scatan.views.game.components.CardContextMap.CardType
 import scatan.views.viewmodel.GameViewModel
 

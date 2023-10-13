@@ -1,18 +1,12 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.lib.mvc.ScalaJSView
-import scatan.model.ApplicationState
-import scatan.model.components.{Award, AwardType, Awards}
-import scatan.model.game.ScatanState
+import scatan.model.components.Award
 import scatan.model.game.config.ScatanActions
-import scatan.model.game.ops.AwardOps.awards
-import scatan.model.game.ops.ScoreOps.scores
-import scatan.views.game.GameView
 import scatan.views.utils.TypeUtils.*
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, clickHandler, reactiveState}
-import scatan.views.viewmodel.ops.ViewModelActionsOps.{allowedActions, canBuyDevelopment, isActionDisabled}
-import scatan.views.viewmodel.ops.ViewModelPlayersOps.{currentPlayer, currentPlayerScore}
+import scatan.views.viewmodel.ops.ViewModelActionsOps.*
+import scatan.views.viewmodel.ops.ViewModelCurrentStatusOps.*
+import scatan.views.viewmodel.ops.ViewModelPlayersOps.*
 
 object LeftTabComponent:
 
@@ -69,7 +63,7 @@ object LeftTabComponent:
           className := "game-view-button roll-dice-button",
           "Roll dice",
           disabled <-- gameViewModel.isActionDisabled(ScatanActions.RollDice),
-          onClick --> { _ => clickHandler.onRollDiceClick() },
+          onClick --> { _ => clickHandler.onRollDiceClick() }
         ),
         button(
           className := "game-view-button buy-development-card-button",
@@ -81,7 +75,7 @@ object LeftTabComponent:
           className := "game-view-button end-turn-button",
           "End Turn",
           disabled <-- gameViewModel.isActionDisabled(ScatanActions.NextTurn),
-          onClick --> { _ => clickHandler.onEndTurnClick() },
+          onClick --> { _ => clickHandler.onEndTurnClick() }
         )
       ),
       div(

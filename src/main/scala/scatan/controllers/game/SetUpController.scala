@@ -1,26 +1,21 @@
 package scatan.controllers.game
 
-import scatan.lib.mvc.{BaseController, Controller}
+import scatan.lib.mvc.{Controller, EmptyController}
 import scatan.model.ApplicationState
 import scatan.views.game.SetUpView
 
-/** This is the controller for the setup page.
+/** The controller for the game setup screen.
   */
 trait SetUpController extends Controller[ApplicationState]:
+
+  /** Starts the game with the given usernames.
+    * @param usernames,
+    *   the usernames of the players.
+    */
   def startGame(usernames: String*): Unit
 
 object SetUpController:
   def apply(requirements: Controller.Requirements[SetUpView, ApplicationState]): SetUpController =
-    SetUpControllerImpl(requirements)
-
-/** This is the implementation of the controller for the setup page.
-  * @param requirements,
-  *   the requirements for the controller.
-  */
-private class SetUpControllerImpl(requirements: Controller.Requirements[SetUpView, ApplicationState])
-    extends BaseController(requirements)
-    with SetUpController:
-
-  override def startGame(usernames: String*): Unit =
-    this.model
-      .update(_.createGame(usernames*))
+    new EmptyController(requirements) with SetUpController:
+      override def startGame(usernames: String*): Unit =
+        this.model.update(_.createGame(usernames*))

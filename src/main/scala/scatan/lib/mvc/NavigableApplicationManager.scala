@@ -2,6 +2,9 @@ package scatan.lib.mvc
 
 import scatan.lib.mvc.application.NavigableApplication
 
+/** A singleton object that manages the currently running application. It is used to start the application and to
+  * navigate to a new route. It is also used to navigate back to the previous route.
+  */
 object NavigableApplicationManager:
   private var _application: Option[NavigableApplication[?, ?]] = None
 

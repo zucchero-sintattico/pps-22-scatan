@@ -1,8 +1,9 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.UnproductiveTerrain.Desert
-import scatan.model.game.ops.RobberOps.moveRobber
-import scatan.model.game.{BaseScatanStateTest, ScatanState}
+import scatan.model.game.BaseScatanStateTest
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.RobberOps.moveRobber
 import scatan.model.map.Hexagon
 
 class RobberOpsTest extends BaseScatanStateTest:

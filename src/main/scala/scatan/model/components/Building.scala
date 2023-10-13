@@ -4,7 +4,7 @@ import scatan.model.components.*
 import scatan.model.components.BuildingType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{RoadSpot, Spot, StructureSpot}
+import scatan.model.map.Spot
 
 import scala.collection.immutable.ListMap
 

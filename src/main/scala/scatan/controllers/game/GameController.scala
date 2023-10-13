@@ -8,24 +8,107 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 import scatan.views.game.GameView
 
+/** The controller for the game.
+  */
 trait GameController extends Controller[ApplicationState]:
   def state: ApplicationState
 
-  def assignRoad(spot: RoadSpot): Unit
-  def assignSettlement(spot: StructureSpot): Unit
-  def buildRoad(spot: RoadSpot): Unit
-  def buildSettlement(spot: StructureSpot): Unit
-  def buildCity(spot: StructureSpot): Unit
-  def placeRobber(hexagon: Hexagon): Unit
+  /** Goes to the next turn. */
   def nextTurn(): Unit
+
+  /** Rolls the dice. */
   def rollDice(): Unit
+
+  /** Assigns a road to the current player.
+    * @param spot
+    *   The spot to assign the road to.
+    */
+  def assignRoad(spot: RoadSpot): Unit
+
+  /** Assigns a settlement to the current player.
+    * @param spot
+    *   The spot to assign the settlement to.
+    */
+  def assignSettlement(spot: StructureSpot): Unit
+
+  /** Builds a road for the current player.
+    * @param spot
+    *   The spot to build the road on.
+    */
+  def buildRoad(spot: RoadSpot): Unit
+
+  /** Builds a settlement for the current player.
+    * @param spot
+    *   The spot to build the settlement on.
+    */
+  def buildSettlement(spot: StructureSpot): Unit
+
+  /** Builds a city for the current player.
+    * @param spot
+    *   The spot to build the city on.
+    */
+  def buildCity(spot: StructureSpot): Unit
+
+  /** Places the robber on a hexagon.
+    * @param hexagon
+    *   The hexagon to place the robber on.
+    */
+  def placeRobber(hexagon: Hexagon): Unit
+
+  /** Steals a card from a player.
+    * @param player
+    *   The player to steal a card from.
+    */
   def stealCard(player: ScatanPlayer): Unit
+
+  /** Buys a development card for the current player.
+    */
   def buyDevelopmentCard(): Unit
+
+  /** Plays a knight development card for the current player.
+    * @param robberPosition
+    *   The hexagon to place the robber on.
+    */
   def playKnightDevelopment(robberPosition: Hexagon): Unit
+
+  /** Plays a year of plenty development card for the current player.
+    * @param resource1
+    *   The first resource to get.
+    * @param resource2
+    *   The second resource to get.
+    */
   def playYearOfPlentyDevelopment(resource1: ResourceType, resource2: ResourceType): Unit
+
+  /** Plays a monopoly development card for the current player.
+    * @param resource
+    *   The resource to get.
+    */
   def playMonopolyDevelopment(resource: ResourceType): Unit
+
+  /** Plays a road building development card for the current player.
+    * @param spot1
+    *   The first spot to build a road on.
+    * @param spot2
+    *   The second spot to build a road on.
+    */
   def playRoadBuildingDevelopment(spot1: RoadSpot, spot2: RoadSpot): Unit
+
+  /** Trades with the bank.
+    * @param offer
+    *   The resource to offer.
+    * @param request
+    *   The resource to request.
+    */
   def tradeWithBank(offer: ResourceType, request: ResourceType): Unit
+
+  /** Trades with a player.
+    * @param receiver
+    *   The player to trade with.
+    * @param offer
+    *   The cards to offer.
+    * @param request
+    *   The cards to request.
+    */
   def tradeWithPlayer(receiver: ScatanPlayer, offer: Seq[ResourceCard], request: Seq[ResourceCard]): Unit
 
 object GameController:

@@ -2,7 +2,7 @@ package scatan.views.utils
 
 import com.raquo.airstream.core.Signal
 import scatan.model.ApplicationState
-import scatan.model.game.ScatanState
+import scatan.model.game.state.ScatanState
 import scatan.views.game.components.GameViewClickHandler
 import scatan.views.viewmodel.{GameViewModel, ScatanViewModel}
 
@@ -27,4 +27,3 @@ object TypeUtils:
   private[views] def gameViewModel(using scatanViewModel: ScatanViewModel): GameViewModel =
     val reactiveGame = scatanViewModel.state.map(_.game)
     GameViewModel(reactiveGame.map(_.get))
-

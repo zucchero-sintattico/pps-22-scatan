@@ -16,6 +16,14 @@ object Controller:
   trait Provider[C <: Controller[?]]:
     def controller: C
 
+/** A wrapper for a model that updates the view when the model is updated.
+  * @param view
+  *   The view to update
+  * @param model
+  *   The model to wrap
+  * @tparam S
+  *   The state type
+  */
 class ReactiveModelWrapper[S <: Model.State](view: => View[S], model: Model[S]) extends Model[S]:
   private val internalModel = model
   override def state: S = internalModel.state
@@ -23,6 +31,14 @@ class ReactiveModelWrapper[S <: Model.State](view: => View[S], model: Model[S]) 
     internalModel.update(f)
     view.updateState(this.state)
 
+/** A base controller that wraps a model and a view.
+  * @param requirements
+  *   The requirements for the controller
+  * @tparam V
+  *   The view type
+  * @tparam S
+  *   The state type
+  */
 abstract class BaseController[V <: View[S], S <: Model.State](requirements: Controller.Requirements[V, S])
     extends Controller[S]
     with Controller.Dependencies(requirements):
@@ -31,5 +47,11 @@ abstract class BaseController[V <: View[S], S <: Model.State](requirements: Cont
   override protected val model: Model[S] =
     new ReactiveModelWrapper(requirements.view, requirements.model)
 
-class EmptyController[State <: Model.State](requirements: Controller.Requirements[View[State], State])
+/** A controller that does nothing.
+  * @param requirements
+  *   The requirements for the controller
+  * @tparam State
+  *   The state type
+  */
+class EmptyController[State <: Model.State, V <: View[State]](requirements: Controller.Requirements[V, State])
     extends BaseController(requirements)

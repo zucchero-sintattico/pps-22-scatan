@@ -3,13 +3,16 @@ package scatan.model.game
 import scatan.model.components.DevelopmentType.*
 import scatan.model.components.{DevelopmentCard, DevelopmentType}
 
+import scala.annotation.targetName
 import scala.util.Random
 
 extension (int: Int)
+  @targetName("timesDevelopmentType")
   def *(developmentType: DevelopmentType): DevelopmentCardsDeck =
     Seq.fill(int)(DevelopmentCard(developmentType))
 
 type DevelopmentCardsDeck = Seq[DevelopmentCard]
+
 object DevelopmentCardsDeck:
 
   def defaultOrdered: DevelopmentCardsDeck =
