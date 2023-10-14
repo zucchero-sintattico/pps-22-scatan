@@ -2,66 +2,41 @@ package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
 import scatan.model.GameMap
-import scatan.model.components.ResourceType.*
-import scatan.model.components.UnproductiveTerrain.*
 import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.map.*
-import scatan.views.game.components.ContextMap.{toImgId, viewBuildingType, viewPlayer}
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
 import scatan.views.utils.TypeUtils.*
-import scatan.views.game.components.map.MapComponent
-import scatan.views.game.components.map.MapComponent.svgImages
-
-object ContextMap:
-
-  private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
-  private val buildings: Map[BuildingType, String] = Map(
-    BuildingType.Settlement -> "S",
-    BuildingType.City -> "C"
-  )
-
-  val resources: Map[Terrain, String] = Map(
-    Wood -> "res/img/hexagonal/wood.jpg",
-    Sheep -> "res/img/hexagonal/sheep.jpg",
-    Wheat -> "res/img/hexagonal/wheat.jpg",
-    Rock -> "res/img/hexagonal/ore.jpg",
-    Brick -> "res/img/hexagonal/clay.jpg",
-    Desert -> "res/img/hexagonal/desert.jpg",
-    Sea -> "res/img/hexagonal/water.jpg"
-  )
-
-  private def updateAndGetPlayer(player: ScatanPlayer): String =
-    viewPlayers.get(player) match
-      case Some(viewPlayer) => viewPlayer
-      case None =>
-        val viewPlayer = s"player-${viewPlayers.size + 1}"
-        viewPlayers = viewPlayers + (player -> viewPlayer)
-        viewPlayer
-
-  extension (info: AssignmentInfo)
-    def viewPlayer: String = updateAndGetPlayer(info.player)
-    def viewBuildingType: String = buildings(info.buildingType)
-
-  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
+import scatan.views.game.components.MapComponent.{MapElement, radius, given}
 
 /** A component to display the game map.
   */
 object GameMapComponent:
 
-  private given hexSize: Int = 100
-  private val radius = hexSize / 4
-  private val svgCornersPoints: String =
-    (for
-      i <- 0 to 5
-      angleDeg = 60 * i + 30
-      angleRad = Math.PI / 180 * angleDeg
-      x = hexSize * math.cos(angleRad)
-      y = hexSize * math.sin(angleRad)
-    yield s"$x,$y").mkString(" ")
-  private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
+  /** An anti corruption layer that maps the model concept to the view ones.
+    */
+  private object ModelContextMapping:
+    private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
+    private val buildings: Map[BuildingType, String] = Map(
+      BuildingType.Settlement -> "S",
+      BuildingType.City -> "C"
+    )
+
+    private def updateAndGetPlayer(player: ScatanPlayer): String =
+      viewPlayers.get(player) match
+        case Some(viewPlayer) => viewPlayer
+        case None =>
+          val viewPlayer = s"player-${viewPlayers.size + 1}"
+          viewPlayers = viewPlayers + (player -> viewPlayer)
+          viewPlayer
+
+    extension (info: AssignmentInfo)
+      def viewPlayer: String = updateAndGetPlayer(info.player)
+      def viewBuildingType: String = buildings(info.buildingType)
+
+  import ModelContextMapping.*
 
   /** Display the game map.
     * @return
@@ -74,46 +49,49 @@ object GameMapComponent:
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
-  private def contentOf(hex: Hexagon)(using ScatanState): TileContent = scatanState.gameMap.toContent(hex)
   private def robberPlacement(using ScatanState): Hexagon = summon[ScatanState].robberPlacement
   private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
     summon[ScatanState].assignedBuildings.get(spot)
 
   private def gameHexagonalMap: InputSourceWithState[Element] =
     given GameMap = gameMap
-    MapComponent.map(
+    MapComponent.mapContainer(
+      for hex <- gameMap.tiles.toList
+      yield svgHexagonWithCrossedNumber(hex),
       for road <- gameMap.edges.toList
       yield svgRoad(road),
       for spot <- gameMap.nodes.toList
       yield svgSpot(spot)
     )
 
-  /** A svg hexagon.
+  /** A svg hexagon with a number inside.
     *
     * @param hex,
     *   the hexagon
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(hex: Hexagon): InputSourceWithState[Element] =
-    MapComponent.svgHexagon(hex, contentOf(hex), circularNumberWithRobber(hex))
+  private def svgHexagonWithCrossedNumber(hex: Hexagon): InputSourceWithState[MapElement] =
+    MapComponent.svgHexagon(hex, circularNumberWithRobber(hex))
 
-  /** A svg circular number
+  /** A svg circular number with a robber cross.
     * @param hex
     *   the hexagon
     * @return
     *   the component
     */
-  private def circularNumberWithRobber(hex: Hexagon): InputSourceWithState[Element] =
+  private def circularNumberWithRobber(hex: Hexagon): InputSourceWithState[MapElement] =
     MapComponent.circularNumber(
       hex,
-      contentOf(hex),
       onClick --> (_ => clickHandler.onHexagonClick(hex)),
       if robberPlacement == hex
       then robberCross
       else ""
     )
 
+  /** @return
+    *   the Element representing the robber's cross on the game map.
+    */
   private def robberCross: Element =
     svg.g(
       svg.className := "robber",
@@ -131,11 +109,11 @@ object GameMapComponent:
       )
     )
 
-  /** Generate the road graphic
+  /** Create a svg road.
     * @param road
     *   the road
     * @return
-    *   the road graphic
+    *   the svg road
     */
   private def svgRoad(road: RoadSpot): InputSourceWithState[Element] =
     val Coordinates(x1, y1) = road._1.coordinates.get
@@ -161,11 +139,11 @@ object GameMapComponent:
           )
     )
 
-  /** Generate the spot graphic
+  /** Create a svg spot for a structure.
     * @param structure
     *   the spot
     * @return
-    *   the spot graphic
+    *   the svg spot
     */
   private def svgSpot(structure: StructureSpot): InputSourceWithState[Element] =
     val Coordinates(x, y) = structure.coordinates.get

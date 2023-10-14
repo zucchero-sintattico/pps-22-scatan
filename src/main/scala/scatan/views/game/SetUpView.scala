@@ -7,7 +7,7 @@ import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.{ApplicationState, GameMap, GameMapFactory}
 import scatan.views.game.MapSelectionMode.*
 import scatan.views.game.components.LeftTabComponent.buttonsComponent
-import scatan.views.game.components.map.MapComponent
+import scatan.views.game.components.MapComponent
 
 enum MapSelectionMode:
   case Default, Random, WithIterator
@@ -137,7 +137,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         ),
         div(
           cls := "setup-menu-map",
-          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map()(using gameMap))
+          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map(using gameMap))
         )
       )
     )
