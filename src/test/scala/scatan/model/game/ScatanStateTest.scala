@@ -1,8 +1,8 @@
 package scatan.model.game
 
-import scatan.model.GameMap
 import scatan.model.components.{AssignmentInfo, Awards, DevelopmentCards, ResourceCards}
-import scatan.model.map.{Hexagon, Spot}
+import scatan.model.game.state.ScatanState
+import scatan.model.map.{GameMap, Spot}
 
 import scala.language.postfixOps
 
@@ -64,6 +64,7 @@ class ScatanStateTest extends BaseScatanStateTest:
   it should "have a development cards deck" in {
     val state = ScatanState(threePlayers)
     state.developmentCardsDeck shouldBe a[DevelopmentCardsDeck]
-    val stateWithOrderedDeck = ScatanState(threePlayers, developmentCardsDeck = DevelopmentCardsDeck.defaultOrdered)
+    val stateWithOrderedDeck =
+      ScatanState(GameMap(), threePlayers, developmentCardsDeck = DevelopmentCardsDeck.defaultOrdered)
     stateWithOrderedDeck.developmentCardsDeck shouldBe DevelopmentCardsDeck.defaultOrdered
   }

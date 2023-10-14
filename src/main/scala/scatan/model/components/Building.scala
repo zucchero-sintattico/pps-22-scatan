@@ -4,7 +4,8 @@ import scatan.model.components.*
 import scatan.model.components.BuildingType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{RoadSpot, Spot, StructureSpot}
+import scatan.model.map.Spot
+
 import scala.collection.immutable.ListMap
 
 type ResourceCost = (ResourceType, Int)
@@ -13,6 +14,8 @@ type Cost = Map[ResourceType, Int]
 object Cost:
   def apply(resourceCosts: ResourceCost*): Cost = resourceCosts.toMap
 
+/** A building type and its cost.
+  */
 enum BuildingType(val cost: Cost):
   case Settlement
       extends BuildingType(

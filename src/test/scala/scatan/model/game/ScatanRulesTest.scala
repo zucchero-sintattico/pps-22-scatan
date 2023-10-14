@@ -4,10 +4,12 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
 import scatan.lib.game.GameStatus
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
+import scatan.model.game.state.ScatanState
+import scatan.model.map.GameMap
 
 class ScatanRulesTest extends BaseTest:
 
-  val rules = ScatanDSL.rules
+  private val rules = ScatanDSL.rules
 
   "The rules" should "be valid" in {
     rules.valid should be(true)
@@ -19,7 +21,7 @@ class ScatanRulesTest extends BaseTest:
 
   it should "start with a Scatan State" in {
     val players = Seq(ScatanPlayer("a"), ScatanPlayer("b"), ScatanPlayer("c"))
-    val initialState = rules.startingStateFactory(players)
+    val initialState = rules.startingStateFactory(GameMap(), players)
     initialState should be(ScatanState(players))
   }
 
@@ -126,12 +128,12 @@ class ScatanRulesTest extends BaseTest:
 
   it should "only allow to steal card when in Game phase and StealCard step" in {
     val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
-    rules.allowedActions(status) shouldBe Set(ScatanActions.StoleCard)
+    rules.allowedActions(status) shouldBe Set(ScatanActions.StealCard)
   }
 
   it should "go in Playing step when stealing card in Game phase and StealCard step" in {
     val status = GameStatus(ScatanPhases.Game, ScatanSteps.StealCard)
-    rules.nextSteps((status, ScatanActions.StoleCard)) shouldBe ScatanSteps.Playing
+    rules.nextSteps((status, ScatanActions.StealCard)) shouldBe ScatanSteps.Playing
   }
 
   it should "remain in Playing step when in Game phase and Playing step except for Next Turn" in {

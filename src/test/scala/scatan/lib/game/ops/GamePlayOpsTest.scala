@@ -4,6 +4,7 @@ import scatan.BaseTest
 import scatan.lib.game.EmptyDomain.Actions.{NotPlayableAction, StartGame}
 import scatan.lib.game.ops.GamePlayOps.{canPlay, play}
 import scatan.lib.game.{EmptyDomain, Game}
+import scatan.model.map.GameMap
 
 class GamePlayOpsTest extends BaseTest:
 
@@ -11,7 +12,7 @@ class GamePlayOpsTest extends BaseTest:
 
   given EmptyDomainRules = EmptyDomain.rules
   val players = Seq(Player("p1"), Player("p2"), Player("p3"))
-  val game = Game(players)
+  val game = Game(GameMap(), players)
 
   "A Game" should "allow to check if an action is playable" in {
     game.canPlay(StartGame) shouldBe true

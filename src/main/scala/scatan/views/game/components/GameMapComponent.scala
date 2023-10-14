@@ -1,197 +1,132 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
-import scatan.model.components.ResourceType.*
-import scatan.model.components.UnproductiveTerrain.*
 import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
-import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.map.{Hexagon, StructureSpot, TileContent}
-import scatan.model.{ApplicationState, GameMap}
-import scatan.views.Coordinates
-import scatan.views.Coordinates.*
-import scatan.views.game.components.ContextMap.{viewBuildingType, viewPlayer, toImgId}
-
-object ContextMap:
-
-  private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
-  private val buildings: Map[BuildingType, String] = Map(
-    BuildingType.Settlement -> "S",
-    BuildingType.City -> "C"
-  )
-
-  val resources: Map[Terrain, String] = Map(
-    Wood -> "res/img/hexagonal/wood.jpg",
-    Sheep -> "res/img/hexagonal/sheep.jpg",
-    Wheat -> "res/img/hexagonal/wheat.jpg",
-    Rock -> "res/img/hexagonal/ore.jpg",
-    Brick -> "res/img/hexagonal/clay.jpg",
-    Desert -> "res/img/hexagonal/desert.jpg",
-    Sea -> "res/img/hexagonal/water.jpg"
-  )
-
-  private def updateAndGetPlayer(player: ScatanPlayer): String =
-    viewPlayers.get(player) match
-      case Some(viewPlayer) => viewPlayer
-      case None =>
-        val viewPlayer = s"player-${viewPlayers.size + 1}"
-        viewPlayers = viewPlayers + (player -> viewPlayer)
-        viewPlayer
-
-  extension (state: ScatanState) def gameMap: GameMap = state.gameMap
-  extension (info: AssignmentInfo)
-    def viewPlayer: String = updateAndGetPlayer(info.player)
-    def viewBuildingType: String = buildings(info.buildingType)
-
-  extension (terrain: Terrain) def toImgId: String = s"img-${terrain.toString.toLowerCase}"
+import scatan.model.game.state.ScatanState
+import scatan.model.map.*
+import scatan.views.game.components.MapComponent.{MapElement, radius, given}
+import scatan.views.utils.Coordinates
+import scatan.views.utils.Coordinates.*
+import scatan.views.utils.TypeUtils.*
 
 /** A component to display the game map.
   */
 object GameMapComponent:
 
-  private given hexSize: Int = 100
-  private val radius = hexSize / 4
-  private val svgCornersPoints: String =
-    (for
-      i <- 0 to 5
-      angleDeg = 60 * i + 30
-      angleRad = Math.PI / 180 * angleDeg
-      x = hexSize * math.cos(angleRad)
-      y = hexSize * math.sin(angleRad)
-    yield s"$x,$y").mkString(" ")
-  private val layersToCanvasSize: Int => Int = x => (2 * x * hexSize) + 50
+  /** An anti corruption layer that maps the model concept to the view ones.
+    */
+  private object ModelContextMapping:
+    private var viewPlayers: Map[ScatanPlayer, String] = Map.empty
+    private val buildings: Map[BuildingType, String] = Map(
+      BuildingType.Settlement -> "S",
+      BuildingType.City -> "C"
+    )
 
-  def mapComponent(using reactiveState: Signal[ApplicationState])(using gameController: GameController): Element =
+    private def updateAndGetPlayer(player: ScatanPlayer): String =
+      viewPlayers.get(player) match
+        case Some(viewPlayer) => viewPlayer
+        case None =>
+          val viewPlayer = s"player-${viewPlayers.size + 1}"
+          viewPlayers = viewPlayers + (player -> viewPlayer)
+          viewPlayer
+
+    extension (info: AssignmentInfo)
+      def viewPlayer: String = updateAndGetPlayer(info.player)
+      def viewBuildingType: String = buildings(info.buildingType)
+
+  import ModelContextMapping.*
+
+  /** Display the game map.
+    * @return
+    *   the component.
+    */
+  def mapComponent: DisplayableSource[Element] =
     div(
       className := "game-view-game-tab",
-      child <-- reactiveState
-        .map(state =>
-          (for
-            game <- state.game
-            state = game.state
-          yield getHexagonalMap(state)).getOrElse(div("No game"))
-        )
+      child <-- gameViewModel.state.map(_.state).map(gameHexagonalMap(using clickHandler)(using _))
     )
 
-  private def getHexagonalMap(state: ScatanState)(using gameController: GameController): Element =
-    val gameMap = state.gameMap
-    val canvasSize = layersToCanvasSize(gameMap.totalLayers)
-    svg.svg(
-      svgImages,
-      svg.viewBox := s"-${canvasSize} -${canvasSize} ${2 * canvasSize} ${2 * canvasSize}",
-      for
-        hex <- gameMap.tiles.toList
-        content = gameMap.toContent(hex)
-        hasRobber = state.robberPlacement == hex
-      yield svgHexagonWithNumber(hex, content, hasRobber, () => gameController.placeRobber(hex)),
-      for
-        road <- gameMap.edges.toList
-        spot1Coordinates <- road._1.coordinates
-        spot2Coordinates <- road._2.coordinates
-        player = state.assignedBuildings.get(road).map(_.viewPlayer)
-      yield svgRoad(spot1Coordinates, spot2Coordinates, player, () => gameController.onRoadSpot(road)),
-      for
-        spot <- gameMap.nodes.toList
-        coordinates <- spot.coordinates
-        assignmentInfo = state.assignedBuildings.get(spot)
-        player = assignmentInfo.map(_.viewPlayer)
-        buildingType = assignmentInfo.map(_.viewBuildingType)
-      yield svgSpot(coordinates, player, buildingType, () => gameController.onStructureSpot(spot))
+  private def gameMap(using ScatanState): GameMap = scatanState.gameMap
+  private def robberPlacement(using ScatanState): Hexagon = summon[ScatanState].robberPlacement
+  private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
+    summon[ScatanState].assignedBuildings.get(spot)
+
+  private def gameHexagonalMap: InputSourceWithState[Element] =
+    given GameMap = gameMap
+    MapComponent.mapContainer(
+      for hex <- gameMap.tiles.toList
+      yield svgHexagonWithCrossedNumber(hex),
+      for road <- gameMap.edges.toList
+      yield svgRoad(road),
+      for spot <- gameMap.nodes.toList
+      yield svgSpot(spot)
     )
 
-  /** A svg hexagon.
+  /** A svg hexagon with a number inside.
     *
     * @param hex,
     *   the hexagon
     * @return
     *   the svg hexagon.
     */
-  private def svgHexagonWithNumber(
-      hex: Hexagon,
-      tileContent: TileContent,
-      hasRobber: Boolean,
-      onPlaceRobber: () => Unit
-  ): Element =
-    val Coordinates(x, y) = hex.center
-    svg.g(
-      svg.transform := s"translate($x, $y)",
-      svg.polygon(
-        svg.points := svgCornersPoints,
-        svg.cls := "hexagon",
-        svg.fill := s"url(#${tileContent.terrain.toImgId})"
-      ),
-      tileContent.terrain match
-        case Sea => ""
-        case _   => circularNumberWithRobber(tileContent.number, hasRobber, onPlaceRobber)
-    )
+  private def svgHexagonWithCrossedNumber(hex: Hexagon): InputSourceWithState[MapElement] =
+    MapComponent.svgHexagon(hex, circularNumberWithRobber(hex))
 
-  /** A svg circular number
-    * @param number,
-    *   the number to display
+  /** A svg circular number with a robber cross.
+    * @param hex
+    *   the hexagon
     * @return
+    *   the component
     */
-  private def circularNumberWithRobber(number: Option[Int], hasRobber: Boolean, onPlaceRobber: () => Unit): Element =
-    svg.g(
-      svg.circle(
-        svg.cx := "0",
-        svg.cy := "0",
-        svg.r := s"$radius",
-        svg.className := "hexagon-center-circle"
-      ),
-      svg.text(
-        svg.x := "0",
-        svg.y := "0",
-        svg.fontSize := s"$radius",
-        svg.className := "hexagon-center-number",
-        number.map(_.toString).getOrElse("")
-      ),
-      onClick --> (_ => onPlaceRobber()),
-      if hasRobber then robberCross else ""
+  private def circularNumberWithRobber(hex: Hexagon): InputSourceWithState[MapElement] =
+    MapComponent.circularNumber(
+      hex,
+      onClick --> (_ => clickHandler.onHexagonClick(hex)),
+      if robberPlacement == hex
+      then robberCross
+      else ""
     )
 
+  /** @return
+    *   the Element representing the robber's cross on the game map.
+    */
   private def robberCross: Element =
     svg.g(
       svg.className := "robber",
       svg.line(
-        svg.x1 := s"-${radius}",
-        svg.y1 := s"-${radius}",
+        svg.x1 := s"-$radius",
+        svg.y1 := s"-$radius",
         svg.x2 := s"$radius",
         svg.y2 := s"$radius"
       ),
       svg.line(
-        svg.x1 := s"-${radius}",
-        svg.y1 := s"${radius}",
+        svg.x1 := s"-$radius",
+        svg.y1 := s"$radius",
         svg.x2 := s"$radius",
         svg.y2 := s"-$radius"
       )
     )
 
-  /** Generate the road graphic
-    * @param spot1,
-    *   the first spot
-    * @param spot2,
-    *   the second spot
+  /** Create a svg road.
+    * @param road
+    *   the road
     * @return
-    *   the road graphic
+    *   the svg road
     */
-  private def svgRoad(
-      spot1: Coordinates,
-      spot2: Coordinates,
-      withPlayer: Option[String],
-      onRoadClick: () => Unit
-  ): Element =
-    val Coordinates(x1, y1) = spot1
-    val Coordinates(x2, y2) = spot2
+  private def svgRoad(road: RoadSpot): InputSourceWithState[Element] =
+    val Coordinates(x1, y1) = road._1.coordinates.get
+    val Coordinates(x2, y2) = road._2.coordinates.get
+    val player = assignmentInfoOf(road).map(_.viewPlayer)
     svg.g(
       svg.line(
-        svg.x1 := s"${x1}",
-        svg.y1 := s"${y1}",
-        svg.x2 := s"${x2}",
-        svg.y2 := s"${y2}",
-        svg.className := s"road ${withPlayer.getOrElse("")}"
+        svg.x1 := s"$x1",
+        svg.y1 := s"$y1",
+        svg.x2 := s"$x2",
+        svg.y2 := s"$y2",
+        svg.className := s"road ${player.getOrElse("")}"
       ),
-      withPlayer match
+      player match
         case Some(_) => ""
         case _ =>
           svg.circle(
@@ -199,57 +134,33 @@ object GameMapComponent:
             svg.cy := s"${y1 + (y2 - y1) / 2}",
             svg.className := "road-center",
             svg.r := s"$radius",
-            onClick --> (_ => onRoadClick())
+            onClick --> (_ => clickHandler.onRoadClick(road))
           )
     )
 
-  /** Generate the spot graphic
-    * @param x,
-    *   the x coordinate of the spot
-    * @param y,
-    *   the y coordinate of the spot
+  /** Create a svg spot for a structure.
+    * @param structure
+    *   the spot
     * @return
-    *   the spot graphic
+    *   the svg spot
     */
-  private def svgSpot(
-      coordinate: Coordinates,
-      withPlayer: Option[String],
-      withType: Option[String],
-      onSpotClick: () => Unit
-  ): Element =
-    val Coordinates(x, y) = coordinate
+  private def svgSpot(structure: StructureSpot): InputSourceWithState[Element] =
+    val Coordinates(x, y) = structure.coordinates.get
+    val player = assignmentInfoOf(structure).map(_.viewPlayer)
+    val structureType = assignmentInfoOf(structure).map(_.viewBuildingType)
     svg.g(
       svg.circle(
-        svg.cx := s"${x}",
-        svg.cy := s"${y}",
+        svg.cx := s"$x",
+        svg.cy := s"$y",
         svg.r := s"$radius",
-        svg.className := s"${withPlayer.getOrElse("spot")}",
-        onClick --> (_ => onSpotClick())
+        svg.className := s"${player.getOrElse("spot")}",
+        onClick --> (_ => clickHandler.onStructureClick(structure))
       ),
       svg.text(
-        svg.x := s"${x}",
-        svg.y := s"${y}",
+        svg.x := s"$x",
+        svg.y := s"$y",
         svg.className := "spot-text",
         svg.fontSize := s"$radius",
-        s"${withType.getOrElse("")}"
-      )
-    )
-
-  private val svgImages: Element =
-    svg.svg(
-      svg.defs(
-        for (terrain, path) <- ContextMap.resources.toList
-        yield svg.pattern(
-          svg.idAttr := terrain.toImgId,
-          svg.width := "100%",
-          svg.height := "100%",
-          svg.patternContentUnits := "objectBoundingBox",
-          svg.image(
-            svg.href := path,
-            svg.width := "1",
-            svg.height := "1",
-            svg.preserveAspectRatio := "none"
-          )
-        )
+        s"${structureType.getOrElse("")}"
       )
     )

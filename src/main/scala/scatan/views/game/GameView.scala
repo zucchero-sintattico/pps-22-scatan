@@ -4,7 +4,10 @@ import com.raquo.laminar.api.L.*
 import scatan.controllers.game.GameController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
-import scatan.views.game.components.{CardsComponent, GameMapComponent, LeftTabComponent}
+import scatan.model.game.config.ScatanPhases
+import scatan.views.game.components.*
+import scatan.views.utils.TypeUtils
+import scatan.views.viewmodel.ScatanViewModel
 
 trait GameView extends View[ApplicationState]
 
@@ -16,16 +19,21 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
     extends BaseScalaJSView[ApplicationState, GameController](container, requirements)
     with GameView:
 
-  given Signal[ApplicationState] = this.reactiveState
-  given GameController = this.controller
+  given ScatanViewModel = ScatanViewModel(this.reactiveState)
+  given GameViewClickHandler = GameViewClickHandler(this, controller)
+
   override def element: Element =
     div(
+      DevelopmentCardPopups.All,
+      EndgameComponent.endgamePopup,
       div(
         className := LeftTabComponent.leftTabCssClass,
+        LeftTabComponent.awardsComponent,
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.buttonsComponent,
         LeftTabComponent.possibleMovesComponent
       ),
       GameMapComponent.mapComponent,
+      RightTabComponent.tradeComponent,
       CardsComponent.cardsComponent
     )

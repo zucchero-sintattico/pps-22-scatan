@@ -1,5 +1,7 @@
 package scatan.model.game.config
 
+/** A player in a game of Scatan.
+  */
 trait ScatanPlayer:
   def name: String
 

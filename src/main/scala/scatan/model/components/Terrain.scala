@@ -17,4 +17,6 @@ object Listable:
 enum UnproductiveTerrain:
   case Desert, Sea
 
+/** All possible kind of terrains.
+  */
 type Terrain = ResourceType | UnproductiveTerrain

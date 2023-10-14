@@ -5,17 +5,17 @@ import scatan.Pages
 import scatan.controllers.game.SetUpController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState
+import scatan.model.map.{GameMap, GameMapFactory}
+import scatan.views.game.MapSelectionMode.*
+import scatan.views.game.components.LeftTabComponent.buttonsComponent
+import scatan.views.game.components.MapComponent
+
+enum MapSelectionMode:
+  case Default, Random, WithIterator
 
 /** This is the view for the setup page.
   */
-trait SetUpView extends View[ApplicationState]:
-  /** This method is called when the user clicks the start button.
-    */
-  def switchToGame(): Unit
-
-  /** This method is called when the user clicks the back button.
-    */
-  def switchToHome(): Unit
+trait SetUpView extends View[ApplicationState]
 
 object SetUpView:
   def apply(container: String, requirements: View.Requirements[SetUpController]): SetUpView =
@@ -32,13 +32,25 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
     extends BaseScalaJSView[ApplicationState, SetUpController](container, requirements)
     with SetUpView:
 
-  val numberOfUsers: Var[Int] = Var(3)
-  val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
+  private val numberOfUsers: Var[Int] = Var(3)
+  private val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
+
+  val mapSelectionMode: Var[MapSelectionMode] = Var(MapSelectionMode.Default)
+  val reactiveGameMap: Var[GameMap] = Var(GameMapFactory.defaultMap)
+
+  private def changeMap: Unit =
+    mapSelectionMode.now() match
+      case Default =>
+        reactiveGameMap.set(GameMapFactory.defaultMap)
+      case Random =>
+        reactiveGameMap.set(GameMapFactory.randomMap)
+      case WithIterator =>
+        reactiveGameMap.set(GameMapFactory.nextPermutation)
 
   private def validateNames(usernames: String*) =
     usernames.forall(_.matches(".*\\S.*"))
 
-  override def switchToGame(): Unit =
+  private def switchToGame(): Unit =
     val usernames =
       for i <- 1 to numberOfUsers.now()
       yield document
@@ -48,10 +60,10 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         .value
     if validateNames(usernames*) then
       println(usernames)
-      this.controller.startGame(usernames*)
+      this.controller.startGame(reactiveGameMap.now(), usernames*)
       this.navigateTo(Pages.Game)
 
-  override def switchToHome(): Unit =
+  private def switchToHome(): Unit =
     this.navigateTo(Pages.Home)
 
   override def element: Element =
@@ -104,5 +116,29 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
         cls := "setup-menu-button",
         onClick --> (_ => this.switchToHome()),
         "Back"
+      ),
+      div(
+        cls := "setup-menu-map-picker",
+        div(
+          cls := "setup-menu-map-picker-left-tab",
+          select(
+            cls := "setup-menu-map-picker-combobox",
+            onChange.mapToValue.map(v => MapSelectionMode.fromOrdinal(v.toInt)) --> mapSelectionMode,
+            for (mode <- MapSelectionMode.values)
+              yield option(
+                value := s"${mode.ordinal}",
+                mode.toString
+              )
+          ),
+          button(
+            cls := "setup-menu-map-picker-button",
+            "Change Map",
+            onClick --> (_ => changeMap)
+          )
+        ),
+        div(
+          cls := "setup-menu-map",
+          child <-- reactiveGameMap.signal.map(gameMap => MapComponent.map(using gameMap))
+        )
       )
     )

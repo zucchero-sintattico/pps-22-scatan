@@ -2,9 +2,17 @@ package scatan.lib.mvc.page
 
 import scatan.lib.mvc.{Controller, Model, ScalaJSView, View}
 
+/** A factory for creating pages.
+  * @tparam C
+  *   The controller type.
+  * @tparam V
+  *   The view type.
+  * @tparam S
+  *   The state type.
+  */
 trait PageFactory[C <: Controller[?], V <: View[?], S <: Model.State]:
-  val viewFactory: View.Factory[C, V]
-  val controllerFactory: Controller.Factory[V, C, S]
+  def viewFactory: View.Factory[C, V]
+  def controllerFactory: Controller.Factory[V, C, S]
 
 object PageFactory:
   def apply[C <: Controller[S], V <: View[S], S <: Model.State](
