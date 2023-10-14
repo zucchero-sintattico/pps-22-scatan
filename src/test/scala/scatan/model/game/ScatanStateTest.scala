@@ -1,6 +1,6 @@
 package scatan.model.game
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 import scatan.model.components.{AssignmentInfo, Awards, DevelopmentCards, ResourceCards}
 import scatan.model.game.state.ScatanState
 import scatan.model.map.Spot

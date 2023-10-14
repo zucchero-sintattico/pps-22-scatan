@@ -1,7 +1,7 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState

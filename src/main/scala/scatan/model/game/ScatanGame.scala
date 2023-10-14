@@ -4,7 +4,7 @@ import scatan.lib.game.ops.Effect
 import scatan.lib.game.ops.GamePlayOps.{allowedActions, play}
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Turn}
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 import scatan.model.components.ResourceType.{Rock, Sheep, Wheat}
 import scatan.model.components.{DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.ScatanEffects.*

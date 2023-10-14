@@ -1,7 +1,7 @@
 package scatan.lib.game
 
 import scatan.BaseTest
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 class GameTest extends BaseTest:
 

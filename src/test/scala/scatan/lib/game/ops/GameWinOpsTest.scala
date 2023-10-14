@@ -3,7 +3,7 @@ package scatan.lib.game.ops
 import scatan.BaseTest
 import scatan.lib.game.ops.GameWinOps.*
 import scatan.lib.game.{EmptyDomain, Game}
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 class GameWinOpsTest extends BaseTest:
 

@@ -1,6 +1,6 @@
 package scatan.model.game.state
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 import scatan.model.components.*
 import scatan.model.components.UnproductiveTerrain.Desert
 import scatan.model.game.DevelopmentCardsDeck

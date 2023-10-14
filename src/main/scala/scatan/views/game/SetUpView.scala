@@ -4,7 +4,8 @@ import org.scalajs.dom.document
 import scatan.Pages
 import scatan.controllers.game.SetUpController
 import scatan.lib.mvc.{BaseScalaJSView, View}
-import scatan.model.{ApplicationState, GameMap, GameMapFactory}
+import scatan.model.ApplicationState
+import scatan.model.map.{GameMap, GameMapFactory}
 import scatan.views.game.MapSelectionMode.*
 import scatan.views.game.components.LeftTabComponent.buttonsComponent
 import scatan.views.game.components.MapComponent

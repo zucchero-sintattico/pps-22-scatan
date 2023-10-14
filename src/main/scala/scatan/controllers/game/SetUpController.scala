@@ -1,7 +1,8 @@
 package scatan.controllers.game
 
 import scatan.lib.mvc.{Controller, EmptyController}
-import scatan.model.{ApplicationState, GameMap}
+import scatan.model.ApplicationState
+import scatan.model.map.GameMap
 import scatan.views.game.SetUpView
 
 /** The controller for the game setup screen.

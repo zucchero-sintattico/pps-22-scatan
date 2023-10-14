@@ -4,7 +4,7 @@ import scatan.BaseTest
 import scatan.lib.game.EmptyDomain.Actions.NextTurn
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.{EmptyDomain, Game, GameStatus}
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 class GameTurnOpsTest extends BaseTest:
 

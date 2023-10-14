@@ -1,7 +1,7 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 import scatan.model.components.UnproductiveTerrain
 import scatan.model.map.{Hexagon, TileContent}
 import scatan.views.utils.Coordinates

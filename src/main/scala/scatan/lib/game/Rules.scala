@@ -1,6 +1,6 @@
 package scatan.lib.game
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 /** Rules of a game.
   * @param startingStateFactory

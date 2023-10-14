@@ -4,7 +4,7 @@ import scatan.BaseTest
 import scatan.lib.game.EmptyDomain.Actions.{NotPlayableAction, StartGame}
 import scatan.lib.game.ops.GamePlayOps.{canPlay, play}
 import scatan.lib.game.{EmptyDomain, Game}
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 class GamePlayOpsTest extends BaseTest:
 

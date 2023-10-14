@@ -1,6 +1,6 @@
 package scatan.lib.game.dsl
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 private object GameDSLDomain:
 

@@ -1,6 +1,6 @@
 package scatan.lib.game
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 /** A game status is a pair of phase and step.
   * @param phase

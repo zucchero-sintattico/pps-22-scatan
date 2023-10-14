@@ -12,6 +12,10 @@ object StealCardPopup:
 
   def show(): Unit = toBeShown.writer.onNext(true)
 
+  /** Displays a popup for selecting the user to steal a card from.
+    * @return
+    *   the element.
+    */
   def userSelectionPopup(): DisplayableSource[Element] =
     val options: Signal[Seq[ScatanPlayer]] = gameViewModel.playersOnRobberExceptCurrent
     div(

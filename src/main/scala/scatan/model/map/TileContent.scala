@@ -15,16 +15,22 @@ trait MapWithTileContent:
     */
   def toContent: Map[Hexagon, TileContent]
 
+/** A configuration to generate the content of the tiles.
+  */
 trait TileContentConfig:
   def numbers: Seq[Int]
   def terrains: Seq[Terrain]
 
+/** A strategy to generate the content of the tiles.
+  */
 type TileContentStrategy = Seq[Hexagon] => Map[Hexagon, TileContent]
 
-/** A factory to create terrains.
+/** A factory to create strategies to generate the content of the tiles.
   */
 object TileContentStrategyFactory:
 
+  /** Configuration for the layer 2 of the map.
+    */
   object ConfigForLayer2 extends TileContentConfig:
     val terrains: List[Terrain] = List(
       1 * Desert,
@@ -52,11 +58,21 @@ object TileContentStrategyFactory:
         .from(tiles.zip(tileContents))
         .withDefaultValue(TileContent(Sea, None))
 
+  /** A strategy that generates a fixed content for the layer 2 of the map.
+    *
+    * @return
+    *   the strategy.
+    */
   def fixedForLayer2: TileContentStrategy =
     import ConfigForLayer2.*
     given TileContentConfig = ConfigForLayer2
     fromConfig
 
+  /** A strategy that generates a random content for the layer 2 of the map.
+    *
+    * @return
+    *   the strategy.
+    */
   def randomForLayer2: TileContentStrategy =
     import ConfigForLayer2.*
 
@@ -80,6 +96,11 @@ object TileContentStrategyFactory:
         pr <- permutations(r)
       yield e :: pr
 
+  /** A strategy that generates all the possible permutations of the content for the layer 2 of the map.
+    *
+    * @return
+    *   the LazyList of strategies.
+    */
   def permutationForLayer2: LazyList[TileContentStrategy] =
     import ConfigForLayer2.*
     for
