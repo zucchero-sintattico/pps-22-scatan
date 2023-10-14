@@ -4,9 +4,9 @@ import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardsOps.*
+import scatan.model.game.state.ops.AwardOps.*
 
-/** Operations on the game state related to scoring.
+/** Operations on [[ScatanState]] related to the scores.
   */
 object ScoreOps:
   extension (state: ScatanState)

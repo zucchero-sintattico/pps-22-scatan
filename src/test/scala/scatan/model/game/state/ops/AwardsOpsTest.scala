@@ -3,10 +3,10 @@ package scatan.model.game.state.ops
 import scatan.model.components.*
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardsOps.*
+import scatan.model.game.state.ops.AwardOps.*
 import scatan.model.game.state.ops.BuildingOps.assignBuilding
 import scatan.model.game.state.ops.DevelopmentCardOps.assignDevelopmentCard
-import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpots, emptyStructureSpots}
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
 
 class AwardsOpsTest extends BaseScatanStateTest:
 

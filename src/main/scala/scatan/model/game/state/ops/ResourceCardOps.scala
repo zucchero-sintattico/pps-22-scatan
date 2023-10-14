@@ -5,13 +5,15 @@ import scatan.model.components.DevelopmentType.Knight
 import scatan.model.components.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardsOps.*
+import scatan.model.game.state.ops.AwardOps.*
 import scatan.model.game.state.ops.BuildingOps.build
 import scatan.model.game.state.ops.RobberOps.moveRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 import scala.util.Random
 
+/** Operations on [[ScatanState]] related to resource cards.
+  */
 object ResourceCardOps:
 
   extension (state: ScatanState)

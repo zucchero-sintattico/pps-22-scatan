@@ -6,7 +6,7 @@ import scatan.model.game.state.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
-/** Operations on the robber.
+/** Operations on [[ScatanState]] related to robber's actions.
   */
 object RobberOps:
   extension (state: ScatanState)

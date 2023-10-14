@@ -4,7 +4,7 @@ import scatan.model.components.{BuildingType, ResourceCard, ResourceCards, Resou
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.state.ScatanState
 import scatan.model.game.state.ops.BuildingOps.assignBuilding
-import scatan.model.game.state.ops.EmptySpotsOps.emptyStructureSpots
+import scatan.model.game.state.ops.EmptySpotOps.emptyStructureSpots
 import scatan.model.game.state.ops.ResourceCardOps.*
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}

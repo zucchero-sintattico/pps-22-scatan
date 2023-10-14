@@ -4,9 +4,9 @@ import scatan.model.game.state.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
-/** Contains operations on the empty spots of the game map.
+/** Operations on [[ScatanState]] related to empty spots.
   */
-object EmptySpotsOps:
+object EmptySpotOps:
 
   extension (state: ScatanState)
 

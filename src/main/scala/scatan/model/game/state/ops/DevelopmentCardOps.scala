@@ -5,12 +5,14 @@ import scatan.model.components.DevelopmentType.*
 import scatan.model.components.{DevelopmentCard, DevelopmentType, ResourceCard, ResourceType}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardsOps.awards
+import scatan.model.game.state.ops.AwardOps.awards
 import scatan.model.game.state.ops.BuildingOps.build
 import scatan.model.game.state.ops.ResourceCardOps.{assignResourceCard, removeResourceCard}
 import scatan.model.game.state.ops.RobberOps.moveRobber
 import scatan.model.map.{Hexagon, RoadSpot}
 
+/** Operations on [[ScatanState]] related to development cards actions.
+  */
 object DevelopmentCardOps:
 
   extension (state: ScatanState)

@@ -3,10 +3,12 @@ package scatan.model.game.state.ops
 import scatan.model.components.{AssignedBuildings, AssignmentInfo, BuildingType, Cost}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
-import scatan.model.game.state.ops.AwardsOps.*
-import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpots, emptyStructureSpots}
+import scatan.model.game.state.ops.AwardOps.*
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
+/** Operations on [[ScatanState]] related to buildings actions.
+  */
 object BuildingOps:
 
   extension (state: ScatanState)

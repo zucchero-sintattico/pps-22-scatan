@@ -5,7 +5,7 @@ import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.game.state.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.state.ops.EmptySpotsOps.{emptyRoadSpots, emptyStructureSpots}
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
 import scatan.model.game.state.ops.ResourceCardOps.assignResourceCard
 import scatan.model.map.{RoadSpot, StructureSpot}
 
