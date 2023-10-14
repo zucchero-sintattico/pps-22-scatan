@@ -8,7 +8,7 @@ import scatan.model.game.state.ops.BuildingOps.assignBuilding
 import scatan.model.game.state.ops.DevelopmentCardOps.assignDevelopmentCard
 import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
 
-class AwardsOpsTest extends BaseScatanStateTest:
+class AwardOpsTest extends BaseScatanStateTest:
 
   "A State with Awards Ops" should "have awards initially not assigned" in {
     val state = ScatanState(threePlayers)

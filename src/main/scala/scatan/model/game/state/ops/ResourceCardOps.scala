@@ -1,8 +1,8 @@
 package scatan.model.game.state.ops
 
+import scatan.model.components.*
 import scatan.model.components.BuildingType.Road
 import scatan.model.components.DevelopmentType.Knight
-import scatan.model.components.*
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.game.state.ops.AwardOps.*
