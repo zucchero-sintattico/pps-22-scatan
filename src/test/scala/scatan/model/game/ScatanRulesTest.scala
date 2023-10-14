@@ -3,9 +3,9 @@ package scatan.model.game
 import org.scalatest.matchers.should.Matchers.shouldBe
 import scatan.BaseTest
 import scatan.lib.game.GameStatus
-import scatan.model.map.GameMap
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
 import scatan.model.game.state.ScatanState
+import scatan.model.map.GameMap
 
 class ScatanRulesTest extends BaseTest:
 

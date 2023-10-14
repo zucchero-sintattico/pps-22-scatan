@@ -1,17 +1,15 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.map.GameMap
-import scatan.model.components.UnproductiveTerrain
-import scatan.model.map.{Hexagon, TileContent}
+import com.raquo.laminar.nodes.ReactiveSvgElement
+import org.scalajs.dom
+import org.scalajs.dom.SVGGElement
+import scatan.model.components.ResourceType.*
+import scatan.model.components.{Terrain, UnproductiveTerrain}
+import scatan.model.components.UnproductiveTerrain.*
+import scatan.model.map.{GameMap, Hexagon, TileContent}
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.center
-import com.raquo.laminar.nodes.ReactiveSvgElement
-import org.scalajs.dom.SVGGElement
-import org.scalajs.dom
-import scatan.model.components.Terrain
-import scatan.model.components.ResourceType.*
-import scatan.model.components.UnproductiveTerrain.*
 
 /** A component to display the map of hexagons.
   */

@@ -1,15 +1,14 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.model.map.GameMap
 import scatan.model.components.{AssignmentInfo, BuildingType, Terrain}
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.map.*
+import scatan.views.game.components.MapComponent.{MapElement, radius, given}
 import scatan.views.utils.Coordinates
 import scatan.views.utils.Coordinates.*
 import scatan.views.utils.TypeUtils.*
-import scatan.views.game.components.MapComponent.{MapElement, radius, given}
 
 /** A component to display the game map.
   */
