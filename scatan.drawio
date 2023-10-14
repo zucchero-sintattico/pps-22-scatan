@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-14T16:40:03.872Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="yToZF0WZxW8Rcvn8A-bH" version="22.0.4" type="github" pages="4">
+<mxfile host="app.diagrams.net" modified="2023-10-14T17:26:18.815Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="-2k3efEhq8gdooQ9vnfz" version="22.0.4" type="github" pages="5">
   <diagram name="Dominio" id="EaUs6lZDblV2mKkzr74O">
     <mxGraphModel dx="1474" dy="1987" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -994,6 +994,113 @@
         </mxCell>
         <mxCell id="ZV3VIBHRZtLFV-E3plnx-67" value="ops" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="570" y="520" width="30" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="dnWZP5BZR4yDslOUg9m6" name="StateOps">
+    <mxGraphModel dx="1130" dy="675" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;Interface&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ field1: Type&lt;br/&gt;+ field2: Type&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ method1(Type): Type&lt;br/&gt;+ method2(Type, Type): Type&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;case class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;ScatanState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ players: Seq[ScatanPlayer],&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ gameMap: GameMap,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ assignedBuildings: AssignedBuildings,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ assignedAwards: Awards,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ resourceCards: ResourceCards,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ developmentCards: DevelopmentCards,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ developmentCardsDeck: DevelopmentCardsDeck,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ robberPlacement: Hexagon&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="320" y="340" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-3" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="115" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-3" value="«object»&lt;br&gt;&lt;b&gt;AwardOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="80" y="610" width="70" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-4" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-4" value="«object»&lt;br&gt;&lt;b&gt;BuildingOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="160" y="610" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-5" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-5" value="«object»&lt;br&gt;&lt;b&gt;DevelopmentCardOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="260" y="610" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-6" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="580" />
+              <mxPoint x="470" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-6" value="«object»&lt;br&gt;&lt;b&gt;EmptySpotOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="410" y="610" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-7" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-7" value="«object»&lt;br&gt;&lt;b&gt;ResourceCardOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="530" y="610" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-8" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-8" value="«object»&lt;br&gt;&lt;b&gt;RobberOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="650" y="610" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-9" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-9" value="«object»&lt;br&gt;&lt;b&gt;TradeOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="740" y="610" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="jNugAi-4Lvdc9vm-LQEg-10" target="jNugAi-4Lvdc9vm-LQEg-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="865" y="570" />
+              <mxPoint x="470" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-29" value="extends" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="jNugAi-4Lvdc9vm-LQEg-19">
+          <mxGeometry x="0.8377" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jNugAi-4Lvdc9vm-LQEg-10" value="«object»&lt;br&gt;&lt;b&gt;ScoreOps&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="830" y="610" width="70" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
