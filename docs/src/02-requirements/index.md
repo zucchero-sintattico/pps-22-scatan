@@ -2,17 +2,15 @@
 
 ## Business
 
-- Creazione di un applicativo che permetta di giocare a Coloni di Catan
-  implementando le regole ufficiali del gioco da tavolo.
-- Il gioco deve essere implementato in modo da poter essere giocato in 3 o 4
-  giocatori, in modalità hot-seat.
+- Creazione di un applicativo che permetta di giocare a Coloni di Catan implementando parte delle regole ufficiali del gioco da tavolo.
+- Il gioco deve essere implementato in modo da poter essere giocato in 3 o 4 giocatori, in modalità hot-seat.
 
 ## Modello di dominio
 
-Per la realizzazione del dominio, è stato preso come riferimento il gioco da tavolo originale, con le sue regole ufficiali.
+Per la realizzazione del dominio, è stato preso come riferimento il gioco da tavolo originale, con parte le sue regole ufficiali.
 Di seguito sarà riportata una descrizione più dettagliata del nostro dominio applicativo.
 
-![Modello di dominio](../img/scatan-dominio.jpg)
+![Modello di dominio](../img/02-requirements/scatan-dominio.jpg)
 
 ## Funzionali
 
@@ -24,12 +22,12 @@ Di seguito sarà riportata una descrizione più dettagliata del nostro dominio a
 - L'utente deve poter vedere il campo di gioco una volta iniziata la partita.
 - L'utente deve poter gestire il posizionamento iniziale delle colonie e delle strade, seguendo le regole del gioco.
 - L'utente deve ricevere le risorse iniziali in base al posizionamento delle colonie.
-- L'utente deve poter vedere le carte che possiede in mano.
+- L'utente deve poter vedere le carte risorsa che possiede in mano.
 - L'utente deve poter vedere le carte sviluppo posizionate e/o giocate.
 - L'utente deve poter effettuare il suo turno sapendo in quale fase si trova.
 - L'utente deve poter lanciare i dadi per raccogliere le risorse.
 - L'utente deve poter effettuare scambi con gli altri giocatori.
-- L'utente deve poter effettuare scambi con la banca, utilizzando il giusto tasso di cambio in base ai porti posseduti.
+- L'utente deve poter effettuare scambi con la banca.
 - L'utente deve poter costruire strade, colonie e città con le risorse possedute e i vincoli del gioco.
 - L'utente deve poter acquistare le carte sviluppo.
 - L'utente deve poter giocare le carte sviluppo.
@@ -71,10 +69,9 @@ Di seguito sarà riportata una descrizione più dettagliata del nostro dominio a
 Utilizzo di:
 
 - Scala 3.3.0
-- ScalaTest 3.3.0
+- ScalaTest 3.3.x
 - JDK 17+
-- ScalaJS 1.13.2
-- TuProlog 4.x
+- ScalaJS 1.13.x
 
 ## Requisiti Opzionali:
 

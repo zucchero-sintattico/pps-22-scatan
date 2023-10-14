@@ -8,8 +8,9 @@ La qualità del progetto è favorita dall'esperienza del team di sviluppo, guida
 
 Nella fase iniziale del processo, sono stati definiti i seguenti ruoli:
 
-- L'_esperto di dominio_: Alessandro Mazzoli, responsabile della qualità e usabilità del prodotto.
-- Il _product owner_: Manuel Andruccioli, responsabile di supervisionare l'andamento del progetto e del coordinamento del team di sviluppo.
+- L'_esperto di dominio_: Alessandro Mazzoli, responsabile della qualità e usabilità del prodotto e sviluppatore.
+- Il _product owner_: Manuel Andruccioli, responsabile di supervisionare l'andamento del progetto e del coordinamento del team di sviluppo e sviluppatore.
+- _Sviluppatore_: Luigi Borriello.
 
 ## Meeting
 
@@ -119,15 +120,15 @@ Il processo di sviluppo con TDD prevede tre passaggi principali:
 
 3. **Refactoring**: dopo aver fatto passare il test, sarà possibile apportare eventuali miglioramenti al codice, refattorizzandolo per renderlo più pulito e meglio comprensibile. È importante che il test continui a passare anche dopo il refactoring.
 
-### Test coverage
-
-Per la misurazione della _code coverage_ nei test, è stato deciso di utilizzare [Scoverage](https://github.com/scoverage/sbt-scoverage), un plugin che permette di misurare la percentuale di codice coperto dai test.
-
 ## Building
 
 Come build tool è stato scelto _Sbt_, che gestisce le opportune dipendenze del progetto.
 
 Inoltre, facilita l'esecuzione dei test, la generazione della documentazione, compilazione e report del test coverage.
+
+### Code Quality
+
+Per garantire la qualità del codice, è stato deciso di utilizzare _Scalafmt_, che è uno strumento che permette di formattare automaticamente il codice sorgente in modo da renderlo più leggibile e coerente.
 
 ### CI/CD
 
@@ -139,7 +140,10 @@ In particolare, sono stati definiti i seguenti _workflow_:
   - [Il progetto](https://zucchero-sintattico.github.io/pps-22-scatan/)
   - [La documentazione](https://zucchero-sintattico.github.io/pps-22-scatan/docs/)
   - [Scaladoc](https://zucchero-sintattico.github.io/pps-22-scatan/scaladoc/)
-  - [Test coverage](https://zucchero-sintattico.github.io/pps-22-scatan/test-coverage/)
+  - Releases
+    - [v0.1.0](https://zucchero-sintattico.github.io/pps-22-scatan/releases/v0.1.0/)
+    - [v0.2.0](https://zucchero-sintattico.github.io/pps-22-scatan/releases/v0.2.0/)
+    - [v1.0.1](https://zucchero-sintattico.github.io/pps-22-scatan/releases/v1.0.1/)
 - **Test & Format**: vengono eseguiti i test e il controllo del formato del codice
 
 Questo strumento, in caso di fallimento, notifica via mail il membro del gruppo che ha iniziato l'esecuzione del workflow, in modo da poter intervenire tempestivamente qualora si verifichi un errore.
