@@ -109,10 +109,26 @@ object BuildingOps:
           else None
         case _ => None
 
+    /** The default rules for building a settlement.
+      * @param spot
+      *   the spot where to build
+      * @param player
+      *   the player that want to build
+      * @return
+      *   true if the player can build a settlement on the spot, false otherwise
+      */
     private def defaultRulesForSettlementBuilding(spot: StructureSpot, player: ScatanPlayer): Boolean =
       state.emptyStructureSpots.contains(spot)
         && state.gameMap.neighboursOf(spot).flatMap(state.assignedBuildings.get).isEmpty
 
+    /** The default rules for building a road.
+      * @param spot
+      *   the spot where to build
+      * @param player
+      *   the player that want to build
+      * @return
+      *   true if the player can build a road on the spot, false otherwise
+      */
     private def defaultRulesForRoadBuilding(spot: RoadSpot, player: ScatanPlayer): Boolean =
       val structureSpot1 = spot._1
       val structureSpot2 = spot._2

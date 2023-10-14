@@ -38,7 +38,7 @@ private class ScalaJsSetUpView(container: String, requirements: View.Requirement
   val mapSelectionMode: Var[MapSelectionMode] = Var(MapSelectionMode.Default)
   val reactiveGameMap: Var[GameMap] = Var(GameMapFactory.defaultMap)
 
-  def changeMap: Unit =
+  private def changeMap: Unit =
     mapSelectionMode.now() match
       case Default =>
         reactiveGameMap.set(GameMapFactory.defaultMap)

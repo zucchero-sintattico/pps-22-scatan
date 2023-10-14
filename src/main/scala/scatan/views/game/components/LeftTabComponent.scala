@@ -55,6 +55,10 @@ object LeftTabComponent:
       )
     )
 
+  /** Displays the buttons to perform actions.
+    * @return
+    *   the component
+    */
   def buttonsComponent: DisplayableSource[Element] =
     div(
       div(

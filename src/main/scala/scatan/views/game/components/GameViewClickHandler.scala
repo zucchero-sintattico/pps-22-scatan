@@ -14,17 +14,64 @@ import scatan.views.game.GameView
 import scatan.views.game.components.CardContextMap.CardType
 
 trait GameViewClickHandler:
+  /** Handles a click on a road spot.
+    * @param roadSpot
+    *   the road spot that was clicked
+    */
   def onRoadClick(roadSpot: RoadSpot): Unit
+
+  /** Handles a click on a structure spot.
+    * @param roadSpot
+    *   the structure spot that was clicked
+    */
   def onStructureClick(structureSpot: StructureSpot): Unit
+
+  /** Handles a click on an hexagon.
+    * @param roadSpot
+    *   the hexagon that was clicked
+    */
   def onHexagonClick(hexagon: Hexagon): Unit
 
+  /** Handles a click on the roll dice button.
+    */
   def onRollDiceClick(): Unit
+
+  /** Handles a click on the buy development card button.
+    */
   def onBuyDevelopmentCardClick(): Unit
+
+  /** Handles a click on the end turn button.
+    */
   def onEndTurnClick(): Unit
+
+  /** Handles a click on the steal card button.
+    * @param player
+    *   the player to steal a card from
+    */
   def onStealCardClick(player: ScatanPlayer): Unit
 
+  /** Handles a click on a card.
+    * @param cardType
+    *   the card that was clicked
+    */
   def onCardClick(cardType: CardType): Unit
+
+  /** Handles a click on the trade with bank button.
+    * @param offer
+    *   the resource type to offer
+    * @param request
+    *   the resource type to request
+    */
   def onTradeWithBank(offer: ResourceType, request: ResourceType): Unit
+
+  /** Handles a click on the trade with player button.
+    * @param receiver
+    *   the player to trade with
+    * @param offer
+    *   the resource type to offer
+    * @param request
+    *   the resource type to request
+    */
   def onTradeWithPlayer(
       receiver: ScatanPlayer,
       offer: Map[ResourceType, Int],

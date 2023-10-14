@@ -14,6 +14,8 @@ type Cost = Map[ResourceType, Int]
 object Cost:
   def apply(resourceCosts: ResourceCost*): Cost = resourceCosts.toMap
 
+/** A building type and its cost.
+  */
 enum BuildingType(val cost: Cost):
   case Settlement
       extends BuildingType(

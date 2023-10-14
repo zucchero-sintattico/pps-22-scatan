@@ -3,6 +3,7 @@ package scatan.views.utils
 import scatan.model.map.{Hexagon, StructureSpot}
 
 /** @param value
+  *   the value of the double to wrap.
   */
 final case class DoubleWithPrecision(value: Double):
   override def equals(x: Any): Boolean =
