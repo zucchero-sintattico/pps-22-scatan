@@ -1,11 +1,13 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.*
-import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.DevelopmentCardOps.assignDevelopmentCard
-import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
-import scatan.model.game.ops.ScoreOps.*
-import scatan.model.game.{BaseScatanStateTest, ScatanState}
+import scatan.model.game.BaseScatanStateTest
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.BuildingOps.assignBuilding
+import scatan.model.game.state.ops.DevelopmentCardOps.assignDevelopmentCard
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
+import scatan.model.game.state.ops.ResourceCardOps.*
+import scatan.model.game.state.ops.ScoreOps.*
 
 class ScoreOpsTest extends BaseScatanStateTest:
 
@@ -17,7 +19,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
   it should "increment score to one if assign a settlement" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptyStructureSpot.iterator
+    val it = state.emptyStructureSpots.iterator
     val stateWithSettlement = state.assignBuilding(it.next(), BuildingType.Settlement, player1)
     stateWithSettlement match
       case Some(state) =>
@@ -28,7 +30,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
   it should "increment score to two if assign a city" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptyStructureSpot.iterator
+    val it = state.emptyStructureSpots.iterator
     val spotToBuild = it.next()
     val stateWithSettlement = state.assignBuilding(spotToBuild, BuildingType.Settlement, player1)
     stateWithSettlement match
@@ -44,7 +46,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
   it should "not increment score if assign a road" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptyRoadSpot.iterator
+    val it = state.emptyRoadSpots.iterator
     val stateWithRoad = state.assignRoadWithoutRule(it.next(), player1)
     stateWithRoad match
       case Some(state) =>
@@ -65,10 +67,10 @@ class ScoreOpsTest extends BaseScatanStateTest:
   it should "increment score if assign an award a building and a victory point" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val roadSpotIterator = state.emptyRoadSpot.iterator
+    val roadSpotIterator = state.emptyRoadSpots.iterator
     val stateWithSettlementAndAward =
       for
-        stateWithSettlement <- state.assignBuilding(state.emptyStructureSpot.head, BuildingType.Settlement, player1)
+        stateWithSettlement <- state.assignBuilding(state.emptyStructureSpots.head, BuildingType.Settlement, player1)
         oneRoadState <- stateWithSettlement.assignRoadWithoutRule(roadSpotIterator.next, player1)
         twoRoadState <- oneRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
         threeRoadState <- twoRoadState.assignRoadWithoutRule(roadSpotIterator.next, player1)
@@ -88,7 +90,7 @@ class ScoreOpsTest extends BaseScatanStateTest:
   it should "recognize if there is a winner" in {
     val state = ScatanState(threePlayers)
     val player1 = threePlayers.head
-    val it = state.emptyStructureSpot.iterator
+    val it = state.emptyStructureSpots.iterator
     val stateWithAWinner = for
       oneSettlementState <- state.assignSettlmentWithoutRule(it.next, player1)
       twoSettlementState <- oneSettlementState.assignSettlmentWithoutRule(it.next, player1)

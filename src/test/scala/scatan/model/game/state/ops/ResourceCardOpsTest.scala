@@ -1,10 +1,11 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.{BuildingType, ResourceCard, ResourceCards, ResourceType}
-import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.EmptySpotOps.emptyStructureSpot
-import scatan.model.game.ops.ResourceCardOps.*
-import scatan.model.game.{BaseScatanStateTest, ScatanState}
+import scatan.model.game.BaseScatanStateTest
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.BuildingOps.assignBuilding
+import scatan.model.game.state.ops.EmptySpotOps.emptyStructureSpots
+import scatan.model.game.state.ops.ResourceCardOps.*
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 import scatan.utils.UnorderedTriple
@@ -76,7 +77,7 @@ class ResourceCardOpsTest extends BaseScatanStateTest:
   it should "assign a resource card to the player who has a settlement on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
-    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
+    val spotWhereToBuild = state.emptyStructureSpots.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = for
       stateWithSettlement <- state.assignBuilding(spotWhereToBuild, BuildingType.Settlement, state.players.head)
       stateAfterRollDice <- stateWithSettlement.tryEveryRollDices()
@@ -92,7 +93,7 @@ class ResourceCardOpsTest extends BaseScatanStateTest:
   it should "assign two resource cards to the player who has a city on a spot having that resource terrain" in {
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Sheep).head._1
-    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).head
+    val spotWhereToBuild = state.emptyStructureSpots.filter(_.contains(hexagonWithSheep)).head
     val stateWithResources = for
       stateWithSettlement <- state.assignBuilding(spotWhereToBuild, BuildingType.Settlement, state.players.head)
       stateWithCity <- stateWithSettlement.assignBuilding(spotWhereToBuild, BuildingType.City, state.players.head)
@@ -109,7 +110,7 @@ class ResourceCardOpsTest extends BaseScatanStateTest:
   it should "assign only the resource card corresponding to the last building placed after initial phase" in {
     val state = ScatanState(threePlayers)
     val hexagonWithSheep = state.gameMap.toContent.filter(_._2.terrain == ResourceType.Brick).head._1
-    val spotWhereToBuild = state.emptyStructureSpot.filter(_.contains(hexagonWithSheep)).iterator
+    val spotWhereToBuild = state.emptyStructureSpots.filter(_.contains(hexagonWithSheep)).iterator
     // simulate initial placement
     val stateWithBuildings = state
       .assignSettlmentWithoutRule(spotWhereToBuild.next(), state.players.head)

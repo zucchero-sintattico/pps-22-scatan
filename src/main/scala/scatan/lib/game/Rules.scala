@@ -1,6 +1,6 @@
 package scatan.lib.game
 
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 /** Rules of a game.
   * @param startingStateFactory
@@ -70,23 +70,3 @@ final case class Rules[State, P, S, A, Player](
       (status, action) -> step
     }
   }
-
-object Rules:
-  def empty[State, P, S, A, Player]: Rules[State, P, S, A, Player] =
-    fromStateFactory((_, _) => null.asInstanceOf[State])
-
-  def fromStateFactory[State, P, S, A, Player](
-      initialStateFactory: (GameMap, Seq[Player]) => State
-  ): Rules[State, P, S, A, Player] =
-    Rules[State, P, S, A, Player](
-      startingStateFactory = initialStateFactory,
-      startingPhase = null.asInstanceOf[P],
-      actions = Map.empty,
-      allowedPlayersSizes = Set.empty,
-      startingSteps = Map.empty,
-      phaseTurnIteratorFactories = Map.empty,
-      nextPhase = Map.empty,
-      endingSteps = Map.empty,
-      winnerFunction = (_: State) => None,
-      initialAction = Map.empty
-    )

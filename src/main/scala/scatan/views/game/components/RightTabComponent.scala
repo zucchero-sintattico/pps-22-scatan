@@ -1,16 +1,16 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
-import scatan.model.ApplicationState
 import scatan.model.components.ResourceType
 import scatan.model.game.ScatanGame
 import scatan.model.game.config.ScatanActions
+import scatan.model.game.config.ScatanActions.TradeWithBank
 import scatan.views.utils.TypeUtils.*
+import scatan.views.viewmodel.ops.ViewModelActionsOps.isActionEnabled
 
 object RightTabComponent:
 
-  private def resourceTypefromName(name: String): ResourceType =
+  private def resourceTypeFromName(name: String): ResourceType =
     name match
       case "Wood"  => ResourceType.Wood
       case "Brick" => ResourceType.Brick
@@ -31,11 +31,8 @@ object RightTabComponent:
       h2("Trade:"),
       tradePlayerComponent,
       tradeBankComponent,
-      visibility <-- areTradeEnabled.map(if _ then "visible" else "hidden")
+      visibility <-- gameViewModel.isActionEnabled(TradeWithBank).map(if _ then "visible" else "hidden")
     )
-
-  private def areTradeEnabled: Displayable[Signal[Boolean]] =
-    reactiveState.map(_.game.map(_.allowedActions.contains(ScatanActions.TradeWithBank)).getOrElse(false))
 
   private def tradePlayerComponent: DisplayableSource[Element] =
     div(
@@ -47,11 +44,7 @@ object RightTabComponent:
       ),
       div(
         className := "game-view-players",
-        child <-- reactiveState
-          .map(state =>
-            (for game <- state.game
-            yield getPlayersList(game)).getOrElse(div("No game"))
-          )
+        child <-- gameViewModel.state.map(getPlayersList)
       )
     )
 
@@ -66,7 +59,7 @@ object RightTabComponent:
         button(
           className := "trade-bank-button",
           onClick --> (_ =>
-            gameController.onTradeWithBank(
+            clickHandler.onTradeWithBank(
               bankTradeOffer.now(),
               bankTradeRequest.now()
             )
@@ -80,8 +73,8 @@ object RightTabComponent:
     div(
       className := "game-view-resource-type-choice",
       select(
-        onChange.mapToValue.map(resourceTypefromName(_)) --> changing,
         className := "game-view-resource-type-choice-select",
+        onChange.mapToValue.map(resourceTypeFromName) --> changing,
         // for each type of resource add an option
         for resource <- ResourceType.values
         yield option(resource.toString, value := resource.toString)
@@ -97,7 +90,7 @@ object RightTabComponent:
         button(
           className := "trade-player-button",
           onClick --> (_ =>
-            gameController.onTradeWithPlayer(
+            clickHandler.onTradeWithPlayer(
               player,
               playerTradeOffer.now(),
               playerTradeRequest.now()

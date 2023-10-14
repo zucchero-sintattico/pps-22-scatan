@@ -3,7 +3,8 @@ package scatan.views.game.components
 import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import scatan.model.game.config.ScatanPlayer
-import scatan.views.utils.TypeUtils.{DisplayableSource, gameController, reactiveState}
+import scatan.views.utils.TypeUtils.{DisplayableSource, clickHandler, gameViewModel}
+import scatan.views.viewmodel.ops.ViewModelPlayersOps.playersOnRobberExceptCurrent
 
 object StealCardPopup:
 
@@ -11,13 +12,12 @@ object StealCardPopup:
 
   def show(): Unit = toBeShown.writer.onNext(true)
 
+  /** Displays a popup for selecting the user to steal a card from.
+    * @return
+    *   the element.
+    */
   def userSelectionPopup(): DisplayableSource[Element] =
-    val options: Signal[Seq[ScatanPlayer]] = reactiveState.map(_.game match
-      case Some(game) =>
-        game.playersOnRobber
-          .filter(_ != game.turn.player)
-      case None => Nil
-    )
+    val options: Signal[Seq[ScatanPlayer]] = gameViewModel.playersOnRobberExceptCurrent
     div(
       display <-- toBeShown.signal.map(if _ then "block" else "none"),
       cls := "popup",
@@ -26,7 +26,7 @@ object StealCardPopup:
           player.name,
           onClick --> { _ =>
             // Close the popup, you can implement your own logic here
-            gameController.stealCard(player)
+            clickHandler.onStealCardClick(player)
             toBeShown.writer.onNext(false)
           }
         )

@@ -2,6 +2,7 @@ package scatan.model
 
 import scatan.BaseTest
 import scatan.lib.game.Game
+import scatan.model.map.GameMap
 
 class ApplicationStateTest extends BaseTest:
 

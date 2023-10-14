@@ -3,13 +3,16 @@ package scatan.model.game
 import scatan.model.components.DevelopmentType.*
 import scatan.model.components.{DevelopmentCard, DevelopmentType}
 
+import scala.annotation.targetName
 import scala.util.Random
 
 extension (int: Int)
+  @targetName("timesDevelopmentType")
   def *(developmentType: DevelopmentType): DevelopmentCardsDeck =
     Seq.fill(int)(DevelopmentCard(developmentType))
 
 type DevelopmentCardsDeck = Seq[DevelopmentCard]
+
 object DevelopmentCardsDeck:
 
   def defaultOrdered: DevelopmentCardsDeck =
@@ -19,5 +22,6 @@ object DevelopmentCardsDeck:
       2 * YearOfPlenty ++
       2 * Monopoly
 
-  def shuffled: DevelopmentCardsDeck =
-    Random.shuffle(defaultOrdered)
+  def shuffled(seed: Int = 1): DevelopmentCardsDeck =
+    val random = Random(seed)
+    defaultOrdered.sortBy(_ => random.nextDouble())

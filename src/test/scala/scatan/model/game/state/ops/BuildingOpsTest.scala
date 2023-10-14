@@ -1,23 +1,24 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.*
+import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.BuildingOps.{assignBuilding, build}
-import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
-import scatan.model.game.ops.ResourceCardOps.assignResourceCard
-import scatan.model.game.{BaseScatanStateTest, ScatanState}
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.BuildingOps.{assignBuilding, build}
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
+import scatan.model.game.state.ops.ResourceCardOps.assignResourceCard
 import scatan.model.map.{RoadSpot, StructureSpot}
 
 class BuildingOpsTest extends BaseScatanStateTest:
 
   private def spotToBuildStructure(state: ScatanState): StructureSpot =
-    state.emptyStructureSpot.head
+    state.emptyStructureSpots.head
 
   private def spotToBuildRoad(state: ScatanState): RoadSpot =
-    state.emptyRoadSpot.head
+    state.emptyRoadSpots.head
 
   private def roadNearSpot(state: ScatanState, spot: StructureSpot): RoadSpot =
-    state.emptyRoadSpot.filter(_.contains(spot)).head
+    state.emptyRoadSpots.filter(_.contains(spot)).head
 
   "A State with buildings Ops" should "have empty buildings when state start" in {
     val state = ScatanState(threePlayers)
@@ -182,7 +183,7 @@ class BuildingOpsTest extends BaseScatanStateTest:
   it should "not allow to assign a building if another is near" in {
     val state = ScatanState(threePlayers)
     val spot = spotToBuildStructure(state)
-    val anotherSpot = (state.gameMap.neighboursOf(spot) & state.emptyStructureSpot.toSet).head
+    val anotherSpot = (state.gameMap.neighboursOf(spot) & state.emptyStructureSpots.toSet).head
     val stateAssigned =
       state
         .assignBuilding(anotherSpot, BuildingType.Settlement, threePlayers.head)

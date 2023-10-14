@@ -5,11 +5,14 @@ import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.ops.GameTurnOps.nextTurn
 import scatan.lib.game.ops.GameWinOps.{isOver, winner}
 import scatan.lib.game.{Game, GameStatus, Rules}
+import scatan.model.game.ScatanDSL
 import scatan.model.game.ScatanEffects.{AssignRoadEffect, AssignSettlementEffect, NextTurnEffect}
 import scatan.model.game.config.ScatanActions.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptyStructureSpot}
-import scatan.model.game.{ScatanDSL, ScatanState}
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptyStructureSpots}
+
+import scatan.model.map.GameMap
 
 class GameTest extends BaseTest:
 
@@ -75,11 +78,11 @@ class GameTest extends BaseTest:
 
   def nextTurn(game: ScatanGame): Option[ScatanGame] =
     for
-      structureSpot <- game.state.emptyStructureSpot.headOption
+      structureSpot <- game.state.emptyStructureSpots.headOption
       gameAfterBuildSettlement <- game.play(AssignSettlement)(using
         AssignSettlementEffect(game.turn.player, structureSpot)
       )
-      roadSpot <- gameAfterBuildSettlement.state.emptyRoadSpot.headOption
+      roadSpot <- gameAfterBuildSettlement.state.emptyRoadSpots.headOption
       gameAfterBuildRoad <- gameAfterBuildSettlement.play(AssignRoad)(using
         AssignRoadEffect(gameAfterBuildSettlement.turn.player, roadSpot)
       )

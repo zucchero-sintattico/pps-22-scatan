@@ -1,9 +1,11 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
-import scatan.model.game.ScatanState
+import scatan.model.game.state.ScatanState
 import scatan.model.map.HexagonInMap.layer
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
+/** Operations on [[ScatanState]] related to empty spots.
+  */
 object EmptySpotOps:
 
   extension (state: ScatanState)
@@ -22,7 +24,7 @@ object EmptySpotOps:
       * @return
       *   the empty structure spots of the game map
       */
-    def emptyStructureSpot: Seq[StructureSpot] =
+    def emptyStructureSpots: Seq[StructureSpot] =
       state.gameMap.nodes
         .filter(!state.assignedBuildings.isDefinedAt(_))
         .filter(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers))
@@ -32,7 +34,7 @@ object EmptySpotOps:
       * @return
       *   the empty road spots of the game map
       */
-    def emptyRoadSpot: Seq[RoadSpot] =
+    def emptyRoadSpots: Seq[RoadSpot] =
       state.gameMap.edges
         .filter(!state.assignedBuildings.isDefinedAt(_))
         .filter(_.toSet.forall(_.toSet.exists(_.layer <= state.gameMap.withTerrainLayers)))

@@ -1,8 +1,8 @@
-package scatan.model
+package scatan.model.map
 
+import scatan.model.components.Terrain
 import scatan.model.map.*
 import scatan.model.map.HexagonInMap.*
-import scatan.model.components.Terrain
 
 /** Hexagonal tiled game map of Scatan.
   *
@@ -11,18 +11,21 @@ import scatan.model.components.Terrain
   *
   * @param withSeaLayers
   *   number of concentric circles of hexagons the terrain ones.
+  *
+  * @param tileContentStrategy
+  *   strategy to generate the content of the tiles
   */
 final case class GameMap(
     withTerrainLayers: Int = 2,
     withSeaLayers: Int = 1,
-    tileContentsStrategy: TileContentStrategy = TileContentStrategyFactory.fixedForLayer2
+    tileContentStrategy: TileContentStrategy = TileContentStrategyFactory.fixedForLayer2
 ) extends HexagonalTiledMap(withTerrainLayers + withSeaLayers)
     with MapWithTileContent:
 
   val totalLayers = withTerrainLayers + withSeaLayers
   val tileWithTerrain = tiles.toSeq.filter(_.layer <= withTerrainLayers)
 
-  override val toContent: Map[Hexagon, TileContent] = tileContentsStrategy(tileWithTerrain)
+  override val toContent: Map[Hexagon, TileContent] = tileContentStrategy(tileWithTerrain)
 
   override def equals(x: Any): Boolean =
     x match
@@ -32,14 +35,26 @@ final case class GameMap(
         (this.toContent.toSet & that.toContent.toSet).sizeIs == this.toContent.size
       case _ => false
 
+/** A factory to create game maps.
+  */
 object GameMapFactory:
 
+  /** @return
+    *   a fixed game map for layer 2
+    */
   def defaultMap: GameMap =
-    GameMap(tileContentsStrategy = TileContentStrategyFactory.fixedForLayer2)
+    GameMap(tileContentStrategy = TileContentStrategyFactory.fixedForLayer2)
 
+  /** @return
+    *   a random game map for layer 2
+    */
   def randomMap: GameMap =
-    GameMap(tileContentsStrategy = TileContentStrategyFactory.randomForLayer2)
+    GameMap(tileContentStrategy = TileContentStrategyFactory.randomForLayer2)
 
-  val strategies: Iterator[TileContentStrategy] = TileContentStrategyFactory.permutationForLayer2.toIterator
+  private val strategies: Iterator[TileContentStrategy] = TileContentStrategyFactory.permutationForLayer2.toIterator
+
+  /** @return
+    *   the next permutation of the game map for layer 2
+    */
   def nextPermutation: GameMap =
-    GameMap(tileContentsStrategy = strategies.next())
+    GameMap(tileContentStrategy = strategies.next())

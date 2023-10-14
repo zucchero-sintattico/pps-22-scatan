@@ -1,63 +1,64 @@
 package scatan.views.game.components
 
 import com.raquo.laminar.api.L.*
-import scatan.controllers.game.GameController
-import scatan.lib.mvc.ScalaJSView
-import scatan.model.ApplicationState
-import scatan.model.components.{Award, AwardType}
-import scatan.model.game.ScatanState
+import scatan.model.components.Award
 import scatan.model.game.config.ScatanActions
-import scatan.model.game.ops.AwardOps.awards
-import scatan.model.game.ops.ScoreOps.scores
-import scatan.views.game.GameView
-import scatan.views.utils.TypeUtils.{Displayable, DisplayableSource, gameController, reactiveState}
+import scatan.views.utils.TypeUtils.*
+import scatan.views.viewmodel.ops.ViewModelActionsOps.*
+import scatan.views.viewmodel.ops.ViewModelCurrentStatusOps.*
+import scatan.views.viewmodel.ops.ViewModelPlayersOps.*
 
 object LeftTabComponent:
 
-  extension (action: ScatanActions) def toViewAction: String = action.toString
-
   def leftTabCssClass: String = "game-view-left-tab"
 
+  /** Displays the current player, their score, and the current phase and step of the game.
+    * @return
+    *   the component
+    */
   def currentPlayerComponent: Displayable[Element] =
     div(
       h2(
         className := "game-view-player",
-        child.text <-- reactiveState
-          .map("Current Player: " + _.game.map(_.turn.player.name).getOrElse("No player"))
+        child.text <-- gameViewModel.currentPlayer.map("Current Player: " + _.name)
       ),
       h2(
         className := "game-view-player-score",
-        child.text <-- reactiveState
-          .map("Score: " + _.game.map(game => game.state.scores(game.turn.player)).getOrElse("No score"))
+        child.text <-- gameViewModel.currentPlayerScore.map("Score: " + _)
       ),
       h2(
         className := "game-view-phase",
-        child.text <-- reactiveState
-          .map("Phase: " + _.game.map(_.gameStatus.phase.toString).getOrElse("No phase"))
+        child.text <-- gameViewModel.currentPhase.map("Phase: " + _)
       ),
       h2(
         className := "game-view-step",
-        child.text <-- reactiveState
-          .map("Step: " + _.game.map(_.gameStatus.step.toString).getOrElse("No step"))
+        child.text <-- gameViewModel.currentStep.map("Step: " + _)
       )
     )
 
+  extension (scatanAction: ScatanActions)
+    private def toDisplayable: String =
+      scatanAction.toString.split("(?=[A-Z])").map(_.capitalize).mkString(" ")
+
+  /** Displays all the actions the current player can take.
+    * @return
+    *   the component
+    */
   def possibleMovesComponent: Displayable[Element] =
     div(
       className := "game-view-moves",
       "Possible moves:",
       ul(
-        children <-- reactiveState
-          .map(state =>
-            for move <- state.game.map(_.allowedActions.toSeq).getOrElse(Seq.empty)
-            yield li(cls := "game-view-move", move.toViewAction)
-          )
+        children <-- gameViewModel.allowedActions.split(_.ordinal) { (_, action, _) =>
+          li(cls := "game-view-move", action.toDisplayable)
+        }
       )
     )
 
-  def isActionDisabled(action: ScatanActions): Displayable[Signal[Boolean]] =
-    reactiveState.map(_.game.exists(!_.allowedActions.contains(action)))
-
+  /** Displays the buttons to perform actions.
+    * @return
+    *   the component
+    */
   def buttonsComponent: DisplayableSource[Element] =
     div(
       div(
@@ -65,63 +66,54 @@ object LeftTabComponent:
         button(
           className := "game-view-button roll-dice-button",
           "Roll dice",
-          onClick --> { _ => gameController.rollDice() },
-          disabled <-- isActionDisabled(ScatanActions.RollDice)
+          disabled <-- gameViewModel.isActionDisabled(ScatanActions.RollDice),
+          onClick --> { _ => clickHandler.onRollDiceClick() }
         ),
         button(
           className := "game-view-button buy-development-card-button",
           "Buy Dev. Card",
-          onClick --> { _ => gameController.buyDevelopmentCard() },
-          disabled <-- isActionDisabled(ScatanActions.BuyDevelopmentCard)
+          onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
+          disabled <-- gameViewModel.canBuyDevelopment
         ),
         button(
           className := "game-view-button end-turn-button",
           "End Turn",
-          onClick --> { _ => gameController.nextTurn() },
-          disabled <-- isActionDisabled(ScatanActions.NextTurn)
+          disabled <-- gameViewModel.isActionDisabled(ScatanActions.NextTurn),
+          onClick --> { _ => clickHandler.onEndTurnClick() }
         )
       ),
       div(
-        StealCardPopup.userSelectionPopup(),
         className := "game-view-buttons",
+        StealCardPopup.userSelectionPopup(),
         button(
           className := "game-view-button steal-card-button",
           "Steal Card",
           onClick --> { _ => StealCardPopup.show() },
-          disabled <-- isActionDisabled(ScatanActions.StealCard)
+          disabled <-- gameViewModel.isActionDisabled(ScatanActions.StealCard)
         )
       )
     )
 
+  /** Displays the awards that have been given out so far, if any.
+    * @return
+    *   the component
+    */
   def awardsComponent: DisplayableSource[Element] =
     div(
       className := "awards",
       h2("Current awards"),
-      child <-- reactiveState
-        .map(state =>
-          (for
-            game <- state.game
-            gameState = game.state
-          yield getCurrentAwards(gameState))
-            .getOrElse(div("No game"))
-        )
-    )
-  private def getCurrentAwards(state: ScatanState): Element =
-    div(
-      ul(
-        li(
-          "Longest road: ",
-          state
-            .awards(Award(AwardType.LongestRoad))
-            .map(award => s"${award._1.name} (${award._2} roads)")
-            .getOrElse("Nobody yet")
-        ),
-        li(
-          "Largest army: ",
-          state
-            .awards(Award(AwardType.LargestArmy))
-            .map(award => s"${award._1.name} (${award._2} cards)")
-            .getOrElse("Nobody yet")
+      div(
+        ul(
+          children <-- gameViewModel.currentAwards.map(_.toSeq).split(_._1) { (award, opt, _) =>
+            li(
+              award.toDisplayable,
+              opt._2.map((player, score) => s" ($player: $score)").getOrElse("Nobody Yet")
+            )
+          }
         )
       )
     )
+
+  extension (award: Award)
+    private def toDisplayable: String =
+      award.awardType.toString.split("(?=[A-Z])").map(_.capitalize).mkString(" ")

@@ -3,8 +3,9 @@ package scatan.model.game
 import scatan.BaseTest
 import scatan.model.components.BuildingType
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.BuildingOps.assignBuilding
-import scatan.model.game.ops.EmptySpotOps.{emptyRoadSpot, emptySpots}
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.BuildingOps.assignBuilding
+import scatan.model.game.state.ops.EmptySpotOps.{emptyRoadSpots, emptySpots}
 import scatan.model.map.{RoadSpot, Spot, StructureSpot}
 
 abstract class BaseScatanStateTest extends BaseTest:
@@ -16,7 +17,7 @@ abstract class BaseScatanStateTest extends BaseTest:
   protected def noConstrainToBuildSettlment: ScatanState => ((StructureSpot, ScatanPlayer) => Boolean) = _ =>
     (_, _) => true
   protected def spotShouldBeEmptyToBuildRoad: ScatanState => ((RoadSpot, ScatanPlayer) => Boolean) = s =>
-    (r, _) => s.emptyRoadSpot.contains(r)
+    (r, _) => s.emptyRoadSpots.contains(r)
 
   // Avoid heavy check on spot type
   extension (state: ScatanState)

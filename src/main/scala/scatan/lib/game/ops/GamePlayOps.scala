@@ -58,5 +58,7 @@ object GamePlayOps:
         else newGame
 
   extension (bool: Boolean)
-    def option: Option[Unit] =
+    /** Convert a boolean to an option, returning Some(()) if true, None if false
+      */
+    private def option: Option[Unit] =
       if bool then Some(()) else None

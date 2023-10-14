@@ -2,8 +2,6 @@ package scatan.model.map
 
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
-import scatan.model.GameMap
-import scatan.model.GameMapFactory
 
 class GameMapFactoryTest extends BaseTest with ScalaCheckPropertyChecks:
 

@@ -7,16 +7,11 @@ import scatan.model.components.DevelopmentType.*
 import scatan.model.components.ResourceType.*
 import scatan.model.game.*
 import scatan.model.game.config.*
-import scatan.views.game.components.CardContextMap.{CardType, cardImages, countCardOf}
+import scatan.views.game.components.CardContextMap.{CardType, cardImages}
 import scatan.views.utils.TypeUtils.*
+import scatan.views.viewmodel.ops.ViewModelPlayersOps.cardCountOfCurrentPlayer
 
 object CardContextMap:
-  extension (state: ScatanState)
-    def countCardOf(player: ScatanPlayer)(cardType: CardType): Int = cardType match
-      case resourceType: ResourceType =>
-        state.resourceCards(player).count(_.resourceType == resourceType)
-      case developmentType: DevelopmentType =>
-        state.developmentCards(player).count(_.developmentType == developmentType)
 
   type CardType = ResourceType | DevelopmentType
 
@@ -34,6 +29,11 @@ object CardContextMap:
   )
 
 object CardsComponent:
+
+  /** Display the cards of the current player.
+    * @return
+    *   the component
+    */
   def cardsComponent: DisplayableSource[Element] =
     div(
       cls := "game-view-card-container",
@@ -41,27 +41,33 @@ object CardsComponent:
       cardCountComponent(cardImages.collect { case (k: DevelopmentType, v) => (k, v) })
     )
 
+  /** Display the given cards with the given images paths.
+    * @param cards
+    *   the cards to display with their images paths
+    * @return
+    *   the component
+    */
   private def cardCountComponent(cards: Map[CardType, String]): DisplayableSource[Element] =
     div(
       cls := "game-view-child-container",
       for (cardType, path) <- cards.toList
       yield div(
         cls := "game-view-card-item",
-        onClick --> (_ => gameController.clickCard(cardType)),
+        onClick --> { _ => clickHandler.onCardClick(cardType) },
         div(
           cls := "game-view-card-count",
-          child.text <-- reactiveState.map(state =>
-            (for
-              game <- state.game
-              currentPlayer = game.turn.player
-              resourceCount = game.state.countCardOf(currentPlayer)(cardType)
-            yield resourceCount).getOrElse(0)
-          )
+          child.text <-- gameViewModel.cardCountOfCurrentPlayer(cardType).map(_.toString)
         ),
         cardImageBy(path)
       )
     )
 
+  /** Display the card image with the given path.
+    * @param path
+    *   the path of the image
+    * @return
+    *   the component
+    */
   private def cardImageBy(path: String): Element =
     img(
       cls := "game-view-card",

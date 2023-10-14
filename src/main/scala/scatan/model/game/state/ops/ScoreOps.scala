@@ -1,11 +1,13 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.AwardOps.*
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.AwardOps.*
 
+/** Operations on [[ScatanState]] related to the scores.
+  */
 object ScoreOps:
   extension (state: ScatanState)
 

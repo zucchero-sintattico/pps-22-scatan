@@ -2,7 +2,7 @@ package scatan.lib.game.dsl.ops
 
 import scatan.lib.game.dsl.GameDSLDomain.*
 import scatan.lib.game.dsl.PropertiesDSL.*
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 object GameCtxOps:
 

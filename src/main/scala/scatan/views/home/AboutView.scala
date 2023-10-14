@@ -1,7 +1,6 @@
 package scatan.views.home
 
 import com.raquo.laminar.api.L.*
-import scatan.Pages
 import scatan.controllers.home.AboutController
 import scatan.lib.mvc.{BaseScalaJSView, View}
 import scatan.model.ApplicationState

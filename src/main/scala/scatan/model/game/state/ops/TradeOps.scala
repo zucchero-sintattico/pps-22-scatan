@@ -1,14 +1,30 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.{ResourceCard, ResourceType}
-import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
-import scatan.model.game.ops.ResourceCardOps.{assignResourceCard, removeResourceCard}
-import scatan.views.game.components.ContextMap.resources
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.ResourceCardOps.{assignResourceCard, removeResourceCard}
 
+/** Operations on [[ScatanState]] related to trades.
+  */
 object TradeOps:
   val tradeWithBankRequiredCards = 4
   extension (state: ScatanState)
+
+    /** Trade with a player. The sender must have the senderCards and the receiver must have the receiverCards The
+      * sender will give the senderCards to the receiver and vice versa
+      *
+      * @param sender
+      *   the player that will trade with the receiver
+      * @param receiver
+      *   the player that will trade with the sender
+      * @param senderCards
+      *   the cards that the sender will give to the receiver
+      * @param receiverCards
+      *   the cards that the receiver will give to the sender
+      * @return
+      *   Some(state) if the trade is allowed, None otherwise
+      */
     def tradeWithPlayer(
         sender: ScatanPlayer,
         receiver: ScatanPlayer,

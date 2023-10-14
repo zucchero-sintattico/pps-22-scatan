@@ -1,15 +1,17 @@
 package scatan.model.game
 
 import scatan.lib.game.Rules
+import scatan.lib.game.dsl.GameDSL.*
 import scatan.model.game.config.{ScatanActions, ScatanPhases, ScatanPlayer, ScatanSteps}
-import scatan.model.game.ops.ResourceCardOps.assignResourcesAfterInitialPlacement
-import scatan.model.game.ops.ScoreOps.winner
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.ResourceCardOps.assignResourcesAfterInitialPlacement
+import scatan.model.game.state.ops.ScoreOps.winner
 
 import scala.language.postfixOps
 
+/** Scatan game rules
+  */
 object ScatanDSL:
-
-  import scatan.lib.game.dsl.GameDSL.*
 
   private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
 
@@ -73,5 +75,4 @@ object ScatanDSL:
 
   }
 
-  def rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] =
-    game.rules
+  def rules: Rules[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] = game.rules

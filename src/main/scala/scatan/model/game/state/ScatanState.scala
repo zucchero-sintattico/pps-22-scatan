@@ -1,14 +1,10 @@
-package scatan.model.game
+package scatan.model.game.state
 
-import scatan.model.GameMap
 import scatan.model.components.*
-import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.components.DevelopmentType.Knight
 import scatan.model.components.UnproductiveTerrain.Desert
+import scatan.model.game.DevelopmentCardsDeck
 import scatan.model.game.config.ScatanPlayer
 import scatan.model.map.*
-
-import scala.collection.mutable.ListMap
 
 /** Represents the state of a Scatan game.
   *
@@ -43,6 +39,7 @@ object ScatanState:
   /** Creates a new ScatanState with the specified players.
     *
     * @param players
+    *   The players in the game.
     * @return
     *   a new ScatanState with the specified players
     */

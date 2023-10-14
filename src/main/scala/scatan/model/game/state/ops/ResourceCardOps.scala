@@ -1,12 +1,19 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
-import scatan.model.components.{AssignedBuildings, BuildingType, ResourceCard, ResourceType}
-import scatan.model.game.ScatanState
+import scatan.model.components.*
+import scatan.model.components.BuildingType.Road
+import scatan.model.components.DevelopmentType.Knight
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.state.ScatanState
+import scatan.model.game.state.ops.AwardOps.*
+import scatan.model.game.state.ops.BuildingOps.build
+import scatan.model.game.state.ops.RobberOps.moveRobber
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot, TileContent}
 
 import scala.util.Random
 
+/** Operations on [[ScatanState]] related to resource cards.
+  */
 object ResourceCardOps:
 
   extension (state: ScatanState)
@@ -55,7 +62,9 @@ object ResourceCardOps:
     /** Removes a resource card from a player.
       *
       * @param player
+      *   the player to remove the resource card from
       * @param resourceCard
+      *   the resource card to remove
       * @return
       *   Some(ScatanState) if the resource card was removed, None otherwise
       */

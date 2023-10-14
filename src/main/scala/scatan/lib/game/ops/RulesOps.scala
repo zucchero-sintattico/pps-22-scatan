@@ -1,7 +1,7 @@
 package scatan.lib.game.ops
 
 import scatan.lib.game.{GameStatus, Rules}
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 /** Operations on [[Rules]] related to their construction.
   */

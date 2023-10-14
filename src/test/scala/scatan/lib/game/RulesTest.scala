@@ -1,7 +1,7 @@
 package scatan.lib.game
 
 import scatan.BaseTest
-import scatan.model.GameMap
+import scatan.model.map.GameMap
 
 class RulesTest extends BaseTest:
 
@@ -14,12 +14,8 @@ class RulesTest extends BaseTest:
     Rules
   }
 
-  it should "have a empty ruleset" in {
-    Rules.empty
-  }
-
-  it should "be validateble" in {
-    Rules.empty.valid shouldBe false
+  it should "be validatable" in {
+    emptyGameRules.valid shouldBe true
   }
 
   it should "have an initial state factory" in {

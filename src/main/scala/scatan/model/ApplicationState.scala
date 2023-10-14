@@ -3,6 +3,7 @@ package scatan.model
 import scatan.lib.mvc.Model
 import scatan.model.game.ScatanGame
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.map.GameMap
 
 final case class ApplicationState(game: Option[ScatanGame]) extends Model.State:
   def createGame(gameMap: GameMap, usernames: String*): ApplicationState =

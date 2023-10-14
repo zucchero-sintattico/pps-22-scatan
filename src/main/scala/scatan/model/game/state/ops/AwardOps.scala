@@ -1,11 +1,16 @@
-package scatan.model.game.ops
+package scatan.model.game.state.ops
 
 import scatan.model.components.*
 import scatan.model.components.AssignedBuildingsAdapter.asPlayerMap
-import scatan.model.game.ScatanState
 import scatan.model.game.config.ScatanPlayer
+import scatan.model.game.state.ScatanState
 
+/** Operations on [[ScatanState]] related to the awards.
+  */
 object AwardOps:
+
+  private val minimumRoadLengthForAward = 5
+  private val minimumKnightsForAward = 3
 
   extension (state: ScatanState)
     /** Returns a map of the current awards and their respective players. The awards are Longest Road and Largest Army.
@@ -32,8 +37,10 @@ object AwardOps:
             else playerWithLargestArmy
         )
       Map(
-        Award(AwardType.LongestRoad) -> (if longestRoad._2 >= 5 then Some((longestRoad._1, longestRoad._2))
+        Award(AwardType.LongestRoad) -> (if longestRoad._2 >= minimumRoadLengthForAward then
+                                           Some((longestRoad._1, longestRoad._2))
                                          else precedentLongestRoad),
-        Award(AwardType.LargestArmy) -> (if largestArmy._2 >= 3 then Some((largestArmy._1, largestArmy._2))
+        Award(AwardType.LargestArmy) -> (if largestArmy._2 >= minimumKnightsForAward then
+                                           Some((largestArmy._1, largestArmy._2))
                                          else precedentLargestArmy)
       )
