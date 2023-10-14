@@ -71,7 +71,7 @@ In the game, each participant takes on the role of a settler trying to establish
 - Scala 3
 - Scala.js
 - SBT
-- Scoverage
+- Laminar
 - ScalaTest
 
 <!-- GETTING STARTED -->
