@@ -1,1 +1,2 @@
 # Installazione
+Il nostro software non necessita di alcuna installazione in quanto, essendo deployato come applicazione web, è accessibile da qualsiasi browser, tramite il seguente [link](https://zucchero-sintattico.github.io/pps-22-scatan/).
