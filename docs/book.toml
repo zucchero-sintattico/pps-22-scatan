@@ -4,3 +4,6 @@ authors = ["Manuel Andruccioli, Alessandro Mazzoli, Luigi Borriello"]
 language = "it"
 multilingual = true
 src = "src"
+
+[output.html]
+mathjax-support = true
