@@ -16,11 +16,37 @@ Il codice è organizzato in 5 package principali:
   - `game` contentente le classi che implementano un engine di gioco generico, che può essere utilizzato per implementare giochi basati su fasi, step e azioni.
     All'interno di questo package troviamo anche il `dsl` che permette di definire un gioco in modo dichiarativo.
 
+<!--************ MAZZOLI *****************-->
+
 ## Architettura
 
-### MVC
+### Model
 
-## Dsl
+### Controller
+
+### View
+
+#### ViewModel
+
+### Application
+
+<!--************ MAZZOLI *****************-->
+
+## Game Engine
+
+### Game
+
+### Rules
+
+<!--************ MAZZOLI *****************-->
+
+## DSL
+
+### PropertiesDSL
+
+### GameDSL
+
+<!--************* ---- ****************-->
 
 ## Model
 
