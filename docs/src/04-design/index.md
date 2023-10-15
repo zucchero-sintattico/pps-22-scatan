@@ -24,17 +24,27 @@ Il codice è organizzato in 5 package principali:
 
 ### Controller
 
+![Architettura Controller](../img/04-design/mvc/mvc-controller.jpg)
+
 ### View
+
+![Architettura View](../img/04-design/mvc/mvc-view.jpg)
 
 #### ViewModel
 
 ### Application
+
+![Architettura Application](../img/04-design/mvc/mvc-app.jpg)
 
 <!--************ MAZZOLI *****************-->
 
 ## Game Engine
 
 ### Game
+
+![Game](../img/04-design/game/core-game.jpg)
+
+![Game](../img/04-design/game/game-ops.jpg)
 
 ### Rules
 
@@ -44,7 +54,25 @@ Il codice è organizzato in 5 package principali:
 
 ### PropertiesDSL
 
+![PropertiesDSL](../img/04-design/dsl/properties-dsl.jpg)
+
 ### GameDSL
+
+![GameDSL Dominio](../img/04-design/dsl/game-dsl-domain.jpg)
+
+![GameDSL](../img/04-design/dsl/game-dsl.jpg)
+
+<!--************ MAZZOLI *****************-->
+
+## ScatanGame
+
+### Dominio
+
+![GameDSL](../img/04-design/game/scatan-game-domain.jpg)
+
+![GameDSL](../img/04-design/game/scatan-game.jpg)
+
+### ScatanDSL
 
 <!--************* ---- ****************-->
 
