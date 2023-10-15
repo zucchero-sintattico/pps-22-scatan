@@ -8,17 +8,12 @@ import org.scalajs.dom
   *   The type of the state of the view.
   */
 trait ScalaJSView[State <: Model.State](
-    val container: String, // The id of the container element
-    val initialState: State // The initial state of the view
+    val container: String // The id of the container element
 ) extends View[State]:
-
-  private val _reactiveState = Var[State](initialState)
-  override def updateState(state: State): Unit =
-    _reactiveState.writer.onNext(state)
 
   /** A signal that emits the current state of the application.
     */
-  def reactiveState: Signal[State] = _reactiveState.signal
+  def reactiveState: Signal[State]
 
   /** The element that is rendered by this view.
     */
@@ -54,7 +49,14 @@ abstract class BaseScalaJSView[State <: Model.State, C <: Controller[State]](
     container: String,
     requirements: View.Requirements[C]
 ) extends BaseView[State, C](requirements)
-    with ScalaJSView[State](
-      container,
-      requirements.controller.state
-    )
+    with ScalaJSView[State](container):
+
+  private val _reactiveState = Var[State](controller.state)
+
+  override def updateState(state: State): Unit =
+    super.updateState(state)
+    _reactiveState.writer.onNext(state)
+
+  /** A signal that emits the current state of the application.
+    */
+  def reactiveState: Signal[State] = _reactiveState.signal
