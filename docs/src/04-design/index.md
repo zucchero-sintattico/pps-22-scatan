@@ -149,6 +149,23 @@ Perciò è possibile definire delle `TileContentStrategy` che permette di modifi
 
 ## View
 
-### Components
+La View, come precedentemente introdotto, permette all'utente di visualizzare lo stato dell'applicazione in modo reattivo, e consentire l'interazione con il sistema.
+È possibile notare una differente complessità tra le varie schermate dell'applicazione: la schermata di gioco è la più complessa, in quanto deve mostrare lo stato attuale di avanzamente della partita, e consentire le varie interazione permesse, mentre le altre contengono un minor numero di elementi, in quanto devono solo consentire all'utente di proseguire e/o navigare all'interno dell'applicazione.
+
+A fronte di ciò, è stato scelto di utilizzare un approccio a componenti per la realizzazione schermate più dense di elementi, mentre per le altre è stato scelto un approccio più semplice, basato su un unico elemento.
+
+Inoltre, l'approccio a componenti, permette il riutilizzo del codice in sezioni diverse dell'applicazione.
+
+### Context Map e Anti Corruption Layer
+
+L'obiettivo della view di mostrare lo stato del model in modo reattivo contempla la necessità di tradurre le informazioni contenute nel model in elementi grafici, significativi per l'utente.
+
+Il più delle volte, la traduzione è diretta mentre, in alcuni casi, è necessario effettuare delle trasformazioni di contesto, per rendere più significative le informazioni.
+
+Per ovviare a questo problema è stato introdotto il concetto di `Context Map`, luogo che permette di tradurre le informazioni del model in elementi grafici, wrappando il model stesso.
+
+Questo meccanismo funge anche da `Anti Corruption Layer`, in quanto permette di rimuovere la dipendenza diretta tra model e alcune parti della view, risultando l'unico punto dove sono richieste modifiche in caso di cambiamenti nel model.
+
+![Context Map](../img/04-design/view/context-map.jpg)
 
 ### ViewModel
