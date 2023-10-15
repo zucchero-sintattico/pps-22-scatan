@@ -11,7 +11,7 @@ object TradeOps:
   val tradeWithBankRequiredCards = 4
   extension (state: ScatanState)
 
-    /** Trade with a player. The sender must have the senderCards and the receiver must have the receiverCards The
+    /** Trade between two players. The sender must have the senderCards and the receiver must have the receiverCards The
       * sender will give the senderCards to the receiver and vice versa
       *
       * @param sender
@@ -25,7 +25,7 @@ object TradeOps:
       * @return
       *   Some(state) if the trade is allowed, None otherwise
       */
-    def tradeWithPlayer(
+    def tradeBetweenPlayers(
         sender: ScatanPlayer,
         receiver: ScatanPlayer,
         senderCards: Seq[ResourceCard],

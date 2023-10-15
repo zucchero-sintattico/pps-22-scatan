@@ -4,7 +4,7 @@ import scatan.model.components.*
 import scatan.model.game.BaseScatanStateTest
 import scatan.model.game.state.ScatanState
 import scatan.model.game.state.ops.ResourceCardOps.assignResourceCard
-import scatan.model.game.state.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
+import scatan.model.game.state.ops.TradeOps.{tradeWithBank, tradeBetweenPlayers}
 
 class TradeOpsTest extends BaseScatanStateTest:
 
@@ -19,7 +19,7 @@ class TradeOpsTest extends BaseScatanStateTest:
     stateWithResourceAssigned match
       case Some(stateWithResourceAssigned) =>
         val stateWithTrade =
-          stateWithResourceAssigned.tradeWithPlayer(
+          stateWithResourceAssigned.tradeBetweenPlayers(
             sender,
             receiver,
             Seq(ResourceCard(ResourceType.Wood), ResourceCard(ResourceType.Wood)),
@@ -49,7 +49,12 @@ class TradeOpsTest extends BaseScatanStateTest:
         state.resourceCards(sender) should be(Seq(ResourceCard(ResourceType.Wood)))
         state.resourceCards(receiver) should be(Seq(ResourceCard(ResourceType.Brick)))
         val stateWithTrade =
-          state.tradeWithPlayer(sender, receiver, Seq(ResourceCard(ResourceType.Brick)), state.resourceCards(receiver))
+          state.tradeBetweenPlayers(
+            sender,
+            receiver,
+            Seq(ResourceCard(ResourceType.Brick)),
+            state.resourceCards(receiver)
+          )
         stateWithTrade should be(None)
       case None => fail("Resources not assigned")
   }
@@ -66,7 +71,7 @@ class TradeOpsTest extends BaseScatanStateTest:
     stateWithResourceAssigned match
       case Some(state) =>
         val stateWithTrade =
-          state.tradeWithPlayer(
+          state.tradeBetweenPlayers(
             sender,
             receiver,
             Seq(ResourceCard(ResourceType.Wood)),

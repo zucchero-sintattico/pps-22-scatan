@@ -15,6 +15,8 @@ import scatan.model.map.{Hexagon, RoadSpot}
   */
 object DevelopmentCardOps:
 
+  type DevelopmentCardEffect = ScatanState => Option[ScatanState]
+
   extension (state: ScatanState)
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
       * added to the player's list of development cards. The assigned awards are updated.
@@ -115,7 +117,7 @@ object DevelopmentCardOps:
         player: ScatanPlayer,
         developmentType: DevelopmentType,
         turnNumber: Int
-    )(effect: ScatanState => Option[ScatanState]): Option[ScatanState] =
+    )(effect: DevelopmentCardEffect): Option[ScatanState] =
       val stateWithCardConsumed = for
         developmentCards <- state.developmentCards.get(player)
         card <- developmentCards.find(card =>
