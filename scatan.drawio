@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-15T09:32:19.468Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="4f95XX-rLYkP11IPQT1D" version="22.0.4" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2023-10-15T09:47:36.287Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="GY6Q1kVeEsetxOB_4rfI" version="22.0.4" type="github" pages="9">
   <diagram name="Dominio" id="EaUs6lZDblV2mKkzr74O">
     <mxGraphModel dx="1196" dy="1962" grid="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
@@ -1312,7 +1312,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="GLKENwSksik30WPqZ9PZ" name="DSL">
-    <mxGraphModel dx="557" dy="1014" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="859" dy="1231" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1361,6 +1361,77 @@
         <mxCell id="-BroTS4ndIiJjGo42biA-14" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Factory[P]&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ create(): P&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1660" y="1000" width="90" height="70" as="geometry" />
         </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-22" value="enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-17" target="-BroTS4ndIiJjGo42biA-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-17" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;object&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;GameDSL&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Game: ObjectBuilder[GameCtx]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="1560" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-23" value="enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-18" target="-BroTS4ndIiJjGo42biA-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-24" value="enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-18" target="-BroTS4ndIiJjGo42biA-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-18" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;object&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;GameCtxOps&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Players: GameCtx ?=&amp;gt; PropertyBuilder[PlayersCtx]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Phase: GameCtx ?=&amp;gt; PropertyBuilder[PhaseCtx]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ InitialPhase: GameCtx ?=&amp;gt; PropertySetter[Phase]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;....&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="1692.5" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-19" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;object&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;PlayersCtxOps&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ CanBe: PlayersCtx&amp;nbsp;?=&amp;gt; PropertySetter[Set[Int]]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="1870" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-25" value="enable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-20" target="-BroTS4ndIiJjGo42biA-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-20" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;object&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;PhaseCtxOps&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Step: PhaseCtx ?=&amp;gt; PropertyBuilder[StepCtx]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ PhaseType: PhaseCtx ?=&amp;gt; PropertySetter[Phase]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;...&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1870" y="1870" width="290" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-21" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;object&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;StepCtxOps&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Step: PhaseCtx ?=&amp;gt; PropertyBuilder[StepCtx]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ PhaseType: PhaseCtx ?=&amp;gt; PropertySetter[Phase]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;...&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1870" y="2010" width="290" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-39" value="GameDSL" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="1480" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-40" value="GameDSL Domain" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="1510" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-41" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;GameCtx&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="1575" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=diamond;endFill=1;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-42" target="-BroTS4ndIiJjGo42biA-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-42" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;PlayersCtx&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="1680" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endSize=12;endArrow=diamond;endFill=1;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-43" target="-BroTS4ndIiJjGo42biA-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-43" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;PhaseCtx&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="1680" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=diamond;endFill=1;endSize=12;" edge="1" parent="1" source="-BroTS4ndIiJjGo42biA-44" target="-BroTS4ndIiJjGo42biA-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-44" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;StepCtx&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="1780" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-48" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="1650" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-49" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="1650" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-BroTS4ndIiJjGo42biA-50" value="N" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="1750" width="30" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="BDIfUdRtoNhLryLOG7TU" name="Game">
+    <mxGraphModel dx="1196" dy="862" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
       </root>
     </mxGraphModel>
   </diagram>
