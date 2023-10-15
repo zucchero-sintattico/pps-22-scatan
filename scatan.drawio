@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-15T09:02:45.494Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="uwwFizIIgvHWIBptgW9w" version="22.0.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-10-15T09:17:10.722Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="s_ZH7qE5MlqNvqCwqICC" version="22.0.4" type="github" pages="8">
   <diagram name="Dominio" id="EaUs6lZDblV2mKkzr74O">
     <mxGraphModel dx="1196" dy="1962" grid="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
@@ -1308,6 +1308,14 @@
         <mxCell id="m4BZXmUh2SQiku0kXkyH-53" value="App Management" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
           <mxGeometry x="1590" y="1040" width="170" height="40" as="geometry" />
         </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="GLKENwSksik30WPqZ9PZ" name="DSL">
+    <mxGraphModel dx="1196" dy="862" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
       </root>
     </mxGraphModel>
   </diagram>
