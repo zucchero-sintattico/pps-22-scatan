@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-15T10:18:08.320Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15" etag="UaMcej_QxsnmF1qMXDBI" version="22.0.4" type="github" pages="9">
+<mxfile host="app.diagrams.net" modified="2023-10-15T10:19:08.902Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15" etag="p2RbMKFWfI2vI_M0A9_I" version="22.0.4" type="github" pages="9">
   <diagram name="Dominio" id="EaUs6lZDblV2mKkzr74O">
     <mxGraphModel grid="1" page="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
@@ -1021,7 +1021,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="R12bm-XjikckiDstN4jV" name="GameMap">
-    <mxGraphModel dx="2032" dy="1392" grid="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="968" dy="663" grid="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1038,6 +1038,9 @@
               <mxPoint x="330" y="230" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="baE22un9bo9vFEbzdQ7s-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="baE22un9bo9vFEbzdQ7s-3" target="baE22un9bo9vFEbzdQ7s-23">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="baE22un9bo9vFEbzdQ7s-3" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«case class»&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;b style=&quot;border-color: var(--border-color);&quot;&gt;GameMap&lt;/b&gt;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+&amp;nbsp;tileWithTerrain: Int&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+&amp;nbsp;totalLayers: Int&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="210" y="280" width="140" height="90" as="geometry" />
@@ -1105,13 +1108,19 @@
           <mxGeometry x="430" y="190" width="240" height="80" as="geometry" />
         </mxCell>
         <mxCell id="baE22un9bo9vFEbzdQ7s-21" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«type»&lt;br&gt;&lt;b&gt;TileContentStrategy&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;strategy(Seq[Hexagon]): Map[Hexagon, TileContent]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="990" y="20" width="300" height="80" as="geometry" />
+          <mxGeometry x="990" y="30" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="baE22un9bo9vFEbzdQ7s-87" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="baE22un9bo9vFEbzdQ7s-22" target="baE22un9bo9vFEbzdQ7s-21">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="baE22un9bo9vFEbzdQ7s-22" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«object»&lt;br&gt;&lt;b&gt;TileContentStrategyFactory&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ fixedForLayer2: TileContentStrategy&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ randomForLayer2: TileContentStrategy&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ permutationForLayer2: LazyList[TileContentStrategy]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="590" y="20" width="320" height="100" as="geometry" />
         </mxCell>
+        <mxCell id="baE22un9bo9vFEbzdQ7s-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="baE22un9bo9vFEbzdQ7s-23" target="baE22un9bo9vFEbzdQ7s-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="baE22un9bo9vFEbzdQ7s-23" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«object»&lt;br&gt;&lt;b&gt;GameMapFactory&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ defaultMap: GameMap&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ randomMap: GameMap&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ nextPermutation: GameMap&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="180" y="60" width="180" height="100" as="geometry" />
+          <mxGeometry x="190" y="20" width="180" height="100" as="geometry" />
         </mxCell>
         <mxCell id="baE22un9bo9vFEbzdQ7s-24" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«type»&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&lt;b&gt;Terrain&lt;/b&gt;&lt;/i&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1300" y="207.5" width="90" height="40" as="geometry" />
