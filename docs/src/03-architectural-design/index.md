@@ -2,7 +2,7 @@
 
 Come pattern architetturale abbiamo scelto di utilizzare il pattern MVC (Model-View-Controller), che permette di separare la logica di business dalla logica di presentazione. In questo modo è possibile modificare l'interfaccia grafica senza dover modificare la logica di business e viceversa.
 
-<!-- FOTO ARCHITETTURA MVC IMMUTABILE -->
+![Architettura MVC scelta](../img/03-architectural-design/scatan-MVC-immutable.jpg)
 
 L'architettura scelta vede quindi la presenza di tre componenti principali:
 
