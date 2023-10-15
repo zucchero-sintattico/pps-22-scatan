@@ -32,9 +32,9 @@ Di seguito sarà riportata una descrizione più dettagliata del nostro dominio a
 - L'utente deve poter acquistare le carte sviluppo.
 - L'utente deve poter giocare le carte sviluppo.
 - L'utente deve poter sapere chi detiene i certificati di strada più lunga e armata più grande.
-- L'utente deve poter rubare una carta ad un altro giocatore quando lancia i dadi e ottiene un 7.
+- L'utente deve poter spostare il brigante e rubare una carta ad un altro giocatore quando lancia i dadi e ottiene un 7.
 - L'utente deve poter vedere quando un giocatore raggiunge i 10 punti vittoria e quindi vince la partita.
-- L'utente deve poter giocare con mappe diverse, con disposizioni casuali delle tessere.
+- L'utente deve poter giocare con mappe diverse, con disposizioni casuali delle tessere, potendo selezionare la mappa da utilizzare nel menu di setup.
 
 ### Sistema
 
@@ -45,7 +45,7 @@ Di seguito sarà riportata una descrizione più dettagliata del nostro dominio a
 - Il sistema deve poter riconoscere la fine del turno di ogni giocatore, passando al giocatore successivo.
 - Il sistema deve poter gestire il lancio dei dadi:
   - permettendo a tutti i giocatori di raccogliere opportunamente le risorse
-  - oppure di far rubare una carta al giocatore di mano.
+  - oppure di far spostare il brigante e poi rubare una carta al giocatore di mano nel caso esca 7
 - Il sistema deve poter visualizzare il campo di gioco.
 - Il sistema deve poter visualizzare le risorse di ogni giocatore.
 - Il sistema deve poter visualizzare le costruzioni di ogni giocatore.
