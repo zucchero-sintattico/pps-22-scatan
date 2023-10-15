@@ -23,6 +23,8 @@
   - [Sprint 4](./09-backlog/sprints/04-sprint.md)
   - [Sprint 5](./09-backlog/sprints/05-sprint.md)
 
+- [Glossario](./10-glossary/index.md)
+
 ---
 
 [Installazione](./07-installation/index.md)
