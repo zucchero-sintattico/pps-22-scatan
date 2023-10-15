@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-15T08:57:07.376Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="NxfMLCUG-n2-0u7XUYX1" version="22.0.4" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2023-10-15T09:02:45.494Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="uwwFizIIgvHWIBptgW9w" version="22.0.4" type="github" pages="7">
   <diagram name="Dominio" id="EaUs6lZDblV2mKkzr74O">
     <mxGraphModel dx="1196" dy="1962" grid="1" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
@@ -1157,29 +1157,35 @@
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-26" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;abstract class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;BaseScalaJSView[C, S]&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="205" y="1040" width="140" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="LVKPDV2N2bbrRAVPuBX8-31" value="use" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=12;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-29" target="LVKPDV2N2bbrRAVPuBX8-30">
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=diamond;endFill=0;endSize=12;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-29" target="LVKPDV2N2bbrRAVPuBX8-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-52" value="use" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-29" target="LVKPDV2N2bbrRAVPuBX8-30">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-29" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;ApplicationPage[S, V, C]&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ model: Model[S]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ view: V&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ controller: C&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="380" y="1120" width="155" height="100" as="geometry" />
+          <mxGeometry x="1660" y="1120" width="155" height="100" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-30" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;PageFactory&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ viewFactory: View.Factory&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ controllerFactory: Controller.Factory&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="600" y="1130" width="220" height="80" as="geometry" />
+          <mxGeometry x="1890" y="1130" width="220" height="80" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-32" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Application[S, Route]&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ model: Mode[S]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ pages: Map[Route, ApplicationPage[S, ?, ?]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="80" y="1200" width="260" height="100" as="geometry" />
+          <mxGeometry x="1330" y="1120" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=block;endFill=0;endSize=12;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-33" target="LVKPDV2N2bbrRAVPuBX8-32">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-33" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Navigable&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="380" y="1370" width="110" height="40" as="geometry" />
+          <mxGeometry x="1200" y="1290" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;jumpSize=6;endSize=12;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-34" target="LVKPDV2N2bbrRAVPuBX8-32">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="LVKPDV2N2bbrRAVPuBX8-36" value="mixin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-34" target="LVKPDV2N2bbrRAVPuBX8-33">
+        <mxCell id="LVKPDV2N2bbrRAVPuBX8-36" value="mixin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="LVKPDV2N2bbrRAVPuBX8-34" target="LVKPDV2N2bbrRAVPuBX8-33">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="LVKPDV2N2bbrRAVPuBX8-34" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;NavigableApplication&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="130" y="1370" width="160" height="40" as="geometry" />
+          <mxGeometry x="1380" y="1290" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="m4BZXmUh2SQiku0kXkyH-1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Model[S]&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ state: S&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ update(u: S =&amp;gt; S): Unit&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="510" y="160" width="150" height="100" as="geometry" />
@@ -1285,19 +1291,22 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="m4BZXmUh2SQiku0kXkyH-42" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;trait&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;ScalaJSView[S]&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ container: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ reactiveState: Signal[S]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ element: Element&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1540" y="710" width="150" height="100" as="geometry" />
+          <mxGeometry x="1520" y="640" width="150" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="m4BZXmUh2SQiku0kXkyH-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=block;endFill=1;endSize=12;" edge="1" parent="1" source="m4BZXmUh2SQiku0kXkyH-45" target="m4BZXmUh2SQiku0kXkyH-39">
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;endArrow=block;endFill=1;endSize=12;" edge="1" parent="1" source="m4BZXmUh2SQiku0kXkyH-45" target="m4BZXmUh2SQiku0kXkyH-39">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="m4BZXmUh2SQiku0kXkyH-44" value="mixin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endSize=11;" edge="1" parent="1" source="m4BZXmUh2SQiku0kXkyH-45" target="m4BZXmUh2SQiku0kXkyH-42">
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-44" value="mixin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;endSize=11;" edge="1" parent="1" source="m4BZXmUh2SQiku0kXkyH-45" target="m4BZXmUh2SQiku0kXkyH-42">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="m4BZXmUh2SQiku0kXkyH-45" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;abstract class&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;BaseScalaJSView[C, S]&lt;/b&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1735" y="880" width="140" height="40" as="geometry" />
+          <mxGeometry x="1560" y="860" width="140" height="40" as="geometry" />
         </mxCell>
         <mxCell id="m4BZXmUh2SQiku0kXkyH-46" value="View Management" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
           <mxGeometry x="1715" y="510" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="m4BZXmUh2SQiku0kXkyH-53" value="App Management" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1590" y="1040" width="170" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
