@@ -1,15 +1,5 @@
 # Design Architettuale
 
-## Organizzazione del codice
-
-Il codice è organizzato in package, ognuno dei quali contiene classi che svolgono funzionalità simili. I package sono i seguenti:
-
-<!-- FOTO PACKAGE -->
-
-- `package`: descrizione
-
-## Architettura
-
 Come pattern architetturale abbiamo scelto di utilizzare il pattern MVC (Model-View-Controller), che permette di separare la logica di business dalla logica di presentazione. In questo modo è possibile modificare l'interfaccia grafica senza dover modificare la logica di business e viceversa.
 
 <!-- FOTO ARCHITETTURA MVC IMMUTABILE -->
