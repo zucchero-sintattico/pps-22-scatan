@@ -13,9 +13,7 @@ private object GameDSLDomain:
       phases: MultipleProperty[PhaseCtx[State, P, S, A, Player]] = MultipleProperty[PhaseCtx[State, P, S, A, Player]](),
       players: OptionalProperty[PlayersCtx] = OptionalProperty[PlayersCtx](),
       winner: OptionalProperty[State => Option[Player]] = OptionalProperty[State => Option[Player]](),
-      initialPhase: OptionalProperty[P] = OptionalProperty[P](),
-      stateFactory: OptionalProperty[(GameMap, Seq[Player]) => State] =
-        OptionalProperty[(GameMap, Seq[Player]) => State]()
+      initialPhase: OptionalProperty[P] = OptionalProperty[P]()
   )
 
   /** The players context is used to define the players info of the game.

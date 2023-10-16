@@ -258,4 +258,9 @@ object ScatanGame:
   def apply(game: Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer]): ScatanGame =
     new ScatanGame(game)
   def apply(gameMap: GameMap, players: Seq[ScatanPlayer]): ScatanGame =
-    new ScatanGame(Game(gameMap, players)(using ScatanDSL.rules))
+    new ScatanGame(
+      Game(
+        initialState = ScatanState(gameMap, players),
+        players = players
+      )(using ScatanDSL.rules)
+    )
