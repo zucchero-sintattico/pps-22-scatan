@@ -84,7 +84,7 @@ A fronte di una lettura di [Scala with Cats](https://underscore.io/books/scala-w
 - **associatività**: \\( \forall \\; a,b,c \in S \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c) \\)
 - **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a  \wedge (a \cdot \epsilon) = a \\)
 
-Ne deriva il seguente codice, utilizzando la libreria [Cats](https://typelevel.org/cats/):
+Ne deriva il seguente codice, utilizzando la libreria [`Cats`](https://typelevel.org/cats/):
 
 ```scala
 import cats.Monoid
@@ -182,7 +182,7 @@ svg.text(
 
 La creazione della view, che necessità di un nesting dei componenti, risulta parecchio prolissa e ripetitiva nel passaggio dei parametri.
 
-Per ovviare a questo problema, ho scelto di nascondere il passaggio dei parametri ridondanti, attraverso l'utilizzo di [**Context Function**](https://docs.scala-lang.org/scala3/reference/contextual/context-functions.html) e la dichiarazione di opportuni tipi, a seconda dell'elemento di contesto che si vuole catturare.
+Per ovviare a questo problema, ho scelto di nascondere il passaggio dei parametri ridondanti, attraverso l'utilizzo di [`Context Function`](https://docs.scala-lang.org/scala3/reference/contextual/context-functions.html) e la dichiarazione di opportuni tipi, a seconda dell'elemento di contesto che si vuole catturare.
 
 Inoltre, sono stati definiti anche tipi dati da composizioni degli stessi, in modo da catturare più elementi di contesto contemporaneamente.
 
@@ -222,6 +222,28 @@ def method2(state: ScatanState): E =
 L'esempio è tratto da una semplificazione di `scatan.views.game.components.GameMapComponent#svgHexagonWithCrossedNumber`.
 
 ### Test
+
+Il testing, in alcune sue parti, risultava complicato da esprimere perché, ciò che si voleva porre sotto osservazione, erano delle proprietà.
+
+> Esempio: verifica degli assiomi di un _Monoide_
+
+Per ovviare a questo problema ho deciso di esplorare la libreria [`ScalaTest + ScalaCheck`](https://www.scalatest.org/plus/scalacheck), che permette un'integrazione tra i due framework.
+Così facendo è stato possibile definire dei test **property-based**.
+
+Di seguito un esempio di test:
+
+```scala
+class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
+    "An Hexagon" should "respect the identity law in order to be a Monoid" in {
+    forAll { (r: Int, c: Int, s: Int) =>
+      val hexagon = Hexagon(r, c, s)
+      hexagon |+| Monoid[Hexagon].empty shouldBe hexagon
+      Monoid[Hexagon].empty |+| hexagon shouldBe hexagon
+    }
+  }
+```
+
+Qualora un test fallisce, è possibile ottenere i valori che hanno causato il fallimento e, grazie alla pseudo-randomicità, è possibile riprodurre il test.
 
 ## Alessandro Mazzoli
 
