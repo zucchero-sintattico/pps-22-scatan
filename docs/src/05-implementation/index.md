@@ -19,6 +19,7 @@ Il codice prodotto durante lo svolgimento del progetto riguarda prevalentemente 
 - Regole sul posizionamento delle strutture
 - Gestione visualizzazione della mappa
 - Preview della mappa con possibilità di scelta
+- Gestione della CI per building, testing e deployment
 
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
