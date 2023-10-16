@@ -277,18 +277,18 @@ Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmen
 - Modellazione dello stato della partita
 - Realizzazione grafica degli scambi
 
+
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione e modellazione dei singoli componenti della partita
 
-Come prima cosa, ho individuato quelle che sarebbero state le componenti principali necessari a modellare dello stato della partita, individuando come entità principali i **buildings**, le **resource cards**, le **development cards**, i **trades** e gli **scores**.
-Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellare le singole componenti, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
+Come prima cosa, ho individuato quelle che sarebbero state le componenti principali necessari a modellare dello stato della partita, individuando come entità principali i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
+Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
 
 Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei __type alias__, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
 
 Di seguito, sono riportati due esempi di definizione di  __type alias__:
 - `ResourceCards`:
-```scala
 ```scala
 /** Type of possible resources.
   */
@@ -384,6 +384,11 @@ object ResourceCardOps:
         )
 ```
 
+
+### Realizzazione degli scambi
+FoldLeft????
+
+### Calcolo degli Scores
 
 
 
