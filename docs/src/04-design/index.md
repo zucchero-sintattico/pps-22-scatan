@@ -55,11 +55,34 @@ Il componente responsabile poi della gestione di queste pagine è l'`Application
 
 ## Game Engine
 
+Dall'analisi del gioco si è cercato di astrarre ad un modello comune e riutilizzabile.
+Si è infatti scelto di modellare il concetto di Game come un qualcosa che possiede:
+
+- Dei giocatori
+- Lo stato del gioco
+- Il turno
+- La fase e lo step della fase in cui si trova il gioco
+- Un insieme di regole.
+
 ### Game
 
 ![Game](../img/04-design/game/core-game.jpg)
 
+Si è scelto quindi di mettere questa struttura `core` dentro la classe `Game` che funziona quindi da holder immutabile del gioco.
+
+#### GameOPS
+
 ![Game](../img/04-design/game/game-ops.jpg)
+
+Poichè ora il Game consiste solo in uno snapshot di un gioco, ad esso sono state aggiunte le varie funzionalità tramite insieme di operations su di esso.
+Tra queste troviamo:
+
+- `GamePlayOps` che contiene le operations per gestire le azioni dei giocatori. Esso infatti aggiunge funzionalità quali `canPlay` che utilizza le `Rules` per capire quali azioni sono possibili in quale fase e step e in quale stato si va a finire se si esegue quell'azione.
+  Ovviamente esponde anche il metodo `play` che permette di eseguire l'azione e di passare allo stato successivo.
+  Infatti l'azione viene incapsulato nel concetto di `Effect`, che altro che non è un mapping dallo stato attuale ad uno stato successivo, che può però non essere applicabile.
+- `GameTurnOps` aggiunge la funzionalità di gestione del turno, ovvero di passaggio da un giocatore all'altro.
+- `GameWinOps` esponse come funzionalità la gestione della vittoria di un giocatore, ovvero la verifica se un giocatore ha raggiunto i punti vittoria necessari per vincere la partita.
+  Infatti tramite di esso non solo è possibile sapere se la partita è finita ma è possibile sapire se c'è e chi è il vincitore.
 
 ### Rules
 
