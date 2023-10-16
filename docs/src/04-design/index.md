@@ -219,3 +219,24 @@ Questo meccanismo funge anche da `Anti Corruption Layer`, in quanto permette di 
 ![Context Map](../img/04-design/view/context-map.jpg)
 
 ### ViewModel
+
+
+## Stato della partita
+Lo stato della partita è stata modellata tramite un entità rinominata `ScatanState` nella quale son presenti tutte le informazioni a riguardo.
+In particolare vi sono contenute le seguenti informazioni:
+
+- `players`: la lista dei giocatori
+- `gameMap`: la mappa di gioco
+- `assignedBuildings`: la lista di edifici assegnati ai giocatori
+- `assignedAwards`: la lista di premi assegnati ai giocatori
+- `resourceCards`: le liste di carte risorse assegnate ai giocatori
+- `developmentCards`: le liste di carte sviluppo assegnate ai giocatori
+- `developmentCardDeck`: il mazzo di carte sviluppo
+- `robberPlacement`: la posizione del ladro
+
+![ScatanState](../img/04-design/model/scatan-stateOps.jpg)
+
+### Componenti del gioco & Operations
+Queste informazioni, sono state modellate divise in componenti e per ognuno di questi, sono state implementate le relative operations, in modo da poterle gestire in modo più semplice e modulare le varie funzionalità del gioco.
+
+#### 
