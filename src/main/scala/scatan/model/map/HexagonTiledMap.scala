@@ -42,7 +42,7 @@ class HexagonalTiledMap(layers: Int)
     for
       first <- nodes
       second <- nodes
-      if first.toSet.intersect(second.toSet).sizeIs == spotsPerRoad
+      if (first.toSet & second.toSet).sizeIs == spotsPerRoad
     yield UnorderedPair(first, second)
 
 /** Extension method of Hexagons if put in an Hexagonal map.
