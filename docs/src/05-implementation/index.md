@@ -9,6 +9,19 @@
 
 ## Manuel Andruccioli
 
+Il codice prodotto durante lo svolgimento del progetto riguarda prevalentemente le seguente parti:
+
+- Gestione della parte statica della mappa di gioco
+  - Esagoni, Spot e Road
+  - Mappa come un grafo
+  - Contenuto degli esagoni
+  - Creazione di essa
+- Regole sul posizionamento delle strutture
+- Gestione visualizzazione della mappa
+- Preview della mappa con possibilità di scelta
+
+Di seguito saranno descritte con maggior dettaglio le parti più salienti.
+
 ### Creazione Hexagonal Game Map
 
 **Obiettivo**: creare una game map di dimensioni arbitrariamente grandi, cercando una modellazione quanto più vicina al dominio. 
