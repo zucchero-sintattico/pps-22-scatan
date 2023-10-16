@@ -107,7 +107,8 @@ object LeftTabComponent:
           children <-- gameViewModel.currentAwards.map(_.toSeq).split(_._1) { (award, opt, _) =>
             li(
               award.toDisplayable,
-              opt._2.map((player, score) => s" ($player: $score)").getOrElse("Nobody Yet")
+              ": ",
+              opt._2.map((player, score) => s"($player: $score)").getOrElse("Nobody Yet")
             )
           }
         )
