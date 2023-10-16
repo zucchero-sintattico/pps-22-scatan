@@ -1,5 +1,12 @@
 # Implementazione
 
+## Generale
+
+### Tecnologie di dettaglio utilizzate
+
+- [scalajs-dom](https://scala-js.github.io/scala-js-dom/)
+- [Laminar](https://laminar.dev)
+
 ## Manuel Andruccioli
 
 ### Creazione Hexagonal Game Map
@@ -180,8 +187,3 @@ svg.text(
 ## Luigi Borriello
 
 ## Pair programming
-
-## Tecnologie di dettaglio utilizzate
-
-- [scalajs-dom](https://scala-js.github.io/scala-js-dom/)
-- [Laminar](https://laminar.dev)
