@@ -76,7 +76,7 @@ object PropertiesDSL:
     def apply(builder: Builder[P]): Unit =
       val obj = summon[Factory[P]].create()
       builder(using obj)
-      property(obj)
+      property.update(obj)
 
   given [P: Factory]: Conversion[PropertyUpdater[P], PropertyBuilder[P]] = PropertyBuilder(_)
 
