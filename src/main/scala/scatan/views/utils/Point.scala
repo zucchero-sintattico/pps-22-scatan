@@ -5,22 +5,24 @@ import scatan.model.map.{Hexagon, StructureSpot}
 /** @param value
   *   the value of the double to wrap.
   */
-final case class DoubleWithPrecision(value: Double):
+final case class DoubleWithPrecision(value: Double, precision: Int = 3):
+  private val absDiff: Double = math.pow(10, -precision)
+  private val roundConst = math.pow(10, precision)
   override def equals(x: Any): Boolean =
     x match
       case that: DoubleWithPrecision =>
-        (this.value - that.value).abs < 0.001
+        (this.value - that.value).abs < absDiff
       case _ => false
 
-  override def hashCode: Int = (value * 1000).round.toInt.hashCode
+  override def hashCode: Int = (value * roundConst).round.toInt.hashCode
 
 /** A trait to represent cartesian coordinates.
   */
-trait Coordinates:
+trait Point:
   def x: DoubleWithPrecision
   def y: DoubleWithPrecision
 
-object Coordinates:
+object Point:
 
   /** Create a new Coordinates object.
     *
@@ -31,7 +33,7 @@ object Coordinates:
     * @return
     *   the new Coordinates object
     */
-  def apply(x: DoubleWithPrecision, y: DoubleWithPrecision): Coordinates = CoordinatesImpl(x, y)
+  def apply(x: DoubleWithPrecision, y: DoubleWithPrecision): Point = PointImpl(x, y)
 
   /** Extract the x and y coordinates from a Coordinates object, unwrapping them to double.
     *
@@ -40,16 +42,16 @@ object Coordinates:
     * @return
     *   a pair of doubles.
     */
-  def unapply(coordinates: Coordinates): (Double, Double) =
-    (coordinates.x.value, coordinates.y.value)
+  def unapply(point: Point): (Double, Double) =
+    (point.x.value, point.y.value)
 
-  private case class CoordinatesImpl(x: DoubleWithPrecision, y: DoubleWithPrecision) extends Coordinates
+  private case class PointImpl(x: DoubleWithPrecision, y: DoubleWithPrecision) extends Point
 
   /** Convert a pair of doubles to a Coordinates object.
     */
-  given Conversion[(Double, Double), Coordinates] with
-    def apply(pair: (Double, Double)): Coordinates =
-      Coordinates(DoubleWithPrecision(pair._1), DoubleWithPrecision(pair._2))
+  given Conversion[(Double, Double), Point] with
+    def apply(pair: (Double, Double)): Point =
+      Point(DoubleWithPrecision(pair._1), DoubleWithPrecision(pair._2))
 
   /** Extension methods to handle hexagon in cartesian plane.
     */
@@ -59,7 +61,7 @@ object Coordinates:
       * @return
       *   the center point of the hexagon
       */
-    def center(using hexSize: Int): Coordinates =
+    def center(using hexSize: Int): Point =
       val x = hexSize * (math.sqrt(3) * hex.col + math.sqrt(3) / 2 * hex.row)
       val y = hexSize * (3.0 / 2 * hex.row)
       (x, y)
@@ -69,8 +71,8 @@ object Coordinates:
       * @return
       *   the points of the hexagon
       */
-    def vertices(using hexSize: Int): Set[Coordinates] =
-      val Coordinates(x, y) = center
+    def vertices(using hexSize: Int): Set[Point] =
+      val Point(x, y) = center
       for
         i <- (0 to 5).toSet
         angle_deg = 60 * i - 30
@@ -83,5 +85,5 @@ object Coordinates:
   /** Extension methods to handle spot in cartesian plane.
     */
   extension (spot: StructureSpot)
-    def coordinates(using hexSize: Int): Option[Coordinates] =
-      (spot._1.vertices & spot._2.vertices & spot._3.vertices).headOption
+    def point(using hexSize: Int): Point =
+      (spot._1.vertices & spot._2.vertices & spot._3.vertices).head
