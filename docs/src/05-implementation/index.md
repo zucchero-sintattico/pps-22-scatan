@@ -70,6 +70,36 @@ val edges: Set[RoadSpot] =
 
 ### Hexagon e Monoidi
 
+A fronte di una lettura di [Scala with Cats](https://underscore.io/books/scala-with-cats/), ho voluto sperimentare.
+
+È stato riconosciuto come un `Hexagon` può essere un **monoide** (e garantisce proprietà utili durante la scrittura di codice), in quanto è possibile soddisfare gli assiomi di:
+
+- **associatività**: \\( \forall \\; a,b,c \in S \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c) \\)
+- **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a  \wedge (a \cdot \epsilon) = a \\)
+
+Ne deriva il seguente codice:
+
+```scala
+import cats.Monoid
+  given Monoid[Hexagon] with
+    def empty: Hexagon = Hexagon(0, 0, 0)
+    def combine(hex1: Hexagon, hex2: Hexagon): Hexagon =
+      Hexagon(
+        hex1.row + hex2.row,
+        hex1.col + hex2.col,
+        hex1.slice + hex2.slice
+      )
+
+// An example of usage
+def allowedDirections: Set[Hexagon]
+// ...
+extension (hex: Hexagon)
+    def neighbours: Set[Hexagon] =
+      import Hexagon.given
+      import cats.syntax.semigroup.*
+      allowedDirections.map(hex |+| _)
+```
+
 ### GameMap in view
 
 ### View TypeUtils
