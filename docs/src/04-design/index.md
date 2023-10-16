@@ -88,10 +88,13 @@ Tra queste troviamo:
 
 Il concetto di `Rules` incapsula tutte le regole del modello di gioco che comprendono tra i principali concetti:
 
-- Stato iniziale
 - Fase iniziale
+- Numero di giocatori
 - Configurazione per ogni fase tra cui:
   - Step iniziale
+  - Step in cui termina il turno
+  - Iteratore dei giocatori
+  - Eventuale azione di ingresso
   - Configurazione dei vari step tra cui:
     - Per ogni azione possibile lo step di arrivo
 
