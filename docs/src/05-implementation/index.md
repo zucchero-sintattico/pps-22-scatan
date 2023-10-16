@@ -77,7 +77,7 @@ A fronte di una lettura di [Scala with Cats](https://underscore.io/books/scala-w
 - **associatività**: \\( \forall \\; a,b,c \in S \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c) \\)
 - **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a  \wedge (a \cdot \epsilon) = a \\)
 
-Ne deriva il seguente codice:
+Ne deriva il seguente codice, utilizzando la libreria [Cats](https://typelevel.org/cats/):
 
 ```scala
 import cats.Monoid
