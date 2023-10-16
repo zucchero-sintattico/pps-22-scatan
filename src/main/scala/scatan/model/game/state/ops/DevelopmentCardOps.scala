@@ -15,6 +15,8 @@ import scatan.model.map.{Hexagon, RoadSpot}
   */
 object DevelopmentCardOps:
 
+  type DevelopmentCardEffect = ScatanState => Option[ScatanState]
+
   extension (state: ScatanState)
     /** Returns a new ScatanState with the given development card assigned to the given player. The development card is
       * added to the player's list of development cards. The assigned awards are updated.
@@ -73,27 +75,6 @@ object DevelopmentCardOps:
 
     /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
       * and assigned awards.
-      * @param player
-      *   the player who is consuming the development card
-      * @param developmentCard
-      *   the development card to be consumed
-      * @return
-      *   Some(ScatanState) if the player has the development card, None otherwise
-      */
-    def consumeDevelopmentCard(player: ScatanPlayer, developmentCard: DevelopmentCard): Option[ScatanState] =
-      if !state.developmentCards(player).contains(developmentCard) then None
-      else
-        val remainingCards =
-          state.developmentCards(player).filter(_.developmentType == developmentCard.developmentType).drop(1)
-        Some(
-          state.copy(
-            developmentCards = state.developmentCards.updated(player, remainingCards),
-            assignedAwards = state.awards
-          )
-        )
-
-    /** Consumes a development card for a given player and returns a new ScatanState with the updated development cards
-      * and assigned awards.
       *
       * @param player
       *   the player who is consuming the development card
@@ -119,11 +100,24 @@ object DevelopmentCardOps:
           )
         )
 
-    private def playDevelopment(
+    /** Plays a development card for a given player and returns a new ScatanState with the updated development cards.
+      *
+      * @param player
+      *   The player who is playing the development card.
+      * @param developmentType
+      *   The type of development card to play.
+      * @param turnNumber
+      *   The turn number when the development card was played.
+      * @param effect
+      *   The effect of the development card.
+      * @return
+      *   Some(ScatanState) if the development card was played, None otherwise.
+      */
+    private def playDevelopmentCard(
         player: ScatanPlayer,
         developmentType: DevelopmentType,
         turnNumber: Int
-    )(effect: ScatanState => Option[ScatanState]): Option[ScatanState] =
+    )(effect: DevelopmentCardEffect): Option[ScatanState] =
       val stateWithCardConsumed = for
         developmentCards <- state.developmentCards.get(player)
         card <- developmentCards.find(card =>
@@ -139,25 +133,63 @@ object DevelopmentCardOps:
         case None  => Some(state)
         case other => other
 
+    /** Plays a knight development card for a given player and returns a new ScatanState with the updated development
+      * cards.
+      *
+      * @param player
+      *   The player who is playing the knight development card.
+      * @param robberPosition
+      *   The position where the robber will be moved.
+      * @param turnNumber
+      *   The turn number when the development card was played.
+      * @return
+      *   Some(ScatanState) if the knight development card was played, None otherwise.
+      */
     def playKnightDevelopment(player: ScatanPlayer, robberPosition: Hexagon, turnNumber: Int): Option[ScatanState] =
-      playDevelopment(player, DevelopmentType.Knight, turnNumber)(_.moveRobber(robberPosition))
+      playDevelopmentCard(player, DevelopmentType.Knight, turnNumber)(_.moveRobber(robberPosition))
 
+    /** Plays a road building development card for a given player and returns a new ScatanState with the updated
+      * development cards.
+      *
+      * @param player
+      *   The player who is playing the road building development card.
+      * @param firstRoad
+      *   The first road to be built.
+      * @param secondRoad
+      *   The second road to be built.
+      * @param turnNumber
+      *   The turn number when the development card was played.
+      * @return
+      *   Some(ScatanState) if the road building development card was played, None otherwise.
+      */
     def playRoadBuildingDevelopment(
         player: ScatanPlayer,
         firstRoad: RoadSpot,
         secondRoad: RoadSpot,
         turnNumber: Int
     ): Option[ScatanState] =
-      playDevelopment(player, DevelopmentType.RoadBuilding, turnNumber) {
+      playDevelopmentCard(player, DevelopmentType.RoadBuilding, turnNumber) {
         _.build(firstRoad, Road, player).flatMap(_.build(secondRoad, Road, player))
       }
 
+    /** Plays a monopoly development card for a given player and returns a new ScatanState with the updated development
+      * cards.
+      *
+      * @param player
+      *   The player who is playing the monopoly development card.
+      * @param resourceType
+      *   The resource type to be monopolized.
+      * @param turnNumber
+      *   The turn number when the development card was played.
+      * @return
+      *   Some(ScatanState) if the monopoly development card was played, None otherwise.
+      */
     def playMonopolyDevelopment(
         player: ScatanPlayer,
         resourceType: ResourceType,
         turnNumber: Int
     ): Option[ScatanState] =
-      playDevelopment(player, DevelopmentType.Monopoly, turnNumber) { newState =>
+      playDevelopmentCard(player, DevelopmentType.Monopoly, turnNumber) { newState =>
         val otherPlayers = newState.players.filterNot(_ == player)
         otherPlayers.foldLeft(Option(newState))((optState, otherPlayer) =>
           optState.flatMap(state =>
@@ -174,13 +206,27 @@ object DevelopmentCardOps:
         )
       }
 
+    /** Plays a year of plenty development card for a given player and returns a new ScatanState with the updated
+      * development cards.
+      *
+      * @param player
+      *   The player who is playing the year of plenty development card.
+      * @param firstResource
+      *   The first resource to be assigned.
+      * @param secondResource
+      *   The second resource to be assigned.
+      * @param turnNumber
+      *   The turn number when the development card was played.
+      * @return
+      *   Some(ScatanState) if the year of plenty development card was played, None otherwise.
+      */
     def playYearOfPlentyDevelopment(
         player: ScatanPlayer,
         firstResource: ResourceType,
         secondResource: ResourceType,
         turnNumber: Int
     ): Option[ScatanState] =
-      playDevelopment(player, DevelopmentType.YearOfPlenty, turnNumber) {
+      playDevelopmentCard(player, DevelopmentType.YearOfPlenty, turnNumber) {
         _.assignResourceCard(player, ResourceCard(firstResource))
           .flatMap(_.assignResourceCard(player, ResourceCard(secondResource)))
       }
