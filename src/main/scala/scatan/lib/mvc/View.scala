@@ -68,5 +68,3 @@ abstract class BaseView[State <: Model.State, C <: Controller[State]](requiremen
   private var _state: State = controller.state
   override private[mvc] def updateState(state: State): Unit =
     _state = state
-
-
