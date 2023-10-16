@@ -48,7 +48,6 @@ object GameMapComponent:
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
-  private def robberPlacement(using ScatanState): Hexagon = summon[ScatanState].robberPlacement
   private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
     summon[ScatanState].assignedBuildings.get(spot)
 
@@ -83,7 +82,7 @@ object GameMapComponent:
     MapComponent.circularNumber(
       hex,
       onClick --> (_ => clickHandler.onHexagonClick(hex)),
-      if robberPlacement == hex
+      if summon[ScatanState].robberPlacement == hex
       then robberCross
       else ""
     )
