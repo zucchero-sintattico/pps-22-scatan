@@ -1,32 +1,42 @@
 # Guida utente
 
-## Schermata iniziale
+## Schermata iniziale [R1]
 
 ![Schermata iniziale](../img/others/tutorial/home-view.png)
 
-## Schermata di setup
+## Schermata di setup [R2]
 
-![Schermata di setup](../img/others/tutorial/setup-view.png)
+![Schermata di setup](../img/others/tutorial/setup-view/setup-view.png)
 
-## Schermata di gioco
+### Scelta casuale della mappa [R2.1]
 
-### Campo di gioco
+![Scelta casuale della mappa](../img/others/tutorial/setup-view/casual-map.png)
+
+## Schermata di gioco [R3]
+
+![Schermata di gioco](../img/others/tutorial/game-view/game-view.png)
+
+### Campo di gioco [R3.1]
 
 ![Campo di gioco](../img/others/tutorial/game-view/game-field.png)
 
-### Pannello informazioni e mosse
+### Pannello informazioni e mosse [R3.2]
 
 ![Pannello informazioni](../img/others/tutorial/game-view/info-panel.png)
 
-### Zona carte del giocatore
+### Zona carte risorsa [R3.3]
 
-![Zona carte del giocatore](../img/others/tutorial/game-view/card-panel.png)
+![Zona carte del giocatore](../img/others/tutorial/game-view/resource-card.png)
 
-### Pannello di scambio
+### Zona carte development [R3.4]
+
+![Zona carte del giocatore](../img/others/tutorial/game-view/development-card.png)
+
+### Pannello di scambio [R3.5]
 
 ![Pannello di scambio](../img/others/tutorial/game-view/trade-panel.png)
 
-## Posizionamento iniziale
+## Posizionamento iniziale [R4]
 
 Gli utenti posizionano le strutture iniziali seguendo le regole del gioco:
 
@@ -39,7 +49,7 @@ Gli utenti posizionano le strutture iniziali seguendo le regole del gioco:
 
 ![Posizionamento iniziale errore](../img/others/tutorial/initial-positioning/rule-on-initial-positioning.png)
 
-## Risorse iniziali
+## Risorse iniziali [R5]
 
 `Player 1` posiziona il suo secondo settlement e la sua seconda strada
 
