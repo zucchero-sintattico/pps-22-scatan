@@ -23,10 +23,12 @@
   - [Sprint 4](./09-backlog/sprints/04-sprint.md)
   - [Sprint 5](./09-backlog/sprints/05-sprint.md)
 
-- [Glossario](./10-glossary/index.md)
+- [Glossario](./others/glossary.md)
 
 ---
 
-[Installazione](./07-installation/index.md)
+[Installazione](./others/installation.md)
 
-[Conclusioni](./08-conclusions/index.md)
+[Guida utente](./others/tutorial.md)
+
+[Link utili](./others/links.md)
