@@ -102,6 +102,75 @@ extension (hex: Hexagon)
 
 ### GameMap in view
 
+La visualizzazione della _GameMap_ è stata una parte delicata e complessa, in quanto è stato necessario trovare un modo per rappresentare graficamente, in modo consono, la gli esagoni, spot e road precedentemente introdotti, ma anche per gestire l'interazione dell'utente con gli elementi.
+
+La parte di accesso al model è immediata, data la rappresentazione di esso.
+
+```scala
+MapComponent.mapContainer(
+    for hex <- gameMap.tiles.toList
+    yield svgHexagonWithCrossedNumber(hex),
+    for road <- gameMap.edges.toList
+    yield svgRoad(road),
+    for spot <- gameMap.nodes.toList
+    yield svgSpot(spot)
+)
+```
+
+La parte più complicata è stata la rappresentazione grafica degli elementi, dovendo trovare un _mapping_ su un piano bidimensionale, basato su coordinate cartesiane (dato dalla tecnologia utilizzata, `SVG`).
+
+Innanzitutto è stato introdotto un concetto di `Point`, un punto nel piano cartesiano, che ha permesso di rendere agevole l'utilizzo del sistema di coordinate da dover adottare.
+Inoltre, è stato necessario aggiungere un wrapper di `Double` che aggiunge il concetto di precisione, in modo da consentire operazioni sul tipo, senza incorrere in errori di arrotondamento.
+
+Infine, sono stati realizzati metodi di utilità per trattare una coppia di Double come un punto nel piano cartesiano, ma anche per scomporre un punto.
+
+Da ciò derivata la seguente implementazione:
+
+```scala
+trait Point:
+    def x: DoubleWithPrecision
+    def y: DoubleWithPrecision
+
+object Point:
+    def unapply(point: Point): (Double, Double) = (point.x.value, point.y.value)
+
+given Conversion[(Double, Double), Point] with
+    def apply(pair: (Double, Double)): Point =
+        Point(DoubleWithPrecision(pair._1), DoubleWithPrecision(pair._2))
+```
+#### Nesting di componenti
+
+La costruzione della mappa è stata realizzata attraverso il nesting di componenti, ognuno con diverse proprietà.
+In linea di massima, si è sempre cercato di separare la logica di creazione del componente, compreso di ciò che necessità per la resa grafica, dallo stile di visualizzione.
+
+Per far fronte a ciò, ogni componente è corredato dello stretto necessario, con aggiunta di una classe che permette di personalizzare la resa grafica, attraverso i fogli di stile.
+
+> Nota: non tutte le proprietà di svg sono modificabili via css, perciò sono state inserire direttamente nel componente.
+
+Di seguito un esempio:
+
+```scala
+...
+svg.text(
+    svg.x := s"$x",
+    svg.y := s"$y",
+    svg.className := "spot-text",
+    svg.fontSize := s"$radius",
+    s"${structureType.getOrElse("")}"
+)
+...
+```
+
+```css
+.spot-text {
+    fill: black;
+    text-anchor: middle;
+    dominant-baseline: central;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+```
+
 ### View TypeUtils
 
 ### Test
