@@ -102,15 +102,67 @@ Il concetto di `Rules` incapsula tutte le regole del modello di gioco che compre
 
 ## DSL
 
+Per semplificare la modellazione di un gioco basato sull'engine creato si è scelto di optare per lo sviluppo di un dsl che supportasse la sua creazione in modo dichiarativo.
+
+Il dsl si divide in due parti:
+
+- `PropertiesDSL` che consiste in un core di funzionalità generiche che permettono lo sviluppo di un dsl basato su propietà.
+- `GameDSL` che consiste nell'insieme di funzionalità che vengono esposte per la creazione delle regole di un gioco
+
 ### PropertiesDSL
 
 ![PropertiesDSL](../img/04-design/dsl/properties-dsl.jpg)
 
+Per quanto riguarda il `PropertiesDSL` si è scelto di utilizzare un approccio basato su `Property` che altro non sono che dei wrapper di valori.
+Le principali tipologie di `Property` sono:
+
+- `OptionalProperty` che rappresenta una properietà che all'inizio è vuota e può venire settata una volta.
+- `MultipleProperty` che rappresenta una properietà che può essere settata più volte e che quindi contiene una lista di valori.
+
+Successivamente per la modifica di tali risorse sono state utilizzate tre entità:
+
+- `PropertySetter` che esponse il metodo `:=` utilizzato per settare il valore di una `Property` in modo dichiarativo.
+  ```scala
+  property := value
+  ```
+- `PropertyBuilder`che permette di creare una `Property` in modo dichiarativo, tramite la sua costruzione. Esso infatti abilita la seguente sintassi:
+
+  ```scala
+  property {
+      ...
+      another {
+
+      }
+      ...
+  }
+  ```
+
+- `ObjectBuilder` che ha la stessa funzionalità del `PropertyBuilder` ma che restituisce l'oggetto creato.
+
 ### GameDSL
+
+A questo punto si è implementato quindi il `GameDSL` che consiste in un insieme di funzionalità che permettono la creazione di un gioco in modo dichiarativo sfruttando il `PropertiesDSL`.
+
+#### Dominio GameDSL
 
 ![GameDSL Dominio](../img/04-design/dsl/game-dsl-domain.jpg)
 
+Prima di tutto si è definito un insieme di contesti che vanno a definire il dominio del `GameDSL`:
+
+- `GameCtx` che rappresenta il contesto di un gioco, ovvero quello in cui si definiscono le regole di un gioco.
+- `PlayersCtx` che rappresenta il contesto dei giocatori, ovvero quello in cui si definiscono le regole relative ai giocatori.
+- `PhaseCtx` che rappresenta il contesto di una fase, ovvero quello in cui si definiscono le regole relative ad una fase del gioco.
+- `StepCtx` che rappresenta il contesto di uno step, ovvero quello in cui si definiscono le regole relative ad uno step di una fase del gioco.
+
+#### DSL
+
 ![GameDSL](../img/04-design/dsl/game-dsl.jpg)
+
+A questo punto sono state sviluppate l'insieme di funzionalità che permettono la creazione di un gioco in modo dichiarativo.
+
+Si può notare come queste rispecchino i vari contesti e soprattuto le properietà che questi contesti contengono, infatti ognuna delle operazione esposte dal dsl rispecchia una delle properietà del contesto.
+
+Questo è stato fatto per simulare un concetto di funzione in cui il contesto è implicito e quindi non è necessario passarlo come parametro, ne specificare su di chi si sta operando.
 
 <!--************ MAZZOLI *****************-->
 
