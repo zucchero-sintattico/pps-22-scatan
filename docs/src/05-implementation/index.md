@@ -180,6 +180,47 @@ svg.text(
 
 ### View TypeUtils
 
+La creazione della view, che necessità di un nesting dei componenti, risulta parecchio prolissa e ripetitiva nel passaggio dei parametri.
+
+Per ovviare a questo problema, ho scelto di nascondere il passaggio dei parametri ridondanti, attraverso l'utilizzo di [**Context Function**](https://docs.scala-lang.org/scala3/reference/contextual/context-functions.html) e la dichiarazione di opportuni tipi, a seconda dell'elemento di contesto che si vuole catturare.
+
+Inoltre, sono stati definiti anche tipi dati da composizioni degli stessi, in modo da catturare più elementi di contesto contemporaneamente.
+
+Alcuni di essi sono ripoortati di seguito:
+
+```scala
+  type Displayable[T] = ScatanViewModel ?=> T
+  type InputSource[T] = GameViewClickHandler ?=> T
+  type DisplayableSource[T] = Displayable[InputSource[T]]
+  type InputSourceWithState[T] = InputSource[GameStateKnowledge[T]]
+```
+
+La possibilità di catturare il contesto di cui ha bisogno una gerarchia nestata di chiamate a funzioni, in un tipo implicito, ha aperto la possibilità alla realizzazione di semplificazioni.
+
+Di seguito è riportato un frammento esemplificativo:
+
+```scala
+def method1: InputSourceWithState[E] =
+    // not using ScatanState
+    method2
+
+def method2: InputSourceWithState[E] =
+    doSomethingWithState(summon[ScatanState])
+```
+
+Al contrario, la versione senza Context Function sarebbe stata:
+
+```scala
+def method1(state: ScatanState): E =
+    // not using ScatanState
+    method2(state)
+
+def method2(state: ScatanState): E =
+    doSomethingWithState(state)
+```
+
+L'esempio è tratto da una semplificazione di `scatan.views.game.components.GameMapComponent#svgHexagonWithCrossedNumber`.
+
 ### Test
 
 ## Alessandro Mazzoli
