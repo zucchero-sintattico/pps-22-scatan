@@ -263,4 +263,131 @@ Qualora un test fallisce, è possibile ottenere i valori che hanno causato il fa
 
 ## Luigi Borriello
 
+Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmente delle seguenti parti:
+
+- Creazione e modellazione dei singoli componenti relativi allo stato della partita, e delle loro corrispondenti operazioni nonchè:
+  - Gestione delle carte risorse
+  - Gestione delle carte sviluppo
+  - Gestione delle costruzioni
+  - Gestione dei punteggi
+  - Gestione dei certificati
+  - Gestione degli scambi intra-giocatore
+  - Gestione degli scambi con la banca
+
+- Modellazione dello stato della partita
+- Realizzazione grafica degli scambi
+
+Di seguito saranno descritte con maggior dettaglio le parti più salienti.
+
+### Creazione e modellazione dei singoli componenti della partita
+
+Come prima cosa, ho individuato quelle che sarebbero state le componenti principali necessari a modellare dello stato della partita, individuando come entità principali i **buildings**, le **resource cards**, le **development cards**, i **trades** e gli **scores**.
+Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellare le singole componenti, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
+
+Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei __type alias__, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
+
+Di seguito, sono riportati due esempi di definizione di  __type alias__:
+- `ResourceCards`:
+```scala
+```scala
+/** Type of possible resources.
+  */
+enum ResourceType:
+  case Wood
+  case Brick
+  case Sheep
+  case Wheat
+  case Rock
+
+/** A resource card.
+  */
+final case class ResourceCard(resourceType: ResourceType)
+
+/** The resource cards hold by the players.
+  */
+type ResourceCards = Map[ScatanPlayer, Seq[ResourceCard]]
+```
+
+- `Awards`:
+```scala
+/** Type of possible awards.
+  */
+enum AwardType:
+  case LongestRoad
+  case LargestArmy
+
+/** An award
+  */
+final case class Award(awardType: AwardType)
+
+/** The assigned awards to the current holder player and the number of points.
+  */
+type Awards = Map[Award, Option[(ScatanPlayer, Int)]]
+```
+
+### Modellazione dello stato della partita
+
+In concomitanza alla realizzazione di questi componenti, ho iniziato a modellare anche quella che sarebbe stata l'entità principale dello stato della partita, scegliendo di utilizzare una **case class** chiamata `ScatanState`, contenente solo le informazioni necessarie per poter catturare i vari snapshot dello stato della partita durante il suo svolgimento.
+
+```scala
+final case class ScatanState(
+    players: Seq[ScatanPlayer],
+    gameMap: GameMap,
+    assignedBuildings: AssignedBuildings,
+    assignedAwards: Awards,
+    resourceCards: ResourceCards,
+    developmentCards: DevelopmentCards,
+    developmentCardsDeck: DevelopmentCardsDeck,
+    robberPlacement: Hexagon
+)
+```
+
+### Realizzazione delle ScatanState Ops
+
+Dopo aver individuato quelle che sarebbero state le principali operazioni da poter effettuare sullo stato della partita, ho deciso di raggrupparle e dividerle in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
+
+Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità.
+
+Inoltre, per favorire un approccio più funzionale, ho deciso di realizzare tutti questi metodi senza side-effect, facendo in modo che ogni volta che verrà effettuata una modifica allo stato della partita, verrà ritornato un `Option[ScatanState]` contenente il nuovo stato della partita, o `None` altrimenti, permettendo agli strati superiori catturare eventuali errori e gestirli di conseguenza.
+
+Di seguito, viene riportato un esempio di definizione dell' **object** contenente le **extension methods** per la gestione delle **resource cards**:
+
+```scala
+/** Operations on [[ScatanState]] related to resource cards.
+  */
+object ResourceCardOps:
+
+  extension (state: ScatanState)
+    /** Assigns a resource card to a player.
+      */
+    def assignResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
+      Some(
+        state.copy(
+          resourceCards = state.resourceCards.updated(player, state.resourceCards(player) :+ resourceCard)
+        )
+      )
+
+    /** Removes a resource card from a player.
+      */
+    def removeResourceCard(player: ScatanPlayer, resourceCard: ResourceCard): Option[ScatanState] =
+      if !state.resourceCards(player).contains(resourceCard) then None
+      else
+        val remainingCardsOfSameType =
+          state.resourceCards(player).filter(_.resourceType == resourceCard.resourceType).drop(1)
+        val remainingCardsOfDifferentType =
+          state.resourceCards(player).filter(_.resourceType != resourceCard.resourceType)
+        Some(
+          state.copy(
+            resourceCards =
+              state.resourceCards.updated(player, remainingCardsOfDifferentType ++ remainingCardsOfSameType)
+          )
+        )
+```
+
+
+
+
+
+
+
 ## Pair programming
