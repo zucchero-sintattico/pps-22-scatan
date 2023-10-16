@@ -86,6 +86,15 @@ Tra queste troviamo:
 
 ### Rules
 
+Il concetto di `Rules` incapsula tutte le regole del modello di gioco che comprendono tra i principali concetti:
+
+- Stato iniziale
+- Fase iniziale
+- Configurazione per ogni fase tra cui:
+  - Step iniziale
+  - Configurazione dei vari step tra cui:
+    - Per ogni azione possibile lo step di arrivo
+
 <!--************ MAZZOLI *****************-->
 
 ## DSL
