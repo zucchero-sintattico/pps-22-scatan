@@ -29,4 +29,6 @@
 
 [Installazione](./others/installation.md)
 
+[Guida utente](./others/tutorial.md)
+
 [Link utili](./others/links.md)

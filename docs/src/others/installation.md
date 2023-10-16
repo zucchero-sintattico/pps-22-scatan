@@ -24,5 +24,3 @@ Per eseguire i **test** è necessario avere installato, si può procedere con il
 ```bash
 % sbt test
 ```
-
-## Guida utente
