@@ -84,7 +84,7 @@ A fronte di una lettura di [Scala with Cats](https://underscore.io/books/scala-w
 - **associatività**: \\( \forall \\; a,b,c \in S \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c) \\)
 - **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a  \wedge (a \cdot \epsilon) = a \\)
 
-Ne deriva il seguente codice, utilizzando la libreria [Cats](https://typelevel.org/cats/):
+Ne deriva il seguente codice, utilizzando la libreria [`Cats`](https://typelevel.org/cats/):
 
 ```scala
 import cats.Monoid
@@ -180,7 +180,70 @@ svg.text(
 
 ### View TypeUtils
 
+La creazione della view, che necessità di un nesting dei componenti, risulta parecchio prolissa e ripetitiva nel passaggio dei parametri.
+
+Per ovviare a questo problema, ho scelto di nascondere il passaggio dei parametri ridondanti, attraverso l'utilizzo di [`Context Function`](https://docs.scala-lang.org/scala3/reference/contextual/context-functions.html) e la dichiarazione di opportuni tipi, a seconda dell'elemento di contesto che si vuole catturare.
+
+Inoltre, sono stati definiti anche tipi dati da composizioni degli stessi, in modo da catturare più elementi di contesto contemporaneamente.
+
+Alcuni di essi sono ripoortati di seguito:
+
+```scala
+  type Displayable[T] = ScatanViewModel ?=> T
+  type InputSource[T] = GameViewClickHandler ?=> T
+  type DisplayableSource[T] = Displayable[InputSource[T]]
+  type InputSourceWithState[T] = InputSource[GameStateKnowledge[T]]
+```
+
+La possibilità di catturare il contesto di cui ha bisogno una gerarchia nestata di chiamate a funzioni, in un tipo implicito, ha aperto la possibilità alla realizzazione di semplificazioni.
+
+Di seguito è riportato un frammento esemplificativo:
+
+```scala
+def method1: InputSourceWithState[E] =
+    // not using ScatanState
+    method2
+
+def method2: InputSourceWithState[E] =
+    doSomethingWithState(summon[ScatanState])
+```
+
+Al contrario, la versione senza Context Function sarebbe stata:
+
+```scala
+def method1(state: ScatanState): E =
+    // not using ScatanState
+    method2(state)
+
+def method2(state: ScatanState): E =
+    doSomethingWithState(state)
+```
+
+L'esempio è tratto da una semplificazione di `scatan.views.game.components.GameMapComponent#svgHexagonWithCrossedNumber`.
+
 ### Test
+
+Il testing, in alcune sue parti, risultava complicato da esprimere perché, ciò che si voleva porre sotto osservazione, erano delle proprietà.
+
+> Esempio: verifica degli assiomi di un _Monoide_
+
+Per ovviare a questo problema ho deciso di esplorare la libreria [`ScalaTest + ScalaCheck`](https://www.scalatest.org/plus/scalacheck), che permette un'integrazione tra i due framework.
+Così facendo è stato possibile definire dei test **property-based**.
+
+Di seguito un esempio di test:
+
+```scala
+class HexagonTest extends BaseTest with ScalaCheckPropertyChecks:
+    "An Hexagon" should "respect the identity law in order to be a Monoid" in {
+    forAll { (r: Int, c: Int, s: Int) =>
+      val hexagon = Hexagon(r, c, s)
+      hexagon |+| Monoid[Hexagon].empty shouldBe hexagon
+      Monoid[Hexagon].empty |+| hexagon shouldBe hexagon
+    }
+  }
+```
+
+Qualora un test fallisce, è possibile ottenere i valori che hanno causato il fallimento e, grazie alla pseudo-randomicità, è possibile riprodurre il test.
 
 ## Alessandro Mazzoli
 
