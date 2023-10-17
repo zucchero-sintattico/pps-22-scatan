@@ -59,16 +59,26 @@ e riceve le risorse corrispondenti alle tasselli su cui ha costruito.
 
 ![Assegnamento Risorse iniziali](../img/others/tutorial/initial-resources-assignment/initial-resources-assignment.png)
 
-## Robber [R6]
+## Lancio dadi e raccolta risorse [R6]
 
-### Lancio dei dadi con risultato 7 [R6.1]
+### Lancio dei dadi
+
+![Lancio dei dadi](../img/others/tutorial/resource-farming/rolling-dice.png)
+
+### Raccolta risorse
+
+![Raccolta risorse](../img/others/tutorial/resource-farming/resource-acquired.png)
+
+## Robber [R7]
+
+### Lancio dei dadi con risultato 7 [R7.1]
 
 ![Lancio dei dadi con risultato 7](../img/others/tutorial/robber/7-roll-dice.png)
 
-### Rubare una carta ad un avversario [R6.2]
+### Rubare una carta ad un avversario [R7.2]
 
 ![Rubare una carta ad un avversario](../img/others/tutorial/robber/stealing-card.png)
 
-### Carta rubata [R6.3]
+### Carta rubata [R7.3]
 
 ![Carta rubata](../img/others/tutorial/robber/stolen-card.png)
