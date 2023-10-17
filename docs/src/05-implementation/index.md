@@ -954,12 +954,70 @@ Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella 
 ```
 
 ## Pair programming
+Data la corretta divisione dei compiti e la non sovrapposizione delle proprie parti assegnate, non è stato strettamente necessario effettuare pair programming.
+Tuttavia le parti più complesse del progetto sono state sviluppate in maniera collaborativa, come ad esempio la parte grafica dell'applicazione nelle sue varie schermate.
 
-Lo sviluppo di alcune parti del progetto non è stato effettuato propriamente in pair programming, ma sono state sviluppate in maniera collaborativa, come ad esempio la parte grafica dell'applicazione nelle sue varie schermate.
+### ScalaJs Views (Andruccioli & Borriello)
+Avendo utilizzato Laminar per la realizzazione della parte grafica dell'applicazione, la realizzazione delle schermate è stata effettuata tramite la definizione di componenti, che sono stati poi assemblati per creare le varie schermate.
 
-### Setup View & Game View (Andruccioli & Borriello)
-La grafica dell'applicazione è implementata grazie al framework **Laminar**, per disegnare l'interfaccia grafica, e realizzare i componenti reattivi.
+Il framework, ci ha permesso di realizzare le schermate in maniera dichiarativa, utilizzando la sintassi di Scala, e di poterle aggiornare in maniera reattiva, in modo da poterle mantenere sempre sincronizzate con lo stato della partita.
+
+La reattività è stata ottenuta tramite l'utilizzo di **Var** e **Signal**, nonché variabili reattive e relativi observer, forniti dal framework stesso.
+
+#### Esempio: SetUpView
 
 Per quanto riguarda la schermata di setup, è realizzata in maniera molto semplice, in quanto non presenta particolari funzionalità, se non la possibilità di inserire il nome dei giocatori, di selezionare il numero di giocatori e di scegliere la mappa di gioco.
+
+Ad esempio, nella SetUpView, abbiamo le seguenti componenti reattive:
+``` scala
+  /** The number of players.
+    */
+  val numberOfUsers: Var[Int] = Var(3)
+  val reactiveNumberOfUsers: Signal[Int] = numberOfUsers.signal
+
+  /** Map Selection */
+  val mapSelectionMode: Var[MapSelectionMode] = Var(MapSelectionMode.Default)
+  val reactiveGameMap: Var[GameMap] = Var(GameMapFactory.defaultMap)
+```
+
+Le quali vengono poi utilizzate nel del componente grafico renderizzato:
+```scala
+override def element: Element =
+    // ... stuff
+      div(
+        cls := "setup-menu",
+        select(
+          cls := "setup-menu-combobox",
+          // how vars are used "at write time"
+          onChange.mapToValue.map(_.toInt) --> numberOfUsers,
+          option(
+            cls := "setup-menu-combobox-option",
+            value := "3",
+            "3 Players"
+          ),
+          option(
+            cls := "setup-menu-combobox-option",
+            value := "4",
+            "4 Players"
+          )
+        )
+      ),
+      div(
+        cls := "setup-menu",
+        // how signals are used "at read time"
+        children <-- reactiveNumberOfUsers.map(element =>
+          for i <- 1 to element
+          yield div(
+            cls := "setup-menu-textbox-container",
+            input(
+              cls := "setup-menu-textbox",
+              defaultValue := s"Player $i",
+              placeholder := s"Player $i"
+            )
+          )
+        )
+      ),
+      // ... other stuff
+```
 
 
