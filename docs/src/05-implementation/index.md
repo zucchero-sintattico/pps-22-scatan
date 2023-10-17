@@ -386,10 +386,11 @@ object ResourceCardOps:
 
 
 ### Realizzazione degli scambi
-FoldLeft????
+<!-- FoldLeft -->
+<!-- For comprension -->
 
 ### Calcolo degli Scores
-
+<!-- Partial functions -->
 
 
 
