@@ -14,7 +14,7 @@ Di seguito sarà riportata una descrizione più dettagliata del nostro dominio a
 
 ### Campo di gioco
 
-La mappa di gioco è composta da tasselle esagonali che, unite tra loro a nido d'ape, formano il terreno di gioco. L'incrocio di 3 esagoni determina una zona di costruzione per edifici, le quali sono collegate tra loro da strade. Inoltre, ogni tassella ha una tipologia di terreno ed un numero che indica il valore di lancio dei dadi per raccogliere le risorse.
+La mappa di gioco è composta da tasselli esagonali che, unite tra loro a nido d'ape, formano il terreno di gioco. L'incrocio di 3 esagoni determina una zona di costruzione per edifici, le quali sono collegate tra loro da strade. Inoltre, ogni tassella ha una tipologia di terreno ed un numero che indica il valore di lancio dei dadi per raccogliere le risorse.
 
 ![Mappa di Catan. Fonte: https://blog.alexbeals.com/posts/catan-map-generator](../img/02-requirements/catan-map.jpg)
 

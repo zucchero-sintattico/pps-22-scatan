@@ -45,7 +45,7 @@ Gli utenti posizionano le strutture iniziali seguendo le regole del gioco:
 
 ![Posizionamento iniziale](../img/others/tutorial/initial-positioning/initial-positioning.png)
 
-> **Regola**: per costruire un settlment è necessario che, negli spot adiacenti, non ci siano altre strutture!
+> **Regola**: per costruire un settlement è necessario che, negli spot adiacenti, non ci siano altre strutture!
 
 ![Posizionamento iniziale errore](../img/others/tutorial/initial-positioning/rule-on-initial-positioning.png)
 
@@ -55,6 +55,6 @@ Gli utenti posizionano le strutture iniziali seguendo le regole del gioco:
 
 ![Risorse iniziali](../img/others/tutorial/initial-resources-assignment/second-settlment-placing.png)
 
-e riceve le risorse corrispondenti alle tasselle su cui ha costruito.
+e riceve le risorse corrispondenti alle tasselli su cui ha costruito.
 
-![Assegnemnto Risorse iniziali](../img/others/tutorial/initial-resources-assignment/initial-resources-assignment.png)
+![Assegnamento Risorse iniziali](../img/others/tutorial/initial-resources-assignment/initial-resources-assignment.png)

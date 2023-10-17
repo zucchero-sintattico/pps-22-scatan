@@ -137,7 +137,7 @@ In particolare vi sono contenute le seguenti informazioni:
 
 ### Componenti del gioco & Operations
 
-Le informazioni precedentemente elencate sono modellate come componenti (es: `Award`, `Buildings`, `ResourceCard`, ...), del gioco, molti di questi indipenti tra loro.
+Le informazioni precedentemente elencate sono modellate come componenti (es: `Award`, `Buildings`, `ResourceCard`, ...), del gioco, molti di questi indipendenti tra loro.
 In seguito, a ciò le operations per gestire queste singole parti del dominio sono realizzate indipendentemente, optando quindi per un approccio modulare facile da estendere e mantenere.
 Inoltre, così facendo, il core della partita (`ScatanState`) risulta essere indipendente dalle funzionalità del gioco.
 

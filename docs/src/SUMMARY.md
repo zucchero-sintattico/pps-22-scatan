@@ -14,7 +14,7 @@
 
 - [Implementazione](./05-implementation/index.md)
 
-- [Restrospettiva](./06-retrospective/index.md)
+- [Retrospettiva](./06-retrospective/index.md)
 
 - [Backlog](./09-backlog/product-backlog.md)
   - [Sprint 1](./09-backlog/sprints/01-sprint.md)

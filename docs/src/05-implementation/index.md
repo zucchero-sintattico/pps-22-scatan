@@ -958,8 +958,7 @@ Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella 
 Lo sviluppo di alcune parti del progetto non è stato effettuato propriamente in pair programming, ma sono state sviluppate in maniera collaborativa, come ad esempio la parte grafica dell'applicazione nelle sue varie schermate.
 
 ### Setup View & Game View (Andruccioli & Borriello)
+
 La grafica dell'applicazione è implementata grazie al framework **Laminar**, per disegnare l'interfaccia grafica, e realizzare i componenti reattivi.
 
 Per quanto riguarda la schermata di setup, è realizzata in maniera molto semplice, in quanto non presenta particolari funzionalità, se non la possibilità di inserire il nome dei giocatori, di selezionare il numero di giocatori e di scegliere la mappa di gioco.
-
-
