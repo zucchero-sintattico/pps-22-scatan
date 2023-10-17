@@ -10,10 +10,10 @@ Il codice è organizzato in 5 package principali:
 - `views` contiene le entità che permettono di visualizzare lo stato dell'applicazione all'utente e che ne permetto l'interazione diretta tramite un interfaccia grafica.
 - `controllers` contiene le entità che permettono di gestire le interazioni dell'utente con l'applicazione, ovvero quelle che implementano la logica di accesso e aggiornamento del Model.
 - `utils` contiene le classi di utilità, ovvero quelle che implementano funzionalità di supporto.
-- `lib` contiene i module sviluppati che sono diventati parte fondamente del progetto.
+- `lib` contiene i module sviluppati che sono diventati parte fondamentale del progetto.
   Tra questi troviamo:
-  - `mvc` contentente le classi che implementano il pattern architetturale MVC scelto per il progetto e tutte le sue componenti.
-  - `game` contentente le classi che implementano un engine di gioco generico, che può essere utilizzato per implementare giochi basati su fasi, step e azioni.
+  - `mvc` contenente le classi che implementano il pattern architetturale MVC scelto per il progetto e tutte le sue componenti.
+  - `game` contenente le classi che implementano un engine di gioco generico, che può essere utilizzato per implementare giochi basati su fasi, step e azioni.
     All'interno di questo package troviamo anche il `dsl` che permette di definire un gioco in modo dichiarativo.
 
 <!--************ MAZZOLI *****************-->
@@ -51,8 +51,6 @@ Questo componente serve per costruire insieme le componenti di View, Model e Con
 
 Il componente responsabile poi della gestione di queste pagine è l'`Application` che gestisce il mapping dalla `Route` all'istanza di `ApplicationPage` corrispondente.
 
-<!--************ MAZZOLI *****************-->
-
 ## Game Engine
 
 Un Game consiste nell'insieme delle seguenti proprietà:
@@ -73,7 +71,7 @@ La classe `Game` rappresenta il core del gioco, ovvero il suo stato.
 
 ![Game](../img/04-design/game/game-ops.jpg)
 
-Poichè ora il Game consiste solo in uno snapshot di un gioco, le sue funzionalità vengono esposte tramite insiemi coerenti di operations su di esso.
+Poiché ora il Game consiste solo in uno snapshot di un gioco, le sue funzionalità vengono esposte tramite insiemi coerenti di operations su di esso.
 Tra queste troviamo:
 
 - `GamePlayOps` che contiene le operations per gestire le azioni dei giocatori. Esso infatti aggiunge funzionalità quali:
@@ -81,8 +79,8 @@ Tra queste troviamo:
   - `play` che permette di eseguire l'azione e di passare allo stato successivo.
     Infatti l'azione viene incapsulato nel concetto di `Effect`, che altro che non è un mapping dallo stato attuale ad uno stato successivo, che può però non essere applicabile.
 - `GameTurnOps` aggiunge la funzionalità di gestione del turno, ovvero di passaggio da un giocatore all'altro.
-- `GameWinOps` esponse come funzionalità la gestione della vittoria di un giocatore, ovvero la verifica se un giocatore ha raggiunto i punti vittoria necessari per vincere la partita.
-  Tramite di esso non solo è possibile sapere se la partita è finita ma è possibile sapire se c'è e chi è il vincitore.
+- `GameWinOps` espone come funzionalità la gestione della vittoria di un giocatore, ovvero la verifica se un giocatore ha raggiunto i punti vittoria necessari per vincere la partita.
+  Tramite di esso non solo è possibile sapere se la partita è finita ma è possibile sapere se c'è e chi è il vincitore.
 
 ### Rules
 
@@ -97,8 +95,6 @@ Il concetto di `Rules` incapsula tutte le regole del modello di gioco che compre
   - Configurazione dei vari step tra cui:
     - Per ogni azione possibile lo step di arrivo
 
-<!--************ MAZZOLI *****************-->
-
 ## ScatanGame
 
 #### Dominio
@@ -107,7 +103,7 @@ Il dominio del gioco è stato modellato nel seguente modo:
 
 ![GameDSL](../img/04-design/game/scatan-game-domain.jpg)
 
-Poichè ad ogni azioni corrisponde esattamente un solo stato di arrivo si è dovuto differenziare il lancio dei dati in due azioni distinte:
+Poiché ad ogni azioni corrisponde esattamente un solo stato di arrivo si è dovuto differenziare il lancio dei dati in due azioni distinte:
 
 - `RollDice` che rappresenta il lancio dei dadi quando esce un numero diverso da 7
 - `RollSeven` che rappresenta il lancio dei dadi quando esce 7
@@ -188,7 +184,7 @@ Perciò è possibile definire delle `TileContentStrategy` che permette di modifi
 ## View
 
 La View, come precedentemente introdotto, permette all'utente di visualizzare lo stato dell'applicazione in modo reattivo, e consentire l'interazione con il sistema.
-È possibile notare una differente complessità tra le varie schermate dell'applicazione: la schermata di gioco è la più complessa, in quanto deve mostrare lo stato attuale di avanzamente della partita, e consentire le varie interazione permesse, mentre le altre contengono un minor numero di elementi, in quanto devono solo consentire all'utente di proseguire e/o navigare all'interno dell'applicazione.
+È possibile notare una differente complessità tra le varie schermate dell'applicazione: la schermata di gioco è la più complessa, in quanto deve mostrare lo stato attuale di avanzamento della partita, e consentire le varie interazione permesse, mentre le altre contengono un minor numero di elementi, in quanto devono solo consentire all'utente di proseguire e/o navigare all'interno dell'applicazione.
 
 A fronte di ciò, è stato scelto di utilizzare un approccio a componenti per la realizzazione schermate più dense di elementi, mentre per le altre è stato scelto un approccio più semplice, basato su un unico elemento.
 

@@ -1,4 +1,4 @@
-# Design Architettuale
+# Design Architetturale
 
 Come pattern architetturale viene utilizzando il pattern MVC (Model-View-Controller), che permette di separare la logica di business dalla logica di presentazione. In questo modo è possibile modificare l'interfaccia grafica senza dover modificare la logica di business e viceversa.
 

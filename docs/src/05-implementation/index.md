@@ -346,8 +346,8 @@ trait NavigatorView extends View[?]:
 
 ##### ScalaJS
 
-Per supportare inoltre l'integrazione dell'architettura con ScalaJS, ho è presente un ulteriore Mixin che aggiunge la properità `element` che rappresenta il nodo radice della view e che andrà implementato dalle view concrete.
-Questo componente inoltre si occupa di esporre lo stato reattivo in modo da poter essere sfruttato dagli elementi grafici poichè mantenuto sempre sincronizzato
+Per supportare inoltre l'integrazione dell'architettura con ScalaJS, ho è presente un ulteriore Mixin che aggiunge la proprietà `element` che rappresenta il nodo radice della view e che andrà implementato dalle view concrete.
+Questo componente inoltre si occupa di esporre lo stato reattivo in modo da poter essere sfruttato dagli elementi grafici poiché mantenuto sempre sincronizzato
 
 ```scala
 trait ScalaJSView[State <: Model.State](
@@ -462,7 +462,7 @@ Per poter definire le regole è presente un DSL che permette di definire le rego
 #### PropertiesDSL
 
 Alla base del DSL vi è un core di funzionalità che permettono di definire un DSL generico.
-Tale core è basato sul concetto di properietà, in particolare le seguenti due:
+Tale core è basato sul concetto di proprietà, in particolare le seguenti due:
 
 - `OptionalProperty`, che rappresenta una proprietà vuota all'inizio e che può essere modificata tramite l'aggiunta di un valore
 
