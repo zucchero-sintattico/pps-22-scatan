@@ -636,8 +636,7 @@ Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un
 
 Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmente delle seguenti parti:
 
-- Creazione e modellazione dei singoli componenti relativi allo stato della partita, e delle loro corrispondenti operazioni nonchè:
-
+- Modellazione dello stato della partita, dei singoli componenti relativi a quest'ultimo, e delle loro corrispondenti operazioni nonchè:
   - Gestione delle carte risorse
   - Gestione delle carte sviluppo
   - Gestione delle costruzioni
@@ -645,16 +644,15 @@ Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmen
   - Gestione dei certificati
   - Gestione degli scambi intra-giocatore
   - Gestione degli scambi con la banca
-
-- Modellazione dello stato della partita
 - Realizzazione grafica degli scambi
+- Contributo parziale alla realizzazione di tutte le schermate dell'applicazione  
 
 
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione e modellazione dei singoli componenti della partita
+Per la modellazione dello stato della partita, come prima cosa, ho individuato quelle che sarebbero state le sue componenti principali, individuando così le entità dei **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 
-Come prima cosa, ho individuato quelle che sarebbero state le componenti principali necessari a modellare dello stato della partita, individuando come entità principali i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
 
 Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei **type alias**, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
@@ -722,7 +720,7 @@ Dopo aver individuato quelle che sarebbero state le principali operazioni da pot
 
 Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità.
 
-Inoltre, per favorire un approccio più funzionale, ho deciso di realizzare tutti questi metodi senza side-effect, facendo in modo che ogni volta che verrà effettuata una modifica allo stato della partita, verrà ritornato un `Option[ScatanState]` contenente il nuovo stato della partita, o `None` altrimenti, permettendo agli strati superiori catturare eventuali errori e gestirli di conseguenza.
+Inoltre, per favorire un approccio più funzionale, ho deciso di realizzare tutti questi metodi senza side-effect, facendo in modo che ogni volta che verrà effettuata una modifica allo stato della partita, verrà ritornato un `Option[ScatanState]` contenente il nuovo stato della partita, o `None` altrimenti, permettendo agli strati superiori dell'applicazione di catturare eventuali errori e gestirli di conseguenza.
 
 Di seguito, viene riportato un esempio di definizione dell' **object** contenente le **extension methods** per la gestione delle **resource cards**:
 
@@ -798,7 +796,7 @@ Di seguito, viene riportato un esempio di utilizzo di `foldLeft` nella gestione 
 
 ### Calcolo degli Scores
 
-Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, è stato definito tramite la libreria cats, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
+Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, è stato definito tramite la libreria **cats**, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
 
 ```scala
 import cats.kernel.Semigroup
@@ -848,8 +846,9 @@ Infine, ho combinato queste funzioni di punteggio parziale mediante l'operazione
 ```
 
 ### Testing
-L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente. \\
-Per ovviare a questo problema, è stato utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito, più simile alla descrizione delle operazioni che vengono testate e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
+L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente. 
+
+Per ovviare a questo problema, è stato utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
 
 Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella fase di testing:
 
