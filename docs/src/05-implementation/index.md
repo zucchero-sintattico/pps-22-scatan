@@ -272,11 +272,11 @@ Le parti di progetto a cui ho lavorato sono principalmente le seguenti:
 
 ### MVC
 
-L'architettura MVC è stata ispirata al Cake pattern, infatti possiamo notare come ognuno dei tre componenti abbia ad esempio il concetto di dipendenze, gestite tramite un Mixin che trasforma i requirements in proprietà del componente.
+L'architettura MVC è ispirata al Cake pattern, infatti possiamo notare come ognuno dei tre componenti abbia ad esempio il concetto di dipendenze, gestite tramite un Mixin che trasforma i requirements in proprietà del componente.
 
 #### Controller
 
-Il controller è stato strutturato come un componente che ha come dipendenze sia il model che la view, in modo da poterli utilizzare all'interno del controller stesso.
+Il controller è strutturato come un componente che ha come dipendenze sia il model che la view, in modo da poterli utilizzare all'interno del controller stesso.
 
 ```scala
 trait Controller[State <: Model.State]:
@@ -293,7 +293,7 @@ object Controller:
     def controller: C
 ```
 
-Per gestire gli update della view in maniera automatica è stato introdotto un `ReactiveModelWrapper` che incapsula il vero Model e si occupa di aggiornare la view ogni volta che lo stato del model cambia.
+Per gestire gli update della view in maniera automatica è presente un `ReactiveModelWrapper` che incapsula il vero Model e si occupa di aggiornare la view ogni volta che lo stato del model cambia.
 
 ```scala
 class ReactiveModelWrapper[S <: Model.State](view: => View[S], model: Model[S]) extends Model[S]:
@@ -304,7 +304,7 @@ class ReactiveModelWrapper[S <: Model.State](view: => View[S], model: Model[S]) 
     view.updateState(this.state)
 ```
 
-Questo ha permesso la creazione di un controller Base che supportasse automaticamente l'aggiornamento della rispettiva View.
+Questo permette la creazione di un controller Base che supporta automaticamente l'aggiornamento della rispettiva View.
 
 ```scala
 abstract class BaseController[V <: View[S], S <: Model.State](requirements: Controller.Requirements[V, S])
@@ -318,7 +318,7 @@ abstract class BaseController[V <: View[S], S <: Model.State](requirements: Cont
 
 #### View
 
-Anche il concetto di View è stato creato seguendo la stessa logica a componenti e dipendenze, infatti possiamo vedere come le dipendenze della view consistano solamente nel controller.
+Anche il concetto di View è strutturato seguendo la stessa logica a componenti e dipendenze, infatti presenta le sue dipendenze che consistono solamente nel controller.
 
 ```scala
 trait View[State <: Model.State]:
@@ -336,7 +336,7 @@ object View:
 
 ##### Navigator View
 
-Per supportare la navigabilità tra le varie view, ho creato un trait `NavigatorView` che estende `View` e aggiunge i metodi `navigateTo` e `navigateBack` che permettono di navigare tra le varie view.
+Per supportare la navigabilità tra le varie view, è presente il Mixin `NavigatorView` che estende `View` e aggiunge i metodi `navigateTo` e `navigateBack` che permettono di navigare tra le varie view.
 
 ```scala
 trait NavigatorView extends View[?]:
@@ -346,7 +346,7 @@ trait NavigatorView extends View[?]:
 
 ##### ScalaJS
 
-Per supportare inoltre l'integrazione dell'architettura con ScalaJS, ho optato per l'utilizzo di un altro Mixin che aggiunge la properità `element` che rappresenta il nodo radice della view.
+Per supportare inoltre l'integrazione dell'architettura con ScalaJS, ho è presente un ulteriore Mixin che aggiunge la properità `element` che rappresenta il nodo radice della view e che andrà implementato dalle view concrete.
 Questo componente inoltre si occupa di esporre lo stato reattivo in modo da poter essere sfruttato dagli elementi grafici poichè mantenuto sempre sincronizzato
 
 ```scala
@@ -394,13 +394,13 @@ Esso infatti al suo interno contiene tutte le dipendenze richieste da tutti i co
 
 ### Game
 
-Mi sono occupato inoltre dello sviluppo dell'engine di gioco basato su:
+Il modello di engine per giochi sviluppato si basa sulle seguenti tre componenti:
 
-- fasi
-- step
-- azioni
+- fase: momento del gioco
+- step: momento all'interno di un turno di gioco
+- azioni: azioni che possono essere effettuate all'interno di uno step e in una determinata fase
 
-Il core di questo engine è stato costruito per essere immutabile e per mantenere uno snapshot dello stato attuale del gioco.
+Il core di questo engine è costruito per essere immutabile e per mantenere uno snapshot dello stato attuale del gioco.
 
 ```scala
 final case class Game[State, PhaseType, StepType, ActionType, Player](
@@ -413,16 +413,16 @@ final case class Game[State, PhaseType, StepType, ActionType, Player](
 ):
 ```
 
-Successivamente tramite extension methods sono state esposte le varie funzionalità del gioco quali la possibilità di effettuare delle azioni.
+Tramite extension methods sono esposte le varie funzionalità del gioco quali la possibilità di effettuare delle azioni.
 
-Tale funzionalità è stata modellata sul concetto di effetto, che rende così il concetto di azione indipendente dalla sua implementazione che verrà fornita tramite tale effetto.
+Tale funzionalità è modellata sul concetto di effetto, che rende così il concetto di azione indipendente dalla sua implementazione che viene fornita tramite tale effetto.
 
 ```scala
 trait Effect[A, S]:
   def apply(state: S): Option[S]
 ```
 
-Un effetto infatti è relativo ad un azione e consiste in una trasformazione dallo stato attuale ad un altro stato, che può non essere applicabile.
+Un effetto è relativo ad un azione e consiste in una trasformazione dallo stato attuale ad un altro stato, che può non essere applicabile.
 
 L'implementazione della funzionalità di `play` risulta quindi la seguente, che sfrutta la monade Option per gestire il caso in cui l'effetto non sia applicabile.
 
@@ -457,12 +457,12 @@ object GamePlayOps:
 
 ### DSL
 
-Una volta modellato il concetto di Rules di un gioco, ho iniziato quindi lo sviluppo di un DSL che permettesse di definire le regole di un gioco in modo dichiarativo.
+Per poter definire le regole è presente un DSL che permette di definire le regole in modo dichiarativo.
 
 #### PropertiesDSL
 
-Prima di tutto ho definito un insieme di funzionalità core che permettesse la creazione di un dsl generico.
-Tale core è basato sul concetto di properietà, in particolare ne abbiamo definite due:
+Alla base del DSL vi è un core di funzionalità che permettono di definire un DSL generico.
+Tale core è basato sul concetto di properietà, in particolare le seguenti due:
 
 - `OptionalProperty`, che rappresenta una proprietà vuota all'inizio e che può essere modificata tramite l'aggiunta di un valore
 
@@ -481,9 +481,9 @@ Entrambe le proprietà sono anche `UpdatableProperty`, ovvero proprietà che pos
     override def update(newValue: P): Unit = value = value :+ newValue
 ```
 
-A questo punto per fornire una sintassi dichiarativa ho introdotto il concetto di `PropertyUpdater` che wrappa una property ed espone il metodo `:=` permettendo un utilizzo dichiarativo.
+A questo punto per fornire una sintassi dichiarativa è presente la classe `PropertyUpdater` che wrappa una property ed espone il metodo `:=`, permettendone un utilizzo dichiarativo.
 
-L'utilizzo di una conversione implicita ha permesso di poter utilizzare il metodo direttamente su una proprietà.
+L'utilizzo di una conversione implicita permette di poter utilizzare il metodo direttamente su una proprietà.
 
 ```scala
   class PropertySetter[P](property: PropertyUpdater[P]):
@@ -492,8 +492,14 @@ L'utilizzo di una conversione implicita ha permesso di poter utilizzare il metod
   given [P]: Conversion[PropertyUpdater[P], PropertySetter[P]] = PropertySetter(_)
 ```
 
-Stessa metodologia è stata applicata per proprietà la cui assegnazione prevede una fase di building, ovvero di costruzione della stessa.
-È stata realizzata quindi la class `PropertyBuilder` che aggiunge un metodo `apply` che prende in input una funzione che ha implicitamente il valore della proprietà in input.
+Tale classe permette l'utilizzo di una sintassi dichiarativa del seguente tipo:
+
+```scala
+property := value
+```
+
+La stessa metodologia è applicata per proprietà la cui assegnazione prevede una fase di building, ovvero di costruzione della stessa.
+È presente quindi la classe `PropertyBuilder` che aggiunge un metodo `apply` che prende in input una funzione che ha implicitamente il valore della proprietà in input.
 
 ```scala
   private type Builder[P] = P ?=> Unit
@@ -510,7 +516,7 @@ Stessa metodologia è stata applicata per proprietà la cui assegnazione prevede
   given [P: Factory]: Conversion[PropertyUpdater[P], PropertyBuilder[P]] = PropertyBuilder(_)
 ```
 
-Tramite l'utilizzo della factory viene creato l'oggetto che si vuole builder e viene utilizzata la funzione di building specificata, infine viene aggiornata la proprietà con l'oggetto creato.
+Tramite l'utilizzo della factory implicita viene creato l'oggetto che si vuole costruire e viene utilizzata la funzione di building specificata, infine viene aggiornata la proprietà con l'oggetto creato.
 
 Tale classe permette l'utilizzo di una sintassi dichiarativa del seguente tipo:
 
@@ -524,7 +530,7 @@ property {
 }
 ```
 
-Infine è stato realizzato l `ObjectBuilder` che consiste in un `PropertyBuilder` che ritorna l'oggetto costruito invece che settarlo ad una proprietà
+Infine è presente l `ObjectBuilder` che consiste in un `PropertyBuilder` che ritorna l'oggetto costruito invece che settarlo ad una proprietà
 
 ```scala
   class ObjectBuilder[P: Factory]:
@@ -534,7 +540,7 @@ Infine è stato realizzato l `ObjectBuilder` che consiste in un `PropertyBuilder
       obj
 ```
 
-Troviamo inoltre un type alias utile per lo sviluppo di funzioni che prendono implicitamente un contesto:
+È inoltre presente un type alias utile per lo sviluppo di funzioni che prendono implicitamente un contesto:
 
 ```scala
 type Contexted[Ctx, P] = Ctx ?=> P
@@ -542,18 +548,18 @@ type Contexted[Ctx, P] = Ctx ?=> P
 
 #### GameDSL
 
-Una volta creata la libreria per lo sviluppo di DSL ho iniziato a creare il DSL per la definizione di regole di un gioco.
+Sopra alla libreria di base è presente un DSL specifico per la definizione di regole di un gioco.
 
 ##### Dominio
 
-Prima di tutto ho definito un dominio di contesti contenti tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules`
+Prima di tutto è presente il dominio di contesti per il dsl, contente tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules`
 
 - `GameCtx` che rappresenta il contesto di un gioco, ovvero quello in cui si definiscono le regole di un gioco.
 - `PlayersCtx` che rappresenta il contesto dei giocatori, ovvero quello in cui si definiscono le regole relative ai giocatori.
 - `PhaseCtx` che rappresenta il contesto di una fase, ovvero quello in cui si definiscono le regole relative ad una fase del gioco.
 - `StepCtx` che rappresenta il contesto di uno step, ovvero quello in cui si definiscono le regole relative ad uno step di una fase del gioco.
 
-Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a definire il comportamente.
+Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a definire il comportamento.
 
 ```scala
   case class GameCtx[State, P, S, A, Player](
@@ -579,7 +585,7 @@ Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a
   )
 ```
 
-Infine tramite operations su tali contesti sono state definite le funzionalità di creazione del dsl in modo che ognuna di esse si riferisca ad una proprietà all'interno del contesto che sta costruendo.
+Tramite operations su tali contesti sono esposte le funzionalità di creazione del dsl in modo che ognuna di esse si riferisca ad una proprietà all'interno del contesto che sta costruendo.
 
 La più importante è sicuramente la funzione `Game` che permette la creazione di un `GameCtx`:
 
@@ -596,7 +602,7 @@ val gameCtx = Game {
 }
 ```
 
-Nella quale la funzione passata prende in input implicitamente il contesto di gioco e può quindi settare le varie proprietà, tramite le operazioni su quei contesti definiti.
+nella quale la funzione passata prende in input implicitamente il `GameCtx` e può quindi settare le sue proprietà, tramite le ulteriori operazioni che lavorano su quel contesto implicito.
 
 Ad esempio le operazioni sul `GameCtx` sono le seguenti:
 
@@ -630,11 +636,11 @@ object GameCtxOps:
 
 Queste funzionalità hanno quindi lo scopo di esporre le proprietà del contesto preso implicitamente e di permetterne la configurazione in maniera dichiarativa, utilizzando le conversioni implicite della libreria della proprietà.
 
-Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un contesto implicito sopra al quale vengono chiamate operazioni senza la necessità di dover specificare il receiver.
+Questa struttura cerca di emulare il concetto di funzione in cui il receiver è implicito e non va specificato.
 
 #### ScatanDSL
 
-Il dsl creato mi ha permesso di definire le regole del gioco nel seguente modo:
+Il dsl creato ha permesso di definire le regole del gioco nel seguente modo:
 
 ```scala
 private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
@@ -711,12 +717,12 @@ Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmen
   - Gestione degli scambi intra-giocatore
   - Gestione degli scambi con la banca
 - Realizzazione grafica degli scambi
-- Contributo parziale alla realizzazione di tutte le schermate dell'applicazione  
-
+- Contributo parziale alla realizzazione di tutte le schermate dell'applicazione
 
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione e modellazione dei singoli componenti della partita
+
 Per la modellazione dello stato della partita, come prima cosa, ho individuato quelle che sarebbero state le sue componenti principali, individuando così le entità dei **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 
 Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
@@ -726,6 +732,7 @@ Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato p
 Di seguito, sono riportati due esempi di definizione di **type alias**:
 
 - `ResourceCards`:
+
 ```scala
 /** Type of possible resources.
   */
@@ -743,7 +750,7 @@ final case class ResourceCard(resourceType: ResourceType)
 /** The resource cards hold by the players.
   */
 type ResourceCards = Map[ScatanPlayer, Seq[ResourceCard]]
-````
+```
 
 - `Awards`:
 
@@ -822,7 +829,6 @@ object ResourceCardOps:
         )
 ```
 
-
 ### Operazioni tail recursive
 
 Nello sviluppo delle operazioni sullo stato, ho posto una particolare enfasi sull'utilizzo pervasivo della funzione `foldLeft` per l'elaborazione delle informazioni in molte delle nostre strutture dati. L'obiettivo di questa scelta è stato duplice: da un lato, ottimizzare le prestazioni del codice attraverso l'uso di questa funzione altamente efficiente; d'altro lato, migliorare la coerenza e la leggibilità del codice, aumentandone la dichiaratività.
@@ -880,7 +886,7 @@ object Scores:
       }
 ```
 
-Successivamente, ho definito una serie di funzioni, ognuna delle quali si occupa di calcolare il punteggio dei giocatori secondo un criterio specifico, ottenendo così più punteggi "parziali". 
+Successivamente, ho definito una serie di funzioni, ognuna delle quali si occupa di calcolare il punteggio dei giocatori secondo un criterio specifico, ottenendo così più punteggi "parziali".
 
 Di seguito, viene riportato un esempio di definizione di una di queste funzioni:
 
@@ -912,7 +918,8 @@ Infine, ho combinato queste funzioni di punteggio parziale mediante l'operazione
 ```
 
 ### Testing
-L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente. 
+
+L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente.
 
 Per ovviare a questo problema, è stato utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
 
@@ -932,10 +939,5 @@ Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella 
       case None        => fail("stateWithAward should be defined")
   }
 ```
-
-
-
-
-
 
 ## Pair programming
