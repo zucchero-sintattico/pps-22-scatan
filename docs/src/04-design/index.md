@@ -22,7 +22,7 @@ Il codice è organizzato in 5 package principali:
 
 ### Model
 
-Si è scelto di gestire il Model come unico stato dell'applicazione, che viene modificato tramite l'aggiornamento dello stesso, applicando un'azione.
+Si è scelto di gestire il Model come unico stato dell'applicazione, che viene modificato tramite l'applicazione di un'azione di update.
 Lo stato che viene restituito è quindi sempre un oggetto immutabile che quindi può essere condiviso tra le varie componenti dell'applicazione.
 
 ### Controller
@@ -30,6 +30,7 @@ Lo stato che viene restituito è quindi sempre un oggetto immutabile che quindi 
 ![Architettura Controller](../img/04-design/mvc/mvc-controller.jpg)
 
 Per quanto riguarda la gestione dei Controller si è scelto di automatizzare l'aggiornamento dello stato alla view tramite la creazione di un `ReactiveModelWrapper` che incapsula il vero model e ad ogni modifica dello stato, notifica la view del cambiamento.
+
 La struttura del Controller è ispirata al Cake Pattern, portando quindi il concetto di dipendenza ma venendo poi gestita con il passaggio di tali requirements tramite costruttore.
 
 ### View
@@ -38,17 +39,20 @@ La struttura del Controller è ispirata al Cake Pattern, portando quindi il conc
 
 Anche nelle View sono stati sfruttati i Mixin, in particolare per supportare la navigabilità tra le varie schermate dell'applicazione e per l'integrazione di ScalaJS.
 Il Mixin `ScalaJSView` infatti si occupa di gestire le funzionalità di _show_ e _hide_ tramite render con Laminar, mentre il Mixin `NavigatorView` si occupa di gestire la navigazione tra le varie schermate dell'applicazione.
-Inoltre la `ScalaJSView` espone anche uno stato reattivo che può essere utilizzato nelle varie View e viene tenuto sempre aggiornato ad ogni modifica propagata dal controller. Questo ha reso molto semplice lo sviluppo delle pagine, in quanto tutto quello mostrato graficamente era dipendente dallo stato reattivo.
+
+Inoltre la `ScalaJSView` espone anche uno stato reattivo che può essere utilizzato nelle varie View e viene tenuto sempre aggiornato ad ogni modifica propagata dal controller. Questo ha reso molto semplice lo sviluppo delle pagine, in quanto tutto quello mostrato graficamente è dipendente dallo stato reattivo.
 
 #### ViewModel
 
-Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è stato creato il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone già tutti i vari metodi per ottenere le informazioni specifiche.
+Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è stato creato il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone tutti i vari metodi per ottenere le informazioni dipendenti dallo stato.
 
 ### Application
 
 ![Architettura Application](../img/04-design/mvc/mvc-app.jpg)
 
 Per completare la gestione di MVC si è quindi introdotto il concetto di `ApplicationPage`, ovvero dell'istanza di una pagina dell'applicazione che consiste nella referenza del Model, del Controller e della View.
+Questo componente serve per costruire insieme le componenti di View, Model e Controller e collegarle tra loro.
+
 Il componente responsabile poi della gestione di queste pagine è l'`Application` che si occupa di gestire il mapping dalla `Route` all'istanza di `ApplicationPage` corrispondente.
 
 <!--************ MAZZOLI *****************-->
@@ -77,12 +81,13 @@ Si è scelto quindi di mettere questa struttura `core` dentro la classe `Game` c
 Poichè ora il Game consiste solo in uno snapshot di un gioco, ad esso sono state aggiunte le varie funzionalità tramite insieme di operations su di esso.
 Tra queste troviamo:
 
-- `GamePlayOps` che contiene le operations per gestire le azioni dei giocatori. Esso infatti aggiunge funzionalità quali `canPlay` che utilizza le `Rules` per capire quali azioni sono possibili in quale fase e step e in quale stato si va a finire se si esegue quell'azione.
-  Ovviamente esponde anche il metodo `play` che permette di eseguire l'azione e di passare allo stato successivo.
-  Infatti l'azione viene incapsulato nel concetto di `Effect`, che altro che non è un mapping dallo stato attuale ad uno stato successivo, che può però non essere applicabile.
+- `GamePlayOps` che contiene le operations per gestire le azioni dei giocatori. Esso infatti aggiunge funzionalità quali:
+  - `canPlay` che utilizzando le `Rules` capisce quali azioni sono possibili in quale fase e step e in quale stato si va a finire se si esegue quell'azione.
+  - `play` che permette di eseguire l'azione e di passare allo stato successivo.
+    Infatti l'azione viene incapsulato nel concetto di `Effect`, che altro che non è un mapping dallo stato attuale ad uno stato successivo, che può però non essere applicabile.
 - `GameTurnOps` aggiunge la funzionalità di gestione del turno, ovvero di passaggio da un giocatore all'altro.
 - `GameWinOps` esponse come funzionalità la gestione della vittoria di un giocatore, ovvero la verifica se un giocatore ha raggiunto i punti vittoria necessari per vincere la partita.
-  Infatti tramite di esso non solo è possibile sapere se la partita è finita ma è possibile sapire se c'è e chi è il vincitore.
+  Tramite di esso non solo è possibile sapere se la partita è finita ma è possibile sapire se c'è e chi è il vincitore.
 
 ### Rules
 
@@ -94,7 +99,6 @@ Il concetto di `Rules` incapsula tutte le regole del modello di gioco che compre
   - Step iniziale
   - Step in cui termina il turno
   - Iteratore dei giocatori
-  - Eventuale azione di ingresso
   - Configurazione dei vari step tra cui:
     - Per ogni azione possibile lo step di arrivo
 
@@ -125,7 +129,7 @@ Successivamente per la modifica di tali risorse sono state utilizzate tre entit�
   ```scala
   property := value
   ```
-- `PropertyBuilder`che permette di creare una `Property` in modo dichiarativo, tramite la sua costruzione. Esso infatti abilita la seguente sintassi:
+- `PropertyBuilder` che permette di creare una `Property` in modo dichiarativo, tramite la sua costruzione. Esso infatti abilita la seguente sintassi:
 
   ```scala
   property {
@@ -154,27 +158,37 @@ Prima di tutto si è definito un insieme di contesti che vanno a definire il dom
 - `PhaseCtx` che rappresenta il contesto di una fase, ovvero quello in cui si definiscono le regole relative ad una fase del gioco.
 - `StepCtx` che rappresenta il contesto di uno step, ovvero quello in cui si definiscono le regole relative ad uno step di una fase del gioco.
 
+Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a definire il comportamente.
+
 #### DSL
 
 ![GameDSL](../img/04-design/dsl/game-dsl.jpg)
 
 A questo punto sono state sviluppate l'insieme di funzionalità che permettono la creazione di un gioco in modo dichiarativo.
 
-Si può notare come queste rispecchino i vari contesti e soprattuto le properietà che questi contesti contengono, infatti ognuna delle operazione esposte dal dsl rispecchia una delle properietà del contesto.
+Esse rispecchino le proprietà contenute all'interno dei vari contest, infatti ognuna delle operazione esposte dal dsl rispecchia una delle properietà del contesto, che viene trasformata in una property dichiarativa da poter usare nel dsl.
 
-Questo è stato fatto per simulare un concetto di funzione in cui il contesto è implicito e quindi non è necessario passarlo come parametro, ne specificare su di chi si sta operando.
+Inoltre tali funzionalità sono state strutturate per richiedere dei contesti implicitamente in modo da poter essere utilizzate solo nel contesto corretto.
 
 <!--************ MAZZOLI *****************-->
 
 ## ScatanGame
 
-### Dominio
+Una volta progettato l'engine di gioco, generico per dominio, si è andati a sviluppare il dominio del gioco di Catan
+
+#### Dominio
 
 ![GameDSL](../img/04-design/game/scatan-game-domain.jpg)
 
-![GameDSL](../img/04-design/game/scatan-game.jpg)
+Poichè ad ogni azioni corrisponde esattamente un solo stato di arrivo si è dovuto differenziare il lancio dei dati in due azioni distinte:
 
-### ScatanDSL
+- `RollDice` che rappresenta il lancio dei dadi quando esce un numero diverso da 7
+- `RollSeven` che rappresenta il lancio dei dadi quando esce 7
+
+In questo modo si è potuto differenziare le due azioni con le relative conseguenze.
+A questo punto una volta definito il dominio del gioco si è andato a definire un layer anti-corruzione che nascondesse il dominio del gioco e che esponesse solo le funzionalità necessarie per la gestione del gioco, ma che all'interno sfruttasse l'engine e il dominio scelto.
+
+![GameDSL](../img/04-design/game/scatan-game.jpg)
 
 <!--************* ---- ****************-->
 
@@ -273,7 +287,9 @@ Questo meccanismo funge anche da `Anti Corruption Layer`, in quanto permette di 
 ### ViewModel
 
 <!-- Borriello -->
+
 ## Stato della partita
+
 Lo stato della partita è stato modellato tramite un entità rinominata `ScatanState`,
 nella quale son presenti tutte le informazioni a riguardo, rappresentandone uno Snapshot.
 In particolare vi sono contenute le seguenti informazioni:
@@ -289,17 +305,18 @@ In particolare vi sono contenute le seguenti informazioni:
 
 ![ScatanState](../img/04-design/state/scatan-state.jpg)
 
-
 ### Componenti del gioco & Operations
+
 Le informazioni precedentemente elencate sono state modellate come componenti (es: `Award`, `Buildings`, `ResourceCard`, ...), del gioco, molti di questi indipenti tra loro.
 In seguito a ciò sono state realizzate indipendentemente le operations per gestire queste singole parti del dominio, optando quindi per un approccio modulare facile da estendere e mantenere.
 Inoltre, così facendo, siamo riusciti a rendere il core della partita (`ScatanState`) indipendente dalle funzionalità del gioco.
 
-
 <!-- Queste informazioni, sono state divise in componenti e per ognuno di questi, sono state aggiunte le relative operazioni, dividendo così la business logic in più moduli, in modo da rendere il core (`ScatanState`) indipendente dalle funzionalità del gioco, inoltre, questa scelta ci ha permesso di poter gestire in modo più semplice e modulare quest'ultime. -->
 
 ![ScatanState](../img/04-design/state/scatan-stateOps.jpg)
+
 #### Resource Cards Ops
+
 - `ResourceCardOps`: contiene le operations per gestire le carte risorse, fornendo funzionalità per:
   - aggiungere carte risorsa: utilizzabile in seguito al lancio dei dadi e in seguito alla fase iniziale
   - rimuovere carte risorsa: utili per l'acquisto di carte sviluppo e per la costruzione di edifici
@@ -308,6 +325,7 @@ Inoltre, così facendo, siamo riusciti a rendere il core della partita (`ScatanS
 ![Resource Cards](../img/04-design/state/resCardOps.jpg)
 
 #### Development Cards Ops
+
 - `DevelopmentCardOps`: contiene le operations per gestire le carte sviluppo, fornendo funzionalità che permettono ad un giocatore di:
   - aggiungere carte sviluppo al proprio mazzo effettuandone un acquisto
   - giocare carte sviluppo dal proprio mazzo applicando gli effetti di queste ultime sulla partita
@@ -316,30 +334,31 @@ Inoltre, così facendo, siamo riusciti a rendere il core della partita (`ScatanS
 ![Development Cards](../img/04-design/state/devCardOps.jpg)
 
 #### Buildings Ops
+
 - `BuildingOps`: contiene le operations per gestire gli edifici, aggiungendo funzionalità per:
   - assegnare edifici ai giocatori in seguito alla fase iniziale di preparazione
   - far costruire edifici ai giocatori in seguito all'acquisto di questi ultimi, verificando che il giocatore abbia le risorse necessarie e che la posizione scelta sia valida
 
 ![Buildings](../img/04-design/state/buildingOps.jpg)
 
-
 #### Awards Ops
+
 - `AwardOps`: contiene l'operazione per calcolare i premi allo stato attuale della partita, in particolare:
   - il premio per il giocatore con il maggior numero di strade
   - il premio per il giocatore con il maggior numero di carte sviluppo di tipo cavaliere
 
 ![Awards](../img/04-design/state/awardOps.jpg)
 
-
 #### Trade Ops
+
 - `TradeOps`: contiene le operations per gestire gli scambi, permettendo ai giocatori di:
   - scambiare carte risorsa con altri giocatori
   - scambiare carte risorsa con la banca
 
 ![Trade](../img/04-design/state/tradeOps.jpg)
 
-
 #### Score Ops
+
 - `ScoreOps`: contiene l'operazione per calcolare il punteggio di un giocatore, in particolare:
   - il punteggio per gli edifici costruiti
   - il punteggio per le carte sviluppo di tipo 'punto vittoria'
@@ -349,6 +368,7 @@ Inoltre, così facendo, siamo riusciti a rendere il core della partita (`ScatanS
 ![Score](../img/04-design/state/scoreOps.jpg)
 
 #### Robber Ops
+
 - `RobberOps`: contiene le operations per gestire il ladro, permettendo ai giocatori di:
   - spostare il ladro in una nuova posizione
 
