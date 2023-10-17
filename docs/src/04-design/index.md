@@ -42,10 +42,6 @@ Il Mixin `ScalaJSView` infatti si occupa di gestire le funzionalità di _show_ e
 
 Inoltre la `ScalaJSView` espone anche uno stato reattivo che può essere utilizzato nelle varie View e viene tenuto sempre aggiornato ad ogni modifica propagata dal controller. Questo ha reso molto semplice lo sviluppo delle pagine, in quanto tutto quello mostrato graficamente è dipendente dallo stato reattivo.
 
-#### ViewModel
-
-Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è stato creato il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone tutti i vari metodi per ottenere le informazioni dipendenti dallo stato.
-
 ### Application
 
 ![Architettura Application](../img/04-design/mvc/mvc-app.jpg)
@@ -192,11 +188,7 @@ A questo punto una volta definito il dominio del gioco si è andato a definire u
 
 <!--************* ---- ****************-->
 
-## Model
-
-### Game
-
-### Map
+## Map
 
 L'analisi del dominio ha portato alla schematizzazione della mappa di gioco, con i seguenti elementi:
 
@@ -261,8 +253,6 @@ Perciò è possibile definire delle `TileContentStrategy` che permette di modifi
 
 ![TileContent](../img/04-design/gamemap/creation.jpg)
 
-### Components
-
 ## View
 
 La View, come precedentemente introdotto, permette all'utente di visualizzare lo stato dell'applicazione in modo reattivo, e consentire l'interazione con il sistema.
@@ -271,6 +261,10 @@ La View, come precedentemente introdotto, permette all'utente di visualizzare lo
 A fronte di ciò, è stato scelto di utilizzare un approccio a componenti per la realizzazione schermate più dense di elementi, mentre per le altre è stato scelto un approccio più semplice, basato su un unico elemento.
 
 Inoltre, l'approccio a componenti, permette il riutilizzo del codice in sezioni diverse dell'applicazione.
+
+### ViewModel
+
+Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è stato creato il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone tutti i vari metodi per ottenere le informazioni dipendenti dallo stato.
 
 ### Context Map e Anti Corruption Layer
 
@@ -283,8 +277,6 @@ Per ovviare a questo problema è stato introdotto il concetto di `Context Map`, 
 Questo meccanismo funge anche da `Anti Corruption Layer`, in quanto permette di rimuovere la dipendenza diretta tra model e alcune parti della view, risultando l'unico punto dove sono richieste modifiche in caso di cambiamenti nel model.
 
 ![Context Map](../img/04-design/view/context-map.jpg)
-
-### ViewModel
 
 <!-- Borriello -->
 
