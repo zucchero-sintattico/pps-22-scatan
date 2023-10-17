@@ -38,7 +38,7 @@ La mappa di gioco è composta da tasselli esagonali che, unite tra loro a nido d
 - L'utente deve poter acquistare le carte sviluppo.
 - L'utente deve poter giocare le carte sviluppo.
 - L'utente deve poter sapere chi detiene i certificati di strada più lunga e armata più grande. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
-- L'utente deve poter spostare il brigante e rubare una carta ad un altro giocatore quando lancia i dadi e ottiene un 7.
+- L'utente deve poter spostare il brigante e rubare una carta ad un altro giocatore quando lancia i dadi e ottiene un 7. [R6](../others/tutorial.md#robber-r6)
 - L'utente deve poter vedere quando un giocatore raggiunge i 10 punti vittoria e quindi vince la partita.
 - L'utente deve poter giocare con mappe diverse, con disposizioni casuali delle tessere, potendo selezionare la mappa da utilizzare nel menu di setup. [R2.1](../others/tutorial.md#scelta-casuale-della-mappa-r21)
 

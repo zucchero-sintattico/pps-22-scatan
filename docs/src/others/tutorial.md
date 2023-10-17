@@ -58,3 +58,17 @@ Gli utenti posizionano le strutture iniziali seguendo le regole del gioco:
 e riceve le risorse corrispondenti alle tasselli su cui ha costruito.
 
 ![Assegnamento Risorse iniziali](../img/others/tutorial/initial-resources-assignment/initial-resources-assignment.png)
+
+## Robber [R6]
+
+### Lancio dei dadi con risultato 7 [R6.1]
+
+![Lancio dei dadi con risultato 7](../img/others/tutorial/robber/7-roll-dice.png)
+
+### Rubare una carta ad un avversario [R6.2]
+
+![Rubare una carta ad un avversario](../img/others/tutorial/robber/stealing-card.png)
+
+### Carta rubata [R6.3]
+
+![Carta rubata](../img/others/tutorial/robber/stolen-card.png)
