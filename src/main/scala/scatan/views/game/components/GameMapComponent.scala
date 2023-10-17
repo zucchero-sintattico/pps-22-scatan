@@ -6,8 +6,8 @@ import scatan.model.game.config.ScatanPlayer
 import scatan.model.game.state.ScatanState
 import scatan.model.map.*
 import scatan.views.game.components.MapComponent.{MapElement, radius, given}
-import scatan.views.utils.Coordinates
-import scatan.views.utils.Coordinates.*
+import scatan.views.utils.Point
+import scatan.views.utils.Point.*
 import scatan.views.utils.TypeUtils.*
 
 /** A component to display the game map.
@@ -48,7 +48,6 @@ object GameMapComponent:
     )
 
   private def gameMap(using ScatanState): GameMap = scatanState.gameMap
-  private def robberPlacement(using ScatanState): Hexagon = summon[ScatanState].robberPlacement
   private def assignmentInfoOf(spot: Spot)(using ScatanState): Option[AssignmentInfo] =
     summon[ScatanState].assignedBuildings.get(spot)
 
@@ -83,7 +82,7 @@ object GameMapComponent:
     MapComponent.circularNumber(
       hex,
       onClick --> (_ => clickHandler.onHexagonClick(hex)),
-      if robberPlacement == hex
+      if summon[ScatanState].robberPlacement == hex
       then robberCross
       else ""
     )
@@ -115,8 +114,8 @@ object GameMapComponent:
     *   the svg road
     */
   private def svgRoad(road: RoadSpot): InputSourceWithState[Element] =
-    val Coordinates(x1, y1) = road._1.coordinates.get
-    val Coordinates(x2, y2) = road._2.coordinates.get
+    val Point(x1, y1) = road._1.point
+    val Point(x2, y2) = road._2.point
     val player = assignmentInfoOf(road).map(_.viewPlayer)
     svg.g(
       svg.line(
@@ -145,7 +144,7 @@ object GameMapComponent:
     *   the svg spot
     */
   private def svgSpot(structure: StructureSpot): InputSourceWithState[Element] =
-    val Coordinates(x, y) = structure.coordinates.get
+    val Point(x, y) = structure.point
     val player = assignmentInfoOf(structure).map(_.viewPlayer)
     val structureType = assignmentInfoOf(structure).map(_.viewBuildingType)
     svg.g(

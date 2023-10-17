@@ -7,6 +7,7 @@ import scatan.views.utils.TypeUtils.*
 import scatan.views.viewmodel.ops.ViewModelActionsOps.*
 import scatan.views.viewmodel.ops.ViewModelCurrentStatusOps.*
 import scatan.views.viewmodel.ops.ViewModelPlayersOps.*
+import scatan.model.game.state.ScatanState
 
 object LeftTabComponent:
 
@@ -33,6 +34,18 @@ object LeftTabComponent:
       h2(
         className := "game-view-step",
         child.text <-- gameViewModel.currentStep.map("Step: " + _)
+      )
+    )
+
+  def playerColorComponent: GameStateKnowledge[Element] =
+    div(
+      className := "game-view-player-color",
+      for
+        (player, count) <- summon[ScatanState].players.zipWithIndex
+        playerCssClass = s"player-${count + 1}"
+      yield p(
+        className := playerCssClass,
+        player.name
       )
     )
 

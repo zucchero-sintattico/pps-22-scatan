@@ -1,11 +1,10 @@
 package scatan.model.map
 
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
 import scatan.model.components.UnproductiveTerrain.*
 import scatan.model.map.HexagonInMap.layer
 
-class GameMapTest extends BaseTest with ScalaCheckPropertyChecks:
+class GameMapTest extends BaseTest:
 
   val standardGameMap = GameMap(2)
 
