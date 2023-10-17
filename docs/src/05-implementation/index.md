@@ -548,6 +548,13 @@ Una volta creata la libreria per lo sviluppo di DSL ho iniziato a creare il DSL 
 
 Prima di tutto ho definito un dominio di contesti contenti tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules``
 
+- `GameCtx` che rappresenta il contesto di un gioco, ovvero quello in cui si definiscono le regole di un gioco.
+- `PlayersCtx` che rappresenta il contesto dei giocatori, ovvero quello in cui si definiscono le regole relative ai giocatori.
+- `PhaseCtx` che rappresenta il contesto di una fase, ovvero quello in cui si definiscono le regole relative ad una fase del gioco.
+- `StepCtx` che rappresenta il contesto di uno step, ovvero quello in cui si definiscono le regole relative ad uno step di una fase del gioco.
+
+Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a definire il comportamente.
+
 ```scala
   case class GameCtx[State, P, S, A, Player](
       phases: MultipleProperty[PhaseCtx[State, P, S, A, Player]] = ...
@@ -589,9 +596,9 @@ val gameCtx = Game {
 }
 ```
 
-Nella quale la funzione passata prende in input implicitamente il contesto di gioco e può quindi settare le varie proprietà, tramite le operations su quei contesti definiti.
+Nella quale la funzione passata prende in input implicitamente il contesto di gioco e può quindi settare le varie proprietà, tramite le operazioni su quei contesti definiti.
 
-Ad esempio le operazioni disponibili sul `GameCtx` sono le seguenti:
+Ad esempio le operazioni sul `GameCtx` sono le seguenti:
 
 ```scala
 object GameCtxOps:
@@ -622,6 +629,8 @@ object GameCtxOps:
 ```
 
 Queste funzionalità hanno quindi lo scopo di esporre le proprietà del contesto preso implicitamente e di permetterne la configurazione in maniera dichiarativa, utilizzando le conversioni implicite della libreria della proprietà.
+
+Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un contesto implicita sopra al quale vengono chiamate operazioni senza la necessità di dover specificare il receiver.
 
 ## Luigi Borriello
 
