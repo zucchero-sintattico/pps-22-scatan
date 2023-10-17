@@ -392,6 +392,246 @@ trait ApplicationPage[S <: Model.State, C <: Controller[?], V <: View[?]](
 
 Esso infatti al suo interno contiene tutte le dipendenze richieste da tutti i componenti e sfrutta questa proprietà per fare un inizializzazione semplice e veloce.
 
+### Game
+
+Mi sono occupato inoltre dello sviluppo dell'engine di gioco basato su:
+
+- fasi
+- step
+- azioni
+
+Il core di questo engine è stato costruito per essere immutabile e per mantenere uno snapshot dello stato attuale del gioco.
+
+```scala
+final case class Game[State, PhaseType, StepType, ActionType, Player](
+    players: Seq[Player],
+    state: State,
+    turn: Turn[Player],
+    gameStatus: GameStatus[PhaseType, StepType],
+    playersIterator: Iterator[Player],
+    rules: Rules[State, PhaseType, StepType, ActionType, Player]
+):
+```
+
+Successivamente tramite extension methods sono state esposte le varie funzionalità del gioco quali la possibilità di effettuare delle azioni.
+
+Tale funzionalità è stata modellata sul concetto di effetto, che rende così il concetto di azione indipendente dalla sua implementazione che verrà fornita tramite tale effetto.
+
+```scala
+trait Effect[A, S]:
+  def apply(state: S): Option[S]
+```
+
+Un effetto infatti è relativo ad un azione e consiste in una trasformazione dallo stato attuale ad un altro stato, che può non essere applicabile.
+
+L'implementazione della funzionalità di `play` risulta quindi la seguente, che sfrutta la monade Option per gestire il caso in cui l'effetto non sia applicabile.
+
+```scala
+object GamePlayOps:
+  extension [State, PhaseType, StepType, Action, Player](game: Game[State, PhaseType, StepType, Action, Player])
+
+    def allowedActions: Set[Action] =
+      game.rules.allowedActions(game.gameStatus)
+
+    def canPlay(actionType: Action): Boolean =
+      allowedActions.contains(actionType)
+
+    def play(
+        action: Action
+    )(using effect: Effect[action.type, State]): Option[Game[State, PhaseType, StepType, Action, Player]] =
+      for
+        _ <- canPlay(action).option
+        newState <- effect(game.state)
+        newStep = game.rules.nextSteps((game.gameStatus, action))
+        newStatus = game.gameStatus.copy(
+          step = newStep
+        )
+        newGame = game.copy(
+          state = newState,
+          gameStatus = newStatus
+        )
+      yield
+        if newGame.rules.endingSteps(newGame.gameStatus.phase) == newGame.gameStatus.step then newGame.nextTurn.get
+        else newGame
+```
+
+### DSL
+
+Una volta modellato il concetto di Rules di un gioco, ho iniziato quindi lo sviluppo di un DSL che permettesse di definire le regole di un gioco in modo dichiarativo.
+
+#### PropertiesDSL
+
+Prima di tutto ho definito un insieme di funzionalità core che permettesse la creazione di un dsl generico.
+Tale core è basato sul concetto di properietà, in particolare ne abbiamo definite due:
+
+- `OptionalProperty`, che rappresenta una proprietà vuota all'inizio e che può essere modificata tramite l'aggiunta di un valore
+
+- `MultipleProperty`, che rappresenta una proprietà contenente un insieme di valori, inizialmente vuota, che può essere modificata tramite l'aggiunta di un valore
+
+Entrambe le proprietà sono anche `UpdatableProperty`, ovvero proprietà che possono essere aggiornate tramite l'aggiunta di un valore.
+
+```scala
+  sealed trait UpdatableProperty[P]:
+    def update(newValue: P): Unit
+
+  final case class OptionalProperty[P](var value: Option[P] = None) extends UpdatableProperty[P]:
+    override def update(newValue: P): Unit = value = Some(newValue)
+
+  final case class MultipleProperty[P](var value: Seq[P] = Seq.empty[P]) extends UpdatableProperty[P]:
+    override def update(newValue: P): Unit = value = value :+ newValue
+```
+
+A questo punto per fornire una sintassi dichiarativa ho introdotto il concetto di `PropertyUpdater` che wrappa una property ed espone il metodo `:=` permettendo un utilizzo dichiarativo.
+
+L'utilizzo di una conversione implicita ha permesso di poter utilizzare il metodo direttamente su una proprietà.
+
+```scala
+  class PropertySetter[P](property: PropertyUpdater[P]):
+    def :=(value: P): Unit = property.update(value)
+
+  given [P]: Conversion[PropertyUpdater[P], PropertySetter[P]] = PropertySetter(_)
+```
+
+Stessa metodologia è stata applicata per proprietà la cui assegnazione prevede una fase di building, ovvero di costruzione della stessa.
+È stata realizzata quindi la class `PropertyBuilder` che aggiunge un metodo `apply` che prende in input una funzione che ha implicitamente il valore della proprietà in input.
+
+```scala
+  private type Builder[P] = P ?=> Unit
+
+  trait Factory[P]:
+    def create(): P
+
+  class PropertyBuilder[P: Factory](property: PropertyUpdater[P]):
+    def apply(builder: Builder[P]): Unit =
+      val obj = summon[Factory[P]].create()
+      builder(using obj)
+      property.update(obj)
+
+  given [P: Factory]: Conversion[PropertyUpdater[P], PropertyBuilder[P]] = PropertyBuilder(_)
+```
+
+Tramite l'utilizzo della factory viene creato l'oggetto che si vuole builder e viene utilizzata la funzione di building specificata, infine viene aggiornata la proprietà con l'oggetto creato.
+
+Tale classe permette l'utilizzo di una sintassi dichiarativa del seguente tipo:
+
+```scala
+property {
+  ...
+  otherProperty {
+
+  }
+  ...
+}
+```
+
+Infine è stato realizzato l `ObjectBuilder` che consiste in un `PropertyBuilder` che ritorna l'oggetto costruito invece che settarlo ad una proprietà
+
+```scala
+  class ObjectBuilder[P: Factory]:
+    def apply(builder: Builder[P]): P =
+      val obj = summon[Factory[P]].create()
+      builder(using obj)
+      obj
+```
+
+Troviamo inoltre un type alias utile per lo sviluppo di funzioni che prendono implicitamente un contesto:
+
+```scala
+type Contexted[Ctx, P] = Ctx ?=> P
+```
+
+#### GameDSL
+
+Una volta creata la libreria per lo sviluppo di DSL ho iniziato a creare il DSL per la definizione di regole di un gioco.
+
+##### Dominio
+
+Prima di tutto ho definito un dominio di contesti contenti tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules``
+
+- `GameCtx` che rappresenta il contesto di un gioco, ovvero quello in cui si definiscono le regole di un gioco.
+- `PlayersCtx` che rappresenta il contesto dei giocatori, ovvero quello in cui si definiscono le regole relative ai giocatori.
+- `PhaseCtx` che rappresenta il contesto di una fase, ovvero quello in cui si definiscono le regole relative ad una fase del gioco.
+- `StepCtx` che rappresenta il contesto di uno step, ovvero quello in cui si definiscono le regole relative ad uno step di una fase del gioco.
+
+Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a definire il comportamente.
+
+```scala
+  case class GameCtx[State, P, S, A, Player](
+      phases: MultipleProperty[PhaseCtx[State, P, S, A, Player]] = ...
+      players: OptionalProperty[PlayersCtx] = ...
+      ...
+  )
+
+  case class PlayersCtx(
+    allowedSizes: OptionalProperty[Seq[Int]] = ...
+  )
+
+  case class PhaseCtx[State, Phase, Step, Action, Player](
+      initialStep: OptionalProperty[Step] = ...
+      endingStep: OptionalProperty[Step] = ...
+      steps: MultipleProperty[StepCtx[Phase, Step, Action]] = ...
+      ...
+  )
+
+  case class StepCtx[P, S, A](
+      when: MultipleProperty[(A, S)] = ...
+      ...
+  )
+```
+
+Infine tramite operations su tali contesti sono state definite le funzionalità di creazione del dsl in modo che ognuna di esse si riferisca ad una proprietà all'interno del contesto che sta costruendo.
+
+La più importante è sicuramente la funzione `Game` che permette la creazione di un `GameCtx`:
+
+```scala
+  def Game[State, Phase, Step, Actions, Player] =
+    ObjectBuilder[GameCtx[State, Phase, Step, Actions, Player]]()
+```
+
+Questo abilita la creazione di un contesto di gioco tramite la seguente sintassi:
+
+```scala
+val gameCtx = Game {
+  ...
+}
+```
+
+Nella quale la funzione passata prende in input implicitamente il contesto di gioco e può quindi settare le varie proprietà, tramite le operazioni su quei contesti definiti.
+
+Ad esempio le operazioni sul `GameCtx` sono le seguenti:
+
+```scala
+object GameCtxOps:
+
+  /** Define the winner function, which is a function that takes a game state and returns the winner of the game, if
+    * any.
+    */
+  def WinnerFunction[State, Player]
+      : Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[State => Option[Player]]] =
+    ctx ?=> ctx.winner
+
+  /** Define a phase of the game.
+    */
+  def Phase[State, Phase, Step, Action, Player]: Contexted[GameCtx[State, Phase, Step, Action, Player], PropertyBuilder[
+    PhaseCtx[State, Phase, Step, Action, Player]
+  ]] =
+    ctx ?=> ctx.phases
+
+  /** Define the Players info of the game.
+    */
+  def Players: Contexted[GameCtx[?, ?, ?, ?, ?], PropertyBuilder[PlayersCtx]] =
+    ctx ?=> ctx.players
+
+  /** Define the initial phase of the game.
+    */
+  def InitialPhase[Phase]: Contexted[GameCtx[?, Phase, ?, ?, ?], PropertySetter[Phase]] =
+    ctx ?=> ctx.initialPhase
+```
+
+Queste funzionalità hanno quindi lo scopo di esporre le proprietà del contesto preso implicitamente e di permetterne la configurazione in maniera dichiarativa, utilizzando le conversioni implicite della libreria della proprietà.
+
+Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un contesto implicita sopra al quale vengono chiamate operazioni senza la necessità di dover specificare il receiver.
+
 ## Luigi Borriello
 
 Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmente delle seguenti parti:
