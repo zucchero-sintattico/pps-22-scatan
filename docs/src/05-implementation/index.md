@@ -636,7 +636,7 @@ Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un
 
 Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmente delle seguenti parti:
 
-- Modellazione dello stato della partita, dei singoli componenti relativi a quest'ultimo, e delle loro corrispondenti operazioni nonchè:
+- Modellazione dello stato della partita, dei singoli componenti relativi a quest'ultimo, e delle loro corrispondenti operazioni nonché:
   - Gestione delle carte risorse
   - Gestione delle carte sviluppo
   - Gestione delle costruzioni
@@ -715,8 +715,7 @@ final case class ScatanState(
 ```
 
 ### ScatanState Ops
-
-Dopo aver individuato le principali operazioni da poter effettuare sullo stato della partita, ho deciso di raggrupparle e dividerle in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
+Le principali operazioni effettuabili sullo stato della partita, sono raggruppate e divise in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
 
 Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità.
 
@@ -819,7 +818,7 @@ Di seguito, un esempio di utilizzo di `foldLeft` nella gestione degli **awards**
 
 ### Calcolo degli Scores
 
-Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, viene definito tramite la libreria **cats**, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
+Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, viene definito tramite la libreria **cats**, un semigruppo per il tipo `Scores` (un semigruppo ha un'operazione binaria associativa), in modo da poter dichiarare come combinare più elementi di questo tipo:
 
 ```scala
 import cats.kernel.Semigroup
@@ -882,9 +881,13 @@ Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella 
   }
 ```
 
-
-
-
-
-
 ## Pair programming
+
+Lo sviluppo di alcune parti del progetto non è stato effettuato propriamente in pair programming, ma sono state sviluppate in maniera collaborativa, come ad esempio la parte grafica dell'applicazione nelle sue varie schermate.
+
+### Setup View & Game View (Andruccioli & Borriello)
+La grafica dell'applicazione è implementata grazie al framework **Laminar**, per disegnare l'interfaccia grafica, e realizzare i componenti reattivi.
+
+Per quanto riguarda la schermata di setup, è realizzata in maniera molto semplice, in quanto non presenta particolari funzionalità, se non la possibilità di inserire il nome dei giocatori, di selezionare il numero di giocatori e di scegliere la mappa di gioco.
+
+
