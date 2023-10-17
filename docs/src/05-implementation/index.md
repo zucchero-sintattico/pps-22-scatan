@@ -889,7 +889,7 @@ Di seguito, un esempio di utilizzo di `foldLeft` nella gestione degli **awards**
 
 ### Calcolo degli Scores
 
-Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, viene definito tramite la libreria **cats**, un semigruppo per il tipo `Scores` (un semigruppo ha un'operazione binaria associativa), in modo da poter dichiarare come combinare più elementi di questo tipo:
+Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, viene definito tramite la libreria **cats**, un semigruppo per il tipo `Scores` (un tipo forma un semigruppo se ha un'operazione binaria associativa), in modo da poter dichiarare come combinare più elementi di questo tipo:
 
 ```scala
 import cats.kernel.Semigroup
