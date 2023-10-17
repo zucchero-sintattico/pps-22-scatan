@@ -1,6 +1,6 @@
 # Design Architettuale
 
-Come pattern architetturale abbiamo scelto di utilizzare il pattern MVC (Model-View-Controller), che permette di separare la logica di business dalla logica di presentazione. In questo modo è possibile modificare l'interfaccia grafica senza dover modificare la logica di business e viceversa.
+Come pattern architetturale viene utilizzando il pattern MVC (Model-View-Controller), che permette di separare la logica di business dalla logica di presentazione. In questo modo è possibile modificare l'interfaccia grafica senza dover modificare la logica di business e viceversa.
 
 ![Architettura MVC scelta](../img/03-architectural-design/scatan-MVC-immutable.jpg)
 
@@ -8,7 +8,7 @@ L'architettura scelta vede quindi la presenza di tre componenti principali:
 
 - **Model**: contiene la logica di business dell'applicazione, ovvero le classi che implementano le regole del gioco e che permettono di gestire il suo svolgimento.
   Il tutto però è incapsulato all'interno di uno **State** che rappresenta lo stato attuale dell'applicazione, questo stato è quindi l'unico elemento all'interno del Model.
-  Esso essendo progettato per essere immutabile, permette di renderlo accessibile all'esterno.
+  Essendo lo stato progettato per essere immutabile, permette di renderlo accessibile all'esterno.
   L'unico modo quindi per modificarlo è tramite la funzione `update` che prende in input un'azione e sostituisce lo stato attuale con quello nuovo, ottenuto applicando l'azione allo stato attuale.
 
 - **Controller**: contiene le entità che permettono di gestire le interazioni dell'utente con l'applicazione, ovvero quelle che implementano la logica di presentazione e di accesso al Model.

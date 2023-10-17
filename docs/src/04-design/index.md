@@ -22,14 +22,14 @@ Il codice è organizzato in 5 package principali:
 
 ### Model
 
-Si è scelto di gestire il Model come unico stato dell'applicazione, che viene modificato tramite l'applicazione di un'azione di update.
-Lo stato che viene restituito è quindi sempre un oggetto immutabile che quindi può essere condiviso tra le varie componenti dell'applicazione.
+Il Model consiste nello stato dell'applicazione, che viene modificato tramite l'applicazione di un'azione di update.
+Lo stato che viene esposto è quindi sempre un oggetto immutabile che quindi può essere condiviso tra le varie componenti dell'applicazione.
 
 ### Controller
 
 ![Architettura Controller](../img/04-design/mvc/mvc-controller.jpg)
 
-Per quanto riguarda la gestione dei Controller si è scelto di automatizzare l'aggiornamento dello stato alla view tramite la creazione di un `ReactiveModelWrapper` che incapsula il vero model e ad ogni modifica dello stato, notifica la view del cambiamento.
+Per quanto riguarda la gestione dei Controller l'aggiornamento dello stato alla view è automatizzato tramite l'utilizzo di un `ReactiveModelWrapper` che incapsula il vero model e ad ogni modifica dello stato, notifica la view del cambiamento.
 
 La struttura del Controller è ispirata al Cake Pattern, portando quindi il concetto di dipendenza ma venendo poi gestita con il passaggio di tali requirements tramite costruttore.
 
@@ -37,26 +37,25 @@ La struttura del Controller è ispirata al Cake Pattern, portando quindi il conc
 
 ![Architettura View](../img/04-design/mvc/mvc-view.jpg)
 
-Anche nelle View sono stati sfruttati i Mixin, in particolare per supportare la navigabilità tra le varie schermate dell'applicazione e per l'integrazione di ScalaJS.
+Anche nelle View vengono sfruttati i Mixin, in particolare per supportare la navigabilità tra le varie schermate dell'applicazione e per l'integrazione di ScalaJS.
 Il Mixin `ScalaJSView` infatti si occupa di gestire le funzionalità di _show_ e _hide_ tramite render con Laminar, mentre il Mixin `NavigatorView` si occupa di gestire la navigazione tra le varie schermate dell'applicazione.
 
-Inoltre la `ScalaJSView` espone anche uno stato reattivo che può essere utilizzato nelle varie View e viene tenuto sempre aggiornato ad ogni modifica propagata dal controller. Questo ha reso molto semplice lo sviluppo delle pagine, in quanto tutto quello mostrato graficamente è dipendente dallo stato reattivo.
+Inoltre la `ScalaJSView` espone anche uno stato reattivo che può essere utilizzato nelle varie View e viene tenuto sempre aggiornato ad ogni modifica propagata dal controller. Questo rende semplice lo sviluppo delle views, in quanto tutto quello mostrato graficamente è dipendente dallo stato reattivo e viene aggiornato automaticamente.
 
 ### Application
 
 ![Architettura Application](../img/04-design/mvc/mvc-app.jpg)
 
-Per completare la gestione di MVC si è quindi introdotto il concetto di `ApplicationPage`, ovvero dell'istanza di una pagina dell'applicazione che consiste nella referenza del Model, del Controller e della View.
+Per completare la gestione di MVC vi è il componente `ApplicationPage`, ovvero l'istanza di una pagina dell'applicazione che consiste nella referenza del Model, del Controller e della View.
 Questo componente serve per costruire insieme le componenti di View, Model e Controller e collegarle tra loro.
 
-Il componente responsabile poi della gestione di queste pagine è l'`Application` che si occupa di gestire il mapping dalla `Route` all'istanza di `ApplicationPage` corrispondente.
+Il componente responsabile poi della gestione di queste pagine è l'`Application` che gestisce il mapping dalla `Route` all'istanza di `ApplicationPage` corrispondente.
 
 <!--************ MAZZOLI *****************-->
 
 ## Game Engine
 
-Dall'analisi del gioco si è cercato di astrarre ad un modello comune e riutilizzabile.
-Si è infatti scelto di modellare il concetto di Game come un qualcosa che possiede:
+Un Game consiste nell'insieme delle seguenti proprietà:
 
 - Dei giocatori
 - Lo stato del gioco
@@ -68,13 +67,13 @@ Si è infatti scelto di modellare il concetto di Game come un qualcosa che possi
 
 ![Game](../img/04-design/game/core-game.jpg)
 
-Si è scelto quindi di mettere questa struttura `core` dentro la classe `Game` che funziona quindi da holder immutabile del gioco.
+La classe `Game` rappresenta il core del gioco, ovvero il suo stato.
 
 #### GameOPS
 
 ![Game](../img/04-design/game/game-ops.jpg)
 
-Poichè ora il Game consiste solo in uno snapshot di un gioco, ad esso sono state aggiunte le varie funzionalità tramite insieme di operations su di esso.
+Poichè ora il Game consiste solo in uno snapshot di un gioco, le sue funzionalità vengono esposte tramite insiemi coerenti di operations su di esso.
 Tra queste troviamo:
 
 - `GamePlayOps` che contiene le operations per gestire le azioni dei giocatori. Esso infatti aggiunge funzionalità quali:
@@ -102,9 +101,9 @@ Il concetto di `Rules` incapsula tutte le regole del modello di gioco che compre
 
 ## ScatanGame
 
-Una volta progettato l'engine di gioco, generico per dominio, si è andati a sviluppare il dominio del gioco di Catan
-
 #### Dominio
+
+Il dominio del gioco è stato modellato nel seguente modo:
 
 ![GameDSL](../img/04-design/game/scatan-game-domain.jpg)
 
@@ -114,7 +113,8 @@ Poichè ad ogni azioni corrisponde esattamente un solo stato di arrivo si è dov
 - `RollSeven` che rappresenta il lancio dei dadi quando esce 7
 
 In questo modo si è potuto differenziare le due azioni con le relative conseguenze.
-A questo punto una volta definito il dominio del gioco si è andato a definire un layer anti-corruzione che nascondesse il dominio del gioco e che esponesse solo le funzionalità necessarie per la gestione del gioco, ma che all'interno sfruttasse l'engine e il dominio scelto.
+
+A questo punto una volta definito il dominio del gioco si è andato a definire un layer anti-corruzione che nascondesse il dominio del gioco e che esponesse solo le funzionalità necessarie per la gestione del gioco, ma che all'interno sfrutti l'engine e il dominio scelto.
 
 ![GameDSL](../img/04-design/game/scatan-game.jpg)
 
@@ -284,7 +284,7 @@ Inoltre, l'approccio a componenti, permette il riutilizzo del codice in sezioni 
 
 ### ViewModel
 
-Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è stato creato il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone tutti i vari metodi per ottenere le informazioni dipendenti dallo stato.
+Per la gestione di tutti i mapping da stato dell'applicazione a singola informazione, è presente il concetto di ViewModel, che consiste in un wrapper dello stato reattivo dell'applicazione e che tramite operations su di esso espone tutti i vari metodi per ottenere le informazioni dipendenti dallo stato.
 
 ### Context Map e Anti Corruption Layer
 
