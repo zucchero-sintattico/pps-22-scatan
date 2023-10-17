@@ -35,13 +35,13 @@ La creazione della game map è partita dall'individuazione dell'unità di base, 
 
 L'articolo [Hexagonal Grids](https://www.redblobgames.com/grids/hexagons/) è stato di grande aiuto per la comprensione del funzionamento di una griglia esagonale e per la scelta della rappresentazione interna degli esagoni, attraverso le coordinate cubiche.
 
-Partendo da questa base teorica è stato possibile creare la mappa a tassellazioni esagonali, con la possibilità di creare mappe di dimensioni arbitrariamente grandi.
+Partendo da questa base teorica è stato possibile creare la mappa a tasselli esagonali, con la possibilità di crearne di dimensioni arbitrariamente grandi.
 
 Data una `case class Hexagon(r, c, s)` ed imponendo il vincolo:
 
 $$ r + c + s = 0 $$
 
-è possibile possibile generare facilmente una collezione di esagoni che rappresenta le tasselle esagonali della mappa.
+è possibile possibile generare facilmente una collezione di esagoni che rappresenta le tasselli esagonali della mappa.
 
 ```scala
 val tiles: Set[Hexagon] =
@@ -57,7 +57,7 @@ val tiles: Set[Hexagon] =
 
 #### Spot
 
-Data la collezione di tasselle esagonali, è ora possibile determinare gli _spot_ della mappa.
+Data la collezione di tasselli esagonali, è ora possibile determinare gli _spot_ della mappa.
 Essi sono i punti di intersezione tra le esagoni e sono stati ricavati con il seguente ragionamento: dato un esagono qualsiasi \\( H \\), si prendono 2 esagoni \\( F, S \\), adiacenti ad \\( H \\), che, a loro volta, sono adiacenti tra loro.
 
 Ne deriva il seguente codice:
@@ -124,7 +124,7 @@ extension (hex: Hexagon)
 
 ### GameMap in view
 
-La visualizzazione della _GameMap_ è stata una parte delicata e complessa, in quanto è stato necessario trovare un modo per rappresentare graficamente, in modo consono, la gli esagoni, spot e road precedentemente introdotti, ma anche per gestire l'interazione dell'utente con gli elementi.
+La visualizzazione della _GameMap_ è una parte delicata, in quanto è stato necessario trovare un modo per rappresentare graficamente, in modo consono, la gli esagoni, spot e road precedentemente introdotti, ma anche per gestire l'interazione dell'utente con gli elementi.
 
 La parte di accesso al model è immediata, data la rappresentazione di esso.
 
@@ -139,12 +139,12 @@ MapComponent.mapContainer(
 )
 ```
 
-La parte più complicata è stata la rappresentazione grafica degli elementi, dovendo trovare un _mapping_ su un piano bidimensionale, basato su coordinate cartesiane (dato dalla tecnologia utilizzata, `SVG`).
+La parte più complessa è stata la rappresentazione grafica degli elementi, dovendo trovare un _mapping_ su un piano bidimensionale, basato su coordinate cartesiane (dato dalla tecnologia utilizzata, `SVG`).
 
-Innanzitutto è stato introdotto un concetto di `Point`, un punto nel piano cartesiano, che ha permesso di rendere agevole l'utilizzo del sistema di coordinate da dover adottare.
-Inoltre, è stato necessario aggiungere un wrapper di `Double` che aggiunge il concetto di precisione, in modo da consentire operazioni sul tipo, senza incorrere in errori di arrotondamento.
+Innanzitutto è introdotto un concetto di `Point`, un punto nel piano cartesiano, che ha permesso di rendere agevole l'utilizzo del sistema di coordinate da dover adottare.
+Inoltre, è necessario aggiungere un wrapper di `Double` che aggiunge il concetto di precisione, in modo da consentire operazioni sul tipo, senza incorrere in errori di arrotondamento.
 
-Infine, sono stati realizzati metodi di utilità per trattare una coppia di Double come un punto nel piano cartesiano, ma anche per scomporre un punto.
+Infine, il tipo di dato appena introdotto, viene corredato da metodi di utilità per trattare una coppia di Double come un punto nel piano cartesiano, ma anche per scomporre un punto nelle sue componenti.
 
 Da ciò derivata la seguente implementazione:
 
@@ -164,7 +164,7 @@ given Conversion[(Double, Double), Point] with
 #### Nesting di componenti
 
 La costruzione della mappa è stata realizzata attraverso il nesting di componenti, ognuno con diverse proprietà.
-In linea di massima, si è sempre cercato di separare la logica di creazione del componente, compreso di ciò che necessità per la resa grafica, dallo stile di visualizzione.
+In linea di massima, si è sempre cercato di separare la logica di creazione del componente, compreso di ciò che necessità per la resa grafica, dallo stile di visualizzazione.
 
 Per far fronte a ciò, ogni componente è corredato dello stretto necessario, con aggiunta di una classe che permette di personalizzare la resa grafica, attraverso i fogli di stile.
 
@@ -202,7 +202,7 @@ Per ovviare a questo problema, ho scelto di nascondere il passaggio dei parametr
 
 Inoltre, sono stati definiti anche tipi dati da composizioni degli stessi, in modo da catturare più elementi di contesto contemporaneamente.
 
-Alcuni di essi sono ripoortati di seguito:
+Alcuni di essi sono riportati di seguito:
 
 ```scala
   type Displayable[T] = ScatanViewModel ?=> T
@@ -211,7 +211,7 @@ Alcuni di essi sono ripoortati di seguito:
   type InputSourceWithState[T] = InputSource[GameStateKnowledge[T]]
 ```
 
-La possibilità di catturare il contesto di cui ha bisogno una gerarchia nestata di chiamate a funzioni, in un tipo implicito, ha aperto la possibilità alla realizzazione di semplificazioni.
+La possibilità di catturare il contesto di cui ha bisogno una gerarchia nidificata di chiamate a funzioni, in un tipo implicito, ha aperto la possibilità alla realizzazione di semplificazioni.
 
 Di seguito è riportato un frammento esemplificativo:
 

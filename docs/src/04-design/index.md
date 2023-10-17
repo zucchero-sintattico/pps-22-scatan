@@ -215,7 +215,7 @@ L'analisi del dominio ha portato alla schematizzazione della mappa di gioco, con
 
 ![Tile, Spot, Road](../img/04-design/gamemap/tile-spot-road.jpg)
 
-A fronte di ciò è stata identificata la classe `GameMap` come entrypoint per questa sotto parte di dominio. In ottica di poter espandere il campo di gioco (AOC), la mappa può essere creata con un numero di _layers_ variabile. Inoltre, per favorire la singola responsabilità dei componenti (SRP), è stato separato il concetto di struttura della mappa e ciò che un tassello può contenere: l'entità appena introdotta mette in relazione i due concetti.
+A fronte di ciò si identifica la classe `GameMap` come entrypoint per questa sotto parte di dominio. In ottica di poter espandere il campo di gioco (AOC), la mappa può essere creata con un numero di _layers_ variabile. Inoltre, per favorire la singola responsabilità dei componenti (SRP), viene separato il concetto di struttura della mappa e ciò che un tassello può contenere: l'entità appena introdotta mette in relazione i due concetti.
 
 Da ciò ne risulta il seguente schema:
 
@@ -227,7 +227,7 @@ La struttura della mappa è rappresentata dalla classe `HexagonalTiledMap`, che 
 
 Questo componente è basato su [_coordinate cubiche_](https://www.redblobgames.com/grids/hexagons/#coordinates) che permettono di identificare univocamente ogni tassello della mappa.
 
-A seguito della della relazione tra `HexagonalTiledMap` e `Hexagon`, quest'ultimo acquisisce il concetto di spazio con annessi metodi per posizioni relative ed assolute.
+A seguito della relazione tra `HexagonalTiledMap` e `Hexagon`, quest'ultimo acquisisce il concetto di spazio con annessi metodi per posizioni relative ed assolute.
 
 ![HexagonalTiledMap](../img/04-design/gamemap/hexagons.jpg)
 
@@ -264,7 +264,7 @@ I terreni possono essere di 2 tipi:
 
 La creazione della mappa di gioco può essere effettuata attraverso la classe stessa, per libertà di scelta dell'utente, ma sono state predefinite delle _factory_ per far fronte alle esigenze più comuni, date dalle regole del gioco.
 
-Al fine di modificare la mappa, ciò che viene modificato non è la dispozione dei tasselli, ma solo il loro contenuto.
+Al fine di modificare la mappa, ciò che viene cambiato è solo il contenuto dei tasselli.
 Perciò è possibile definire delle `TileContentStrategy` che permette di modificare il contenuto dei tasselli alla costruzione della mappa stessa.
 
 ![TileContent](../img/04-design/gamemap/creation.jpg)

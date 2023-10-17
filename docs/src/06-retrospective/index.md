@@ -15,4 +15,13 @@ Nota di merito alla metodologia di lavoro adottata, che ha permesso di lavorare 
 
 ### Andruccioli Manuel
 
+Il progetto è stato molto interessante e mi ha permesso di approfondire le mie conoscenze di Scala ed esplorare, un minimo in più di quanto fatto a lezione, la programmazione funzionale.
+La scarsità di tempo, dovuto anche alla presenza delle lezioni nel mentre, ha leggermente inficiato la possibilità di una maggior esplorazione di Scala, ecosistema e paradigma.
+
+Nonostante tutto, mi ritengo soddisfatto del lavoro svolto, non solo per la parte di codice, ma per l'intero artefatto prodotto, che ha permesso di approfondire anche aspetti a lato della mera programmazione.
+
+Un aspetto che mi ha colpito è la `referential transparency` e come, un codice privo di side-effect, possa essere estremamente più semplice da testare, ma anche da ragionarci sopra.
+
+Infine, ringrazio i miei compagni di gruppo per la collaborazione e la disponibilità che ha permesso di portare a termine il progetto con successo :).
+
 ### Borriello Luigi
