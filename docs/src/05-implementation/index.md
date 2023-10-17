@@ -25,9 +25,9 @@ Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione Hexagonal Game Map
 
-**Obiettivo**: creare una game map di dimensioni arbitrariamente grandi, cercando una modellazione quanto più vicina al dominio. 
+**Obiettivo**: creare una game map di dimensioni arbitrariamente grandi, cercando una modellazione quanto più vicina al dominio.
 Essa deve permettere di rappresentare _esagoni_, _spot_ e _strade_.
-Inoltre, l'implementazione deve poter permettere di accedere in modo intuitivo alle informazioni che la mappa può fornire 
+Inoltre, l'implementazione deve poter permettere di accedere in modo intuitivo alle informazioni che la mappa può fornire
 
 #### Tiles
 
@@ -87,6 +87,7 @@ val edges: Set[RoadSpot] =
         if (first.toSet & second.toSet).sizeIs == 2
     yield UnorderedPair(first, second)
 ```
+
 ![Spot e Road](../05-implementation/../img/05-implementation/manuandru/spot-road.jpg)
 
 ### Hexagon e Monoidi
@@ -96,7 +97,7 @@ A fronte di una lettura di [Scala with Cats](https://underscore.io/books/scala-w
 È stato riconosciuto come un `Hexagon` può essere un **monoide** (e garantisce proprietà utili durante la scrittura di codice), in quanto è possibile soddisfare gli assiomi di:
 
 - **associatività**: \\( \forall \\; a,b,c \in S \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c) \\)
-- **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a  \wedge (a \cdot \epsilon) = a \\)
+- **identità**: \\( \exists \\; \epsilon \in S : \forall a \in S \Rightarrow (\epsilon \cdot a) = a \wedge (a \cdot \epsilon) = a \\)
 
 Ne deriva il seguente codice, utilizzando la libreria [`Cats`](https://typelevel.org/cats/):
 
@@ -159,6 +160,7 @@ given Conversion[(Double, Double), Point] with
     def apply(pair: (Double, Double)): Point =
         Point(DoubleWithPrecision(pair._1), DoubleWithPrecision(pair._2))
 ```
+
 #### Nesting di componenti
 
 La costruzione della mappa è stata realizzata attraverso il nesting di componenti, ognuno con diverse proprietà.
@@ -184,11 +186,11 @@ svg.text(
 
 ```css
 .spot-text {
-    fill: black;
-    text-anchor: middle;
-    dominant-baseline: central;
-    font-family: sans-serif;
-    font-weight: bold;
+	fill: black;
+	text-anchor: middle;
+	dominant-baseline: central;
+	font-family: sans-serif;
+	font-weight: bold;
 }
 ```
 
@@ -261,11 +263,141 @@ Qualora un test fallisce, è possibile ottenere i valori che hanno causato il fa
 
 ## Alessandro Mazzoli
 
+Le parti di progetto a cui ho lavorato sono principalmente le seguenti:
+
+- Creazione dell'architettura MVC
+- Creazione di un game engine basato su configurazione espresse tramite regole
+- Creazione di un DSL per la definizione di regole
+- Creazione di un layer anti-corruzione per il gioco che incapsula l'engine.
+
+### MVC
+
+L'architettura MVC è stata ispirata al Cake pattern, infatti possiamo notare come ognuno dei tre componenti abbia ad esempio il concetto di dipendenze, gestite tramite un Mixin che trasforma i requirements in proprietà del componente.
+
+#### Controller
+
+Il controller è stato strutturato come un componente che ha come dipendenze sia il model che la view, in modo da poterli utilizzare all'interno del controller stesso.
+
+```scala
+trait Controller[State <: Model.State]:
+  def state: State
+
+object Controller:
+  trait Requirements[V <: View[?], S <: Model.State] extends Model.Provider[S] with View.Provider[V]
+
+  trait Dependencies[V <: View[S], S <: Model.State](requirements: Requirements[V, S]) extends Controller[S]:
+    protected def view: V = requirements.view
+    protected def model: Model[S] = requirements.model
+
+  trait Provider[C <: Controller[?]]:
+    def controller: C
+```
+
+Per gestire gli update della view in maniera automatica è stato introdotto un `ReactiveModelWrapper` che incapsula il vero Model e si occupa di aggiornare la view ogni volta che lo stato del model cambia.
+
+```scala
+class ReactiveModelWrapper[S <: Model.State](view: => View[S], model: Model[S]) extends Model[S]:
+  private val internalModel = model
+  override def state: S = internalModel.state
+  override def update(f: S => S): Unit =
+    internalModel.update(f)
+    view.updateState(this.state)
+```
+
+Questo ha permesso la creazione di un controller Base che supportasse automaticamente l'aggiornamento della rispettiva View.
+
+```scala
+abstract class BaseController[V <: View[S], S <: Model.State](requirements: Controller.Requirements[V, S])
+    extends Controller[S]
+    with Controller.Dependencies(requirements):
+
+  override def state: S = model.state
+  override protected val model: Model[S] =
+    new ReactiveModelWrapper(requirements.view, requirements.model)
+```
+
+#### View
+
+Anche il concetto di View è stato creato seguendo la stessa logica a componenti e dipendenze, infatti possiamo vedere come le dipendenze della view consistano solamente nel controller.
+
+```scala
+trait View[State <: Model.State]:
+  // stuff
+
+object View:
+  trait Requirements[C <: Controller[?]] extends Controller.Provider[C]
+
+  trait Dependencies[C <: Controller[?]](requirements: Requirements[C]) extends View[?]:
+    protected def controller: C = requirements.controller
+
+  trait Provider[V <: View[?]]:
+    def view: V
+```
+
+##### Navigator View
+
+Per supportare la navigabilità tra le varie view, ho creato un trait `NavigatorView` che estende `View` e aggiunge i metodi `navigateTo` e `navigateBack` che permettono di navigare tra le varie view.
+
+```scala
+trait NavigatorView extends View[?]:
+  def navigateTo[Route](route: Route): Unit = NavigableApplicationManager.navigateTo(route)
+  def navigateBack(): Unit = NavigableApplicationManager.navigateBack()
+```
+
+##### ScalaJS
+
+Per supportare inoltre l'integrazione dell'architettura con ScalaJS, ho optato per l'utilizzo di un altro Mixin che aggiunge la properità `element` che rappresenta il nodo radice della view.
+Questo componente inoltre si occupa di esporre lo stato reattivo in modo da poter essere sfruttato dagli elementi grafici poichè mantenuto sempre sincronizzato
+
+```scala
+trait ScalaJSView[State <: Model.State](
+    val container: String,
+    val initialState: State
+) extends View[State]:
+
+  private val _reactiveState = Var[State](initialState)
+  override def updateState(state: State): Unit =
+    _reactiveState.writer.onNext(state)
+
+  /** A signal that emits the current state of the application.
+    */
+  def reactiveState: Signal[State] = _reactiveState.signal
+
+  /** The element that is rendered by this view.
+    */
+  def element: Element
+
+  override def show(): Unit =
+    // ScalaJS stuff
+
+  override def hide(): Unit =
+    // ScalaJS stuff
+
+```
+
+#### Cake Application Page
+
+La costruzione dei vari componenti viene effettuata all'interno dell' `ApplicationPage` che è il componente che si occupa di istanziare la view e il rispettivo controller passandogli le dipendenze richieste.
+
+```scala
+trait ApplicationPage[S <: Model.State, C <: Controller[?], V <: View[?]](
+    override val model: Model[S],
+    val pageFactory: PageFactory[C, V, S]
+) extends Model.Requirements[S]
+    with View.Requirements[C]
+    with Controller.Requirements[V, S]:
+  override lazy val view: V = pageFactory.viewFactory(this)
+  override lazy val controller: C = pageFactory.controllerFactory(this)
+```
+
+Esso infatti al suo interno contiene tutte le dipendenze richieste da tutti i componenti e sfrutta questa proprietà per fare un inizializzazione semplice e veloce.
+
 ## Luigi Borriello
 
 Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmente delle seguenti parti:
 
 - Creazione e modellazione dei singoli componenti relativi allo stato della partita, e delle loro corrispondenti operazioni nonchè:
+
   - Gestione delle carte risorse
   - Gestione delle carte sviluppo
   - Gestione delle costruzioni
@@ -285,9 +417,10 @@ Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 Come prima cosa, ho individuato quelle che sarebbero state le componenti principali necessari a modellare dello stato della partita, individuando come entità principali i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
 
-Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei __type alias__, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
+Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei **type alias**, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
 
-Di seguito, sono riportati due esempi di definizione di  __type alias__:
+Di seguito, sono riportati due esempi di definizione di **type alias**:
+
 - `ResourceCards`:
 ```scala
 /** Type of possible resources.
@@ -306,9 +439,10 @@ final case class ResourceCard(resourceType: ResourceType)
 /** The resource cards hold by the players.
   */
 type ResourceCards = Map[ScatanPlayer, Seq[ResourceCard]]
-```
+````
 
 - `Awards`:
+
 ```scala
 /** Type of possible awards.
   */
@@ -385,12 +519,115 @@ object ResourceCardOps:
 ```
 
 
-### Realizzazione degli scambi
+### Operazioni tail recursive
+
+Nello sviluppo delle operazioni sullo stato, ho posto una particolare enfasi sull'utilizzo pervasivo della funzione `foldLeft` per l'elaborazione delle informazioni in molte delle nostre strutture dati. L'obiettivo di questa scelta è stato duplice: da un lato, ottimizzare le prestazioni del codice attraverso l'uso di questa funzione altamente efficiente; d'altro lato, migliorare la coerenza e la leggibilità del codice, aumentandone la dichiaratività.
+
+Di seguito, viene riportato un esempio di utilizzo di `foldLeft` nella gestione dei **trades**:
+
+```scala
+    /** Trade between two players. The sender must have the senderCards and the receiver must have the receiverCards The
+      * sender will give the senderCards to the receiver and vice versa
+      */
+    def tradeBetweenPlayers(
+        sender: ScatanPlayer,
+        receiver: ScatanPlayer,
+        senderCards: Seq[ResourceCard],
+        receiverCards: Seq[ResourceCard]
+    ): Option[ScatanState] =
+      val stateWithSenderCardsProcessed = senderCards.foldLeft(Option(state))((s, card) =>
+        for
+          initialState <- s
+          stateWithCardRemovedFromSender <- initialState.removeResourceCard(sender, card)
+          stateWithCardAssignedToReceiver <- stateWithCardRemovedFromSender.assignResourceCard(receiver, card)
+        yield stateWithCardAssignedToReceiver
+      )
+      val stateWithReceiverCardsProcessed = receiverCards.foldLeft(stateWithSenderCardsProcessed)((s, card) =>
+        for
+          initialState <- s
+          stateWithCardRemovedFromReceiver <- initialState.removeResourceCard(receiver, card)
+          stateWithCardAssignedToSender <- stateWithCardRemovedFromReceiver.assignResourceCard(sender, card)
+        yield stateWithCardAssignedToSender
+      )
+      stateWithReceiverCardsProcessed
+
+```
+
 <!-- FoldLeft -->
 <!-- For comprension -->
 
 ### Calcolo degli Scores
-<!-- Partial functions -->
+
+Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, è stato definito tramite la libreria cats, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
+
+```scala
+import cats.kernel.Semigroup
+
+/** A Map that contains for each player the number of points they have
+  */
+type Scores = Map[ScatanPlayer, Int]
+
+object Scores:
+
+  given Semigroup[Scores] with
+    def combine(x: Scores, y: Scores): Scores =
+      x ++ y.map { case (player, score) =>
+        player -> (score + x.getOrElse(player, 0))
+      }
+```
+
+Successivamente, ho definito una serie di funzioni, ognuna delle quali si occupa di calcolare il punteggio dei giocatori secondo un criterio specifico, ottenendo così più punteggi "parziali". 
+
+Di seguito, viene riportato un esempio di definizione di una di queste funzioni:
+
+```scala
+/** Computes the partial scores of each player, taking into account the development cards they have assigned. A
+      * victory point card is worth 1 point.
+      */
+    private def partialScoresWithVictoryPointCards: Scores =
+      val playersWithVictoryPointCards =
+        state.developmentCards.filter(_._2.exists(_.developmentType == DevelopmentType.VictoryPoint)).map(_._1)
+      playersWithVictoryPointCards.foldLeft(Scores.empty(state.players))((scores, player) =>
+        scores.updated(player, scores(player) + 1)
+      )
+```
+
+Infine, ho combinato queste funzioni di punteggio parziale mediante l'operazione di combine (`|+|`). Questo processo di combinazione ha permesso di ottenere una funzione di punteggi totali:
+
+```scala
+/** This method calculates the total scores of all players in the game by combining the partial scores with awards
+      * and buildings. It uses the `|+|` operator from the `cats.syntax.semigroup` package to combine the scores.
+      * @return
+      *   the total scores of all players in the game.
+      */
+    def scores: Scores =
+      import cats.syntax.semigroup.*
+      import scatan.model.components.Scores.given
+      val partialScores = Seq(partialScoresWithAwards, partialScoresWithBuildings, partialScoresWithVictoryPointCards)
+      partialScores.foldLeft(Scores.empty(state.players))(_ |+| _)
+```
+
+### Testing
+L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente. \\
+Per ovviare a questo problema, è stato utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito, più simile alla descrizione delle operazioni che vengono testate e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
+
+Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella fase di testing:
+
+```scala
+  it should "assign a LargestArmy award if there are conditions" in {
+    val state = ScatanState(threePlayers)
+    val player1 = threePlayers.head
+    val stateWithAward = for
+      stateWithOneKnight <- state.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithTwoKnight <- stateWithOneKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+      stateWithThreeKnight <- stateWithTwoKnight.assignDevelopmentCard(player1, DevelopmentCard(DevelopmentType.Knight))
+    yield stateWithThreeKnight
+    stateWithAward match
+      case Some(state) => state.awards(Award(AwardType.LargestArmy)) should be(Some((player1, 3)))
+      case None        => fail("stateWithAward should be defined")
+  }
+```
+
 
 
 
