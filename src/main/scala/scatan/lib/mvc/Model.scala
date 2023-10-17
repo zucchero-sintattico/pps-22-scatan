@@ -16,5 +16,6 @@ object Model:
       override def state: S = _state
       override def update(f: S => S): Unit = _state = f(_state)
 
+  trait Requirements[S <: State]
   trait Provider[S <: State]:
     def model: Model[S]
