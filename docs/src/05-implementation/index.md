@@ -546,7 +546,7 @@ Una volta creata la libreria per lo sviluppo di DSL ho iniziato a creare il DSL 
 
 ##### Dominio
 
-Prima di tutto ho definito un dominio di contesti contenti tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules``
+Prima di tutto ho definito un dominio di contesti contenti tutte le varie proprietà che andranno settate nella dichiarazione delle regole e che quindi infine verranno convertite ad un oggetto di tipo `Rules`
 
 - `GameCtx` che rappresenta il contesto di un gioco, ovvero quello in cui si definiscono le regole di un gioco.
 - `PlayersCtx` che rappresenta il contesto dei giocatori, ovvero quello in cui si definiscono le regole relative ai giocatori.
@@ -573,8 +573,8 @@ Ognuno di esse possiede al suo interno l'insieme delle proprietà che ne vanno a
       ...
   )
 
-  case class StepCtx[P, S, A](
-      when: MultipleProperty[(A, S)] = ...
+  case class StepCtx[Phase, Step, Action](
+      when: MultipleProperty[(Action, Step)] = ...
       ...
   )
 ```
@@ -630,7 +630,73 @@ object GameCtxOps:
 
 Queste funzionalità hanno quindi lo scopo di esporre le proprietà del contesto preso implicitamente e di permetterne la configurazione in maniera dichiarativa, utilizzando le conversioni implicite della libreria della proprietà.
 
-Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un contesto implicita sopra al quale vengono chiamate operazioni senza la necessità di dover specificare il receiver.
+Quello che si è cercato quindi di emulare sono funzioni in cui è necessario un contesto implicito sopra al quale vengono chiamate operazioni senza la necessità di dover specificare il receiver.
+
+#### ScatanDSL
+
+Il dsl creato mi ha permesso di definire le regole del gioco nel seguente modo:
+
+```scala
+private val game = Game[ScatanState, ScatanPhases, ScatanSteps, ScatanActions, ScatanPlayer] {
+
+    Players {
+      CanBe := (3 to 4)
+    }
+
+    WinnerFunction := winner
+    InitialPhase := ScatanPhases.Setup
+
+    Phase {
+      PhaseType := ScatanPhases.Setup
+      InitialStep := ScatanSteps.SetupSettlement
+      EndingStep := ScatanSteps.ChangingTurn
+      NextPhase := ScatanPhases.Game
+      Iterate := Iterations.OnceAndBack
+
+      Step {
+        StepType := ScatanSteps.SetupSettlement
+        when := ScatanActions.AssignSettlement -> ScatanSteps.SetupRoad
+      }
+      Step {
+        StepType := ScatanSteps.SetupRoad
+        when := ScatanActions.AssignRoad -> ScatanSteps.ChangingTurn
+      }
+    }
+    Phase {
+      PhaseType := ScatanPhases.Game
+      InitialStep := ScatanSteps.Starting
+      EndingStep := ScatanSteps.ChangingTurn
+      OnEnter := { (state: ScatanState) => state.assignResourcesAfterInitialPlacement.get }
+      Iterate := Iterations.Circular
+
+      Step {
+        StepType := ScatanSteps.Starting
+        when := ScatanActions.RollDice -> ScatanSteps.Playing
+        when := ScatanActions.RollSeven -> ScatanSteps.PlaceRobber
+        when := ScatanActions.PlayDevelopmentCard -> ScatanSteps.Starting
+      }
+      Step {
+        StepType := ScatanSteps.PlaceRobber
+        when := ScatanActions.PlaceRobber -> ScatanSteps.StealCard
+      }
+      Step {
+        StepType := ScatanSteps.StealCard
+        when := ScatanActions.StealCard -> ScatanSteps.Playing
+      }
+      Step {
+        StepType := ScatanSteps.Playing
+        when := ScatanActions.BuildSettlement -> ScatanSteps.Playing
+        when := ScatanActions.BuildRoad -> ScatanSteps.Playing
+        when := ScatanActions.BuildCity -> ScatanSteps.Playing
+        when := ScatanActions.BuyDevelopmentCard -> ScatanSteps.Playing
+        when := ScatanActions.PlayDevelopmentCard -> ScatanSteps.Playing
+        when := ScatanActions.TradeWithBank -> ScatanSteps.Playing
+        when := ScatanActions.TradeWithPlayer -> ScatanSteps.Playing
+        when := ScatanActions.NextTurn -> ScatanSteps.ChangingTurn
+      }
+    }
+}
+```
 
 ## Luigi Borriello
 
