@@ -58,8 +58,11 @@ La mappa di gioco è composta da tasselle esagonali che, unite tra loro a nido d
 - Il sistema deve poter visualizzare le azioni disponibili a seconda della fase in cui si trova. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
 - Il sistema deve poter visualizzare le carte di sviluppo di ogni giocatore.
 - Il sistema deve poter gestire il commercio di risorse tra i giocatori.
+[R5](../../../src/test/scala/scatan/model/game/state/ops/TradeOpsTest.scala)
 - Il sistema deve poter verificare quali giocatori detengono i certificati di strada più lunga e armata più grande. 
+[R6](../../../src/test/scala/scatan/model/game/state/ops/AwardOpsTest.scala)
 - Il sistema deve poter gestire la fine della partita, controllando se un giocatore ha raggiunto i 10 punti vittoria.
+
 
 ## Non funzionali
 

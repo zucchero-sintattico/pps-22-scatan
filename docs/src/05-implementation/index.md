@@ -651,11 +651,11 @@ Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmen
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione e modellazione dei singoli componenti della partita
-Per la modellazione dello stato della partita, come prima cosa, ho individuato quelle che sarebbero state le sue componenti principali, individuando così le entità dei **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
+Per modellare lo stato della partita, come prima cosa, sono individuate e definite quelle che sarebbero le sue componenti principali, ovvero i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 
-Una volta individuati, ho subito organizzato le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
+Una volta individuati, sono definite le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
 
-Dopo di che, per facilitare la lettura e sviluppo del codice stesso, ho optato per definire per ognuno dei componenti, dei **type alias**, corrispondenti a codeste strutture dati, in modo da poterle utilizzare in modo più semplice e diretto.
+Dopo di che, per facilitare la lettura e sviluppo del codice stesso, vengono definiti per ognuno dei componenti, dei **type alias**, corrispondenti a codeste strutture dati, in modo da semplificarne l'utilizzo.
 
 Di seguito, sono riportati due esempi di definizione di **type alias**:
 
@@ -699,7 +699,7 @@ type Awards = Map[Award, Option[(ScatanPlayer, Int)]]
 
 ### Modellazione dello stato della partita
 
-In concomitanza alla realizzazione di questi componenti, ho iniziato a modellare anche quella che sarebbe stata l'entità principale dello stato della partita, scegliendo di utilizzare una **case class** chiamata `ScatanState`, contenente solo le informazioni necessarie per poter catturare i vari snapshot dello stato della partita durante il suo svolgimento.
+In concomitanza alla realizzazione di questi componenti, è stata modellata anche l'entità principale dello stato della partita, scegliendo di utilizzare una **case class** chiamata `ScatanState`, contenente solo le informazioni necessarie per poter catturare i vari snapshot dello stato della partita durante il suo svolgimento.
 
 ```scala
 final case class ScatanState(
@@ -714,13 +714,13 @@ final case class ScatanState(
 )
 ```
 
-### Realizzazione delle ScatanState Ops
+### ScatanState Ops
 
-Dopo aver individuato quelle che sarebbero state le principali operazioni da poter effettuare sullo stato della partita, ho deciso di raggrupparle e dividerle in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
+Dopo aver individuato le principali operazioni da poter effettuare sullo stato della partita, ho deciso di raggrupparle e dividerle in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
 
 Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità.
 
-Inoltre, per favorire un approccio più funzionale, ho deciso di realizzare tutti questi metodi senza side-effect, facendo in modo che ogni volta che verrà effettuata una modifica allo stato della partita, verrà ritornato un `Option[ScatanState]` contenente il nuovo stato della partita, o `None` altrimenti, permettendo agli strati superiori dell'applicazione di catturare eventuali errori e gestirli di conseguenza.
+Inoltre, per favorire un approccio più funzionale, lo ScatanState è reso immutabile e tutti questi metodi sono senza side-effect, facendo in modo che ogni volta che viene effettuata una modifica allo stato della partita, viene ritornato un `Option[ScatanState]` contenente il nuovo stato della partita aggiornato, o `None` altrimenti, permettendo agli strati superiori dell'applicazione di catturare eventuali errori e gestirli di conseguenza.
 
 Di seguito, viene riportato un esempio di definizione dell' **object** contenente le **extension methods** per la gestione delle **resource cards**:
 
@@ -758,15 +758,12 @@ object ResourceCardOps:
 
 
 ### Operazioni tail recursive
-
-Nello sviluppo delle operazioni sullo stato, ho posto una particolare enfasi sull'utilizzo pervasivo della funzione `foldLeft` per l'elaborazione delle informazioni in molte delle nostre strutture dati. L'obiettivo di questa scelta è stato duplice: da un lato, ottimizzare le prestazioni del codice attraverso l'uso di questa funzione altamente efficiente; d'altro lato, migliorare la coerenza e la leggibilità del codice, aumentandone la dichiaratività.
+Nello sviluppo delle operazioni sullo stato, pongo una particolare enfasi sull'utilizzo pervasivo della funzione `foldLeft` per l'elaborazione delle informazioni in molte delle nostre strutture dati. 
+L'obiettivo di questa scelta è duplice: da un lato, ottimizzare le prestazioni del codice attraverso l'uso di questa funzione altamente efficiente; d'altro lato, migliorare la coerenza e la leggibilità del codice, aumentandone la dichiaratività.
 
 Di seguito, viene riportato un esempio di utilizzo di `foldLeft` nella gestione dei **trades**:
 
 ```scala
-    /** Trade between two players. The sender must have the senderCards and the receiver must have the receiverCards The
-      * sender will give the senderCards to the receiver and vice versa
-      */
     def tradeBetweenPlayers(
         sender: ScatanPlayer,
         receiver: ScatanPlayer,
@@ -788,15 +785,41 @@ Di seguito, viene riportato un esempio di utilizzo di `foldLeft` nella gestione 
         yield stateWithCardAssignedToSender
       )
       stateWithReceiverCardsProcessed
-
 ```
 
-<!-- FoldLeft -->
-<!-- For comprension -->
+Di seguito, un esempio di utilizzo di `foldLeft` nella gestione degli **awards**:
+
+```scala
+    def awards: Awards =
+      val precedentLongestRoad = state.assignedAwards(Award(AwardType.LongestRoad))
+      val longestRoad =
+        state.assignedBuildings.asPlayerMap.foldLeft(precedentLongestRoad.getOrElse((ScatanPlayer(""), 0)))(
+          (playerWithLongestRoad, buildingsOfPlayer) =>
+            val roads = buildingsOfPlayer._2.filter(_ == BuildingType.Road)
+            if roads.sizeIs > playerWithLongestRoad._2 then (buildingsOfPlayer._1, roads.size)
+            else playerWithLongestRoad
+        )
+      val precedentLargestArmy = state.assignedAwards(Award(AwardType.LargestArmy))
+      val largestArmy =
+        state.developmentCards.foldLeft(precedentLargestArmy.getOrElse(ScatanPlayer(""), 0))(
+          (playerWithLargestArmy, cardsOfPlayer) =>
+            val knights = cardsOfPlayer._2.filter(_.developmentType == DevelopmentType.Knight)
+            if knights.sizeIs > playerWithLargestArmy._2 then (cardsOfPlayer._1, knights.size)
+            else playerWithLargestArmy
+        )
+      Map(
+        Award(AwardType.LongestRoad) -> (if longestRoad._2 >= minimumRoadLengthForAward then
+                                           Some((longestRoad._1, longestRoad._2))
+                                         else precedentLongestRoad),
+        Award(AwardType.LargestArmy) -> (if largestArmy._2 >= minimumKnightsForAward then
+                                           Some((largestArmy._1, largestArmy._2))
+                                         else precedentLargestArmy)
+      )
+```
 
 ### Calcolo degli Scores
 
-Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, è stato definito tramite la libreria **cats**, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
+Per implementare il modulo dedicato al calcolo dei punteggi, come prima cosa, viene definito tramite la libreria **cats**, un semigruppo per il tipo `Scores`, in modo da poter dichiarare come combinare più elementi di questo tipo:
 
 ```scala
 import cats.kernel.Semigroup
@@ -819,9 +842,6 @@ Successivamente, ho definito una serie di funzioni, ognuna delle quali si occupa
 Di seguito, viene riportato un esempio di definizione di una di queste funzioni:
 
 ```scala
-/** Computes the partial scores of each player, taking into account the development cards they have assigned. A
-      * victory point card is worth 1 point.
-      */
     private def partialScoresWithVictoryPointCards: Scores =
       val playersWithVictoryPointCards =
         state.developmentCards.filter(_._2.exists(_.developmentType == DevelopmentType.VictoryPoint)).map(_._1)
@@ -830,14 +850,9 @@ Di seguito, viene riportato un esempio di definizione di una di queste funzioni:
       )
 ```
 
-Infine, ho combinato queste funzioni di punteggio parziale mediante l'operazione di combine (`|+|`). Questo processo di combinazione ha permesso di ottenere una funzione di punteggi totali:
+Infine, vengono combinate queste funzioni di punteggio parziale mediante l'operazione di combine (`|+|`). Questo processo di combinazione permette ottenere i punteggi totali:
 
 ```scala
-/** This method calculates the total scores of all players in the game by combining the partial scores with awards
-      * and buildings. It uses the `|+|` operator from the `cats.syntax.semigroup` package to combine the scores.
-      * @return
-      *   the total scores of all players in the game.
-      */
     def scores: Scores =
       import cats.syntax.semigroup.*
       import scatan.model.components.Scores.given
@@ -848,7 +863,7 @@ Infine, ho combinato queste funzioni di punteggio parziale mediante l'operazione
 ### Testing
 L'implementazione di tutte le operazioni sullo stato con tipo di ritorno opzionale, rischiava di rendere più macchinosa la fase di testing, e di rendere il codice di quest'ultima confuso e poco leggibile se non gestito correttamente. 
 
-Per ovviare a questo problema, è stato utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
+Per ovviare a questo problema, viene utilizzato in maniera pervasiva il costrutto `for comprehension`, ottenendo così codice più pulito e meno suscettibile a errori dovuti alla gestione dei valori opzionali.
 
 Di seguito, viene riportato un esempio di utilizzo di `for comprehension` nella fase di testing:
 

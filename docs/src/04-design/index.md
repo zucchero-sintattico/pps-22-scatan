@@ -120,6 +120,94 @@ A questo punto una volta definito il dominio del gioco si è andato a definire u
 
 <!--************* ---- ****************-->
 
+<!-- Borriello -->
+
+## Stato della partita
+
+Lo stato della partita è modellato tramite un entità rinominata `ScatanState`,
+nella quale son presenti tutte le informazioni a riguardo, rappresentandone uno Snapshot.
+In particolare vi sono contenute le seguenti informazioni:
+
+- la lista dei giocatori
+- la mappa di gioco
+- la lista di edifici assegnati ai giocatori
+- la lista di premi assegnati ai giocatori
+- le liste di carte risorse assegnate ai giocatori
+- le liste di carte sviluppo assegnate ai giocatori
+- il mazzo di carte sviluppo
+- la posizione del ladro
+
+![ScatanState](../img/04-design/state/scatan-state.jpg)
+
+### Componenti del gioco & Operations
+
+Le informazioni precedentemente elencate sono modellate come componenti (es: `Award`, `Buildings`, `ResourceCard`, ...), del gioco, molti di questi indipenti tra loro.
+In seguito, a ciò le operations per gestire queste singole parti del dominio sono realizzate indipendentemente, optando quindi per un approccio modulare facile da estendere e mantenere.
+Inoltre, così facendo, il core della partita (`ScatanState`) risulta essere indipendente dalle funzionalità del gioco.
+
+
+![ScatanState](../img/04-design/state/scatan-stateOps.jpg)
+
+#### Resource Cards Ops
+
+- `ResourceCardOps`: contiene le operations per gestire le carte risorse, fornendo funzionalità per:
+  - aggiungere carte risorsa: utilizzabile in seguito al lancio dei dadi e in seguito alla fase iniziale
+  - rimuovere carte risorsa: utili per l'acquisto di carte sviluppo e per la costruzione di edifici
+  - rubare carte risorsa: utili per il furto tramite il ladro e in seguito al "7 ai dadi"
+
+![Resource Cards](../img/04-design/state/resCardOps.jpg)
+
+#### Development Cards Ops
+
+- `DevelopmentCardOps`: contiene le operations per gestire le carte sviluppo, fornendo funzionalità che permettono ad un giocatore di:
+  - aggiungere carte sviluppo al proprio mazzo effettuandone un acquisto
+  - giocare carte sviluppo dal proprio mazzo applicando gli effetti di queste ultime sulla partita
+  - rimuovere carte sviluppo dal proprio mazzo in seguito all'uso di queste ultime
+
+![Development Cards](../img/04-design/state/devCardOps.jpg)
+
+#### Buildings Ops
+
+- `BuildingOps`: contiene le operations per gestire gli edifici, aggiungendo funzionalità per:
+  - assegnare edifici ai giocatori in seguito alla fase iniziale di preparazione
+  - far costruire edifici ai giocatori in seguito all'acquisto di questi ultimi, verificando che il giocatore abbia le risorse necessarie e che la posizione scelta sia valida
+
+![Buildings](../img/04-design/state/buildingOps.jpg)
+
+#### Awards Ops
+
+- `AwardOps`: contiene l'operazione per calcolare i premi allo stato attuale della partita, in particolare:
+  - il premio per il giocatore con il maggior numero di strade
+  - il premio per il giocatore con il maggior numero di carte sviluppo di tipo cavaliere
+
+![Awards](../img/04-design/state/awardOps.jpg)
+
+#### Trade Ops
+
+- `TradeOps`: contiene le operations per gestire gli scambi, permettendo ai giocatori di:
+  - scambiare carte risorsa con altri giocatori
+  - scambiare carte risorsa con la banca
+
+![Trade](../img/04-design/state/tradeOps.jpg)
+
+#### Score Ops
+
+- `ScoreOps`: contiene l'operazione per calcolare il punteggio di un giocatore, in particolare:
+  - il punteggio per gli edifici costruiti
+  - il punteggio per le carte sviluppo di tipo 'punto vittoria'
+  - il punteggio per i premi
+  - il punteggio totale
+
+![Score](../img/04-design/state/scoreOps.jpg)
+
+#### Robber Ops
+
+- `RobberOps`: contiene le operations per gestire il ladro, permettendo ai giocatori di:
+  - spostare il ladro in una nuova posizione
+
+![Robber](../img/04-design/state/robberOps.jpg)
+
+
 ## Map
 
 L'analisi del dominio ha portato alla schematizzazione della mappa di gioco, con i seguenti elementi:
@@ -210,90 +298,3 @@ Questo meccanismo funge anche da `Anti Corruption Layer`, in quanto permette di 
 
 ![Context Map](../img/04-design/view/context-map.jpg)
 
-<!-- Borriello -->
-
-## Stato della partita
-
-Lo stato della partita è stato modellato tramite un entità rinominata `ScatanState`,
-nella quale son presenti tutte le informazioni a riguardo, rappresentandone uno Snapshot.
-In particolare vi sono contenute le seguenti informazioni:
-
-- la lista dei giocatori
-- la mappa di gioco
-- la lista di edifici assegnati ai giocatori
-- la lista di premi assegnati ai giocatori
-- le liste di carte risorse assegnate ai giocatori
-- le liste di carte sviluppo assegnate ai giocatori
-- il mazzo di carte sviluppo
-- la posizione del ladro
-
-![ScatanState](../img/04-design/state/scatan-state.jpg)
-
-### Componenti del gioco & Operations
-
-Le informazioni precedentemente elencate sono state modellate come componenti (es: `Award`, `Buildings`, `ResourceCard`, ...), del gioco, molti di questi indipenti tra loro.
-In seguito a ciò sono state realizzate indipendentemente le operations per gestire queste singole parti del dominio, optando quindi per un approccio modulare facile da estendere e mantenere.
-Inoltre, così facendo, siamo riusciti a rendere il core della partita (`ScatanState`) indipendente dalle funzionalità del gioco.
-
-<!-- Queste informazioni, sono state divise in componenti e per ognuno di questi, sono state aggiunte le relative operazioni, dividendo così la business logic in più moduli, in modo da rendere il core (`ScatanState`) indipendente dalle funzionalità del gioco, inoltre, questa scelta ci ha permesso di poter gestire in modo più semplice e modulare quest'ultime. -->
-
-![ScatanState](../img/04-design/state/scatan-stateOps.jpg)
-
-#### Resource Cards Ops
-
-- `ResourceCardOps`: contiene le operations per gestire le carte risorse, fornendo funzionalità per:
-  - aggiungere carte risorsa: utilizzabile in seguito al lancio dei dadi e in seguito alla fase iniziale
-  - rimuovere carte risorsa: utili per l'acquisto di carte sviluppo e per la costruzione di edifici
-  - rubare carte risorsa: utili per il furto tramite il ladro e in seguito al "7 ai dadi"
-
-![Resource Cards](../img/04-design/state/resCardOps.jpg)
-
-#### Development Cards Ops
-
-- `DevelopmentCardOps`: contiene le operations per gestire le carte sviluppo, fornendo funzionalità che permettono ad un giocatore di:
-  - aggiungere carte sviluppo al proprio mazzo effettuandone un acquisto
-  - giocare carte sviluppo dal proprio mazzo applicando gli effetti di queste ultime sulla partita
-  - rimuovere carte sviluppo dal proprio mazzo in seguito all'uso di queste ultime
-
-![Development Cards](../img/04-design/state/devCardOps.jpg)
-
-#### Buildings Ops
-
-- `BuildingOps`: contiene le operations per gestire gli edifici, aggiungendo funzionalità per:
-  - assegnare edifici ai giocatori in seguito alla fase iniziale di preparazione
-  - far costruire edifici ai giocatori in seguito all'acquisto di questi ultimi, verificando che il giocatore abbia le risorse necessarie e che la posizione scelta sia valida
-
-![Buildings](../img/04-design/state/buildingOps.jpg)
-
-#### Awards Ops
-
-- `AwardOps`: contiene l'operazione per calcolare i premi allo stato attuale della partita, in particolare:
-  - il premio per il giocatore con il maggior numero di strade
-  - il premio per il giocatore con il maggior numero di carte sviluppo di tipo cavaliere
-
-![Awards](../img/04-design/state/awardOps.jpg)
-
-#### Trade Ops
-
-- `TradeOps`: contiene le operations per gestire gli scambi, permettendo ai giocatori di:
-  - scambiare carte risorsa con altri giocatori
-  - scambiare carte risorsa con la banca
-
-![Trade](../img/04-design/state/tradeOps.jpg)
-
-#### Score Ops
-
-- `ScoreOps`: contiene l'operazione per calcolare il punteggio di un giocatore, in particolare:
-  - il punteggio per gli edifici costruiti
-  - il punteggio per le carte sviluppo di tipo 'punto vittoria'
-  - il punteggio per i premi
-  - il punteggio totale
-
-![Score](../img/04-design/state/scoreOps.jpg)
-
-#### Robber Ops
-
-- `RobberOps`: contiene le operations per gestire il ladro, permettendo ai giocatori di:
-  - spostare il ladro in una nuova posizione
-
-![Robber](../img/04-design/state/robberOps.jpg)
