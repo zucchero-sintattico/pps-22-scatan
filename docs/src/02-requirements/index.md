@@ -31,10 +31,10 @@ La mappa di gioco è composta da tasselli esagonali che, unite tra loro a nido d
 - L'utente deve poter vedere le carte risorsa che possiede in mano. [R3.3](../others/tutorial.md#zona-carte-risorsa-r33)
 - L'utente deve poter vedere le carte sviluppo che possiede. [R3.4](../others/tutorial.md#zona-carte-development-r34)
 - L'utente deve poter effettuare il suo turno sapendo in quale fase si trova. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
-- L'utente deve poter lanciare i dadi per raccogliere le risorse. [R6](../others/tutorial.md#raccogliere-risorse-r6)
+- L'utente deve poter lanciare i dadi per raccogliere le risorse. [R6](../others/tutorial.md#raccogliere-risorse-r6) [T3](https://github.com/zucchero-sintattico/pps-22-scatan/blob/e4906ddd23ca058b494cfa3b0eefd258a010a5b4/src/test/scala/scatan/model/game/state/ops/ResourceCardOpsTest.scala)
 - L'utente deve poter effettuare scambi con gli altri giocatori. [R3.5](../others/tutorial.md#pannello-di-scambio-r35)
 - L'utente deve poter effettuare scambi con la banca. [R3.5](../others/tutorial.md#pannello-di-scambio-r35)
-- L'utente deve poter costruire strade, colonie e città con le risorse possedute e i vincoli del gioco. TODO
+- L'utente deve poter costruire strade, colonie e città con le risorse possedute e i vincoli del gioco. [T1](https://github.com/zucchero-sintattico/pps-22-scatan/blob/e4906ddd23ca058b494cfa3b0eefd258a010a5b4/src/test/scala/scatan/model/game/state/ops/BuildingOpsTest.scala)
 - L'utente deve poter acquistare le carte sviluppo. [R8](../others/tutorial.md#acquisto-carte-sviluppo-r8)
 - L'utente deve poter giocare le carte sviluppo. [R9](../others/tutorial.md#giocare-carte-sviluppo-r9)
 - L'utente deve poter sapere chi detiene i certificati di strada più lunga e armata più grande. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
@@ -50,7 +50,7 @@ La mappa di gioco è composta da tasselli esagonali che, unite tra loro a nido d
 - Il sistema deve poter gestire il turno di ogni giocatore, permettendo di effettuare scambi o costruzioni. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
 - Il sistema deve poter riconoscere la fine del turno di ogni giocatore, passando al giocatore successivo. [R11](../others/tutorial.md#cambio-turno-r11)
 - Il sistema deve poter gestire il lancio dei dadi:
-  - permettendo a tutti i giocatori di raccogliere opportunamente le risorse [R6](../others/tutorial.md#raccogliere-risorse-r6)
+  - permettendo a tutti i giocatori di raccogliere opportunamente le risorse [R6](../others/tutorial.md#raccogliere-risorse-r6) [T3](https://github.com/zucchero-sintattico/pps-22-scatan/blob/e4906ddd23ca058b494cfa3b0eefd258a010a5b4/src/test/scala/scatan/model/game/state/ops/ResourceCardOpsTest.scala)
   - oppure di far spostare il brigante e poi rubare una carta al giocatore di mano nel caso esca 7 [R7](../others/tutorial.md#robber-r7)
 - Il sistema deve poter visualizzare il campo di gioco. [R3.1](../others/tutorial.md#campo-di-gioco-r31)
 - Il sistema deve poter visualizzare le risorse di ogni giocatore. [R3.3](../others/tutorial.md#zona-carte-risorsa-r33)
@@ -59,7 +59,7 @@ La mappa di gioco è composta da tasselli esagonali che, unite tra loro a nido d
 - Il sistema deve poter visualizzare le carte di sviluppo di ogni giocatore. [R3.4](../others/tutorial.md#zona-carte-development-r34)
 - Il sistema deve poter gestire il commercio di risorse tra i giocatori. [R3.5](../others/tutorial.md#pannello-di-scambio-r35)
 - Il sistema deve poter gestire il commercio di risorse tra i giocatori. [R3.5](../others/tutorial.md#pannello-di-scambio-r35)
-- Il sistema deve poter verificare quali giocatori detengono i certificati di strada più lunga e armata più grande. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32)
+- Il sistema deve poter verificare quali giocatori detengono i certificati di strada più lunga e armata più grande. [R3.2](../others/tutorial.md#pannello-informazioni-e-mosse-r32) [T2](https://github.com/zucchero-sintattico/pps-22-scatan/blob/e4906ddd23ca058b494cfa3b0eefd258a010a5b4/src/test/scala/scatan/model/game/state/ops/AwardOpsTest.scala)
 - Il sistema deve poter gestire la fine della partita, controllando se un giocatore ha raggiunto i 10 punti vittoria. [R10](../others/tutorial.md#vittoria-r10)
 
 ## Non funzionali
