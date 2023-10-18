@@ -73,7 +73,7 @@ object LeftTabComponent:
           className := "game-view-button buy-development-card-button",
           "Buy Dev. Card",
           onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
-          disabled <-- gameViewModel.canBuyDevelopment
+          disabled <-- gameViewModel.canBuyDevelopment.map(!_)
         ),
         button(
           className := "game-view-button end-turn-button",
