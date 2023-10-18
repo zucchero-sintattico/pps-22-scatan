@@ -4,7 +4,6 @@ import scatan.BaseTest
 import scatan.lib.game.EmptyDomain.Actions.NextTurn
 import scatan.lib.game.ops.GamePlayOps.play
 import scatan.lib.game.{EmptyDomain, Game, GameStatus}
-import scatan.model.map.GameMap
 
 class GameTurnOpsTest extends BaseTest:
 
@@ -13,14 +12,14 @@ class GameTurnOpsTest extends BaseTest:
   val players = Seq(Player("p1"), Player("p2"), Player("p3"))
 
   "A Game" should "allow to change turn" in {
-    val game = Game(GameMap(), players)
+    val game = Game(players, State())
     val newGame = game.play(NextTurn)(using NextTurnEffect)
     newGame should be(defined)
     newGame.get.turn.player should be(players(1))
   }
 
   it should "also change the phase if the iterator is empty" in {
-    val game = Game(GameMap(), players)
+    val game = Game(players, State())
     var newGame = game
     newGame.gameStatus should be(GameStatus(MyPhases.Game, Steps.Initial))
     newGame = newGame.play(NextTurn)(using NextTurnEffect).get

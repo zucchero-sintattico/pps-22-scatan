@@ -21,7 +21,6 @@ object ScatanDSL:
 
     WinnerFunction := winner
     InitialPhase := ScatanPhases.Setup
-    StateFactory := { (m, p) => ScatanState(m, p) }
 
     Phase {
       PhaseType := ScatanPhases.Setup

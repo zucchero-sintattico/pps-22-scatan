@@ -29,9 +29,3 @@ object GameCtxOps:
     */
   def InitialPhase[Phase]: Contexted[GameCtx[?, Phase, ?, ?, ?], PropertySetter[Phase]] =
     ctx ?=> ctx.initialPhase
-
-  /** Define the initial state factory of the game.
-    */
-  def StateFactory[State, Player]
-      : Contexted[GameCtx[State, ?, ?, ?, Player], PropertySetter[(GameMap, Seq[Player]) => State]] =
-    ctx ?=> ctx.stateFactory

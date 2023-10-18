@@ -32,7 +32,6 @@ import scatan.model.map.GameMap
   */
 final case class Rules[State, P, S, A, Player](
     allowedPlayersSizes: Set[Int],
-    startingStateFactory: (GameMap, Seq[Player]) => State,
     startingPhase: P,
     startingSteps: Map[P, S],
     endingSteps: Map[P, S],
@@ -43,8 +42,7 @@ final case class Rules[State, P, S, A, Player](
     actions: Map[GameStatus[P, S], Map[A, S]]
 ):
   def valid: Boolean =
-    startingStateFactory != null &&
-      startingPhase != null &&
+    startingPhase != null &&
       startingSteps != Map.empty &&
       actions != Map.empty &&
       allowedPlayersSizes != Set.empty &&

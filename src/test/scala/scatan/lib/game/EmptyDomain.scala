@@ -28,7 +28,7 @@ object EmptyDomain:
     Players {
       CanBe := 2 to 4
     }
-    StateFactory := ((_, _) => State())
+
     InitialPhase := MyPhases.Game
     WinnerFunction := (_ => None)
 

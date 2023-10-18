@@ -31,7 +31,6 @@ object GameDSL:
       */
     def rules: Rules[State, P, S, A, Player] =
       val ruless: Seq[Rules[State, P, S, A, Player]] = (for
-        startingStateFactory <- game.stateFactory
         startingPhase <- game.initialPhase
         winner <- game.winner
         playersCtx <- game.players
@@ -72,7 +71,6 @@ object GameDSL:
           yield when).toMap).toMap
         Rules(
           allowedPlayersSizes = allowedSizes.toSet,
-          startingStateFactory = startingStateFactory,
           startingPhase = startingPhase,
           startingSteps = startingSteps,
           endingSteps = endingSteps,

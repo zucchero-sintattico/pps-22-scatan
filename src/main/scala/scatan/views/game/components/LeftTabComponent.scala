@@ -86,7 +86,7 @@ object LeftTabComponent:
           className := "game-view-button buy-development-card-button",
           "Buy Dev. Card",
           onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
-          disabled <-- gameViewModel.canBuyDevelopment
+          disabled <-- gameViewModel.canBuyDevelopment.map(!_)
         ),
         button(
           className := "game-view-button end-turn-button",
@@ -120,7 +120,8 @@ object LeftTabComponent:
           children <-- gameViewModel.currentAwards.map(_.toSeq).split(_._1) { (award, opt, _) =>
             li(
               award.toDisplayable,
-              opt._2.map((player, score) => s" ($player: $score)").getOrElse("Nobody Yet")
+              ": ",
+              opt._2.map((player, score) => s"($player: $score)").getOrElse("Nobody Yet")
             )
           }
         )

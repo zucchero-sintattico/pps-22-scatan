@@ -19,12 +19,6 @@ class ScatanRulesTest extends BaseTest:
     rules.allowedPlayersSizes should be(Set(3, 4))
   }
 
-  it should "start with a Scatan State" in {
-    val players = Seq(ScatanPlayer("a"), ScatanPlayer("b"), ScatanPlayer("c"))
-    val initialState = rules.startingStateFactory(GameMap(), players)
-    initialState should be(ScatanState(players))
-  }
-
   it should "start with Setup phase" in {
     rules.startingPhase shouldBe ScatanPhases.Setup
   }
