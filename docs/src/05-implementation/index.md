@@ -722,7 +722,7 @@ Per quanto riguarda il mio contributo al progetto, mi sono occupato principalmen
 Di seguito saranno descritte con maggior dettaglio le parti più salienti.
 
 ### Creazione e modellazione dei singoli componenti della partita
-Per modellare lo stato della partita, come prima cosa, sono individuate e definite quelle che sarebbero le sue componenti principali, ovvero i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
+Per modellare lo stato della partita, come prima cosa, ho individuato e definito le sue componenti principali, ovvero i **buildings**, le **resource cards**, le **development cards**, i **trades**, gli **awards** e gli **scores**.
 
 Una volta individuati, sono definite le eventuali strutture dati necessarie a modellarli, cercando di mantenere una certa coerenza tra di esse, e soprattutto con il dominio del gioco.
 
@@ -789,7 +789,7 @@ final case class ScatanState(
 ### ScatanState Ops
 Le principali operazioni effettuabili sullo stato della partita, sono raggruppate e divise in più moduli, ognuno relativo ad una specifica sotto-parte del dominio. Riuscendo così a rendere le varie funzionalità indipendenti (o semi-indipendenti) tra loro.
 
-Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità.
+Per fare ciò, ho realizzato all'interno del package `scatan.model.game.state.ops` una serie di **object** ognuno dei quali contiene una serie di **extension methods** per la case class `ScatanState`, in modo da poterla arricchire di funzionalità specifiche per la sotto-parte del dominio che quel modulo gestisce.
 
 Inoltre, per favorire un approccio più funzionale, lo ScatanState è reso immutabile e tutti questi metodi sono senza side-effect, facendo in modo che ogni volta che viene effettuata una modifica allo stato della partita, viene ritornato un `Option[ScatanState]` contenente il nuovo stato della partita aggiornato, o `None` altrimenti, permettendo agli strati superiori dell'applicazione di catturare eventuali errori e gestirli di conseguenza.
 
