@@ -82,3 +82,27 @@ e riceve le risorse corrispondenti alle tasselli su cui ha costruito.
 ### Carta rubata [R7.3]
 
 ![Carta rubata](../img/others/tutorial/robber/stolen-card.png)
+
+## Acquisto carte sviluppo [R8]
+
+![Pre](../img/others/tutorial/development/before-buying.png)
+
+![Post](../img/others/tutorial/development/after-buying.png)
+
+## Giocare carte sviluppo [R9]
+
+![Pre](../img/others/tutorial/development/before-playing.png)
+
+![Play](../img/others/tutorial/development/playing.png)
+
+![Post](../img/others/tutorial/development/after-playing.png)
+
+## Vittoria [R10]
+
+![Vittoria](../img/others/tutorial/victory/victory.png)
+
+## Cambio turno [R11]
+
+![Pre](../img/others/tutorial/turn/pre-change-turn.png)
+
+![Post](../img/others/tutorial/turn/post-change-turn.png)

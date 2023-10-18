@@ -31,3 +31,5 @@ Ritengo che il progetto sia stato molto utile, non solo ai fini di apprendimento
 Complessivamente, mi ritengo soddisfatto del lavoro svolto, ammetto di aver avuto qualche timore all'inizio, dovuto alla scarsa esperienza con il linguaggio, ma grazie alla disponibilità dei miei compagni di gruppo e alle conoscenze pregresse sviluppate durante il corso, sono riuscito subito a prendere confidenza con il linguaggio e a contribuire attivamente allo sviluppo del progetto.
 
 Ringrazio vivamente i miei compagni di gruppo per la serietà, la disponibilità e la collaborazione che hanno dimostrato fin da subito, difatti ritengo che il lavoro di squadra sia stato parte fondamentale per il successo del progetto.
+
+## Sviluppi Futuri
