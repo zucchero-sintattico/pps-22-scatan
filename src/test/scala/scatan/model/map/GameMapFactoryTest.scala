@@ -1,9 +1,8 @@
 package scatan.model.map
 
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
 
-class GameMapFactoryTest extends BaseTest with ScalaCheckPropertyChecks:
+class GameMapFactoryTest extends BaseTest:
 
   "A GameMapFactory" should "generate a default map" in {
     val map = GameMapFactory.defaultMap

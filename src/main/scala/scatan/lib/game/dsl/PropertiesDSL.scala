@@ -10,8 +10,8 @@ object PropertiesDSL:
     * @tparam P
     *   the type of the property
     */
-  sealed trait UpdatableProperty[P]:
-    def apply(newValue: P): Unit
+  sealed trait PropertyUpdater[P]:
+    def update(newValue: P): Unit
 
   /** An optional property, which can be updated with a new value.
     * @param value
@@ -19,8 +19,8 @@ object PropertiesDSL:
     * @tparam P
     *   the type of the property
     */
-  final case class OptionalProperty[P](var value: Option[P] = None) extends UpdatableProperty[P]:
-    override def apply(newValue: P): Unit = value = Some(newValue)
+  final case class OptionalProperty[P](var value: Option[P] = None) extends PropertyUpdater[P]:
+    override def update(newValue: P): Unit = value = Some(newValue)
 
   /** A sequence property, in which new values can be added.
     * @param value
@@ -28,15 +28,15 @@ object PropertiesDSL:
     * @tparam P
     *   the type of the property
     */
-  final case class SequenceProperty[P](var value: Seq[P] = Seq.empty[P]) extends UpdatableProperty[P]:
-    override def apply(newValue: P): Unit = value = value :+ newValue
+  final case class MultipleProperty[P](var value: Seq[P] = Seq.empty[P]) extends PropertyUpdater[P]:
+    override def update(newValue: P): Unit = value = value :+ newValue
 
   given [P]: Conversion[OptionalProperty[P], Iterable[P]] with
     def apply(optionalProperty: OptionalProperty[P]): Iterable[P] =
       optionalProperty.value.toList
 
-  given [P]: Conversion[SequenceProperty[P], Iterable[P]] with
-    def apply(sequenceProperty: SequenceProperty[P]): Iterable[P] =
+  given [P]: Conversion[MultipleProperty[P], Iterable[P]] with
+    def apply(sequenceProperty: MultipleProperty[P]): Iterable[P] =
       sequenceProperty.value
 
   // Setter
@@ -47,11 +47,11 @@ object PropertiesDSL:
     * @tparam P
     *   the type of the property
     */
-  class PropertySetter[P](property: UpdatableProperty[P]):
+  class PropertySetter[P](property: PropertyUpdater[P]):
     @targetName("set")
-    def :=(value: P): Unit = property(value)
+    def :=(value: P): Unit = property.update(value)
 
-  given [P]: Conversion[UpdatableProperty[P], PropertySetter[P]] = PropertySetter(_)
+  given [P]: Conversion[PropertyUpdater[P], PropertySetter[P]] = PropertySetter(_)
 
   // Updater
 
@@ -61,7 +61,7 @@ object PropertiesDSL:
   private type Builder[P] = P ?=> Unit
 
   trait Factory[P]:
-    def apply(): P
+    def create(): P
 
   /** A property builder. It creates a new object and build it with the given builder. The property is then updated with
     * the built value.
@@ -72,13 +72,13 @@ object PropertiesDSL:
     * @tparam P
     *   the type of the property
     */
-  class PropertyBuilder[P: Factory](property: UpdatableProperty[P]):
+  class PropertyBuilder[P: Factory](property: PropertyUpdater[P]):
     def apply(builder: Builder[P]): Unit =
-      val obj = summon[Factory[P]].apply()
+      val obj = summon[Factory[P]].create()
       builder(using obj)
-      property(obj)
+      property.update(obj)
 
-  given [P: Factory]: Conversion[UpdatableProperty[P], PropertyBuilder[P]] = PropertyBuilder(_)
+  given [P: Factory]: Conversion[PropertyUpdater[P], PropertyBuilder[P]] = PropertyBuilder(_)
 
   // Builder
 
@@ -90,7 +90,7 @@ object PropertiesDSL:
     */
   class ObjectBuilder[P: Factory]:
     def apply(builder: Builder[P]): P =
-      val obj = summon[Factory[P]].apply()
+      val obj = summon[Factory[P]].create()
       builder(using obj)
       obj
 

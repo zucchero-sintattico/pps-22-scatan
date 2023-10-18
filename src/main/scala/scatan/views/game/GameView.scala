@@ -8,6 +8,7 @@ import scatan.model.game.config.ScatanPhases
 import scatan.views.game.components.*
 import scatan.views.utils.TypeUtils
 import scatan.views.viewmodel.ScatanViewModel
+import scatan.model.game.state.ScatanState
 
 trait GameView extends View[ApplicationState]
 
@@ -19,6 +20,7 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
     extends BaseScalaJSView[ApplicationState, GameController](container, requirements)
     with GameView:
 
+  given ScatanState = this.controller.state.game.get.state
   given ScatanViewModel = ScatanViewModel(this.reactiveState)
   given GameViewClickHandler = GameViewClickHandler(this, controller)
 
@@ -28,6 +30,7 @@ private class ScalaJsGameView(container: String, requirements: View.Requirements
       EndgameComponent.endgamePopup,
       div(
         className := LeftTabComponent.leftTabCssClass,
+        LeftTabComponent.playerColorComponent,
         LeftTabComponent.awardsComponent,
         LeftTabComponent.currentPlayerComponent,
         LeftTabComponent.buttonsComponent,

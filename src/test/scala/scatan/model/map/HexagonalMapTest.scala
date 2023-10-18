@@ -1,9 +1,8 @@
 package scatan.model.map
 
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scatan.BaseTest
 
-class HexagonalMapTest extends BaseTest with ScalaCheckPropertyChecks:
+class HexagonalMapTest extends BaseTest:
 
   val rangeToTest: Range = 0 to 5
 

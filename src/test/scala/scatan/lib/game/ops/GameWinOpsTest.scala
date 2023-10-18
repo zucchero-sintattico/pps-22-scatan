@@ -3,7 +3,6 @@ package scatan.lib.game.ops
 import scatan.BaseTest
 import scatan.lib.game.ops.GameWinOps.*
 import scatan.lib.game.{EmptyDomain, Game}
-import scatan.model.map.GameMap
 
 class GameWinOpsTest extends BaseTest:
 
@@ -12,11 +11,11 @@ class GameWinOpsTest extends BaseTest:
   val players = Seq(Player("p1"), Player("p2"), Player("p3"))
 
   "A Game" should "expose a isOver method" in {
-    val game = Game(GameMap(), players)
+    val game = Game(players, State())
     game.isOver shouldBe false
   }
 
   it should "expose a winner method" in {
-    val game = Game(GameMap(), players)
+    val game = Game(players, State())
     game.winner shouldBe None
   }

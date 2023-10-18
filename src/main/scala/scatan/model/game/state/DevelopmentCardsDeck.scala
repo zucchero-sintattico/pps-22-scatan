@@ -1,4 +1,4 @@
-package scatan.model.game
+package scatan.model.game.state
 
 import scatan.model.components.DevelopmentType.*
 import scatan.model.components.{DevelopmentCard, DevelopmentType}

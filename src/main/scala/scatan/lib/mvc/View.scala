@@ -6,6 +6,10 @@ package scatan.lib.mvc
   */
 trait View[State <: Model.State]:
 
+  /** The state of the application.
+    */
+  def state: State
+
   /** Displays the view.
     */
   def show(): Unit
@@ -57,4 +61,10 @@ trait NavigatorView extends View[?]:
 abstract class BaseView[State <: Model.State, C <: Controller[State]](requirements: View.Requirements[C])
     extends View[State]
     with NavigatorView
-    with View.Dependencies(requirements)
+    with View.Dependencies(requirements):
+
+  override def state: State = _state
+
+  private var _state: State = controller.state
+  override private[mvc] def updateState(state: State): Unit =
+    _state = state

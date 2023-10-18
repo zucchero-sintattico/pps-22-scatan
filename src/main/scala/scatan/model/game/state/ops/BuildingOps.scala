@@ -11,6 +11,9 @@ import scatan.model.map.{RoadSpot, Spot, StructureSpot}
   */
 object BuildingOps:
 
+  type RoadBuildingRules = ScatanState => (RoadSpot, ScatanPlayer) => Boolean
+  type SettlementBuildingRules = ScatanState => (StructureSpot, ScatanPlayer) => Boolean
+
   extension (state: ScatanState)
 
     /** Verifies if a player has enough resources to pay a certain cost.
@@ -31,7 +34,7 @@ object BuildingOps:
       * resources to pay the cost of the building, the building is not built. If the player has enough resources to pay
       * the cost of the building, the building is built and the resources are consumed.
       *
-      * @param position
+      * @param spot
       *   the position of the building
       * @param buildingType
       *   the type of the building
@@ -40,12 +43,12 @@ object BuildingOps:
       * @return
       *   Some(ScatanState) if the building is built, None otherwise
       */
-    def build(position: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
+    def build(spot: Spot, buildingType: BuildingType, player: ScatanPlayer): Option[ScatanState] =
       if verifyResourceCost(player, buildingType.cost) then
         val remainingResourceCards = buildingType.cost.foldLeft(state.resourceCards(player))((cards, resourceCost) =>
           cards.filter(_.resourceType != resourceCost._1).drop(resourceCost._2)
         )
-        val gameWithBuildingAssigned = assignBuilding(position, buildingType, player)
+        val gameWithBuildingAssigned = assignBuilding(spot, buildingType, player)
         gameWithBuildingAssigned match
           case Some(game) =>
             Some(
@@ -74,9 +77,8 @@ object BuildingOps:
         spot: Spot,
         buildingType: BuildingType,
         player: ScatanPlayer,
-        roadBuildingRules: ScatanState => (RoadSpot, ScatanPlayer) => Boolean = defaultRulesForRoadBuilding,
-        settlementBuildingRules: ScatanState => (StructureSpot, ScatanPlayer) => Boolean =
-          defaultRulesForSettlementBuilding,
+        roadBuildingRules: RoadBuildingRules = defaultRulesForRoadBuilding,
+        settlementBuildingRules: SettlementBuildingRules = defaultRulesForSettlementBuilding
     ): Option[ScatanState] =
       spot match
         case citySpot: StructureSpot if buildingType == BuildingType.City =>

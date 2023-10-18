@@ -10,12 +10,10 @@ private object GameDSLDomain:
   /** The game context is used to define the game.
     */
   case class GameCtx[State, P, S, A, Player](
-      phases: SequenceProperty[PhaseCtx[State, P, S, A, Player]] = SequenceProperty[PhaseCtx[State, P, S, A, Player]](),
+      phases: MultipleProperty[PhaseCtx[State, P, S, A, Player]] = MultipleProperty[PhaseCtx[State, P, S, A, Player]](),
       players: OptionalProperty[PlayersCtx] = OptionalProperty[PlayersCtx](),
       winner: OptionalProperty[State => Option[Player]] = OptionalProperty[State => Option[Player]](),
-      initialPhase: OptionalProperty[P] = OptionalProperty[P](),
-      stateFactory: OptionalProperty[(GameMap, Seq[Player]) => State] =
-        OptionalProperty[(GameMap, Seq[Player]) => State]()
+      initialPhase: OptionalProperty[P] = OptionalProperty[P]()
   )
 
   /** The players context is used to define the players info of the game.
@@ -30,7 +28,7 @@ private object GameDSLDomain:
       endingStep: OptionalProperty[Step] = OptionalProperty[Step](),
       nextPhase: OptionalProperty[Phase] = OptionalProperty[Phase](),
       onEnter: OptionalProperty[State => State] = OptionalProperty[State => State](),
-      steps: SequenceProperty[StepCtx[Phase, Step, Action]] = SequenceProperty[StepCtx[Phase, Step, Action]](),
+      steps: MultipleProperty[StepCtx[Phase, Step, Action]] = MultipleProperty[StepCtx[Phase, Step, Action]](),
       playerIteratorFactory: OptionalProperty[Seq[Player] => Iterator[Player]] =
         OptionalProperty[Seq[Player] => Iterator[Player]]()
   )
@@ -39,19 +37,19 @@ private object GameDSLDomain:
     */
   case class StepCtx[P, S, A](
       step: OptionalProperty[S] = OptionalProperty[S](),
-      when: SequenceProperty[(A, S)] = SequenceProperty[(A, S)]()
+      when: MultipleProperty[(A, S)] = MultipleProperty[(A, S)]()
   )
 
   private object Factories:
 
     given [State, P, S, A, Player]: Factory[GameCtx[State, P, S, A, Player]] with
-      override def apply(): GameCtx[State, P, S, A, Player] = new GameCtx[State, P, S, A, Player]
+      override def create(): GameCtx[State, P, S, A, Player] = new GameCtx[State, P, S, A, Player]
 
     given Factory[PlayersCtx] with
-      override def apply(): PlayersCtx = new PlayersCtx
+      override def create(): PlayersCtx = new PlayersCtx
 
     given [State, Phase, Step, Action, Player]: Factory[PhaseCtx[State, Phase, Step, Action, Player]] with
-      override def apply(): PhaseCtx[State, Phase, Step, Action, Player] = PhaseCtx()
+      override def create(): PhaseCtx[State, Phase, Step, Action, Player] = PhaseCtx()
 
     given [P, S, A]: Factory[StepCtx[P, S, A]] with
-      override def apply(): StepCtx[P, S, A] = new StepCtx[P, S, A]
+      override def create(): StepCtx[P, S, A] = new StepCtx[P, S, A]
