@@ -33,3 +33,7 @@ Complessivamente, mi ritengo soddisfatto del lavoro svolto, ammetto di aver avut
 Ringrazio vivamente i miei compagni di gruppo per la serietà, la disponibilità e la collaborazione che hanno dimostrato fin da subito, difatti ritengo che il lavoro di squadra sia stato parte fondamentale per il successo del progetto.
 
 ## Sviluppi Futuri
+
+Certamente, in prospettiva di sviluppi futuri, si potrebbe considerare l'implementazione delle funzionalità precedentemente menzionate come opzionali, come ad esempio modalità online e un editor di mappe.
+Tuttavia, prima di tutto, sarebbe prioritario concentrarsi sull'integrazione delle funzionalità mancanti necessarie per garantire la conformità alle regole ufficiali, come la gestione dei porti e altri piccoli dettagli.
+Ulteriore sforzo potrebbe essere impiegato nell arricchimento dell'interfaccia grafica, poiché non essendo parte fondamentale nella valutazione del progetto, non è stata curata quanto avrebbe potuto esserlo.
