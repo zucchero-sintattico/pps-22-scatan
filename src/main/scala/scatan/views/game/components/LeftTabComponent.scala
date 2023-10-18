@@ -108,7 +108,7 @@ object LeftTabComponent:
             li(
               award.toDisplayable,
               ": ",
-              opt._2.map((player, score) => s"($player: $score)").getOrElse("Nobody Yet")
+              opt._2.map((player, score) => s" ($player: $score)").getOrElse(" Nobody Yet")
             )
           }
         )
