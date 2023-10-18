@@ -9,7 +9,7 @@ import scatan.model.game.state.ops.BuildingOps.{assignBuilding, build}
 import scatan.model.game.state.ops.DevelopmentCardOps.*
 import scatan.model.game.state.ops.ResourceCardOps.*
 import scatan.model.game.state.ops.RobberOps.moveRobber
-import scatan.model.game.state.ops.TradeOps.{tradeWithBank, tradeWithPlayer}
+import scatan.model.game.state.ops.TradeOps.{tradeWithBank, tradeBetweenPlayers}
 import scatan.model.map.{Hexagon, RoadSpot, StructureSpot}
 
 object ScatanEffects:
@@ -249,4 +249,4 @@ object ScatanEffects:
       senderCards: Seq[ResourceCard],
       receiverCards: Seq[ResourceCard]
   ): Effect[TradeWithPlayer.type, ScatanState] =
-    (state: ScatanState) => state.tradeWithPlayer(sender, receiver, senderCards, receiverCards)
+    (state: ScatanState) => state.tradeBetweenPlayers(sender, receiver, senderCards, receiverCards)

@@ -11,7 +11,7 @@ object TradeOps:
   val tradeWithBankRequiredCards = 4
   extension (state: ScatanState)
 
-    /** Trade with a player. The sender must have the senderCards and the receiver must have the receiverCards The
+    /** Trade between two players. The sender must have the senderCards and the receiver must have the receiverCards The
       * sender will give the senderCards to the receiver and vice versa
       *
       * @param sender
@@ -25,21 +25,25 @@ object TradeOps:
       * @return
       *   Some(state) if the trade is allowed, None otherwise
       */
-    def tradeWithPlayer(
+    def tradeBetweenPlayers(
         sender: ScatanPlayer,
         receiver: ScatanPlayer,
         senderCards: Seq[ResourceCard],
         receiverCards: Seq[ResourceCard]
     ): Option[ScatanState] =
-      val stateWithSenderCardsProcessed = senderCards.foldLeft(Option(state))((state, card) =>
-        state
-          .flatMap(s => s.removeResourceCard(sender, card))
-          .flatMap(s => s.assignResourceCard(receiver, card))
+      val stateWithSenderCardsProcessed = senderCards.foldLeft(Option(state))((s, card) =>
+        for
+          initialState <- s
+          stateWithCardRemovedFromSender <- initialState.removeResourceCard(sender, card)
+          stateWithCardAssignedToReceiver <- stateWithCardRemovedFromSender.assignResourceCard(receiver, card)
+        yield stateWithCardAssignedToReceiver
       )
-      val stateWithReceiverCardsProcessed = receiverCards.foldLeft(stateWithSenderCardsProcessed)((state, card) =>
-        state
-          .flatMap(s => s.removeResourceCard(receiver, card))
-          .flatMap(s => s.assignResourceCard(sender, card))
+      val stateWithReceiverCardsProcessed = receiverCards.foldLeft(stateWithSenderCardsProcessed)((s, card) =>
+        for
+          initialState <- s
+          stateWithCardRemovedFromReceiver <- initialState.removeResourceCard(receiver, card)
+          stateWithCardAssignedToSender <- stateWithCardRemovedFromReceiver.assignResourceCard(sender, card)
+        yield stateWithCardAssignedToSender
       )
       stateWithReceiverCardsProcessed
 

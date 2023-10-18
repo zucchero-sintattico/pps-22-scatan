@@ -9,6 +9,15 @@ body {
     --road: #363636;
     --button-color: #f2f2f2;
 
+    --colorPlayer1: #ff0000;
+    --colorPlayerOpaque1: rgba(255, 0, 0, 0.5);
+    --colorPlayer2: #0000ff;
+    --colorPlayerOpaque2: rgba(0, 0, 255, 0.5);
+    --colorPlayer3: #00ff00;
+    --colorPlayerOpaque3: rgba(0, 255, 0, 0.5);
+    --colorPlayer4: #ffff00;
+    --colorPlayerOpaque4: rgba(255, 255, 0, 0.5);
+
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -37,26 +46,30 @@ body {
 }
 
 .player-1 {
-    fill: #ff0000;
-    stroke: #ff0000;
+    fill: var(--colorPlayer1);
+    stroke: var(--colorPlayer1);
+    background-color: var(--colorPlayerOpaque1);
     opacity: 1;
 }
 
 .player-2 {
-    fill: #0000ff;
-    stroke: #0000ff;
+    fill: var(--colorPlayer2);
+    stroke: var(--colorPlayer2);
+    background-color: var(--colorPlayerOpaque2);
     opacity: 1;
 }
 
 .player-3 {
-    fill: #00ff00;
-    stroke: #00ff00;
+    fill: var(--colorPlayer3);
+    stroke: var(--colorPlayer3);
+    background-color: var(--colorPlayerOpaque3);
     opacity: 1;
 }
 
 .player-4 {
-    fill: #ffff00;
-    stroke: #ffff00;
+    fill: var(--colorPlayer4);
+    stroke: var(--colorPlayer4);
+    background-color: var(--colorPlayerOpaque4);
     opacity: 1;
 }
 
@@ -215,6 +228,19 @@ body {
     padding: 2em;
 }
 
+.game-view-player-color {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+
+.game-view-player-color>* {
+    border-radius: 1em;
+    padding: 0.6em 0.4em;
+    font-size: 1em;
+}
+
 .game-view-game-tab {
     text-align: center;
     display: inline-block;
@@ -344,17 +370,17 @@ body {
     margin-top: 1em;
 }
 
-.game-view-resource-type-choice{
+.game-view-resource-type-choice {
     display: inline;
     justify-content: space-between;
     margin-top: 1em;
 }
 
-.game-view-resource-amount{
+.game-view-resource-amount {
     display: inline;
     width: 20%;
     border-radius: 0.5em;
-    margin-top: 0.5em; 
+    margin-top: 0.5em;
 }
 
 .popup {
@@ -369,7 +395,7 @@ body {
     z-index: 1000;
 }
 
-.about-view-container{
+.about-view-container {
     color: white;
     font-size: x-large;
     background-color: rgba(0, 0, 0, 0.5);
@@ -377,7 +403,7 @@ body {
     padding: 1em;
 }
 
-.about-link{
+.about-link {
     color: white;
     text-decoration: none;
 }

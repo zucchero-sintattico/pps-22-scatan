@@ -7,6 +7,7 @@ import scatan.views.utils.TypeUtils.*
 import scatan.views.viewmodel.ops.ViewModelActionsOps.*
 import scatan.views.viewmodel.ops.ViewModelCurrentStatusOps.*
 import scatan.views.viewmodel.ops.ViewModelPlayersOps.*
+import scatan.model.game.state.ScatanState
 
 object LeftTabComponent:
 
@@ -33,6 +34,18 @@ object LeftTabComponent:
       h2(
         className := "game-view-step",
         child.text <-- gameViewModel.currentStep.map("Step: " + _)
+      )
+    )
+
+  def playerColorComponent: GameStateKnowledge[Element] =
+    div(
+      className := "game-view-player-color",
+      for
+        (player, count) <- summon[ScatanState].players.zipWithIndex
+        playerCssClass = s"player-${count + 1}"
+      yield p(
+        className := playerCssClass,
+        player.name
       )
     )
 
@@ -73,7 +86,7 @@ object LeftTabComponent:
           className := "game-view-button buy-development-card-button",
           "Buy Dev. Card",
           onClick --> { _ => clickHandler.onBuyDevelopmentCardClick() },
-          disabled <-- gameViewModel.canBuyDevelopment
+          disabled <-- gameViewModel.canBuyDevelopment.map(!_)
         ),
         button(
           className := "game-view-button end-turn-button",
@@ -107,7 +120,8 @@ object LeftTabComponent:
           children <-- gameViewModel.currentAwards.map(_.toSeq).split(_._1) { (award, opt, _) =>
             li(
               award.toDisplayable,
-              opt._2.map((player, score) => s" ($player: $score)").getOrElse("Nobody Yet")
+              ": ",
+              opt._2.map((player, score) => s"($player: $score)").getOrElse("Nobody Yet")
             )
           }
         )

@@ -1,5 +1,6 @@
 package scatan.lib.game
 
+import scatan.model.game.state.ScatanState
 import scatan.model.map.GameMap
 
 /** A game status is a pair of phase and step.
@@ -50,8 +51,8 @@ final case class Game[State, PhaseType, StepType, ActionType, Player](
 
 object Game:
   def apply[State, PhaseType, StepType, ActionType, Player](
-      gameMap: GameMap,
-      players: Seq[Player]
+      players: Seq[Player],
+      initialState: State
   )(using
       rules: Rules[State, PhaseType, StepType, ActionType, Player]
   ): Game[State, PhaseType, StepType, ActionType, Player] =
@@ -59,7 +60,7 @@ object Game:
     val iterator = rules.phaseTurnIteratorFactories.get(rules.startingPhase).map(_(players)).getOrElse(players.iterator)
     Game(
       players = players,
-      state = rules.startingStateFactory(gameMap, players),
+      state = initialState,
       gameStatus = GameStatus(rules.startingPhase, rules.startingSteps(rules.startingPhase)),
       turn = Turn[Player](1, iterator.next()),
       playersIterator = iterator,

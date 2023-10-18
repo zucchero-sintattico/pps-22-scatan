@@ -7,7 +7,6 @@ class RulesTest extends BaseTest:
 
   import EmptyDomain.*
   val players = Seq(Player("Alice"), Player("Bob"), Player("Carol"))
-  val gameMap = GameMap()
   val emptyGameRules = EmptyDomain.rules
 
   "The Rules" should "exists" in {
@@ -16,12 +15,6 @@ class RulesTest extends BaseTest:
 
   it should "be validatable" in {
     emptyGameRules.valid shouldBe true
-  }
-
-  it should "have an initial state factory" in {
-    emptyGameRules.startingStateFactory shouldBe a[(GameMap, Seq[Player]) => State]
-    emptyGameRules.startingStateFactory(gameMap, players) shouldBe a[State]
-    emptyGameRules.startingStateFactory(gameMap, players) shouldBe State()
   }
 
   it should "have a initial phase" in {

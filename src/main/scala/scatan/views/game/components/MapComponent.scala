@@ -8,8 +8,8 @@ import scatan.model.components.ResourceType.*
 import scatan.model.components.{Terrain, UnproductiveTerrain}
 import scatan.model.components.UnproductiveTerrain.*
 import scatan.model.map.{GameMap, Hexagon, TileContent}
-import scatan.views.utils.Coordinates
-import scatan.views.utils.Coordinates.center
+import scatan.views.utils.Point
+import scatan.views.utils.Point.center
 
 /** A component to display the map of hexagons.
   */
@@ -88,7 +88,7 @@ object MapComponent:
     *   the svg hexagon.
     */
   private[components] def svgHexagon(hex: Hexagon, elements: LaminarElement*): MapElement =
-    val Coordinates(x, y) = hex.center
+    val Point(x, y) = hex.center
     svg.g(
       svg.transform := s"translate($x, $y)",
       svg.polygon(
